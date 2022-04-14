@@ -5,6 +5,9 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/types": "^16.2.1",
+    "husky": "^7.0.4",
     "typescript": "^4.6.3"
   }
 }
