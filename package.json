@@ -1,0 +1,7 @@
+{
+  "name": "shimakaze-sdk",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
