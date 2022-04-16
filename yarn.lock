@@ -354,6 +354,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^16":
+  version: 16.11.27
+  resolution: "@types/node@npm:16.11.27"
+  checksum: 6ed0c8c4d29a549d0cfd607d19edf9a4668fbd39087701d923b4a04cd760564e47ad27f9403968cb9c11ee006f0ea6ab698b2491b4b2d2dec3f4a53d0fc22df7
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
@@ -365,6 +372,13 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: fd6bce2b674b6efc3db4c7c3d336bd70c90838e8439de639b909ce22f3720d21344f52427f1d9e57b265fcb7f6c018699b99e5e0c208a1a4823014269a6bf35b
+  languageName: node
+  linkType: hard
+
+"@types/vscode@npm:^1.66.0":
+  version: 1.66.0
+  resolution: "@types/vscode@npm:1.66.0"
+  checksum: 68af14b74bc0924e12255ce03ac43d40cdb0461b8016ff7ce4fcf80b0f6074e81b3e00a9c8840e54ff9cc75a1f32879b1822fd32b974490b1e18bd165af8d21e
   languageName: node
   linkType: hard
 
@@ -2723,6 +2737,15 @@ __metadata:
   checksum: 1a2bcae50de99034fcd92ad4212d8e01eedf52c7ec7830eedcf886622804fe36884278f2be8be0ea5fde3fd1c23911643a4e0f726c8685b61871c8908af01222
   languageName: node
   linkType: hard
+
+"shimakaze-sdk-vscode@workspace:extension":
+  version: 0.0.0-use.local
+  resolution: "shimakaze-sdk-vscode@workspace:extension"
+  dependencies:
+    "@types/node": ^16
+    "@types/vscode": ^1.66.0
+  languageName: unknown
+  linkType: soft
 
 "shimakaze-sdk@workspace:.":
   version: 0.0.0-use.local

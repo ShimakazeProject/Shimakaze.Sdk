@@ -1,0 +1,16 @@
+{
+  "name": "shimakaze-sdk-vscode",
+  "displayName": "Shimakaze SDK",
+  "description": "Make RA2 Mode Easy",
+  "preview": true,
+  "version": "0.0.1",
+  "publisher": "frg2089",
+  "engines": {
+    "vscode": "^1.66.0"
+  },
+  "packageManager": "yarn@3.2.0",
+  "devDependencies": {
+    "@types/node": "^16",
+    "@types/vscode": "^1.66.0"
+  }
+}
