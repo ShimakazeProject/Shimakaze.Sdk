@@ -18,7 +18,8 @@ const types = [
   'wip',
   'build',
   'ci',
-  'conf'
+  'conf',
+  'deps'
 ]
 
 const parserOpts: ParserOptions = {
