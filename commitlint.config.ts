@@ -23,7 +23,7 @@ const types = [
 ]
 
 const parserOpts: ParserOptions = {
-  headerPattern: /^(:[\w:]+:) (\w+)(\([\w/*-]+\))?:? (.*)$/,
+  headerPattern: /^(:[\w:]+:) (\w+)(\([\w/*-.]+\))?:? (.*)$/,
   headerCorrespondence: ['emoji', 'type', 'scope', 'subject']
 }
 
