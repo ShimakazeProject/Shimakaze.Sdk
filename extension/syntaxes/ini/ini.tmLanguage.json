@@ -1,0 +1,76 @@
+{
+  "$schema": "https://github.com/martinring/tmlanguage/raw/master/tmlanguage.json",
+  "name": "Westwood Ini",
+  "scopeName": "source.ini",
+  "fileTypes": [
+    ".ini"
+  ],
+  "patterns": [
+    {
+      "begin": "(^[ \\t]+)?(?=#)",
+      "beginCaptures": {
+        "1": {
+          "name": "meta.preprocessor"
+        }
+      },
+      "end": "(?!\\G)",
+      "patterns": [
+        {
+          "begin": "#",
+          "end": " |\\n",
+          "name": "keyword.control"
+        }
+      ]
+    },
+    {
+      "begin": "(^[ \\t]+)?(?=;)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.whitespace.comment.leading.ini"
+        }
+      },
+      "end": "(?!\\G)",
+      "patterns": [
+        {
+          "begin": ";",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.ini"
+            }
+          },
+          "end": "\\n",
+          "name": "comment.line.semicolon.ini"
+        }
+      ]
+    },
+    {
+      "captures": {
+        "1": {
+          "name": "keyword.other.definition.ini"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.ini"
+        },
+        "3": {
+          "name": "meta.definition.variable.name"
+        }
+      },
+      "match": "\\b([a-zA-Z0-9_.-]+)\\b\\s*(=)([.\\s\\w]*)"
+    },
+    {
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.entity.ini"
+        },
+        "2": {
+          "name": "support.type"
+        },
+        "3": {
+          "name": "punctuation.definition.entity.ini"
+        }
+      },
+      "match": "^(\\[)(.*?)(\\])",
+      "name": "entity.name.section.group-title.ini"
+    }
+  ]
+}
