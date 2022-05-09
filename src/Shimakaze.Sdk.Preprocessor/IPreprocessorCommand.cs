@@ -22,4 +22,15 @@ public interface IPreprocessorCommand
     /// <param name="preprocessor">预处理器实例</param>
     /// <returns></returns>
     Task ExecuteAsync(string[] args, Preprocessor preprocessor);
+
+    /// <summary>
+    /// 需要后处理
+    /// </summary>
+    bool IsPostProcessing => false;
+
+    /// <summary>
+    /// 后处理
+    /// </summary>
+    /// <param name="preprocessor">预处理器实例</param>
+    Task PostProcessingAsync(Preprocessor preprocessor!!) => Task.CompletedTask;
 }

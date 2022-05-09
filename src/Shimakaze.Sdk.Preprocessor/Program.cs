@@ -11,10 +11,9 @@ internal static class Program
     public static async Task Main(FileInfo input!!, FileInfo output!!, string[]? defines)
     {
         Preprocessor preprocessor = new();
-        defines?.Each(preprocessor.Defines.Add);
 
         using var writer = output.CreateText();
-        await preprocessor.InitializeAsync(writer, input.DirectoryName!);
+        await preprocessor.InitializeAsync(writer, input.DirectoryName!, defines ?? Array.Empty<string>());
         await preprocessor.ExecuteAsync(input.FullName).ConfigureAwait(false);
     }
 }

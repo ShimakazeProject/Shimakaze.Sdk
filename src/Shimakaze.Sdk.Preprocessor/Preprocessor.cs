@@ -36,9 +36,23 @@ public sealed class Preprocessor : IDisposable
     /// </summary>
     /// <param name="output">输出流</param>
     /// <param name="workdir">工作目录</param>
-    public async Task InitializeAsync(TextWriter output!!, string workdir!!)
+    /// <param name="defines">定义</param>
+    public async Task InitializeAsync(TextWriter output!!, string workdir!!, params string[] defines)
     {
         await Task.Yield();
+
+        // 初始化输出流
+        Variables[PreprocessorVariableNames.OutputStream_TextWriter] = output;
+
+        // 初始化工作目录栈
+        Variables[PreprocessorVariableNames.WorkingDirectory_Stack_String] = new Stack<string>();
+        GetVariable<Stack<string>>(PreprocessorVariableNames.WorkingDirectory_Stack_String).Push(workdir);
+        Debug.WriteLine($"Push WorkingDirectory: {workdir}");
+
+        Variables[PreprocessorVariableNames.CurrentFile_Stack_String] = new Stack<string>();
+        Variables[PreprocessorVariableNames.DefineStack_Stack_String] = new Stack<string>();
+        Variables[PreprocessorVariableNames.Defines_HashSet_String] = new HashSet<string>(defines);
+        Variables[PreprocessorVariableNames.WriteOutput_Boolean] = true;
 
         // 通过反射取得所有支持的命令
         Variables[PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand] = AppDomain.CurrentDomain.GetAssemblies()
@@ -54,19 +68,6 @@ public sealed class Preprocessor : IDisposable
         // 初始化所有命令
         await GetVariable<Dictionary<string, IPreprocessorCommand>>(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand).Values
             .EachAsync(async i => await i.InitializeAsync(this));
-
-        // 初始化输出流
-        Variables[PreprocessorVariableNames.OutputStream_TextWriter] = output;
-
-        // 初始化工作目录栈
-        Variables[PreprocessorVariableNames.WorkingDirectory_Stack_String] = new Stack<string>();
-        GetVariable<Stack<string>>(PreprocessorVariableNames.WorkingDirectory_Stack_String).Push(workdir);
-        Debug.WriteLine($"Push WorkingDirectory: {workdir}");
-
-        Variables[PreprocessorVariableNames.CurrentFile_Stack_String] = new Stack<string>();
-        Variables[PreprocessorVariableNames.DefineStack_Stack_String] = new Stack<string>();
-        Variables[PreprocessorVariableNames.Defines_HashSet_String] = new HashSet<string>();
-        Variables[PreprocessorVariableNames.WriteOutput_Boolean] = true;
     }
 
     /// <summary>
@@ -94,6 +95,11 @@ public sealed class Preprocessor : IDisposable
             string? raw = await reader.ReadLineAsync();
             await ParseLineAsync(raw!).ConfigureAwait(false);
         }
+
+        await GetVariable<Dictionary<string, IPreprocessorCommand>>(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand)
+            .Values
+            .Where(i => i.IsPostProcessing)
+            .EachAsync(i => i.PostProcessingAsync(this));
     }
 
     private async Task ParseLineAsync(string raw!!)
