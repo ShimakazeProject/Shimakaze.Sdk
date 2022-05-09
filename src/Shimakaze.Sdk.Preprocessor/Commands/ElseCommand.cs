@@ -4,13 +4,15 @@ internal sealed class ElseCommand : IPreprocessorCommand
 {
     public string Command { get; } = "else";
 
-    public Task ExecuteAsync(string[] args!!, string currentFilePath!!, Preprocessor preprocessor!!)
+    public Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
     {
-        string tmp = preprocessor.DefineStack.Pop();
+        var stack = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack_Stack_String);
+        string tmp = stack.Pop();
         Debug.WriteLine($"Pop  DefineStack: {tmp}");
-        preprocessor.DefineStack.Push("Else");
+        stack.Push("Else");
         Debug.WriteLine("Push DefineStack: Else");
-        preprocessor.WriteOutput = !preprocessor.WriteOutput;
+        preprocessor.Variables[PreprocessorVariableNames.WriteOutput_Boolean] =
+            !preprocessor.GetVariable<bool>(PreprocessorVariableNames.WriteOutput_Boolean);
         return Task.CompletedTask;
     }
 }

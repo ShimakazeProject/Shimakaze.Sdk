@@ -1,18 +1,30 @@
 namespace Shimakaze.Sdk.Preprocessor.Commands;
 
-internal sealed class DefineCommand : IPreprocessorCommand
+/// <summary>
+/// # Define
+/// </summary>
+public sealed class DefineCommand : IPreprocessorCommand
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public string Command { get; } = "define";
 
-    public Task ExecuteAsync(string[] args!!, string currentFilePath!!, Preprocessor preprocessor!!)
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    /// <param name="args">命令参数</param>
+    /// <param name="preprocessor">预处理器实例</param>
+    /// <exception cref="ArgumentException">参数不正确时抛出</exception>
+    public Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
     {
         switch (args.Length)
         {
             case 1:
-                preprocessor.Defines.Add(args[0]);
+                preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Add(args[0]);
                 break;
             default:
-                throw new Exception("Invalid arguments");
+                throw new ArgumentException("Invalid arguments");
         }
         return Task.CompletedTask;
     }

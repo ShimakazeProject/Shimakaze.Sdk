@@ -1,82 +1,137 @@
 ﻿namespace Shimakaze.Sdk.Preprocessor;
 
-internal sealed class Preprocessor : IDisposable
+/// <summary>
+/// 预处理器
+/// </summary>
+public sealed class Preprocessor : IDisposable
 {
-    public Dictionary<string, IPreprocessorCommand>? Commands { get; private set; }
-    private TextWriter? _output;
     private bool _disposedValue;
-    private bool _writeOutput = true;
 
-    public Stack<string> WorkingDirectory { get; } = new();
+    /// <summary>
+    /// 变量表
+    /// </summary>
+    /// <remarks>
+    /// 预处理器的所有变量保存在这里
+    /// </remarks>
+    public Dictionary<string, object> Variables { get; } = new();
+    /// <summary>
+    /// 获取预处理器变量
+    /// </summary>
+    /// <typeparam name="T">变量的类型</typeparam>
+    /// <param name="key">变量名</param>
+    /// <returns>变量的值</returns>
+    public T GetVariable<T>(string key) => (T)Variables[key];
+    /// <summary>
+    /// 断言预处理器变量
+    /// </summary>
+    /// <param name="key">变量名</param>
+    /// <returns>变量对象</returns>
+    /// <exception cref="VariableNotInitializeException">当变量不存在时抛出异常</exception>
+    public object AssertVariable(string key) => Variables.ContainsKey(key)
+        ? Variables[key]
+        : throw new VariableNotInitializeException($"{key} not initialized");
 
-    public Stack<string> DefineStack { get; } = new();
-
-    public HashSet<string> Defines { get; } = new();
-
-    public bool WriteOutput
-    {
-        get => _writeOutput; set
-        {
-            _writeOutput = value;
-            Debug.WriteLine($"Change WriteOutput: {value}");
-        }
-    }
+    /// <summary>
+    /// [反射] 初始化预处理器
+    /// </summary>
+    /// <param name="output">输出流</param>
+    /// <param name="workdir">工作目录</param>
     public async Task InitializeAsync(TextWriter output!!, string workdir!!)
     {
-        Commands = AppDomain.CurrentDomain.GetAssemblies()
+        await Task.Yield();
+
+        // 通过反射取得所有支持的命令
+        Variables[PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand] = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(i => i.GetTypes())
             .Where(i => i.GetInterfaces().Contains(typeof(IPreprocessorCommand)))
             .Select(i => (IPreprocessorCommand)Activator.CreateInstance(i)!)
             .ToDictionary(i => i.Command);
-        await Commands.Values.EachAsync(async i => await i.InitializeAsync(this));
-        _output = output;
+        Debug.WriteLine($"Find Commands: [\n  {string.Join(", \n  ",
+            GetVariable<Dictionary<string, IPreprocessorCommand>>(
+                PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand).Keys
+                )}\n]");
 
-        WorkingDirectory.Push(workdir);
+        // 初始化所有命令
+        await GetVariable<Dictionary<string, IPreprocessorCommand>>(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand).Values
+            .EachAsync(async i => await i.InitializeAsync(this));
+
+        // 初始化输出流
+        Variables[PreprocessorVariableNames.OutputStream_TextWriter] = output;
+
+        // 初始化工作目录栈
+        Variables[PreprocessorVariableNames.WorkingDirectory_Stack_String] = new Stack<string>();
+        GetVariable<Stack<string>>(PreprocessorVariableNames.WorkingDirectory_Stack_String).Push(workdir);
         Debug.WriteLine($"Push WorkingDirectory: {workdir}");
+
+        Variables[PreprocessorVariableNames.CurrentFile_Stack_String] = new Stack<string>();
+        Variables[PreprocessorVariableNames.DefineStack_Stack_String] = new Stack<string>();
+        Variables[PreprocessorVariableNames.Defines_HashSet_String] = new HashSet<string>();
+        Variables[PreprocessorVariableNames.WriteOutput_Boolean] = true;
     }
 
-    public async Task ExecuteAsync(string iniFilePath!!)
+    /// <summary>
+    /// 开始执行
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    public async Task ExecuteAsync(string filePath!!)
     {
-        await using Stream fs = File.OpenRead(iniFilePath);
-        using StreamReader sr = new(fs);
-        while (!sr.EndOfStream)
+        GetVariable<Stack<string>>(PreprocessorVariableNames.CurrentFile_Stack_String).Push(filePath);
+        await File.OpenText(filePath).Using(ExecuteAsync);
+        GetVariable<Stack<string>>(PreprocessorVariableNames.CurrentFile_Stack_String).Pop();
+    }
+
+    /// <summary>
+    /// 开始执行
+    /// </summary>
+    /// <param name="reader">输入流</param>
+    private async Task ExecuteAsync(TextReader reader!!)
+    {
+        Func<bool> check = reader is StreamReader sr
+            ? (() => !sr.EndOfStream)
+            : (() => reader.Peek() >= 0);
+        while (check())
         {
-            string? raw = await sr.ReadLineAsync();
-            if (raw is null)
-                throw new Exception("Unexpected end of stream");
-            await ParseLineAsync(raw).ConfigureAwait(false);
+            string? raw = await reader.ReadLineAsync();
+            await ParseLineAsync(raw!).ConfigureAwait(false);
         }
     }
 
-    internal async Task ParseLineAsync(string raw!!)
+    private async Task ParseLineAsync(string raw!!)
     {
-        if (Commands is null)
-            throw new Exception("Commands not initialized");
-        if (_output is null)
-            throw new Exception("Output not initialized");
+        AssertVariable(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand);
+        AssertVariable(PreprocessorVariableNames.OutputStream_TextWriter);
 
         // Trim
         string ts = raw.TrimStart();
 
         if (!ts.StartsWith("#"))
         {
-            if (WriteOutput)
-                await _output.WriteLineAsync(raw).ConfigureAwait(false);
+            if (GetVariable<bool>(PreprocessorVariableNames.WriteOutput_Boolean))
+                await GetVariable<TextWriter>(PreprocessorVariableNames.OutputStream_TextWriter).WriteLineAsync(raw).ConfigureAwait(false);
 
-            Debug.WriteLine($"Write {WriteOutput}: {raw}");
+            Debug.WriteLine($"Write {GetVariable<bool>(PreprocessorVariableNames.WriteOutput_Boolean)}: {raw}");
             return;
         }
 
-        // Get Preprocessor Command
-        var (command, args) = ParseCommand(ts[1..].Trim());
-        if (Commands.TryGetValue(command, out var commandHandler))
+        await ParseCommand(ts[1..].Trim()).Then(InvokeCommand);
+    }
+
+    private async Task InvokeCommand(string command, params string[] args)
+    {
+        if (GetVariable<Dictionary<string, IPreprocessorCommand>>(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand)
+            .TryGetValue(command, out var commandHandler))
         {
             Debug.WriteLine($"Invoke: {command} {string.Join(" ", args)}");
-            await commandHandler.ExecuteAsync(args, raw, this).ConfigureAwait(false);
+            await commandHandler.ExecuteAsync(args, this).ConfigureAwait(false);
         }
     }
 
-    internal static (string command, string[] args) ParseCommand(string raw!!)
+    /// <summary>
+    /// 解析命令
+    /// </summary>
+    /// <param name="raw">预处理器命令字符串</param>
+    /// <returns>命令</returns>
+    private static (string command, string[] args) ParseCommand(string raw!!)
     {
         // split by space and do not split by quotes
         List<string> list = new();
@@ -119,9 +174,13 @@ internal sealed class Preprocessor : IDisposable
         {
             if (disposing)
             {
-                _output?.Dispose();
-                Commands
-                    ?.Where(i => i.Value is IDisposable)
+                Variables.Values
+                    .Where(v => v is IDisposable)
+                    .Select(v => (IDisposable)v)
+                    .Each(v => v.Dispose());
+
+                GetVariable<Dictionary<string, IPreprocessorCommand>>(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand)
+                    .Where(i => i.Value is IDisposable)
                     .Each(i => ((IDisposable)i.Value).Dispose());
             }
 
@@ -129,17 +188,20 @@ internal sealed class Preprocessor : IDisposable
         }
     }
 
-    // ~IniPreprocessor()
-    // {
-    //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
-    //     Dispose(disposing: false);
-    // }
+    /// <summary>
+    /// 对象终结器
+    /// </summary>
+    ~Preprocessor()
+    {
+        Dispose(disposing: false);
+    }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public void Dispose()
     {
-        // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 }
-
