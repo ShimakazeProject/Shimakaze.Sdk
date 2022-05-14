@@ -1,5 +1,5 @@
 {
-  "name": "shimakaze-sdk",
+  "name": "shimakaze-sdk-project",
   "packageManager": "yarn@3.2.0",
   "private": true,
   "workspaces": [
