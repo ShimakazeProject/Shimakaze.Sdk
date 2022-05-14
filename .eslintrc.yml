@@ -10,4 +10,7 @@ parserOptions:
   sourceType: module
 plugins:
   - '@typescript-eslint'
-rules: {}
+rules: {
+  "no-use-before-define": "off",
+  "@typescript-eslint/no-use-before-define": ["error"]
+}
