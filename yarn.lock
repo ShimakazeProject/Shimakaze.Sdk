@@ -278,6 +278,46 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/fast-element@npm:^1.10.1, @microsoft/fast-element@npm:^1.6.2, @microsoft/fast-element@npm:^1.9.0":
+  version: 1.10.1
+  resolution: "@microsoft/fast-element@npm:1.10.1"
+  checksum: 2c0eeb495335bf39a14475fd78c8d7eb6d52c6ec8f9468f69344bc3c6fd24e957842f85c58f066973451a0a1b20640f728258227b36fea2e6ff145eed01e4dff
+  languageName: node
+  linkType: hard
+
+"@microsoft/fast-foundation@npm:^2.38.0, @microsoft/fast-foundation@npm:^2.41.1":
+  version: 2.46.3
+  resolution: "@microsoft/fast-foundation@npm:2.46.3"
+  dependencies:
+    "@microsoft/fast-element": ^1.10.1
+    "@microsoft/fast-web-utilities": ^5.4.1
+    tabbable: ^5.2.0
+    tslib: ^1.13.0
+  checksum: 72661576435381453189258a23718360f1934e1105e45b82d53d8a1c1018b8073bd484533ff7cf2d66be9b99a68fb677a63cf011813b00725cd6d1fa0032ad62
+  languageName: node
+  linkType: hard
+
+"@microsoft/fast-react-wrapper@npm:^0.1.18":
+  version: 0.1.48
+  resolution: "@microsoft/fast-react-wrapper@npm:0.1.48"
+  dependencies:
+    "@microsoft/fast-element": ^1.9.0
+    "@microsoft/fast-foundation": ^2.41.1
+  peerDependencies:
+    react: ">=16.9.0"
+  checksum: 6641cc9875f17e6e381d16c27441ff3503ed87e8e826fa1ae8e8cbb1b4457372532bc09cd6a6d3f78110b296104b7baa7295019e403879797de66c22a6178af1
+  languageName: node
+  linkType: hard
+
+"@microsoft/fast-web-utilities@npm:^5.4.1":
+  version: 5.4.1
+  resolution: "@microsoft/fast-web-utilities@npm:5.4.1"
+  dependencies:
+    exenv-es6: ^1.1.1
+  checksum: 303e87847f962944f474e3716c3eb305668243916ca9e0719e26bb9a32346144bc958d915c103776b3e552cea0f0f6233f839fad66adfdf96a8436b947288ca7
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -530,6 +570,19 @@ __metadata:
     "@typescript-eslint/types": 5.19.0
     eslint-visitor-keys: ^3.0.0
   checksum: ea878349c716980e8c83fde0b60399c5e59931f74eed14d3db0f630a3ed4d092a069a5cdd3bd652bde5e19d733babd18a70ddbb5e4f6ab5b2110ad5cce857bf7
+  languageName: node
+  linkType: hard
+
+"@vscode/webview-ui-toolkit@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@vscode/webview-ui-toolkit@npm:1.0.0"
+  dependencies:
+    "@microsoft/fast-element": ^1.6.2
+    "@microsoft/fast-foundation": ^2.38.0
+    "@microsoft/fast-react-wrapper": ^0.1.18
+  peerDependencies:
+    react: ">=16.9.0"
+  checksum: 7bbaf2d80ad66a9de39396228ed4131ff7489d6cf0b399355eb7ccbfbd2937a5255a4df34650cf87091dd86c033fd6ee6bff51f41036f69e99bfa01cd89f9af6
   languageName: node
   linkType: hard
 
@@ -1026,6 +1079,17 @@ __metadata:
   checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
   languageName: node
   linkType: hard
+
+"csf-view@workspace:packages/csf-view":
+  version: 0.0.0-use.local
+  resolution: "csf-view@workspace:packages/csf-view"
+  dependencies:
+    "@microsoft/fast-element": ^1.10.1
+    "@vscode/webview-ui-toolkit": ^1.0.0
+    typescript: ^4.6.3
+    vite: ^2.9.5
+  languageName: unknown
+  linkType: soft
 
 "dargs@npm:^7.0.0":
   version: 7.0.0
@@ -1750,6 +1814,13 @@ __metadata:
     signal-exit: ^3.0.3
     strip-final-newline: ^2.0.0
   checksum: fba9022c8c8c15ed862847e94c252b3d946036d7547af310e344a527e59021fd8b6bb0723883ea87044dc4f0201f949046993124a42ccb0855cae5bf8c786343
+  languageName: node
+  linkType: hard
+
+"exenv-es6@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "exenv-es6@npm:1.1.1"
+  checksum: 7f2aa12025e6f06c48dc286f380cf3183bb19c6017b36d91695034a3e5124a7235c4f8ff24ca2eb88ae801322f0f99605cedfcfd996a5fcbba7669320e2a448e
   languageName: node
   linkType: hard
 
@@ -3496,19 +3567,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shimakaze-sdk-vscode@workspace:extension":
+"shimakaze-sdk-project@workspace:.":
   version: 0.0.0-use.local
-  resolution: "shimakaze-sdk-vscode@workspace:extension"
-  dependencies:
-    "@types/node": ^16
-    "@types/vscode": ^1.66.0
-    vite: ^2.9.5
-  languageName: unknown
-  linkType: soft
-
-"shimakaze-sdk@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "shimakaze-sdk@workspace:."
+  resolution: "shimakaze-sdk-project@workspace:."
   dependencies:
     "@commitlint/cli": ^16.2.3
     "@commitlint/types": ^16.2.1
@@ -3521,6 +3582,16 @@ __metadata:
     eslint-plugin-promise: ^5.2.0
     husky: ^7.0.4
     typescript: ^4.6.3
+  languageName: unknown
+  linkType: soft
+
+"shimakaze-sdk-vscode@workspace:extension":
+  version: 0.0.0-use.local
+  resolution: "shimakaze-sdk-vscode@workspace:extension"
+  dependencies:
+    "@types/node": ^16
+    "@types/vscode": ^1.66.0
+    vite: ^2.9.5
   languageName: unknown
   linkType: soft
 
@@ -3758,6 +3829,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tabbable@npm:^5.2.0":
+  version: 5.3.2
+  resolution: "tabbable@npm:5.3.2"
+  checksum: 30e9526fd1aaf173944597c838846c32bf38d71192f0565f7e0bd62b86e86c24be9c929b6b49b3f7a9066d913d7d6ba06d754c82ebb9334dd26a58e7df37b9d0
+  languageName: node
+  linkType: hard
+
 "table@npm:^6.0.9":
   version: 6.8.0
   resolution: "table@npm:6.8.0"
@@ -3881,7 +3959,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.8.1":
+"tslib@npm:^1.13.0, tslib@npm:^1.8.1":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
