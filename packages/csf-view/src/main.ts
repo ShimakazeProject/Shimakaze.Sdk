@@ -1,9 +1,9 @@
 import '@vscode/webview-ui-toolkit/dist/toolkit'
 
-import './CsfEditorPanel'
-import './CsfValuesEditorPanel'
-import { stringify } from './utils'
+import { CsfEditorPanel } from './components/CsfEditorPanel'
+import { CsfValuesEditorPanel } from './components/CsfValuesEditorPanel'
 
-const e = document.querySelector('csf-editor-panel')
-
-e?.setAttribute('value', stringify(JSON.parse(e.textContent!)))
+/* eslint-disable no-unused-expressions */
+CsfEditorPanel
+CsfValuesEditorPanel
+/* eslint-enalbe no-unused-expressions */
