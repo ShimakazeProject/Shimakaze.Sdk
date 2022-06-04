@@ -3582,6 +3582,9 @@ __metadata:
     eslint-plugin-promise: ^5.2.0
     husky: ^7.0.4
     typescript: ^4.6.3
+  dependenciesMeta:
+    "@vscode/webview-ui-toolkit@1.0.0":
+      unplugged: true
   languageName: unknown
   linkType: soft
 
@@ -3591,6 +3594,7 @@ __metadata:
   dependencies:
     "@types/node": ^16
     "@types/vscode": ^1.66.0
+    "@vscode/webview-ui-toolkit": ^1.0.0
     vite: ^2.9.5
   languageName: unknown
   linkType: soft
