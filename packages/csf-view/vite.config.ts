@@ -27,7 +27,6 @@ export default defineConfig(({ command, mode }) => {
       formats: ['es']
     }
     options.build!.rollupOptions!.external = [
-      '@microsoft/fast-element',
       '@vscode/webview-ui-toolkit'
     ]
   }

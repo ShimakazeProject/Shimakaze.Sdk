@@ -11,5 +11,5 @@ export class CsfEditorPanel extends FASTElement {
   @attr valuePlaceholder= 'Type a Value'
   @attr extraPlaceholder= 'Empty Extra'
   @attr rows: number = 10
-  @observable value: CsfUnit | string = {}
+  @observable value: CsfUnit | string = ''
 }
