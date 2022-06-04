@@ -1,5 +1,5 @@
 {
-  "name": "csf-view",
+  "name": "shimakaze-sdk-vscode-components",
   "main": "dist/main.js",
   "packageManager": "yarn@3.2.0",
   "dependencies": {

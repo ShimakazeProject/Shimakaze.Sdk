@@ -1,5 +1,5 @@
 import { template } from './template'
-import { CsfValueUnit } from '../../models'
+import type { CsfValueUnit } from '../../models/csf'
 import { FASTElement, customElement, attr, observable } from '@microsoft/fast-element'
 
 @customElement({

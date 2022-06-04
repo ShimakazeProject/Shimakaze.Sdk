@@ -5,7 +5,7 @@ export default defineConfig(({ command, mode }) => {
   const options: UserConfig = {
     cacheDir: '.vite',
     build: {
-      emptyOutDir: true,
+      emptyOutDir: false,
       rollupOptions: {
         output: {
           entryFileNames: '[name].js',
@@ -22,8 +22,9 @@ export default defineConfig(({ command, mode }) => {
   }
 
   if (command === 'build') {
+    options.build!.outDir = '../../extension/dist'
     options.build!.lib = {
-      entry: './src/main.ts',
+      entry: './src/shimakaze-sdk-vscode-components.ts',
       formats: ['es']
     }
     options.build!.rollupOptions!.external = [

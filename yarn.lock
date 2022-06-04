@@ -1080,17 +1080,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csf-view@workspace:packages/csf-view":
-  version: 0.0.0-use.local
-  resolution: "csf-view@workspace:packages/csf-view"
-  dependencies:
-    "@microsoft/fast-element": ^1.10.1
-    "@vscode/webview-ui-toolkit": ^1.0.0
-    typescript: ^4.6.3
-    vite: ^2.9.5
-  languageName: unknown
-  linkType: soft
-
 "dargs@npm:^7.0.0":
   version: 7.0.0
   resolution: "dargs@npm:7.0.0"
@@ -3585,6 +3574,17 @@ __metadata:
   dependenciesMeta:
     "@vscode/webview-ui-toolkit@1.0.0":
       unplugged: true
+  languageName: unknown
+  linkType: soft
+
+"shimakaze-sdk-vscode-components@workspace:packages/shimakaze-sdk-vscode-components":
+  version: 0.0.0-use.local
+  resolution: "shimakaze-sdk-vscode-components@workspace:packages/shimakaze-sdk-vscode-components"
+  dependencies:
+    "@microsoft/fast-element": ^1.10.1
+    "@vscode/webview-ui-toolkit": ^1.0.0
+    typescript: ^4.6.3
+    vite: ^2.9.5
   languageName: unknown
   linkType: soft
 
