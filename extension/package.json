@@ -13,7 +13,7 @@
     "commands": [
       {
         "command": "shimakaze-sdk-vscode.csf.editor",
-        "title": "Csf Editor"
+        "title": "Shimakaze SDK: Open Csf Editor"
       }
     ],
     "grammars": [
@@ -38,7 +38,7 @@
     "vite": "^2.9.5"
   },
   "scripts": {
-    "build": "yarn run -T vite build"
+    "build": "yarn vite build"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.0.0"
