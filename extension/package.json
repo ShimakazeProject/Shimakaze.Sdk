@@ -33,6 +33,12 @@
       ]
     },
     "views": {
+      "explorer": [
+        {
+          "id": "shimakaze-sdk.csf.file.treeview",
+          "name": "CSF File View"
+        }
+      ],
       "shimakaze-sdk-csf-edit-panel": [
         {
           "id": "shimakaze-sdk.csf-edit-panel",
