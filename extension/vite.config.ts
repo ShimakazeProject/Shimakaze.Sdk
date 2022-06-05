@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   build: {
     target: 'node16',
-    emptyOutDir: true,
+    emptyOutDir: false,
     lib: {
       entry: './src/extension.ts',
       formats: ['cjs'],
@@ -19,5 +19,10 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[ext]'
       }
     }
+  },
+  optimizeDeps: {
+    include: [
+      '@vscode/webview-ui-toolkit'
+    ]
   }
 })

@@ -22,10 +22,31 @@
         "scopeName": "source.ini",
         "path": "./syntaxes/ini/ini.tmLanguage.json"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "shimakaze-sdk-csf-edit-panel",
+          "title": "Csf Edit",
+          "icon": "resources/dep.png"
+        }
+      ]
+    },
+    "views": {
+      "shimakaze-sdk-csf-edit-panel": [
+        {
+          "id": "shimakaze-sdk.csf-edit-panel",
+          "name": "Csf Edit",
+          "icon": "resources/dep.svg",
+          "contextualTitle": "Csf Edit Panel",
+          "type": "webview"
+        }
+      ]
+    }
   },
   "activationEvents": [
     "onCommand:shimakaze-sdk-vscode.csf.editor",
+    "onView:shimakaze-sdk.csf-edit-panel",
     "onStartupFinished"
   ],
   "categories": [
