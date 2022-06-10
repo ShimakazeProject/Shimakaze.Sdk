@@ -20,7 +20,8 @@
     "typescript": "^4.6.3"
   },
   "scripts": {
-    "preinstall": "yarn husky install"
+    "preinstall": "yarn husky install",
+    "build": "dotnet build -c:Release Shimakaze.Sdk.sln -p:Collect=true -m"
   },
   "dependenciesMeta": {
     "@vscode/webview-ui-toolkit@1.0.0": {
