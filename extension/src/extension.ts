@@ -1,23 +1,13 @@
 import * as vscode from 'vscode'
-import { CsfEditViewPanel } from './views/CsfEditView'
-import { CsfEditViewProvider } from './views/CsfEditView/new'
-import { CsfFileProvider } from './views/CsfFileTreeView'
+import { initCsfLabelView } from './views/csf/label'
+import { initCsfValueView } from './views/csf/value'
 
 export async function activate (context: vscode.ExtensionContext) {
-  const helloCommand = vscode.commands.registerCommand('shimakaze-sdk-vscode.csf.editor', () => {
-    CsfEditViewPanel.render(context.extensionUri)
-  })
+  const logChannel = vscode.window.createOutputChannel('Shimakaze SDK Log')
+  initCsfLabelView(context, logChannel)
+  initCsfValueView(context, logChannel)
 
-  context.subscriptions.push(helloCommand)
-
-  const csfEditPanelProvider = new CsfEditViewProvider(context.extensionUri)
-
-  context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(CsfEditViewProvider.viewType, csfEditPanelProvider)
-  )
-  context.subscriptions.push(
-    vscode.window.registerTreeDataProvider(CsfFileProvider.viewType, new CsfFileProvider())
-  )
+  // context.subscriptions.push(vscode.commands.registerCommand('shimakaze-sdk-vscode.csf.editor', () => {}))
 }
 
 export function deactivate () { }

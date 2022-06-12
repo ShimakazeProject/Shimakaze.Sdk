@@ -1,9 +1,7 @@
 import * as vscode from 'vscode'
-import { CsfUnit } from '../../models/csf/CsfUnit'
 
 // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
 export const html = (
-  csf: CsfUnit,
   toolkitUri: vscode.Uri,
   csfScriptUri: vscode.Uri
 ) => /* html */`
@@ -17,11 +15,33 @@ export const html = (
   </head>
   <body>
     <csf-editor-panel></csf-editor-panel>
-    
+
     <script type="module" defer src="${csfScriptUri}"></script>
 
     <script>
-      document.querySelector('csf-editor-panel').value = ${JSON.stringify(csf)}
+      const vscode = acquireVsCodeApi()
+      const element = document.querySelector('csf-editor-panel')
+      const pushCsf = () => {
+        vscode.postMessage({
+          type: 'update',
+          data: element.value
+        })
+      }
+
+      window.addEventListener('message', (e) => {
+        if (!e.data.type) {
+          return
+        }
+        switch (e.data.type) {
+          case "put":
+            element.value = e.data.data
+            break
+        }
+      })
+
+      element.onchange = () => {
+        pushCsf()
+      }
     </script>
   </body>
 </html>

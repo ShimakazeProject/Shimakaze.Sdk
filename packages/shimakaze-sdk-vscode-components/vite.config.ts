@@ -12,7 +12,9 @@ export default defineConfig(({ command, mode }) => {
           chunkFileNames: '[name].js',
           assetFileNames: 'assets/[name].[ext]'
         }
-      }
+      },
+      minify: false,
+      sourcemap: true
     },
     optimizeDeps: {
       exclude: [

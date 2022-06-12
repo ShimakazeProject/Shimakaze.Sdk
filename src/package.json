@@ -1,0 +1,7 @@
+{
+  "name": "shimakaze-sdk.dotnet",
+  "packageManager": "yarn@3.2.0",
+  "scripts": {
+    "build": "dotnet build -c:Release ../Shimakaze.Sdk.sln -p:Collect=true -m"
+  }
+}

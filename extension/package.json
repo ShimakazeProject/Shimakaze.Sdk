@@ -2,6 +2,7 @@
   "name": "shimakaze-sdk-vscode",
   "displayName": "Shimakaze SDK",
   "description": "Make RA2 Mode Easy",
+  "repository": "https://github.com/ShimakazeProject/Shimakaze-SDK.git",
   "preview": true,
   "version": "0.0.1",
   "publisher": "frg2089",
@@ -14,6 +15,18 @@
       {
         "command": "shimakaze-sdk-vscode.csf.editor",
         "title": "Shimakaze SDK: Open Csf Editor"
+      },
+      {
+        "command": "_shimakaze-sdk.view.csf.label.create",
+        "title": "Add",
+        "enablement": "true",
+        "icon": "$(add)"
+      },
+      {
+        "command": "_shimakaze-sdk.view.csf.label.remove",
+        "title": "Delete",
+        "enablement": "true",
+        "icon": "$(remove)"
       }
     ],
     "grammars": [
@@ -26,26 +39,48 @@
     "viewsContainers": {
       "panel": [
         {
-          "id": "shimakaze-sdk-csf-edit-panel",
-          "title": "Csf Edit",
-          "icon": "resources/dep.png"
+          "id": "shimakaze-sdk-panel",
+          "title": "Shimakaze SDK Panel"
+        }
+      ],
+      "activitybar": [
+        {
+          "id": "shimakaze-sdk-activitybar",
+          "title": "Shimakaze Sdk Sidebar"
         }
       ]
     },
     "views": {
-      "explorer": [
+      "shimakaze-sdk-activitybar": [
         {
-          "id": "shimakaze-sdk.csf.file.treeview",
-          "name": "CSF File View"
+          "id": "shimakaze-sdk.view.csf.label",
+          "name": "CSF Label View",
+          "when": "shimakaze-sdk:showCsfLabelView"
         }
       ],
-      "shimakaze-sdk-csf-edit-panel": [
+      "shimakaze-sdk-panel": [
         {
-          "id": "shimakaze-sdk.csf-edit-panel",
-          "name": "Csf Edit",
-          "icon": "resources/dep.svg",
+          "id": "shimakaze-sdk.view.csf.value",
+          "name": "Csf Value Edit",
           "contextualTitle": "Csf Edit Panel",
-          "type": "webview"
+          "type": "webview",
+          "when": "shimakaze-sdk:showCsfLabelView"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "_shimakaze-sdk.view.csf.label.create",
+          "when": "view == shimakaze-sdk.view.csf.label",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "_shimakaze-sdk.view.csf.label.remove",
+          "when": "view == shimakaze-sdk.view.csf.label",
+          "group": "inline"
         }
       ]
     }
@@ -62,10 +97,13 @@
   "devDependencies": {
     "@types/node": "^16",
     "@types/vscode": "^1.66.0",
+    "json-schema-to-typescript": "^10.1.5",
     "vite": "^2.9.5"
   },
   "scripts": {
-    "build": "yarn vite build"
+    "build:schema": "json2ts -i './src/schemas/**/*.json' -o './src/@types/generate/' --style.singleQuote",
+    "build:source": "vite build",
+    "build": "yarn run build:schema && yarn run build:source"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.0.0"

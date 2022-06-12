@@ -1,5 +1,5 @@
-import { getUri } from './utils/getUri'
 import * as vscode from 'vscode'
+import { getUri } from './utils/getUri'
 
 /**
  * 获取 @vscode/webview-ui-toolkit 的Uri

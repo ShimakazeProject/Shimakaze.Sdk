@@ -12,5 +12,7 @@ plugins:
   - '@typescript-eslint'
 rules: {
   "no-use-before-define": "off",
-  "@typescript-eslint/no-use-before-define": ["error"]
+  "@typescript-eslint/no-use-before-define": ["error"],
+  "no-dupe-class-members": "off",
+  "@typescript-eslint/no-dupe-class-members": ["error"]
 }

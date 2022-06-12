@@ -4,6 +4,7 @@
   "private": true,
   "workspaces": [
     "packages/**/*",
+    "src",
     "extension"
   ],
   "devDependencies": {
@@ -21,7 +22,7 @@
   },
   "scripts": {
     "preinstall": "yarn husky install",
-    "build": "dotnet build -c:Release Shimakaze.Sdk.sln -p:Collect=true -m"
+    "build": "yarn build"
   },
   "dependenciesMeta": {
     "@vscode/webview-ui-toolkit@1.0.0": {

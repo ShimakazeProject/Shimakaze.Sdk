@@ -18,7 +18,9 @@ export default defineConfig({
         chunkFileNames: '[name].js',
         assetFileNames: 'assets/[name].[ext]'
       }
-    }
+    },
+    minify: false,
+    sourcemap: true
   },
   optimizeDeps: {
     include: [
