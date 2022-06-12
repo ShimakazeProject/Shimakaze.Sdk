@@ -52,7 +52,7 @@ const parseAdvancedCsfValue = (unit: CsfValueUnit): AdvancedCsfValue => {
   return { value, extra: unit.extra }
 }
 const simplifyAdvancedCsfValue = (value: AdvancedCsfValue): ValueArrayItem => {
-  if ('extra' in value) {
+  if ('extra' in value && value.extra != null) {
     return value
   }
 
@@ -79,6 +79,7 @@ export const format = (csf: CsfUnit[]): CSFJsonV2Schema => {
   }))
 
   return {
+    $schema: 'https://shimakazeproject.github.io/json/csf/v2/schema.json',
     protocol: 2,
     version: 3,
     language: 'en_US',
