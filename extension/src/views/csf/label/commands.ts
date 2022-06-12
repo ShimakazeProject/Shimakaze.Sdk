@@ -53,20 +53,29 @@ export const updateCsf = (treeview: vscode.TreeView<CsfNode>, provider: CsfLabel
  * @param provider provider
  * @returns 命令
  */
-export const removeCsf = (treeview: vscode.TreeView<CsfNode>, provider: CsfLabelViewProvider, log: vscode.OutputChannel) => async (node: CsfNode, ...args: any[]) => {
+export const removeCsf = (treeview: vscode.TreeView<CsfNode>, provider: CsfLabelViewProvider, log: vscode.OutputChannel) => async (data: CsfNode) => {
+  let node = data
   if (node.parent && node.parent.children) {
     // 从父节点中删除
     const index = node.parent.children.indexOf(node)
-    if (index > 0) {
+    if (index >= 0) {
       node.parent.children.splice(index, 1)
-      provider.refresh()
-      await treeview.reveal(node.parent, { focus: true })
-      return
+
+      // 如果父节点没有子节点了就删除父节点
+      if (node.parent.children.length !== 0) {
+        provider.refresh()
+        await treeview.reveal(node.parent, { focus: true })
+        return
+      }
+      node = node.parent
+    } else {
+      log.appendLine(`删除失败：${node.label}`)
     }
-  } else if (provider.data) {
+  }
+  if (provider.data) {
     // 删除整个Type节点
     const index = provider.data.indexOf(node)
-    if (index > 0) {
+    if (index >= 0) {
       provider.data?.splice(index, 1)
       provider.refresh()
       return
