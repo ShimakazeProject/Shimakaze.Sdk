@@ -11,14 +11,9 @@ export const html = (
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Csf Edit Panel</title>
-    <script type="module" src="${toolkitUri}"></script>
-  </head>
-  <body>
-    <csf-editor-panel></csf-editor-panel>
-
-    <script type="module" defer src="${csfScriptUri}"></script>
-
-    <script>
+    <script type="module" async src="${toolkitUri}"></script>
+    <script type="module" async src="${csfScriptUri}"></script>
+    <script type="module" async>
       const vscode = acquireVsCodeApi()
       const element = document.querySelector('csf-editor-panel')
       const pushCsf = () => {
@@ -43,6 +38,9 @@ export const html = (
         pushCsf()
       }
     </script>
+  </head>
+  <body>
+    <csf-editor-panel></csf-editor-panel>
   </body>
 </html>
 `
