@@ -41,13 +41,10 @@ export const createCsf = (treeview: vscode.TreeView<CsfNode>, provider: CsfLabel
  * @param provider provider
  * @returns 命令
  */
-export const updateCsf = (treeview: vscode.TreeView<CsfNode>, provider: CsfLabelViewProvider, log: vscode.OutputChannel) => async (newData: CsfUnit) => {
-  if (treeview.selection.length === 0) {
-    return
-  }
-  treeview.selection[0].data = newData
+export const updateCsf = (treeview: vscode.TreeView<CsfNode>, provider: CsfLabelViewProvider, log: vscode.OutputChannel) => async (node: CsfNode, newData: CsfUnit, ...args: any[]) => {
+  node.data = newData
 
-  await treeview.reveal(treeview.selection[0], { focus: true })
+  await treeview.reveal(node, { focus: true })
 }
 
 /**

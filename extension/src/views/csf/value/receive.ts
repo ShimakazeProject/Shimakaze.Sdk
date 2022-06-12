@@ -10,6 +10,7 @@ const receives: Receives = {
   update: async (sender: CsfValueViewProvider, data: WebViewMessage) => {
     await vscode.commands.executeCommand(
       _viewCommand(CsfLabelViewProvider.viewType, 'update'),
+      sender.unit,
       (data as WebViewMessageWithData<CsfValueUnit>).data)
   }
 }

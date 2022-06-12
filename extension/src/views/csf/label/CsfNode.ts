@@ -67,7 +67,7 @@ export class CsfNode extends vscode.TreeItem {
       this.command = {
         title: 'Open',
         command: _viewCommand(CsfValueViewProvider.viewType, 'put'),
-        arguments: [this.data],
+        arguments: [this],
         tooltip: 'Open in Edit Panel'
       }
     }

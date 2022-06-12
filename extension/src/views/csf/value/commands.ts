@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
-import type { CsfUnit } from '../../../@types/CsfModel'
-import { CsfValueViewProvider } from './provider'
+import type { CsfNode } from '../label/CsfNode'
+import type { CsfValueViewProvider } from './provider'
 
 /**
  * 推送数据
@@ -8,6 +8,7 @@ import { CsfValueViewProvider } from './provider'
  * @param log log
  * @returns command
  */
-export const put = (provider: CsfValueViewProvider, log: vscode.OutputChannel) => async (unit: CsfUnit) => {
-  await provider.pushMessage({ type: 'put', data: unit })
+export const put = (provider: CsfValueViewProvider, log: vscode.OutputChannel) => async (unit: CsfNode) => {
+  provider.unit = unit
+  await provider.pushMessage({ type: 'put', data: unit.data })
 }

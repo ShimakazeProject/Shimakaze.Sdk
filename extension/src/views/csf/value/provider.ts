@@ -3,12 +3,14 @@ import { getToolkitUri, getCsfScriptUri } from '../../../CONSTANTS'
 import { WebViewMessage } from '../../../@types/WebViewMessage'
 import { html } from './template'
 import receive from './receive'
+import { CsfNode } from '../label/CsfNode'
 
 export class CsfValueViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'shimakaze-sdk.view.csf.value';
 
   private _view?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri
+  unit?: CsfNode
 
   constructor (extensionUri: vscode.Uri) {
     this._extensionUri = extensionUri
