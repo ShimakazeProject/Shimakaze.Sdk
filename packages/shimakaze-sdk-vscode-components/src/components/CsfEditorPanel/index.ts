@@ -1,5 +1,5 @@
 import { FASTElement, customElement, attr, observable } from '@microsoft/fast-element'
-import type { CsfUnit } from '../../@types/csf'
+import type { ICsfUnit } from '../../@types/csf'
 import { template } from './template'
 import { styles } from './styles'
 
@@ -17,7 +17,19 @@ export class CsfEditorPanel extends FASTElement {
   @attr valuePlaceholder= 'Type a Value'
   @attr extraPlaceholder= 'Empty Extra'
   @attr rows: number = 5
-  @observable value?: CsfUnit = undefined
+  @observable value?: ICsfUnit = undefined
 
   onChange = () => this.$emit('change', this.value)
+
+  labelChange (event: Event) {
+    const newLabel = (event.target as HTMLInputElement).value
+    if (!this.value) {
+      this.value = {
+        label: newLabel,
+        values: []
+      }
+    } else {
+      this.value.label = newLabel
+    }
+  }
 }

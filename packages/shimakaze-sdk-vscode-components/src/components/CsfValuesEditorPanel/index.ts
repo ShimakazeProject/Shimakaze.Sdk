@@ -1,5 +1,5 @@
 import { template } from './template'
-import type { CsfValueUnit } from '../../@types/csf'
+import type { ICsfValueUnit } from '../../@types/csf'
 import { FASTElement, customElement, attr, observable } from '@microsoft/fast-element'
 import { styles } from './styles'
 
@@ -17,7 +17,7 @@ export class CsfValuesEditorPanel extends FASTElement {
 
   @attr valuePlaceholder = 'Type a Value'
   @attr extraPlaceholder = 'Empty Extra'
-  @observable values?: CsfValueUnit[] = undefined
+  @observable values?: ICsfValueUnit[] = undefined
   @observable current: number = 0
 
   removeValue = (index: number) => {
@@ -44,4 +44,18 @@ export class CsfValuesEditorPanel extends FASTElement {
   }
 
   onChange = () => this.$emit('change', this.values)
+
+  valueChange (event: Event, index: number) {
+    const newValue = (event.target as HTMLInputElement).value
+    if (this.values) {
+      this.values[index].value = newValue
+    }
+  }
+
+  extraChange (event: Event, index: number) {
+    const newValue = (event.target as HTMLInputElement).value
+    if (this.values) {
+      this.values[index].extra = newValue
+    }
+  }
 }

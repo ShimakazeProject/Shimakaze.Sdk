@@ -1,12 +1,12 @@
 import { html } from '@microsoft/fast-element'
 import { CsfEditorPanel } from '.'
-import { CsfUnit } from '../../@types/csf'
+import { ICsfUnit } from '../../@types/csf'
 import { CsfValuesEditorPanel } from '../CsfValuesEditorPanel'
 
 // eslint-disable-next-line no-unused-expressions
 CsfValuesEditorPanel
 
-const getValue = (view: CsfEditorPanel): CsfUnit | undefined => {
+const getValue = (view: CsfEditorPanel): ICsfUnit | undefined => {
   if (!view.value) {
     return
   }
@@ -17,7 +17,8 @@ const getValue = (view: CsfEditorPanel): CsfUnit | undefined => {
 export const template = html<CsfEditorPanel, CsfEditorPanel>`
 <vscode-text-field
   :value="${x => getValue(x)?.label}"
-  :placeholder="${x => x.labelPlaceholder}">
+  :placeholder="${x => x.labelPlaceholder}"
+  @change="${(x, c) => x.labelChange(c.event)}">
   ${x => x.labelLabel}
 </vscode-text-field>
 <csf-values-editor-panel
