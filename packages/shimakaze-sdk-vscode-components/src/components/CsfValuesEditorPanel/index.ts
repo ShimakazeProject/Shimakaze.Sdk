@@ -1,7 +1,17 @@
-import { template } from './template'
-import type { ICsfValueUnit } from '../../@types/csf'
+import { TextField, TextArea, Button, Panels, PanelTab, PanelView } from '@vscode/webview-ui-toolkit/dist/toolkit'
 import { FASTElement, customElement, attr, observable } from '@microsoft/fast-element'
+import type { ICsfValueUnit } from '../../@types/csf'
+import { template } from './template'
 import { styles } from './styles'
+
+/* eslint-disable no-unused-expressions */
+TextField
+TextArea
+Button
+Panels
+PanelTab
+PanelView
+/* eslint-enable no-unused-expressions */
 
 @customElement({
   name: 'csf-values-editor-panel',

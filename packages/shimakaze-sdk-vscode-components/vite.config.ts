@@ -7,10 +7,21 @@ export default defineConfig(({ command, mode }) => {
     build: {
       emptyOutDir: false,
       rollupOptions: {
+        input: {
+          'components-csf': './src/csf.ts'
+        },
         output: {
           entryFileNames: '[name].js',
           chunkFileNames: '[name].js',
-          assetFileNames: 'assets/[name].[ext]'
+          assetFileNames: 'assets/[name].[ext]',
+          manualChunks: (id, { getModuleInfo }) => {
+            if (id.includes('@microsoft/fast-element')) {
+              return 'deps/@microsoft/fast-element'
+            }
+            if (id.includes('@vscode/webview-ui-toolkit')) {
+              return 'deps/@vscode/webview-ui-toolkit'
+            }
+          }
         }
       },
       minify: false,
@@ -25,13 +36,6 @@ export default defineConfig(({ command, mode }) => {
 
   if (command === 'build') {
     options.build!.outDir = '../../extension/dist'
-    options.build!.lib = {
-      entry: './src/shimakaze-sdk-vscode-components.ts',
-      formats: ['es']
-    }
-    options.build!.rollupOptions!.external = [
-      '@vscode/webview-ui-toolkit'
-    ]
   }
   return options
 })

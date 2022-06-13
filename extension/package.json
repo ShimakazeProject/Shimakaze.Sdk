@@ -27,6 +27,12 @@
         "title": "Delete",
         "enablement": "true",
         "icon": "$(remove)"
+      },
+      {
+        "command": "_shimakaze-sdk.view.csf.label.saveto",
+        "title": "Save",
+        "enablement": "true",
+        "icon": "$(save)"
       }
     ],
     "grammars": [
@@ -72,6 +78,11 @@
       "view/title": [
         {
           "command": "_shimakaze-sdk.view.csf.label.create",
+          "when": "view == shimakaze-sdk.view.csf.label",
+          "group": "navigation"
+        },
+        {
+          "command": "_shimakaze-sdk.view.csf.label.saveto",
           "when": "view == shimakaze-sdk.view.csf.label",
           "group": "navigation"
         }

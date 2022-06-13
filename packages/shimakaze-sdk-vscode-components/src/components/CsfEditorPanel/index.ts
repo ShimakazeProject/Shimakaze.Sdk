@@ -1,7 +1,11 @@
+import { TextField } from '@vscode/webview-ui-toolkit/dist/toolkit'
 import { FASTElement, customElement, attr, observable } from '@microsoft/fast-element'
 import type { ICsfUnit } from '../../@types/csf'
 import { template } from './template'
 import { styles } from './styles'
+
+// eslint-disable-next-line no-unused-expressions
+TextField
 
 @customElement({
   name: 'csf-editor-panel',

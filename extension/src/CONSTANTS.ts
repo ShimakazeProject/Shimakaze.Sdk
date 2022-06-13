@@ -8,14 +8,10 @@ import { getUri } from './utils/getUri'
  * @returns webview-ui-toolkit 的Uri
  */
 export const getToolkitUri = (webview: vscode.Webview, extensionUri: vscode.Uri) => getUri(webview, extensionUri, [
-  '.yarn',
-  'unplugged',
-  '@vscode-webview-ui-toolkit-virtual-ed0c2df74e',
-  'node_modules',
-  '@vscode',
-  'webview-ui-toolkit',
   'dist',
-  'toolkit.min.js'
+  'deps',
+  '@vscode',
+  'webview-ui-toolkit.js'
 ])
 
 /**
@@ -26,5 +22,5 @@ export const getToolkitUri = (webview: vscode.Webview, extensionUri: vscode.Uri)
  */
 export const getCsfScriptUri = (webview: vscode.Webview, extensionUri: vscode.Uri) => getUri(webview, extensionUri, [
   'dist',
-  'shimakaze-sdk-vscode-components.js'
+  'components-csf.js'
 ])
