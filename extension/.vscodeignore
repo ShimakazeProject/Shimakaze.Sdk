@@ -1,5 +1,3 @@
-.yarn/**/*
-!.yarn/unplugged/@vscode-webview-ui-toolkit-virtual-ed0c2df74e/node_modules/@vscode/webview-ui-toolkit/dist/toolkit.min.js
 dist/**/*.map
 src/**
 .gitignore

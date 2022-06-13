@@ -46,13 +46,15 @@
       "panel": [
         {
           "id": "shimakaze-sdk-panel",
-          "title": "Shimakaze SDK Panel"
+          "title": "Shimakaze SDK Panel",
+          "icon": "assets/logo2.svg"
         }
       ],
       "activitybar": [
         {
           "id": "shimakaze-sdk-activitybar",
-          "title": "Shimakaze Sdk Sidebar"
+          "title": "Shimakaze Sdk Sidebar",
+          "icon": "assets/logo1.svg"
         }
       ]
     },
@@ -109,12 +111,14 @@
     "@types/node": "^16",
     "@types/vscode": "^1.66.0",
     "json-schema-to-typescript": "^10.1.5",
-    "vite": "^2.9.5"
+    "vite": "^2.9.5",
+    "vsce": "^2.9.1"
   },
   "scripts": {
     "build:schema": "json2ts -i './src/schemas/**/*.json' -o './src/@types/generate/' --style.singleQuote",
     "build:source": "vite build",
-    "build": "yarn run build:schema && yarn run build:source"
+    "build": "yarn run build:schema && yarn run build:source",
+    "package": "vsce package --yarn"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.0.0"
