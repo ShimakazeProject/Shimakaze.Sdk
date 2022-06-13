@@ -1,4 +1,9 @@
 # shimakaze-sdk
+
+|构建状态
+|:-:|
+[![ci](https://github.com/ShimakazeProject/Shimakaze-SDK/actions/workflows/ci.yml/badge.svg)](https://github.com/ShimakazeProject/Shimakaze-SDK/actions/workflows/ci.yml)
+
 Shimakaze SDK是一个将MSBuild构建系统带到Red Alert 2模组开发过程中的计划
 通过使用Shimakaze SDK的编译套件, 您可以轻松的整理您的游戏的代码
 编译套件将会自动帮您生成一个向前兼容的模组文件
