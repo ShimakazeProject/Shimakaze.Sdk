@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shimakaze.Sdk.Preprocessor.Commands;
+using Shimakaze.Sdk.Preprocessor.Ini;
+
+namespace Shimakaze.Sdk.Preprocessor.Ini.Commands;
 internal sealed class PragmaCommand : IPreprocessorCommand
 {
     private const string Types_Dictionary_String_Dictionary_String_String = "Types";
@@ -13,13 +15,13 @@ internal sealed class PragmaCommand : IPreprocessorCommand
     public string Command => "pragma";
     private bool _generateHead = false;
 
-    public Task InitializeAsync(Preprocessor preprocessor!!)
+    public Task InitializeAsync(IniPreprocessor preprocessor)
     {
         _generateHead = preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Contains(DEFINE_GENERATE_SECTION_HEAD);
         return Task.CompletedTask;
     }
 
-    public async Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
+    public async Task ExecuteAsync(string[] args, IniPreprocessor preprocessor)
     {
         if (args.Length < 1)
             throw new ArgumentException("pragma must have 1 parameter");
@@ -55,7 +57,7 @@ internal sealed class PragmaCommand : IPreprocessorCommand
 
     public bool IsPostProcessing => true;
 
-    public async Task PostProcessingAsync(Preprocessor preprocessor!!)
+    public async Task PostProcessingAsync(IniPreprocessor preprocessor)
     {
         var map = GetTypeMap(preprocessor);
         var output = preprocessor.GetVariable<TextWriter>(PreprocessorVariableNames.OutputStream_TextWriter);
@@ -68,7 +70,7 @@ internal sealed class PragmaCommand : IPreprocessorCommand
         });
     }
 
-    private static Dictionary<string, Dictionary<string, string>> GetTypeMap(Preprocessor preprocessor!!)
+    private static Dictionary<string, Dictionary<string, string>> GetTypeMap(IniPreprocessor preprocessor)
     {
         if (!preprocessor.Variables.ContainsKey(Types_Dictionary_String_Dictionary_String_String))
         {
@@ -76,7 +78,7 @@ internal sealed class PragmaCommand : IPreprocessorCommand
         }
         return preprocessor.GetVariable<Dictionary<string, Dictionary<string, string>>>(Types_Dictionary_String_Dictionary_String_String);
     }
-    private static void AddType(Preprocessor preprocessor!!, string type!!, string key!!, string value!!)
+    private static void AddType(IniPreprocessor preprocessor, string type, string key, string value)
     {
         var map = GetTypeMap(preprocessor);
         if (!map.TryGetValue(type, out var section))
@@ -85,7 +87,7 @@ internal sealed class PragmaCommand : IPreprocessorCommand
         }
         section.Add(key, value);
     }
-    private static void AddType(Preprocessor preprocessor!!, string type!!, string value!!)
+    private static void AddType(IniPreprocessor preprocessor, string type, string value)
     {
         var map = GetTypeMap(preprocessor);
         if (!map.TryGetValue(type, out var section))

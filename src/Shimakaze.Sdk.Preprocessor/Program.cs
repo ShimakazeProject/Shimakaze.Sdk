@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Preprocessor.Ini;
+
 namespace Shimakaze.Sdk.Preprocessor;
 
 internal static class Program
@@ -8,9 +10,9 @@ internal static class Program
     /// <param name="input">Input File</param>
     /// <param name="output">Output File</param>
     /// <param name="defines">Defines</param>
-    public static async Task Main(FileInfo input!!, FileInfo output!!, string[]? defines)
+    public static async Task Main(FileInfo input, FileInfo output, string[]? defines)
     {
-        Preprocessor preprocessor = new();
+        IniPreprocessor preprocessor = new();
 
         using var writer = output.CreateText();
         await preprocessor.InitializeAsync(writer, input.DirectoryName!, defines ?? Array.Empty<string>());

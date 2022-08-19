@@ -1,9 +1,9 @@
-namespace Shimakaze.Sdk.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Ini.Commands;
 
 internal sealed class EndifCommand : IPreprocessorCommand
 {
     public string Command { get; } = "endif";
-    public Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
+    public Task ExecuteAsync(string[] args, IniPreprocessor preprocessor)
     {
         if (args.Length != 0)
             throw new ArgumentException("Invalid arguments");

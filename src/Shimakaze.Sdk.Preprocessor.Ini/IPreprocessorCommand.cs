@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Preprocessor;
+namespace Shimakaze.Sdk.Preprocessor.Ini;
 
 /// <summary>
 /// 预处理器命令接口
@@ -13,7 +13,7 @@ public interface IPreprocessorCommand
     /// 初始化过程
     /// </summary>
     /// <param name="preprocessor">预处理器实例</param>
-    Task InitializeAsync(Preprocessor preprocessor!!) => Task.CompletedTask;
+    Task InitializeAsync(IniPreprocessor preprocessor) => Task.CompletedTask;
 
     /// <summary>
     /// 预处理器命令执行
@@ -21,7 +21,7 @@ public interface IPreprocessorCommand
     /// <param name="args">命令参数</param>
     /// <param name="preprocessor">预处理器实例</param>
     /// <returns></returns>
-    Task ExecuteAsync(string[] args, Preprocessor preprocessor);
+    Task ExecuteAsync(string[] args, IniPreprocessor preprocessor);
 
     /// <summary>
     /// 需要后处理
@@ -32,5 +32,5 @@ public interface IPreprocessorCommand
     /// 后处理
     /// </summary>
     /// <param name="preprocessor">预处理器实例</param>
-    Task PostProcessingAsync(Preprocessor preprocessor!!) => Task.CompletedTask;
+    Task PostProcessingAsync(IniPreprocessor preprocessor) => Task.CompletedTask;
 }

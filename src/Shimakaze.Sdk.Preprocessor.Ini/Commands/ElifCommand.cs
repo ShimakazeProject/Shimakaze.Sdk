@@ -1,10 +1,12 @@
-namespace Shimakaze.Sdk.Preprocessor.Commands;
+using Shimakaze.Sdk.Preprocessor.Ini;
+
+namespace Shimakaze.Sdk.Preprocessor.Ini.Commands;
 
 internal sealed class ElifCommand : IPreprocessorCommand
 {
     public string Command { get; } = "elif";
 
-    public Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
+    public Task ExecuteAsync(string[] args, IniPreprocessor preprocessor)
     {
         switch (args.Length)
         {

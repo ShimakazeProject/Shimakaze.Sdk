@@ -1,9 +1,9 @@
-﻿namespace Shimakaze.Sdk.Preprocessor;
+﻿namespace Shimakaze.Sdk.Preprocessor.Ini;
 
 /// <summary>
 /// 预处理器
 /// </summary>
-public sealed class Preprocessor : IDisposable
+public sealed class IniPreprocessor : IDisposable
 {
     private bool _disposedValue;
 
@@ -37,7 +37,7 @@ public sealed class Preprocessor : IDisposable
     /// <param name="output">输出流</param>
     /// <param name="workdir">工作目录</param>
     /// <param name="defines">定义</param>
-    public async Task InitializeAsync(TextWriter output!!, string workdir!!, params string[] defines)
+    public async Task InitializeAsync(TextWriter output, string workdir, params string[] defines)
     {
         await Task.Yield();
 
@@ -74,7 +74,7 @@ public sealed class Preprocessor : IDisposable
     /// 开始执行
     /// </summary>
     /// <param name="filePath">文件路径</param>
-    public async Task ExecuteAsync(string filePath!!)
+    public async Task ExecuteAsync(string filePath)
     {
         GetVariable<Stack<string>>(PreprocessorVariableNames.CurrentFile_Stack_String).Push(filePath);
         await File.OpenText(filePath).Using(ExecuteAsync);
@@ -85,7 +85,7 @@ public sealed class Preprocessor : IDisposable
     /// 开始执行
     /// </summary>
     /// <param name="reader">输入流</param>
-    private async Task ExecuteAsync(TextReader reader!!)
+    private async Task ExecuteAsync(TextReader reader)
     {
         Func<bool> check = reader is StreamReader sr
             ? (() => !sr.EndOfStream)
@@ -102,7 +102,7 @@ public sealed class Preprocessor : IDisposable
             .EachAsync(i => i.PostProcessingAsync(this));
     }
 
-    private async Task ParseLineAsync(string raw!!)
+    private async Task ParseLineAsync(string raw)
     {
         AssertVariable(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand);
         AssertVariable(PreprocessorVariableNames.OutputStream_TextWriter);
@@ -137,7 +137,7 @@ public sealed class Preprocessor : IDisposable
     /// </summary>
     /// <param name="raw">预处理器命令字符串</param>
     /// <returns>命令</returns>
-    private static (string command, string[] args) ParseCommand(string raw!!)
+    private static (string command, string[] args) ParseCommand(string raw)
     {
         // split by space and do not split by quotes
         List<string> list = new();
@@ -197,7 +197,7 @@ public sealed class Preprocessor : IDisposable
     /// <summary>
     /// 对象终结器
     /// </summary>
-    ~Preprocessor()
+    ~IniPreprocessor()
     {
         Dispose(disposing: false);
     }

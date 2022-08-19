@@ -1,12 +1,13 @@
+using Shimakaze.Sdk.Preprocessor.Ini;
 using Shimakaze.Sdk.Utils;
 
-namespace Shimakaze.Sdk.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Ini.Commands;
 
 internal sealed class IncludeCommand : IPreprocessorCommand
 {
     public string Command { get; } = "include";
 
-    public async Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
+    public async Task ExecuteAsync(string[] args, IniPreprocessor preprocessor)
     {
         if (args.Length != 1)
             throw new Exception("Invalid arguments");

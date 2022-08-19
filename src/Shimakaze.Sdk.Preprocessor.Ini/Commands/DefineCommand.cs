@@ -1,4 +1,6 @@
-namespace Shimakaze.Sdk.Preprocessor.Commands;
+using Shimakaze.Sdk.Preprocessor.Ini;
+
+namespace Shimakaze.Sdk.Preprocessor.Ini.Commands;
 
 /// <summary>
 /// # Define
@@ -16,7 +18,7 @@ public sealed class DefineCommand : IPreprocessorCommand
     /// <param name="args">命令参数</param>
     /// <param name="preprocessor">预处理器实例</param>
     /// <exception cref="ArgumentException">参数不正确时抛出</exception>
-    public Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
+    public Task ExecuteAsync(string[] args, IniPreprocessor preprocessor)
     {
         switch (args.Length)
         {

@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Preprocessor;
+﻿namespace Shimakaze.Sdk.Preprocessor.Ini;
 
 /// <summary>
 /// 此异常表示变量不存在

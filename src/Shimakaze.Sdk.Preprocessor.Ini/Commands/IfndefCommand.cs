@@ -1,22 +1,21 @@
-namespace Shimakaze.Sdk.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Ini.Commands;
 
-internal sealed class IfdefCommand : IPreprocessorCommand
+internal sealed class IfndefCommand : IPreprocessorCommand
 {
-    public string Command { get; } = "ifdef";
+    public string Command { get; } = "ifndef";
 
-    public Task ExecuteAsync(string[] args!!, Preprocessor preprocessor!!)
+    public Task ExecuteAsync(string[] args, IniPreprocessor preprocessor)
     {
         switch (args.Length)
         {
             case 1:
                 preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack_Stack_String).Push(args[0]);
                 Debug.WriteLine($"Push DefineStack: {args[0]}");
-
                 preprocessor.Variables[PreprocessorVariableNames.WriteOutput_Boolean] =
-                    preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Contains(args[0]);
+                    !preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Contains(args[0]);
                 break;
             default:
-                throw new Exception("Invalid arguments");
+                throw new ArgumentException("Invalid arguments");
         }
         return Task.CompletedTask;
     }

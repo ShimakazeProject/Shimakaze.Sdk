@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Preprocessor;
+﻿namespace Shimakaze.Sdk.Preprocessor.Ini;
 
 /// <summary>
 /// 预处理器变量名列表<br/>
