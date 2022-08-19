@@ -8,7 +8,7 @@ public interface IIniDocument : IEnumerable<IIniSection>
     IniValue? this[string section, string key] { get; set; }
 
     IIniSection Default { get; }
-    ICollection<IIniSection> Sections { get; }
+    IList<IIniSection> Sections { get; }
 
     void Add(IIniSection section);
     bool Remove(string section);

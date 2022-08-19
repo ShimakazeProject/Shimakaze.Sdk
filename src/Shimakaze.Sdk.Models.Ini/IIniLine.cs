@@ -6,7 +6,7 @@ public interface IIniLine
 {
     bool IsEmptyKey { get; }
     bool IsEmptyValue { get; }
-    bool IsNoSummary { get; }
+    bool IsEmptySummary { get; }
     string? Key { get; set; }
     string? Summary { get; set; }
     IniValue? Value { get; set; }

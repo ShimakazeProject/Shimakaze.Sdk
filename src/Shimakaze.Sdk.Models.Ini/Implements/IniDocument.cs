@@ -23,8 +23,8 @@ public class IniDocument : DynamicObject, IEnumerable<IIniSection>, IIniDocument
         _sections = sections;
     }
     public int Count => _sections.Count;
-    public IIniSection Default => new IniSection(nameof(Default));
-    public ICollection<IIniSection> Sections => _sections;
+    public IIniSection Default { get; } = new IniSection(nameof(Default));
+    public IList<IIniSection> Sections => _sections;
 
     public IIniSection this[string section]
     {

@@ -23,52 +23,55 @@ public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderW
         IIniDocument document = new IniDocument();
         IIniSection currentSection = document.Default;
         uint lineNumber = 0;
-        try
+        while (check())
         {
-            while (check())
+            var line = tr.ReadLine();
+            lineNumber++;
+            if (string.IsNullOrWhiteSpace(line))
             {
-                var line = tr.ReadLine();
-                lineNumber++;
-                if (string.IsNullOrWhiteSpace(line))
+                if (buffer.Count > 0)
                 {
-                    if (buffer.Count > 0)
-                        buffer.ForEach(i => currentSection.Add(new IniLine(i)));
-
-                    continue;
+                    buffer.ForEach(i => currentSection.Add(new IniLine(i)));
+                    buffer.Clear();
                 }
 
-                if (line.StartsWith("["))
-                {
-                    var iStart = line.IndexOf('[') + 1;
-                    var iEnd = line.IndexOf(']') - 2;
-                    var iSummary = line.IndexOf(';') + 1;
-                    if (iSummary >= 0 && iEnd > iSummary)
-                    {
-                        throw new FormatException($"The ']' cannot after the ';' at line:{lineNumber}. \n\t{line}");
-                    }
-                    var section = line[iStart..iEnd];
-                    document.Add(currentSection = new IniSection(section));
-
-                    if (buffer.Count > 0)
-                        currentSection.BeforeSummaries = buffer.ToArray();
-
-                    continue;
-                }
-
-                IIniLine kvp = new IniLine(line);
-                if (kvp.IsEmptyKey)
-                {
-                    buffer.Add(line);
-                    continue;
-                }
-
-                currentSection.Add(kvp);
+                continue;
             }
+
+            if (line.StartsWith("["))
+            {
+                var iStart = line.IndexOf('[') + 1;
+                var iEnd = line.IndexOf(']');
+                var iSummary = line.IndexOf(';') + 1;
+                if (iSummary - 1 >= 0 && iEnd > iSummary)
+                {
+                    throw new FormatException($"The ']' cannot after the ';' at line:{lineNumber}. \n\t{line}");
+                }
+                var section = line[iStart..iEnd];
+                document.Add(currentSection = new IniSection(section));
+
+                if (buffer.Count > 0)
+                {
+                    currentSection.BeforeSummaries = buffer.ToArray();
+                    buffer.Clear();
+                }
+
+                continue;
+            }
+
+            IIniLine kvp = new IniLine(line);
+            if (kvp.IsEmptyKey)
+            {
+                buffer.Add(line);
+                continue;
+            }
+
+            currentSection.Add(kvp);
         }
-        catch (Exception e) when (e is not FormatException)
-        {
-            throw new InvalidProgramException($"Unknown Exception at line:{lineNumber}.", e);
-        }
+
+        if (buffer.Count > 0)
+            buffer.ForEach(i => currentSection.Add(new IniLine(i)));
+
 
         return document;
     }

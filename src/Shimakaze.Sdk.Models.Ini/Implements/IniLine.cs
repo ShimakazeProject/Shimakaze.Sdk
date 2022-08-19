@@ -15,20 +15,25 @@ public sealed class IniLine : IIniLine
         var iSemicolon = raw.IndexOf(';');
         var iEqual = raw.IndexOf('=');
         if (iSemicolon == -1)
-        {
-            IsNoSummary = true;
-        }
-        if (!IsNoSummary && iEqual > iSemicolon)
+            IsEmptySummary = true;
+
+        if ((!IsEmptySummary && iEqual > iSemicolon) || iEqual < 0)
         {
             IsEmptyKey = true;
+            IsEmptyValue = true;
         }
 
-        Key = raw[..iEqual].Trim();
-        Value = raw[(iEqual + 1)..(IsNoSummary ? iSemicolon : raw.Length - iEqual - 1)].Trim();
-        if (!IsNoSummary)
+        if (!IsEmptyKey)
         {
-            Summary = raw[(iSemicolon + 1)..].Trim();
+            Key = raw[..iEqual].Trim();
+            Value = raw[(iEqual + 1)..(IsEmptySummary ? raw.Length : iSemicolon)].Trim();
+            if (string.IsNullOrWhiteSpace(Value))
+                IsEmptyValue = true;
         }
+
+        if (!IsEmptySummary)
+            Summary = raw[(iSemicolon + 1)..].Trim();
+
     }
 
 
@@ -37,7 +42,7 @@ public sealed class IniLine : IIniLine
     [MemberNotNullWhen(false, nameof(Value))]
     public bool IsEmptyValue { get; private set; }
     [MemberNotNullWhen(false, nameof(Summary))]
-    public bool IsNoSummary { get; private set; }
+    public bool IsEmptySummary { get; private set; }
     public string? Key
     {
         get => _key;
@@ -53,7 +58,7 @@ public sealed class IniLine : IIniLine
         set
         {
             _summary = value;
-            IsNoSummary = false;
+            IsEmptySummary = false;
         }
     }
     public IniValue? Value
@@ -79,7 +84,7 @@ public sealed class IniLine : IIniLine
                 sb.Append(Value);
             }
         }
-        if (!ignoreSummary && !IsNoSummary)
+        if (!ignoreSummary && !IsEmptySummary)
         {
             if (!IsEmptyKey)
             {
