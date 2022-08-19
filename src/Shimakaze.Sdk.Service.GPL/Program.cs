@@ -1,25 +1,20 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿using Shimakaze.Sdk.Service.Web;
+using Shimakaze.Sdk.Utils;
 
-// Add services to the container.
+namespace Shimakaze.Sdk.Service.GPL;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+static class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    /// <summary>
+    /// Start CSF Language Server
+    /// </summary>
+    /// <param name="host">Listen Host</param>
+    /// <param name="port">Web Server Port</param>
+    /// <param name="ssl">Use SSL/TLS</param>
+    /// <param name="noColorOutput">Disable Colorize Output</param>
+    static async Task Main(string host = "localhost", ushort port = 45082, bool ssl = false, bool noColorOutput = false)
+    {
+        Logger.UseColor = !noColorOutput;
+        await new ServletServer(host, port, ssl).Run();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
