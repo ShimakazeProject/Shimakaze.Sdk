@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Models.Csf.Impliments;
+﻿namespace Shimakaze.Sdk.Models.Csf.Implements;
 
 internal sealed record class Csf : ICsf
 {
