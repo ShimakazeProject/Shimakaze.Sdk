@@ -9,7 +9,7 @@ public interface IIniLine
     bool IsEmptySummary { get; }
     string? Key { get; set; }
     string? Summary { get; set; }
-    IniValue? Value { get; set; }
+    string? Value { get; set; }
 
     string ToString(bool ignoreSummary = false);
 }

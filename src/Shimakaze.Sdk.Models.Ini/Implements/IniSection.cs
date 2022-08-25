@@ -11,10 +11,10 @@ public sealed class IniSection : DynamicObject, IEnumerable<IIniLine>, IIniSecti
     private readonly List<IIniLine> _lines = new();
     public IniSection(string name) => Name = name;
 
-    public string[]? BeforeSummaries { get; set; }
+    public IIniLine[]? BeforeSummaries { get; set; }
     public string Name { get; set; }
     public string? Summary { get; set; }
-    public IniValue? this[string key]
+    public string? this[string key]
     {
         get => _lines.First(i => i.Key == key).Value;
         set => _lines.First(i => i.Key == key).Value = value;
@@ -50,7 +50,7 @@ public sealed class IniSection : DynamicObject, IEnumerable<IIniLine>, IIniSecti
         return b;
     }
 
-    public bool TryGetValue(string key, [NotNullWhen(true)] out IniValue? result)
+    public bool TryGetValue(string key, [NotNullWhen(true)] out string? result)
     {
         result = _lines.FirstOrDefault(i => i.Key == key)?.Value;
         return result is not null;
@@ -58,7 +58,7 @@ public sealed class IniSection : DynamicObject, IEnumerable<IIniLine>, IIniSecti
 
     public override bool TrySetMember(SetMemberBinder binder, object? value)
     {
-        if (value is IniValue v)
+        if (value is string v)
         {
             this[binder.Name] = v;
             return true;

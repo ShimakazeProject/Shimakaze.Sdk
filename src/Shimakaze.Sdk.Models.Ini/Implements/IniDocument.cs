@@ -42,7 +42,7 @@ public class IniDocument : DynamicObject, IEnumerable<IIniSection>, IIniDocument
         }
     }
 
-    public IniValue? this[string section, string key]
+    public string? this[string section, string key]
     {
         get => this[section][key];
         set

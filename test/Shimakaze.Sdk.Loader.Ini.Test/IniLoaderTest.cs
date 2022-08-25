@@ -19,7 +19,7 @@ public class IniLoaderTest
 
         Assert.IsTrue(ini.Sections[0].Name == "Section1");
         Assert.IsNotNull(ini.Sections[0].BeforeSummaries);
-        Assert.IsTrue(string.Join("\n", ini.Sections[0].BeforeSummaries!) == "; Before Summary");
+        Assert.IsTrue(string.Join("\n", ini.Sections[0].BeforeSummaries!.Select(i => i.Summary)) == "Before Summary");
         Assert.IsTrue(ini.Sections[0].Count() == 3);
 
         Assert.IsTrue(!ini.Sections[0][0].IsEmptyKey);
@@ -42,7 +42,7 @@ public class IniLoaderTest
 
         Assert.IsTrue(ini.Sections[1].Name == "Section2");
         Assert.IsNotNull(ini.Sections[1].BeforeSummaries);
-        Assert.IsTrue(string.Join("\n", ini.Sections[1].BeforeSummaries!) == "; Before Summary");
+        Assert.IsTrue(string.Join("\n", ini.Sections[1].BeforeSummaries!.Select(i => i.Summary)) == "Before Summary");
         Assert.IsTrue(ini.Sections[1].Count() == 3);
 
         Assert.IsTrue(!ini.Sections[1][0].IsEmptyKey);

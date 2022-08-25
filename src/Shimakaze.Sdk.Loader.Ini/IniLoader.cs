@@ -15,14 +15,18 @@ public sealed class IniLoaderWriteOptions : WriteOptions<IniLoaderWriteOptions>
 
 public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderWriteOptions>
 {
-    public override IIniDocument Read(TextReader tr, ReadOptions? options)
+    private Dictionary<uint, object?>? _lines;
+
+    public Dictionary<uint, object?> Lines => _lines!;
+    public override IIniDocument Read(TextReader tr, ReadOptions? options = default)
     {
         Func<bool> check = tr is StreamReader sr ? (() => !sr.EndOfStream) : (() => tr.Peek() >= 0);
 
-        List<string> buffer = new();
+        List<IIniLine> buffer = new();
         IIniDocument document = new IniDocument();
         IIniSection currentSection = document.Default;
         uint lineNumber = 0;
+        _lines = new();
         while (check())
         {
             var line = tr.ReadLine();
@@ -31,7 +35,7 @@ public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderW
             {
                 if (buffer.Count > 0)
                 {
-                    buffer.ForEach(i => currentSection.Add(new IniLine(i)));
+                    buffer.ForEach(currentSection.Add);
                     buffer.Clear();
                 }
 
@@ -56,13 +60,15 @@ public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderW
                     buffer.Clear();
                 }
 
+                Lines.Add(lineNumber, currentSection);
                 continue;
             }
 
-            IIniLine kvp = new IniLine(line);
+            IIniLine kvp = new IniLine(line, lineNumber);
+            Lines.Add(lineNumber, kvp);
             if (kvp.IsEmptyKey)
             {
-                buffer.Add(line);
+                buffer.Add(kvp);
                 continue;
             }
 
@@ -70,13 +76,13 @@ public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderW
         }
 
         if (buffer.Count > 0)
-            buffer.ForEach(i => currentSection.Add(new IniLine(i)));
+            buffer.ForEach(currentSection.Add);
 
 
         return document;
     }
 
-    public override void Write(IIniDocument ini, TextWriter tw, IniLoaderWriteOptions? options)
+    public override void Write(IIniDocument ini, TextWriter tw, IniLoaderWriteOptions? options = default)
     {
         options ??= IniLoaderWriteOptions.Default;
 

@@ -5,7 +5,7 @@ namespace Shimakaze.Sdk.Models.Ini;
 public interface IIniDocument : IEnumerable<IIniSection>
 {
     IIniSection this[string section] { get; set; }
-    IniValue? this[string section, string key] { get; set; }
+    string? this[string section, string key] { get; set; }
 
     IIniSection Default { get; }
     IList<IIniSection> Sections { get; }

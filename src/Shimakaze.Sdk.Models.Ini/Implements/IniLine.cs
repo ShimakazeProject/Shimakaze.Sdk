@@ -7,35 +7,48 @@ namespace Shimakaze.Sdk.Models.Ini.implements;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public sealed class IniLine : IIniLine
 {
+    internal string? Raw;
+    internal uint? Line;
+
     private string? _key;
     private string? _summary;
-    private IniValue? _value;
+    private string? _value;
+
     public IniLine(string raw)
     {
-        var iSemicolon = raw.IndexOf(';');
-        var iEqual = raw.IndexOf('=');
-        if (iSemicolon == -1)
-            IsEmptySummary = true;
-
-        if ((!IsEmptySummary && iEqual > iSemicolon) || iEqual < 0)
+        Raw = raw;
+        try
         {
-            IsEmptyKey = true;
-            IsEmptyValue = true;
-        }
+            if (string.IsNullOrEmpty(raw))
+                return;
 
-        if (!IsEmptyKey)
+            int tmp;
+            int eq = raw.IndexOf('=');
+            int se = tmp = raw.IndexOf(';');
+
+            if (se >= 0)
+                _summary = raw[(se + 1)..].Trim();
+
+            if (se < 0)
+                se = raw.Length;
+
+            if (eq >= 0)
+                _value = raw[(eq + 1)..se].Trim();
+
+            if (eq < 0)
+                eq = tmp >= 0 ? tmp : raw.Length;
+
+            _key = raw[0..eq].Trim();
+        }
+        finally
         {
-            Key = raw[..iEqual].Trim();
-            Value = raw[(iEqual + 1)..(IsEmptySummary ? raw.Length : iSemicolon)].Trim();
-            if (string.IsNullOrWhiteSpace(Value))
-                IsEmptyValue = true;
+            IsEmptyKey = string.IsNullOrEmpty(_key);
+            IsEmptyValue = string.IsNullOrEmpty(_value);
+            IsEmptySummary = string.IsNullOrEmpty(_summary);
         }
-
-        if (!IsEmptySummary)
-            Summary = raw[(iSemicolon + 1)..].Trim();
-
     }
 
+    internal IniLine(string raw, uint line) : this(raw) => Line = line;
 
     [MemberNotNullWhen(false, nameof(Key))]
     public bool IsEmptyKey { get; private set; }
@@ -61,40 +74,34 @@ public sealed class IniLine : IIniLine
             IsEmptySummary = false;
         }
     }
-    public IniValue? Value
+    public string? Value
     {
         get => _value;
         set
         {
             _value = value;
-            IsEmptyValue = string.IsNullOrWhiteSpace(value?.Raw);
+            IsEmptyValue = string.IsNullOrWhiteSpace(value);
         }
     }
     public string ToString(bool ignoreSummary = false)
     {
         StringBuilder sb = new();
         if (!IsEmptyKey)
-        {
-            sb
-                .Append(Key)
-                .Append('=');
+            sb.Append(Key);
 
-            if (!IsEmptyValue)
-            {
-                sb.Append(Value);
-            }
-        }
-        if (!ignoreSummary && !IsEmptySummary)
+        if (!IsEmptyValue)
         {
             if (!IsEmptyKey)
-            {
                 sb.Append(' ');
-            }
+            sb.Append("= ").Append(Value);
+        }
 
-            sb
-                .Append(';')
-                .Append(' ')
-                .Append(Summary);
+        if (!ignoreSummary && !IsEmptySummary)
+        {
+            if (!IsEmptyKey || !IsEmptyValue)
+                sb.Append(' ');
+
+            sb.Append("; ").Append(Summary);
         }
 
         return sb.ToString();
