@@ -1,19 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine.DragonFruit" Version="0.4.0-alpha.22272.1" />
     <PackageReference Include="lzo.net" Version="0.0.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shimakaze.Sdk.Service.Web\Shimakaze.Sdk.Service.Web.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Models.Ini\Shimakaze.Sdk.Models.Ini.csproj" />
   </ItemGroup>
 
 </Project>
