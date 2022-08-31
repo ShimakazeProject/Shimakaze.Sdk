@@ -10,3 +10,5 @@
 
 # Visual Studio Cache
 .vs/
+# Visual Studio Unit Test
+/TestResults
