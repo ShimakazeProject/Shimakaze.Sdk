@@ -8,7 +8,7 @@ public interface ICsfData
     string LabelName { get; set; }
     IList<ICsfValue> Values { get; set; }
     static ICsfData Create() => new CsfData();
-    static ICsfData Create(string labelName!!) => new CsfData
+    static ICsfData Create(string labelName) => new CsfData
     {
         Identifier = Constants.LBL_FLAG_RAW,
         StringCount = 1,

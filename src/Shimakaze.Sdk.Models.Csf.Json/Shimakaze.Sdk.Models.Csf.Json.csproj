@@ -1,8 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Models.Csf\Shimakaze.Sdk.Models.Csf.csproj" />
-    <ProjectReference Include="..\Shimakaze.Sdk.Utils\Shimakaze.Sdk.Utils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="System.Diagnostics"/>
+    <Using Include="System.Text"/>
+    <Using Include="System.Text.Json"/>
+    <Using Include="System.Text.Json.Serialization"/>
+    <Using Include="Shimakaze.Sdk.Models.Csf"/>
+    <Using Include="Shimakaze.Sdk.Models.Csf.Json.Common"/>
+  </ItemGroup>
+  
 </Project>

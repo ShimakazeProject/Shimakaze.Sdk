@@ -1,11 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Loader\Shimakaze.Sdk.Loader.csproj" />
     <ProjectReference Include="..\Shimakaze.Sdk.Models.Ini\Shimakaze.Sdk.Models.Ini.csproj" />

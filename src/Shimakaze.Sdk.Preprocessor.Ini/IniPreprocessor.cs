@@ -60,10 +60,8 @@ public sealed class IniPreprocessor : IDisposable
             .Where(i => i.GetInterfaces().Contains(typeof(IPreprocessorCommand)))
             .Select(i => (IPreprocessorCommand)Activator.CreateInstance(i)!)
             .ToDictionary(i => i.Command);
-        Debug.WriteLine($"Find Commands: [\n  {string.Join(", \n  ",
-            GetVariable<Dictionary<string, IPreprocessorCommand>>(
-                PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand).Keys
-                )}\n]");
+
+        Debug.WriteLine($"Find Commands: [\n  {string.Join(", \n  ", GetVariable<Dictionary<string, IPreprocessorCommand>>(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand).Keys)}\n]");
 
         // 初始化所有命令
         await GetVariable<Dictionary<string, IPreprocessorCommand>>(PreprocessorVariableNames.Commands_Dictionary_String_IPreprocessorCommand).Values

@@ -4,9 +4,9 @@ public interface ICsf
 {
     ICsfMetadata Metadata { get; set; }
     IList<ICsfData> Data { get; set; }
-    static ICsf Create() => new Impliments.Csf();
+    static ICsf Create() => new Implements.Csf();
 
-    static ICsf Create(ICsfMetadata metadata, IList<ICsfData> data) => new Impliments.Csf
+    static ICsf Create(ICsfMetadata metadata, IList<ICsfData> data) => new Implements.Csf
     {
         Metadata = metadata,
         Data = data
