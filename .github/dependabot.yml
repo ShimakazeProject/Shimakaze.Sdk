@@ -5,13 +5,19 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "daily"
     commit-message:
       prefix: ":arrow_up:"
-      prefix-development: ":arrow_up::hammer:"
+  # Visual Studio Code Extension
+  - package-ecosystem: "npm"
+    directory: "/extension"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: ":arrow_up:"
 
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/" # Location of package manifests
