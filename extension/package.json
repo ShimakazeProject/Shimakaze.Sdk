@@ -108,7 +108,7 @@
   ],
   "packageManager": "yarn@3.2.0",
   "devDependencies": {
-    "@types/node": "^16",
+    "@types/node": "^18",
     "@types/vscode": "^1.66.0",
     "json-schema-to-typescript": "^11.0.2",
     "vite": "^3.0.9",
