@@ -24,8 +24,8 @@ jobs:
           cache: 'yarn'
       - run: yarn install --immutable
       - run: yarn build
-      - run: yarn workspace shimakaze-sdk-vscode run package
-      - uses: actions/upload-artifact@v3
-        with:
-          name: extension
-          path: "extension/*.vsix"
+      # - run: yarn workspace shimakaze-sdk-vscode run package
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: extension
+      #     path: "extension/*.vsix"
