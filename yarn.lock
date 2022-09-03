@@ -332,14 +332,14 @@ __metadata:
   linkType: hard
 
 "@microsoft/fast-foundation@npm:^2.38.0, @microsoft/fast-foundation@npm:^2.41.1":
-  version: 2.46.13
-  resolution: "@microsoft/fast-foundation@npm:2.46.13"
+  version: 2.46.14
+  resolution: "@microsoft/fast-foundation@npm:2.46.14"
   dependencies:
     "@microsoft/fast-element": ^1.10.5
     "@microsoft/fast-web-utilities": ^5.4.1
     tabbable: ^5.2.0
     tslib: ^1.13.0
-  checksum: f89f7044b5a98e04d9da7e52c46dbbf2dbbd64f6c9b6ccff917bc552b257765c52dc0d607e60f0e68cfc1c9e7520adb5923178b38dbba4a712a4cf5c581cce5b
+  checksum: 68a3f586b78dfc68228566a51be0f0134641723df3f9bcf9b6f9ffd3f882901106ced94bc1fc7e90020568e5a221459544db11b239c141d88bd3a3e53bbe59d2
   languageName: node
   linkType: hard
 
@@ -1547,7 +1547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"entities@npm:^4.2.0, entities@npm:^4.3.0":
+"entities@npm:^4.2.0, entities@npm:^4.3.0, entities@npm:^4.4.0":
   version: 4.4.0
   resolution: "entities@npm:4.4.0"
   checksum: 84d250329f4b56b40fa93ed067b194db21e8815e4eb9b59f43a086f0ecd342814f6bc483de8a77da5d64e0f626033192b1b4f1792232a7ea6b970ebe0f3187c2
@@ -1819,7 +1819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.14.27, esbuild@npm:^0.14.47":
+"esbuild@npm:^0.14.47":
   version: 0.14.54
   resolution: "esbuild@npm:0.14.54"
   dependencies:
@@ -3879,11 +3879,11 @@ __metadata:
   linkType: hard
 
 "parse5@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "parse5@npm:7.0.0"
+  version: 7.1.1
+  resolution: "parse5@npm:7.1.1"
   dependencies:
-    entities: ^4.3.0
-  checksum: 7da5d61cc18eb36ffa71fc861e65cbfd1f23d96483a6631254e627be667dbc9c93ac0b0e6cb17a13a2e4033dab19bfb2f76f38e5936cfb57240ed49036a83fcc
+    entities: ^4.4.0
+  checksum: 8f72fbfa6df83a3f29f58e1818f7bd46b47ff3e26d79c74e10b8fc7ef7ee76163f205113f1b2f6a5b8dc4e31e726f490444f04890cead6e974dbcbe8172b1321
   languageName: node
   linkType: hard
 
@@ -3943,7 +3943,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.13, postcss@npm:^8.4.16":
+"postcss@npm:^8.4.16":
   version: 8.4.16
   resolution: "postcss@npm:8.4.16"
   dependencies:
@@ -4236,7 +4236,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:>=2.59.0 <2.78.0, rollup@npm:>=2.75.6 <2.77.0 || ~2.77.0":
+"rollup@npm:>=2.75.6 <2.77.0 || ~2.77.0":
   version: 2.77.3
   resolution: "rollup@npm:2.77.3"
   dependencies:
@@ -4360,7 +4360,7 @@ __metadata:
     "@microsoft/fast-element": ^1.10.1
     "@vscode/webview-ui-toolkit": ^1.0.0
     typescript: ^4.6.3
-    vite: ^2.9.5
+    vite: ^3.0.9
   languageName: unknown
   linkType: soft
 
@@ -4944,11 +4944,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
   version: 4.8.2
-  resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 6f49363af8af2fe480da1d5fa68712644438785208b06690a3cbe5e7365fd652c3a0f1e587bc8684d78fb69de3dde4de185c0bad7bb4f3664ddfc813ce8caad6
+  checksum: 5cb0f02f414f5405f4b0e7ee1fd7fa9177b6a8783c9017b6cad85f56ce4c4f93e0e6f2ce37e863cb597d44227cd009474c9fbd85bf7a50004e5557426cb58079
   languageName: node
   linkType: hard
 
@@ -5047,35 +5047,6 @@ __metadata:
     spdx-correct: ^3.0.0
     spdx-expression-parse: ^3.0.0
   checksum: 35703ac889d419cf2aceef63daeadbe4e77227c39ab6287eeb6c1b36a746b364f50ba22e88591f5d017bc54685d8137bc2d328d0a896e4d3fd22093c0f32a9ad
-  languageName: node
-  linkType: hard
-
-"vite@npm:^2.9.5":
-  version: 2.9.15
-  resolution: "vite@npm:2.9.15"
-  dependencies:
-    esbuild: ^0.14.27
-    fsevents: ~2.3.2
-    postcss: ^8.4.13
-    resolve: ^1.22.0
-    rollup: ">=2.59.0 <2.78.0"
-  peerDependencies:
-    less: "*"
-    sass: "*"
-    stylus: "*"
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  peerDependenciesMeta:
-    less:
-      optional: true
-    sass:
-      optional: true
-    stylus:
-      optional: true
-  bin:
-    vite: bin/vite.js
-  checksum: 5edf8afc132a598f82a1339aa503514a0e86f6264babe94531b9000d801f157c9a32ae022542404678acca43ee260ade04c4763c4b7b8d381a6b50511b4a1447
   languageName: node
   linkType: hard
 

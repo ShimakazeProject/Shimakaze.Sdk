@@ -1,14 +1,14 @@
 {
   "name": "shimakaze-sdk-vscode-components",
   "main": "dist/main.js",
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.2.3",
   "dependencies": {
     "@microsoft/fast-element": "^1.10.1",
     "@vscode/webview-ui-toolkit": "^1.0.0"
   },
   "devDependencies": {
     "typescript": "^4.6.3",
-    "vite": "^2.9.5"
+    "vite": "^3.0.9"
   },
   "scripts": {
     "dev": "yarn vite dev",

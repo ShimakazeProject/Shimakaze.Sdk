@@ -1,6 +1,6 @@
 {
   "name": "shimakaze-sdk.dotnet",
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.2.3",
   "scripts": {
     "build": "dotnet publish ../Shimakaze.Sdk.sln -o ../extension/bin/"
   }
