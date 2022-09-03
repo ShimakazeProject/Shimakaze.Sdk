@@ -21,9 +21,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm run yarn:ci
-      - run: npm run build
-      - run: npm run package
+          cache: 'yarn'
+      - run: yarn install --immutable
+      - run: yarn build
+      - run: yarn package
       - uses: actions/upload-artifact@v3
         with:
           name: extension
