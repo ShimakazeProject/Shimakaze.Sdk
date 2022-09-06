@@ -602,10 +602,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/three@npm:^0.144.0":
+  version: 0.144.0
+  resolution: "@types/three@npm:0.144.0"
+  dependencies:
+    "@types/webxr": "*"
+  checksum: 7ce69e1a48ba6d19dc9efb78c5c67a3e66c036f240386dd700eda7a5964e44550066ac45bc0997bd4fe7be446edae356313d992361c18415191468dfdbfb454d
+  languageName: node
+  linkType: hard
+
 "@types/vscode@npm:^1.66.0":
   version: 1.71.0
   resolution: "@types/vscode@npm:1.71.0"
   checksum: c07ec75b35f03a79cbeaa2d21bb13e03103c8bd1281b36a49cf9357afffca3efd76284bc0aaf91237aed3ba99e767115bf31b3d9f83e5280abc00f8879d24eb5
+  languageName: node
+  linkType: hard
+
+"@types/webxr@npm:*":
+  version: 0.5.0
+  resolution: "@types/webxr@npm:0.5.0"
+  checksum: 891af0e96a229f45584d89daa3101232862da2ded14076aa631b2e12deb4e4b91fa35ff8d8d5ab4613aa8adce0870bd32cd61f070c1bc70d37303c515e1ae6ac
   languageName: node
   linkType: hard
 
@@ -5300,6 +5316,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "shimakaze-sdk-map-editor@workspace:packages/shimakaze-sdk-map-editor"
   dependencies:
+    "@types/three": ^0.144.0
     "@typescript-eslint/eslint-plugin": latest
     "@typescript-eslint/parser": latest
     "@vitejs/plugin-vue": ^3.0.1
@@ -5310,6 +5327,7 @@ __metadata:
     eslint-plugin-promise: ^6.0.0
     eslint-plugin-vue: latest
     tailwindcss: ^3.1.8
+    three: ^0.144.0
     typescript: ^4.7.4
     vite: ^3.0.4
     vue: ^3.2.37
@@ -5773,6 +5791,13 @@ __metadata:
   dependencies:
     any-promise: ^1.0.0
   checksum: 84e1b804bfec49f3531215f17b4a6e50fd4397b5f7c1bccc427b9c656e1ecfb13ea79d899930184f78bc2f57285c54d9a50a590c8868f4f0cef5c1d9f898b05e
+  languageName: node
+  linkType: hard
+
+"three@npm:^0.144.0":
+  version: 0.144.0
+  resolution: "three@npm:0.144.0"
+  checksum: 6fb1afb3d189fede913c17e05ad17f3e653370eb3f1030b94a1cc49e84be1e45ea50a340c87289ff30f9bf90a87d04fcdc507577c7c5b062ff730b942f8a16ea
   languageName: node
   linkType: hard
 
