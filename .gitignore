@@ -12,3 +12,5 @@
 .vs/
 # Visual Studio Unit Test
 /TestResults
+
+node_modules
