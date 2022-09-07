@@ -1,0 +1,1 @@
+# Shimakaze-SDK Map Editor
