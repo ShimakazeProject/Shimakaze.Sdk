@@ -15,7 +15,7 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      { find: '@', replacement: '/' }
+      { find: '@', replacement: '/src' }
     ]
   },
   plugins: [vue()]
