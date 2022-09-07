@@ -7,11 +7,14 @@ namespace Shimakaze.Sdk.Models.Ini.implements;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public sealed class IniLine : IIniLine
 {
-    internal string? Raw;
-    internal uint? Line;
-
+    internal readonly int EqIndex;
+    internal readonly uint Line;
+    internal readonly string Raw;
+    internal readonly int SeIndex;
     private string? _key;
+
     private string? _summary;
+
     private string? _value;
 
     public IniLine(string raw)
@@ -22,9 +25,8 @@ public sealed class IniLine : IIniLine
             if (string.IsNullOrEmpty(raw))
                 return;
 
-            int tmp;
-            int eq = raw.IndexOf('=');
-            int se = tmp = raw.IndexOf(';');
+            int eq = EqIndex = raw.IndexOf('=');
+            int se = SeIndex = raw.IndexOf(';');
 
             if (se >= 0)
                 _summary = raw[(se + 1)..].Trim();
@@ -36,7 +38,7 @@ public sealed class IniLine : IIniLine
                 _value = raw[(eq + 1)..se].Trim();
 
             if (eq < 0)
-                eq = tmp >= 0 ? tmp : raw.Length;
+                eq = SeIndex >= 0 ? SeIndex : raw.Length;
 
             _key = raw[0..eq].Trim();
         }
@@ -52,10 +54,13 @@ public sealed class IniLine : IIniLine
 
     [MemberNotNullWhen(false, nameof(Key))]
     public bool IsEmptyKey { get; private set; }
-    [MemberNotNullWhen(false, nameof(Value))]
-    public bool IsEmptyValue { get; private set; }
+
     [MemberNotNullWhen(false, nameof(Summary))]
     public bool IsEmptySummary { get; private set; }
+
+    [MemberNotNullWhen(false, nameof(Value))]
+    public bool IsEmptyValue { get; private set; }
+
     public string? Key
     {
         get => _key;
@@ -65,6 +70,7 @@ public sealed class IniLine : IIniLine
             IsEmptyKey = string.IsNullOrWhiteSpace(value);
         }
     }
+
     public string? Summary
     {
         get => _summary;
@@ -74,6 +80,7 @@ public sealed class IniLine : IIniLine
             IsEmptySummary = false;
         }
     }
+
     public string? Value
     {
         get => _value;
@@ -83,6 +90,7 @@ public sealed class IniLine : IIniLine
             IsEmptyValue = string.IsNullOrWhiteSpace(value);
         }
     }
+
     public string ToString(bool ignoreSummary = false)
     {
         StringBuilder sb = new();
@@ -106,8 +114,29 @@ public sealed class IniLine : IIniLine
 
         return sb.ToString();
     }
+
     public override string ToString() => ToString(false);
 
+    internal IniToken GetToken(int index)
+    {
+        switch (Raw[index])
+        {
+            case ' ':
+                return IniToken.Space;
+            case '=':
+                return IniToken.Equal;
+            case ';':
+                return IniToken.Semicolon;
+        }
+        if (EqIndex >= 0 && index < EqIndex)
+            return IniToken.Key;
+        if (SeIndex >= 0 && index > SeIndex)
+            return IniToken.Summary;
+        if (index > EqIndex && index < SeIndex)
+            return IniToken.Value;
+
+        return IniToken.Key;
+    }
     private string GetDebuggerDisplay()
     {
         return ToString();

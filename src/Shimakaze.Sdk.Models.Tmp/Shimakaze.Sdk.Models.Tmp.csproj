@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Models.Common\Shimakaze.Sdk.Models.Common.csproj" />
+  </ItemGroup>
+</Project>

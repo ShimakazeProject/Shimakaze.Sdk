@@ -41,6 +41,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution
 		test\Directory.Build.props = test\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Kernel.Map", "src\Shimakaze.Sdk.Kernel.Map\Shimakaze.Sdk.Kernel.Map.csproj", "{14AB778F-C39A-4679-ADF7-82DF7410B3B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Models.Ini.TerrainControl", "src\Shimakaze.Sdk.Models.Ini.TerrainControl\Shimakaze.Sdk.Models.Ini.TerrainControl.csproj", "{7A630C0B-1ED2-4B83-A707-A85C8741C33F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Models.Tmp", "src\Shimakaze.Sdk.Models.Tmp\Shimakaze.Sdk.Models.Tmp.csproj", "{E89735EE-003A-46E7-9999-658B6A7537CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Models.Common", "src\Shimakaze.Sdk.Models.Common\Shimakaze.Sdk.Models.Common.csproj", "{255543C3-0761-4DC9-A716-101F49308FFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Models.Shp", "C:\Users\Shimakaze\Source\Repos\ShimakazeProject\Shimakaze-SDK\src\Shimakaze.Sdk.Models.Shp\Shimakaze.Sdk.Models.Shp.csproj", "{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +101,26 @@ Global
 		{58F0B427-B6BA-47C6-942E-D97EBED56AF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58F0B427-B6BA-47C6-942E-D97EBED56AF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58F0B427-B6BA-47C6-942E-D97EBED56AF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14AB778F-C39A-4679-ADF7-82DF7410B3B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14AB778F-C39A-4679-ADF7-82DF7410B3B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14AB778F-C39A-4679-ADF7-82DF7410B3B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14AB778F-C39A-4679-ADF7-82DF7410B3B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A630C0B-1ED2-4B83-A707-A85C8741C33F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A630C0B-1ED2-4B83-A707-A85C8741C33F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A630C0B-1ED2-4B83-A707-A85C8741C33F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A630C0B-1ED2-4B83-A707-A85C8741C33F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E89735EE-003A-46E7-9999-658B6A7537CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E89735EE-003A-46E7-9999-658B6A7537CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E89735EE-003A-46E7-9999-658B6A7537CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E89735EE-003A-46E7-9999-658B6A7537CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{255543C3-0761-4DC9-A716-101F49308FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{255543C3-0761-4DC9-A716-101F49308FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{255543C3-0761-4DC9-A716-101F49308FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{255543C3-0761-4DC9-A716-101F49308FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
