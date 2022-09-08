@@ -18,7 +18,7 @@ public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderW
     private Dictionary<uint, object?>? _lines;
 
     public Dictionary<uint, object?> Lines => _lines!;
-    public override IIniDocument Read(TextReader tr, ReadOptions? options = default)
+    public override async Task<IIniDocument> ReadAsync(TextReader tr, ReadOptions? options = default)
     {
         Func<bool> check = tr is StreamReader sr ? (() => !sr.EndOfStream) : (() => tr.Peek() >= 0);
 
@@ -29,7 +29,7 @@ public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderW
         _lines = new();
         while (check())
         {
-            var line = tr.ReadLine();
+            var line = await tr.ReadLineAsync();
             lineNumber++;
             if (string.IsNullOrWhiteSpace(line))
             {
@@ -82,32 +82,36 @@ public sealed class IniLoader : TextLoader<IIniDocument, ReadOptions, IniLoaderW
         return document;
     }
 
-    public override void Write(IIniDocument ini, TextWriter tw, IniLoaderWriteOptions? options = default)
+    public override async Task WriteAsync(IIniDocument ini, TextWriter tw, IniLoaderWriteOptions? options = default)
     {
         options ??= IniLoaderWriteOptions.Default;
 
-        WriteIniLines(ini.Default, tw, options.IgnoreSummary);
+        await WriteIniLines(ini.Default, tw, options.IgnoreSummary);
 
-        tw.WriteLine();
+        await tw.WriteLineAsync();
 
         foreach (var section in ini)
         {
-            if (section.BeforeSummaries is not null && section.BeforeSummaries.Length > 0)
-                section.BeforeSummaries.Each(tw.WriteLine);
+            if (!options.IgnoreSummary
+                && section.BeforeSummaries is not null
+                && section.BeforeSummaries.Length > 0)
+                await WriteIniLines(section.BeforeSummaries, tw);
 
-            tw.WriteLine($"[{section.Name}]");
-            if (string.IsNullOrWhiteSpace(section.Summary))
-                tw.WriteLine(section.Summary);
+            await tw.WriteLineAsync($"[{section.Name}]");
 
-            WriteIniLines(section, tw, options.IgnoreSummary);
+            if (!options.IgnoreSummary
+                && string.IsNullOrWhiteSpace(section.Summary))
+                await tw.WriteLineAsync(section.Summary);
 
-            tw.WriteLine();
+            await WriteIniLines(section, tw, options.IgnoreSummary);
+
+            await tw.WriteLineAsync();
         }
     }
 
-    private static void WriteIniLines(IEnumerable<IIniLine> lines, TextWriter tw, bool ignoreSummary = false)
+    private static async ValueTask WriteIniLines(IEnumerable<IIniLine> lines, TextWriter tw, bool ignoreSummary = false)
     {
         foreach (var line in lines)
-            tw.WriteLine(line.ToString(ignoreSummary));
+            await tw.WriteLineAsync(line.ToString(ignoreSummary));
     }
 }

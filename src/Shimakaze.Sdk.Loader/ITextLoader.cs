@@ -6,6 +6,6 @@ public interface ITextLoader<TDocument, TReadOptions, TWriteOptions>: ILoader<TD
     where TReadOptions : IReadOptions, new()
     where TWriteOptions : IWriteOptions, new()
 {
-    TDocument Read(TextReader tr, TReadOptions? options = default);
-    void Write(TDocument document, TextWriter tw, TWriteOptions? options = default);
+    Task<TDocument> ReadAsync(TextReader tr, TReadOptions? options = default);
+    Task WriteAsync(TDocument document, TextWriter tw, TWriteOptions? options = default);
 }

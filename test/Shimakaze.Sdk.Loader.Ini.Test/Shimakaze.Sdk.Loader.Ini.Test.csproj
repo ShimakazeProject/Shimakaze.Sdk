@@ -4,4 +4,10 @@
     <ProjectReference Include="..\..\src\Shimakaze.Sdk.Loader.Ini\Shimakaze.Sdk.Loader.Ini.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>

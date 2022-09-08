@@ -4,12 +4,12 @@ namespace Shimakaze.Sdk.Loader.Ini.Test;
 public class IncompleteIniLoaderTest
 {
     [TestMethod]
-    public void ReadTest()
+    public async Task ReadTest()
     {
         IniLoader loader = new();
 
         using StreamReader sr = File.OpenText(Path.Combine("Assets", "Test2.ini"));
-        var ini = loader.Read(sr, default);
+        var ini = await loader.ReadAsync(sr, default);
 
         Assert.IsNotNull(ini);
         Assert.IsTrue(ini.Default[0].IsEmptyKey);
