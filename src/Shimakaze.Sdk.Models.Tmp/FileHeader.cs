@@ -4,7 +4,7 @@
 /// TMP File Header <br/>
 /// <see href="https://modenc.renegadeprojects.com/TMP"/>
 /// </summary>
-public struct FileHeader
+public record struct FileHeader
 {
     /// <summary>
     /// size in blocks

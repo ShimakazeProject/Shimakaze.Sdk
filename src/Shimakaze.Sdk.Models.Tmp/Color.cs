@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Shimakaze.Sdk.Models.Common;
+namespace Shimakaze.Sdk.Models.Tmp;
 
 [StructLayout(LayoutKind.Sequential)]
-public struct RGB
+public record struct Color
 {
     public byte Red;
     public byte Green;

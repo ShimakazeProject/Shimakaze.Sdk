@@ -30,7 +30,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution Folder", "{DF284CEB-421D-4D80-B3CB-218B959E4610}"
 	ProjectSection(SolutionItems) = preProject
 		src\.editorconfig = src\.editorconfig
-		Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.props = src\Directory.Build.props
 		global.json = global.json
 		nuget.config = nuget.config
 	EndProjectSection
@@ -41,15 +41,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution
 		test\Directory.Build.props = test\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Kernel.Map", "src\Shimakaze.Sdk.Kernel.Map\Shimakaze.Sdk.Kernel.Map.csproj", "{14AB778F-C39A-4679-ADF7-82DF7410B3B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Kernel.Map", "src\Shimakaze.Sdk.Kernel.Map\Shimakaze.Sdk.Kernel.Map.csproj", "{14AB778F-C39A-4679-ADF7-82DF7410B3B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Models.Ini.TerrainControl", "src\Shimakaze.Sdk.Models.Ini.TerrainControl\Shimakaze.Sdk.Models.Ini.TerrainControl.csproj", "{7A630C0B-1ED2-4B83-A707-A85C8741C33F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Models.Ini.TerrainControl", "src\Shimakaze.Sdk.Models.Ini.TerrainControl\Shimakaze.Sdk.Models.Ini.TerrainControl.csproj", "{7A630C0B-1ED2-4B83-A707-A85C8741C33F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Models.Tmp", "src\Shimakaze.Sdk.Models.Tmp\Shimakaze.Sdk.Models.Tmp.csproj", "{E89735EE-003A-46E7-9999-658B6A7537CE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Models.Common", "src\Shimakaze.Sdk.Models.Common\Shimakaze.Sdk.Models.Common.csproj", "{255543C3-0761-4DC9-A716-101F49308FFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Models.Tmp", "src\Shimakaze.Sdk.Models.Tmp\Shimakaze.Sdk.Models.Tmp.csproj", "{E89735EE-003A-46E7-9999-658B6A7537CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Models.Shp", "C:\Users\Shimakaze\Source\Repos\ShimakazeProject\Shimakaze-SDK\src\Shimakaze.Sdk.Models.Shp\Shimakaze.Sdk.Models.Shp.csproj", "{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Loader.Tmp", "src\Shimakaze.Sdk.Loader.Tmp\Shimakaze.Sdk.Loader.Tmp.csproj", "{CD7E4C97-6F52-4D89-BE66-5576FAF752FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Loader.Tmp.Test", "test\Shimakaze.Sdk.Loader.Tmp.Test\Shimakaze.Sdk.Loader.Tmp.Test.csproj", "{084CFDB5-E8BA-4630-B243-18395A3D0F92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,14 +115,18 @@ Global
 		{E89735EE-003A-46E7-9999-658B6A7537CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E89735EE-003A-46E7-9999-658B6A7537CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E89735EE-003A-46E7-9999-658B6A7537CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{255543C3-0761-4DC9-A716-101F49308FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{255543C3-0761-4DC9-A716-101F49308FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{255543C3-0761-4DC9-A716-101F49308FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{255543C3-0761-4DC9-A716-101F49308FFD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5963D73D-0ECA-4CBB-838A-4D56BBC19AC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD7E4C97-6F52-4D89-BE66-5576FAF752FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD7E4C97-6F52-4D89-BE66-5576FAF752FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD7E4C97-6F52-4D89-BE66-5576FAF752FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD7E4C97-6F52-4D89-BE66-5576FAF752FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{084CFDB5-E8BA-4630-B243-18395A3D0F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{084CFDB5-E8BA-4630-B243-18395A3D0F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{084CFDB5-E8BA-4630-B243-18395A3D0F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{084CFDB5-E8BA-4630-B243-18395A3D0F92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,6 +134,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{29878251-2ACA-4CAF-8757-6AE61568257E} = {5DCD637F-1A97-48B6-B088-B5EBC8D119F8}
 		{93B684B6-9CA6-4221-80C2-176ED8575DA5} = {5DCD637F-1A97-48B6-B088-B5EBC8D119F8}
+		{084CFDB5-E8BA-4630-B243-18395A3D0F92} = {5DCD637F-1A97-48B6-B088-B5EBC8D119F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70F51886-608B-4BCC-8AFE-82185A5E5497}
