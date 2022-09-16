@@ -121,6 +121,6 @@
     "package": "vsce package --yarn"
   },
   "dependencies": {
-    "@vscode/webview-ui-toolkit": "^1.0.0"
+    "@vscode/webview-ui-toolkit": "^1.1.0"
   }
 }
