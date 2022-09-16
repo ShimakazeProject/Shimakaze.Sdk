@@ -432,9 +432,9 @@
     "@typescript-eslint/types" "5.37.0"
     eslint-visitor-keys "^3.3.0"
 
-"@vscode/webview-ui-toolkit@^1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@vscode/webview-ui-toolkit/-/webview-ui-toolkit-1.0.1.tgz#1f094e447571ed28b1ac72eb8a5d99148c97aded"
+"@vscode/webview-ui-toolkit@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@vscode/webview-ui-toolkit/-/webview-ui-toolkit-1.1.0.tgz#22d16bf2edcc9db73df5fca190abe12573b612f1"
   dependencies:
     "@microsoft/fast-element" "^1.6.2"
     "@microsoft/fast-foundation" "^2.38.0"
