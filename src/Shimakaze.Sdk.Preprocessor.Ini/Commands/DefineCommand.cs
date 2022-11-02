@@ -15,15 +15,15 @@ public sealed class DefineCommand : IPreprocessorCommand
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    /// <param name="args">ÃüÁî²ÎÊý</param>
-    /// <param name="preprocessor">Ô¤´¦ÀíÆ÷ÊµÀý</param>
-    /// <exception cref="ArgumentException">²ÎÊý²»ÕýÈ·Ê±Å×³ö</exception>
+    /// <param name="args">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="preprocessor">Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½</param>
+    /// <exception cref="ArgumentException">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·Ê±ï¿½×³ï¿½</exception>
     public Task ExecuteAsync(string[] args, IniPreprocessor preprocessor)
     {
         switch (args.Length)
         {
             case 1:
-                preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Add(args[0]);
+                preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines).Add(args[0]);
                 break;
             default:
                 throw new ArgumentException("Invalid arguments");

@@ -6,13 +6,13 @@
 /// </summary>
 public static class PreprocessorVariableNames
 {
-#pragma warning disable CS1591
-    public const string WorkingDirectory_Stack_String = "WorkingDirectory";
-    public const string DefineStack_Stack_String = "DefineStack";
-    public const string Defines_HashSet_String = "Defines";
-    public const string WriteOutput_Boolean = "WriteOutput";
-    public const string OutputStream_TextWriter = "OutputStream";
-    public const string Commands_Dictionary_String_IPreprocessorCommand = "Commands";
-    public const string CurrentFile_Stack_String = "CurrentFile";
-#pragma warning restore CS1591
+    public const string WorkingDirectory = "WorkingDirectory";
+    public const string DefineStack = "DefineStack";
+    public const string Defines = "Defines";
+    public const string WriteOutput = "WriteOutput";
+    public const string OutputStream = "OutputStream";
+    public const string Commands = "Commands";
+    public const string CurrentFile = "CurrentFile";
+    public const string Sources = "Sources";
+    public const string Extensions = "Extensions";
 }

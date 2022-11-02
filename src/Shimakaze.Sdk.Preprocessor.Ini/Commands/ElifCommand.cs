@@ -11,14 +11,14 @@ internal sealed class ElifCommand : IPreprocessorCommand
         switch (args.Length)
         {
             case 1:
-                var stack = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack_Stack_String);
+                var stack = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack);
                 string tmp = stack.Pop();
                 Debug.WriteLine($"Pop  DefineStack: {tmp}");
                 stack.Push(args[0]);
                 Debug.WriteLine($"Push DefineStack: {args[0]}");
-                preprocessor.Variables[PreprocessorVariableNames.WriteOutput_Boolean] =
-                    !preprocessor.GetVariable<bool>(PreprocessorVariableNames.WriteOutput_Boolean)
-                    && preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Contains(args[0]);
+                preprocessor.Variables[PreprocessorVariableNames.WriteOutput] =
+                    !preprocessor.GetVariable<bool>(PreprocessorVariableNames.WriteOutput)
+                    && preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines).Contains(args[0]);
                 break;
             default:
                 throw new ArgumentException("Invalid arguments");

@@ -17,7 +17,7 @@ internal sealed class PragmaCommand : IPreprocessorCommand
 
     public Task InitializeAsync(IniPreprocessor preprocessor)
     {
-        _generateHead = preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Contains(DEFINE_GENERATE_SECTION_HEAD);
+        _generateHead = preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines).Contains(DEFINE_GENERATE_SECTION_HEAD);
         return Task.CompletedTask;
     }
 
@@ -30,12 +30,12 @@ internal sealed class PragmaCommand : IPreprocessorCommand
         {
             case "type":
                 {
-                    var currentFile = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.CurrentFile_Stack_String);
+                    var currentFile = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.CurrentFile);
                     var fileNameWithoutExt = Path.GetFileNameWithoutExtension(currentFile.Peek());
 
                     if (_generateHead)
                     {
-                        var output = preprocessor.GetVariable<TextWriter>(PreprocessorVariableNames.OutputStream_TextWriter);
+                        var output = preprocessor.GetVariable<TextWriter>(PreprocessorVariableNames.OutputStream);
                         await output.WriteLineAsync($"[{fileNameWithoutExt}]");
                     }
 
@@ -60,7 +60,7 @@ internal sealed class PragmaCommand : IPreprocessorCommand
     public async Task PostProcessingAsync(IniPreprocessor preprocessor)
     {
         var map = GetTypeMap(preprocessor);
-        var output = preprocessor.GetVariable<TextWriter>(PreprocessorVariableNames.OutputStream_TextWriter);
+        var output = preprocessor.GetVariable<TextWriter>(PreprocessorVariableNames.OutputStream);
 
         await map.EachAsync(async i =>
         {

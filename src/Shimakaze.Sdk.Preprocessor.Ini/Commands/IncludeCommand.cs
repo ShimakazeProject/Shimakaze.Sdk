@@ -1,6 +1,3 @@
-using Shimakaze.Sdk.Preprocessor.Ini;
-using Shimakaze.Sdk.Utils;
-
 namespace Shimakaze.Sdk.Preprocessor.Ini.Commands;
 
 internal sealed class IncludeCommand : IPreprocessorCommand
@@ -12,32 +9,27 @@ internal sealed class IncludeCommand : IPreprocessorCommand
         if (args.Length != 1)
             throw new Exception("Invalid arguments");
 
-        var workingDirectory = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.WorkingDirectory_Stack_String);
-        var currentFile = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.CurrentFile_Stack_String);
+        var workingDirectory =
+            preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.WorkingDirectory);
+        var currentFile = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.CurrentFile);
         string currentDirectory = workingDirectory.Peek();
 
-        string filePath = args[0].Trim(new[] { '"', '\'' });
-        if (!Path.IsPathRooted(filePath))
-            filePath = Path.Combine(currentDirectory, filePath);
+        FileInfo file = preprocessor.GetFileFromSourceFileList(args[0].Trim(new[] { '"', '\'' }), currentDirectory);
 
-        if (!File.Exists(filePath))
-            throw new FileNotFoundException($"File not found: {filePath}");
+        currentDirectory = file.Directory!.FullName;
 
-        currentDirectory = Path.GetDirectoryName(filePath) ?? throw new Exception("Invalid file path");
-
-
-        currentFile.Push(filePath);
-        Debug.WriteLine($"Push {PreprocessorVariableNames.CurrentFile_Stack_String}: {filePath}");
+        currentFile.Push(file.FullName);
+        Debug.WriteLine($"Push {PreprocessorVariableNames.CurrentFile}: {file.FullName}");
 
         workingDirectory.Push(currentDirectory);
-        Debug.WriteLine($"Push {PreprocessorVariableNames.WorkingDirectory_Stack_String}: {currentDirectory}");
+        Debug.WriteLine($"Push {PreprocessorVariableNames.WorkingDirectory}: {currentDirectory}");
 
-        await preprocessor.ExecuteAsync(filePath).ConfigureAwait(false);
+        await preprocessor.ExecuteAsync(file).ConfigureAwait(false);
 
         string tmp = workingDirectory.Pop();
-        Debug.WriteLine($"Pop  {PreprocessorVariableNames.WorkingDirectory_Stack_String}: {tmp}");
+        Debug.WriteLine($"Pop  {PreprocessorVariableNames.WorkingDirectory}: {tmp}");
 
         tmp = currentFile.Pop();
-        Debug.WriteLine($"Pop  {PreprocessorVariableNames.CurrentFile_Stack_String}: {tmp}");
+        Debug.WriteLine($"Pop  {PreprocessorVariableNames.CurrentFile}: {tmp}");
     }
 }

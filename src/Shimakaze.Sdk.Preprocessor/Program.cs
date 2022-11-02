@@ -7,15 +7,19 @@ internal static class Program
     /// <summary>
     /// Common Preprocessor.
     /// </summary>
-    /// <param name="input">Input File</param>
+    /// <param name="inputs">Input File</param>
+    /// <param name="entry">Entry File</param>
     /// <param name="output">Output File</param>
     /// <param name="defines">Defines</param>
-    public static async Task Main(FileInfo input, FileInfo output, string[]? defines)
+    /// <param name="extensions">Extensions</param>
+    public static async Task Main(FileInfo[] inputs, FileInfo entry, FileInfo output, string[]? defines,
+        string[] extensions)
     {
         IniPreprocessor preprocessor = new();
 
-        using var writer = output.CreateText();
-        await preprocessor.InitializeAsync(writer, input.DirectoryName!, defines ?? Array.Empty<string>());
-        await preprocessor.ExecuteAsync(input.FullName).ConfigureAwait(false);
+        await using var writer = output.CreateText();
+        await preprocessor.InitializeAsync(writer, entry.DirectoryName!, inputs, defines ?? Array.Empty<string>(),
+            extensions);
+        await preprocessor.ExecuteAsync(entry).ConfigureAwait(false);
     }
 }

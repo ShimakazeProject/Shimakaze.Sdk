@@ -9,10 +9,10 @@ internal sealed class IfndefCommand : IPreprocessorCommand
         switch (args.Length)
         {
             case 1:
-                preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack_Stack_String).Push(args[0]);
+                preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack).Push(args[0]);
                 Debug.WriteLine($"Push DefineStack: {args[0]}");
-                preprocessor.Variables[PreprocessorVariableNames.WriteOutput_Boolean] =
-                    !preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines_HashSet_String).Contains(args[0]);
+                preprocessor.Variables[PreprocessorVariableNames.WriteOutput] =
+                    !preprocessor.GetVariable<HashSet<string>>(PreprocessorVariableNames.Defines).Contains(args[0]);
                 break;
             default:
                 throw new ArgumentException("Invalid arguments");

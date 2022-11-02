@@ -7,13 +7,13 @@ internal sealed class EndifCommand : IPreprocessorCommand
     {
         if (args.Length != 0)
             throw new ArgumentException("Invalid arguments");
-        if (preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack_Stack_String).Count == 0)
+        if (preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack).Count == 0)
             throw new Exception("endif without ifdef");
 
-        string tmp = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack_Stack_String).Pop();
+        string tmp = preprocessor.GetVariable<Stack<string>>(PreprocessorVariableNames.DefineStack).Pop();
         Debug.WriteLine($"Pop  DefineStack  {tmp}");
 
-        preprocessor.Variables[PreprocessorVariableNames.WriteOutput_Boolean] = true;
+        preprocessor.Variables[PreprocessorVariableNames.WriteOutput] = true;
         return Task.CompletedTask;
     }
 }
