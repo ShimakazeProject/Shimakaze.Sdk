@@ -547,7 +547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.37.0":
+"@typescript-eslint/eslint-plugin@npm:^5.42.0":
   version: 5.42.0
   resolution: "@typescript-eslint/eslint-plugin@npm:5.42.0"
   dependencies:
@@ -570,7 +570,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.37.0":
+"@typescript-eslint/parser@npm:^5.42.0":
   version: 5.42.0
   resolution: "@typescript-eslint/parser@npm:5.42.0"
   dependencies:
@@ -667,7 +667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vscode/webview-ui-toolkit@npm:^1.0.0":
+"@vscode/webview-ui-toolkit@npm:^1.0.0, @vscode/webview-ui-toolkit@npm:^1.1.0":
   version: 1.1.0
   resolution: "@vscode/webview-ui-toolkit@npm:1.1.0"
   dependencies:
@@ -2037,7 +2037,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vue@npm:^9.4.0":
+"eslint-plugin-vue@npm:^9.7.0":
   version: 9.7.0
   resolution: "eslint-plugin-vue@npm:9.7.0"
   dependencies:
@@ -4435,14 +4435,14 @@ __metadata:
   dependencies:
     "@commitlint/cli": "npm:^17.1.2"
     "@commitlint/types": "npm:^17.0.0"
-    "@typescript-eslint/eslint-plugin": "npm:^5.37.0"
-    "@typescript-eslint/parser": "npm:^5.37.0"
+    "@typescript-eslint/eslint-plugin": "npm:^5.42.0"
+    "@typescript-eslint/parser": "npm:^5.42.0"
     eslint: "npm:^7.32.0"
     eslint-config-standard: "npm:^16.0.3"
     eslint-plugin-import: "npm:^2.26.0"
     eslint-plugin-node: "npm:^11.1.0"
     eslint-plugin-promise: "npm:^5.2.0"
-    eslint-plugin-vue: "npm:^9.4.0"
+    eslint-plugin-vue: "npm:^9.7.0"
     typescript: "npm:^4.8.3"
     vue-eslint-parser: "npm:^9.0.3"
   dependenciesMeta:
@@ -4468,9 +4468,9 @@ __metadata:
   dependencies:
     "@types/node": "npm:^18"
     "@types/vscode": "npm:^1.66.0"
-    "@vscode/webview-ui-toolkit": "npm:^1.0.0"
+    "@vscode/webview-ui-toolkit": "npm:^1.1.0"
     json-schema-to-typescript: "npm:^11.0.2"
-    vite: "npm:^3.1.0"
+    vite: "npm:^3.2.2"
     vsce: "npm:^2.9.1"
   languageName: unknown
   linkType: soft
@@ -5148,7 +5148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.0.9, vite@npm:^3.1.0":
+"vite@npm:^3.0.9, vite@npm:^3.2.2":
   version: 3.2.2
   resolution: "vite@npm:3.2.2"
   dependencies:
