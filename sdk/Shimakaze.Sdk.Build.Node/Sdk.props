@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <!-- support npm and yarn2(berry) -->
+    <NodePackageManager Condition="'$(NodePackageManager)' == ''">npm</NodePackageManager>
+
+    <StartupCommand>yarn dev</StartupCommand>
+    <BuildCommand>yarn build</BuildCommand>
+    <RestoreCommand>yarn install</RestoreCommand>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
+  </PropertyGroup>
+</Project>

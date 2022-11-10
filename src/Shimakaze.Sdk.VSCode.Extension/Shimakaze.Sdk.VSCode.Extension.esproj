@@ -1,0 +1,13 @@
+<Project>
+  <Import Project="$(MSBuildProjectDirectory)\..\..\sdk\Shimakaze.Sdk.Build.Node\Sdk.props" />
+
+  <PropertyGroup>
+    <StartupCommand>yarn dev</StartupCommand>
+    <!-- Command to run on project build -->
+    <BuildCommand>yarn run build</BuildCommand>
+    <!-- Folder where production build objects will be placed -->
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildProjectDirectory)\..\..\sdk\Shimakaze.Sdk.Build.Node\Sdk.targets" />
+</Project>

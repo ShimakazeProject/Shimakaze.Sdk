@@ -1,0 +1,10 @@
+<Project>
+
+  <Target Name="Build">
+    <Exec Command="$(BuildCommand)" UseUtf8Encoding="Always" />
+  </Target>
+
+  <Target Name="Restore">
+    <Exec Command="$(RestoreCommand)" UseUtf8Encoding="Always" />
+  </Target>
+</Project>

@@ -35,7 +35,7 @@ export default defineConfig(({ command, mode }) => {
   }
 
   if (command === 'build') {
-    options.build!.outDir = '../../extension/dist'
+    options.build!.outDir = 'dist'
   }
   return options
 })

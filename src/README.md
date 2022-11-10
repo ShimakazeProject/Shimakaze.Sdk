@@ -1,1 +1,0 @@
-# Shimakaze SDK .Net Component

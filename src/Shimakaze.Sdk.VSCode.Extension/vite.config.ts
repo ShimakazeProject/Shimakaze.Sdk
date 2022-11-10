@@ -12,7 +12,7 @@ export default defineConfig({
       fileName: 'extension.js'
     },
     rollupOptions: {
-      external: ['vscode'],
+      external: ['vscode', '@vscode/webview-ui-toolkit'],
       output: {
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',

@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
+        dotnet-version: ['6.0.x']
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -24,6 +25,11 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - run: yarn build
+      - name: Use Dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.node-version }}
+      - run: dotnet build
       # - run: yarn workspace shimakaze-sdk-vscode run package
       # - uses: actions/upload-artifact@v3
       #   with:

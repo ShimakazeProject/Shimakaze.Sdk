@@ -478,9 +478,9 @@ __metadata:
   linkType: hard
 
 "@types/lodash@npm:^4.14.182":
-  version: 4.14.187
-  resolution: "@types/lodash@npm:4.14.187"
-  checksum: 90fc80ad884fce65f8d8bc407b4209e3bc9f3a7c70de0fa61deb680b671d314e237464ff243f06e14294edda417742f8cbd0d10406cf69fe16980e4d70a6f6d1
+  version: 4.14.188
+  resolution: "@types/lodash@npm:4.14.188"
+  checksum: 672660fd912505b7076646ff1f216950ff11bd50a69acfed09c44adb55c407f111f9b24a2361610cbd6c1bb2cc768895cd5b7673351f71d8793b5e84b641def8
   languageName: node
   linkType: hard
 
@@ -4446,14 +4446,14 @@ __metadata:
     typescript: "npm:^4.8.3"
     vue-eslint-parser: "npm:^9.0.3"
   dependenciesMeta:
-    "@vscode/webview-ui-toolkit@1.0.0":
+    "@vscode/webview-ui-toolkit@1.1.0":
       unplugged: true
   languageName: unknown
   linkType: soft
 
-"shimakaze-sdk-vscode-components@workspace:packages/shimakaze-sdk-vscode-components":
+"shimakaze-sdk-vscode-components@workspace:src/Shimakaze.Sdk.VSCode.Components":
   version: 0.0.0-use.local
-  resolution: "shimakaze-sdk-vscode-components@workspace:packages/shimakaze-sdk-vscode-components"
+  resolution: "shimakaze-sdk-vscode-components@workspace:src/Shimakaze.Sdk.VSCode.Components"
   dependencies:
     "@microsoft/fast-element": "npm:^1.10.1"
     "@vscode/webview-ui-toolkit": "npm:^1.0.0"
@@ -4462,9 +4462,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"shimakaze-sdk-vscode@workspace:extension":
+"shimakaze-sdk-vscode@workspace:src/Shimakaze.Sdk.VSCode.Extension":
   version: 0.0.0-use.local
-  resolution: "shimakaze-sdk-vscode@workspace:extension"
+  resolution: "shimakaze-sdk-vscode@workspace:src/Shimakaze.Sdk.VSCode.Extension"
   dependencies:
     "@types/node": "npm:^18"
     "@types/vscode": "npm:^1.66.0"
@@ -4472,12 +4472,6 @@ __metadata:
     json-schema-to-typescript: "npm:^11.0.2"
     vite: "npm:^3.2.2"
     vsce: "npm:^2.9.1"
-  languageName: unknown
-  linkType: soft
-
-"shimakaze-sdk.dotnet@workspace:src":
-  version: 0.0.0-use.local
-  resolution: "shimakaze-sdk.dotnet@workspace:src"
   languageName: unknown
   linkType: soft
 
@@ -5149,8 +5143,8 @@ __metadata:
   linkType: hard
 
 "vite@npm:^3.0.9, vite@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "vite@npm:3.2.2"
+  version: 3.2.3
+  resolution: "vite@npm:3.2.3"
   dependencies:
     esbuild: "npm:^0.15.9"
     fsevents: "npm:~2.3.2"
@@ -5158,6 +5152,7 @@ __metadata:
     resolve: "npm:^1.22.1"
     rollup: "npm:^2.79.1"
   peerDependencies:
+    "@types/node": ">= 14"
     less: "*"
     sass: "*"
     stylus: "*"
@@ -5167,6 +5162,8 @@ __metadata:
     fsevents:
       optional: true
   peerDependenciesMeta:
+    "@types/node":
+      optional: true
     less:
       optional: true
     sass:
@@ -5179,13 +5176,13 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 4e2f4e89dda317138c36a144c1487647768c045d65e6aac01a1354b52fe8ce7fff036558c5bbe7a042379e608a22d0681aa130a0041a080df37717a237631cda
+  checksum: ddd857ae9900e65cb7853466f22d008b9814e6ac57390b61a82dffcac2503bda954271357faeabfb7c258a1ac08345e050b2c6dc6197b11d21def3a95399f076
   languageName: node
   linkType: hard
 
 "vsce@npm:^2.9.1":
-  version: 2.13.0
-  resolution: "vsce@npm:2.13.0"
+  version: 2.14.0
+  resolution: "vsce@npm:2.14.0"
   dependencies:
     azure-devops-node-api: "npm:^11.0.1"
     chalk: "npm:^2.4.2"
@@ -5209,7 +5206,7 @@ __metadata:
     yazl: "npm:^2.2.2"
   bin:
     vsce: vsce
-  checksum: 785df59afabbd8d039c7fb5d3a4dd50cdff624fd6606fe39a91a6a3464deb0af4f52f74096f3731cebbf7607d3d4950885b61ea9f92eacbaf05922d4123edb23
+  checksum: 8339c60c7247a535300ec7435606f61bd276674191137c06bd9388e8b818e50b3bcdaf8dc40b94f114b2d77bcafee67e30b7859c285a91d7f0270c7a9c311c68
   languageName: node
   linkType: hard
 
