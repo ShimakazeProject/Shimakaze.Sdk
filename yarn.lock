@@ -4471,7 +4471,7 @@ __metadata:
     "@vscode/webview-ui-toolkit": "npm:^1.1.0"
     json-schema-to-typescript: "npm:^11.0.2"
     vite: "npm:^3.2.2"
-    vsce: "npm:^2.9.1"
+    vsce: "npm:^2.15.0"
   languageName: unknown
   linkType: soft
 
@@ -5183,9 +5183,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vsce@npm:^2.9.1":
-  version: 2.13.0
-  resolution: "vsce@npm:2.13.0"
+"vsce@npm:^2.15.0":
+  version: 2.15.0
+  resolution: "vsce@npm:2.15.0"
   dependencies:
     azure-devops-node-api: "npm:^11.0.1"
     chalk: "npm:^2.4.2"
@@ -5209,7 +5209,7 @@ __metadata:
     yazl: "npm:^2.2.2"
   bin:
     vsce: vsce
-  checksum: 785df59afabbd8d039c7fb5d3a4dd50cdff624fd6606fe39a91a6a3464deb0af4f52f74096f3731cebbf7607d3d4950885b61ea9f92eacbaf05922d4123edb23
+  checksum: a67ebe85784e48ae3f757065eb2329231a909ee465456004b61ddb5dfa0e6d1af84a18f0315fc80ca7dd547fdd0c86970495ecfd33fc2bbec72c5fa2e41ecd09
   languageName: node
   linkType: hard
 
