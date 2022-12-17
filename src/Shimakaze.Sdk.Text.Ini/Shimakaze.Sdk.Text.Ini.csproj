@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Serialization\Shimakaze.Sdk.Serialization.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Text\Shimakaze.Sdk.Text.csproj" />
+  </ItemGroup>
+
+</Project>
