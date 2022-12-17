@@ -12,13 +12,41 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution
 		nuget.config = nuget.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kernel", "Kernel", "{58283B9D-461A-45A6-A692-95B0B265E812}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Data", "src\Shimakaze.Sdk.Data\Shimakaze.Sdk.Data.csproj", "{349D2CE2-2D29-4099-9F24-9F43F0A7F0A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Serialization", "src\Shimakaze.Sdk.Serialization\Shimakaze.Sdk.Serialization.csproj", "{16313A8A-C7A3-4CBD-956E-288F0DFED4F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Text", "src\Shimakaze.Sdk.Text\Shimakaze.Sdk.Text.csproj", "{1A031D2E-6D23-4592-99D9-EB7025DE1449}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{349D2CE2-2D29-4099-9F24-9F43F0A7F0A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{349D2CE2-2D29-4099-9F24-9F43F0A7F0A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{349D2CE2-2D29-4099-9F24-9F43F0A7F0A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{349D2CE2-2D29-4099-9F24-9F43F0A7F0A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16313A8A-C7A3-4CBD-956E-288F0DFED4F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16313A8A-C7A3-4CBD-956E-288F0DFED4F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16313A8A-C7A3-4CBD-956E-288F0DFED4F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16313A8A-C7A3-4CBD-956E-288F0DFED4F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A031D2E-6D23-4592-99D9-EB7025DE1449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A031D2E-6D23-4592-99D9-EB7025DE1449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A031D2E-6D23-4592-99D9-EB7025DE1449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A031D2E-6D23-4592-99D9-EB7025DE1449}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F09875A-CB61-42E4-BAC8-DB5A300ED38F} = {6D716D86-5B2F-494D-884F-47CE9EFD5234}
+		{349D2CE2-2D29-4099-9F24-9F43F0A7F0A3} = {58283B9D-461A-45A6-A692-95B0B265E812}
+		{16313A8A-C7A3-4CBD-956E-288F0DFED4F0} = {58283B9D-461A-45A6-A692-95B0B265E812}
+		{1A031D2E-6D23-4592-99D9-EB7025DE1449} = {58283B9D-461A-45A6-A692-95B0B265E812}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D29C92CC-AD70-4392-BD7E-D9C543CCBDBA}
