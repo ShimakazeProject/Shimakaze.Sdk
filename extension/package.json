@@ -111,7 +111,7 @@
     "@types/node": "^18",
     "@types/vscode": "^1.66.0",
     "json-schema-to-typescript": "^11.0.2",
-    "vite": "^3.2.2",
+    "vite": "^4.0.3",
     "vsce": "^2.9.1"
   },
   "scripts": {
