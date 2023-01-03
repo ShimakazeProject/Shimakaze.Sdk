@@ -6,7 +6,7 @@
 	"image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {}
-	}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -23,7 +23,17 @@
 	// "postCreateCommand": "dotnet restore",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-dotnettools.csharp",
+				"vscode-icons-team.vscode-icons",
+				"eamodio.gitlens",
+				"revrenlove.c-sharp-utilities",
+				"logerfo.csharp-colors"
+			]
+		}
+	},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
