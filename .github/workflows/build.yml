@@ -9,8 +9,8 @@ on:
       - master
 
 jobs:
-  setup:
-    name: Setup build environment
+  build-ubuntu:
+    name: Build on Ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,28 +19,65 @@ jobs:
         uses: actions/setup-dotnet@v3.0.3
         with:
           global-json-file: ./global.json
-  build:
-    needs:
-      - setup
-    runs-on: ubuntu-latest
-    steps:
       - name: Run Restore
-        run: dotnet restore
+        run: dotnet restore Shimakaze.Sdk.sln
       - name: Run Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
       - name: Run Test
-        run: dotnet test --configuration Release --no-build
-  pack:
-    needs:
-      - setup
-      - pack
-    runs-on: ubuntu-latest
-    steps:
+        run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
       - name: Create the package
         run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: nuget-packages
+          name: nuget-packages-ubuntu
+          path: src/**/bin/Release/*.*nupkg
+          retention-days: 3
+  build-windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3.0.3
+        with:
+          global-json-file: ./global.json
+      - name: Run Restore
+        run: dotnet restore Shimakaze.Sdk.sln
+      - name: Run Build
+        run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
+      - name: Run Test
+        run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
+      - name: Create the package
+        run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: nuget-packages-windows
           path: src/**/bin/Release/*.*nupkg
           retention-days: 14
+  build-macos:
+    name: Build on Mac OS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3.0.3
+        with:
+          global-json-file: ./global.json
+      - name: Run Restore
+        run: dotnet restore Shimakaze.Sdk.sln
+      - name: Run Build
+        run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
+      - name: Run Test
+        run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
+      - name: Create the package
+        run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: nuget-packages-macos
+          path: src/**/bin/Release/*.*nupkg
+          retention-days: 3
