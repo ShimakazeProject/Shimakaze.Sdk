@@ -1,0 +1,10 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>Shimakaze Project</Authors>
+    <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+</Project>

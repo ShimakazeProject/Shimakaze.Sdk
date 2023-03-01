@@ -3,7 +3,6 @@
 # intervention with every merge. To do so, just comment the entries below and
 # uncomment the group further below
 ###############################################################################
-
 *.sln        text eol=crlf
 *.csproj     text eol=crlf
 *.vbproj     text eol=crlf
@@ -16,13 +15,10 @@
 *.modelproj  text eol=crlf
 *.sqlproj    text eol=crlf
 *.wwaproj    text eol=crlf
-
 *.xproj      text eol=crlf
 *.props      text eol=crlf
 *.filters    text eol=crlf
 *.vcxitems   text eol=crlf
-
-
 #*.sln       merge=binary
 #*.csproj    merge=binary
 #*.vbproj    merge=binary
@@ -35,18 +31,14 @@
 #*.modelproj merge=binary
 #*.sqlproj   merge=binary
 #*.wwaproj   merge=binary
-
 #*.xproj     merge=binary
 #*.props     merge=binary
 #*.filters   merge=binary
 #*.vcxitems  merge=binary
-
 *.cs       text diff=csharp
 *.cshtml   text diff=html
 *.csx      text diff=csharp
-
 # Basic .gitattributes for a PowerShell repo.
-
 # Source files
 # ============
 *.ps1      text eol=crlf
@@ -57,3 +49,5 @@
 *.pssc     text eol=crlf
 *.psrc     text eol=crlf
 *.cdxml    text eol=crlf
+# Git LFS
+*.csf filter=lfs diff=lfs merge=lfs -text

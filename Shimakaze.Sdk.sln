@@ -1,11 +1,26 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk", "src\Shimakaze.Sdk\Shimakaze.Sdk.csproj", "{ACBD9A5B-1993-47A4-9295-56F32758AC53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Tests", "test\Shimakaze.Sdk.Tests\Shimakaze.Sdk.Tests.csproj", "{D6A48AC3-1A7F-4124-921E-303284A999C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACBD9A5B-1993-47A4-9295-56F32758AC53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACBD9A5B-1993-47A4-9295-56F32758AC53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACBD9A5B-1993-47A4-9295-56F32758AC53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACBD9A5B-1993-47A4-9295-56F32758AC53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6A48AC3-1A7F-4124-921E-303284A999C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A48AC3-1A7F-4124-921E-303284A999C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A48AC3-1A7F-4124-921E-303284A999C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A48AC3-1A7F-4124-921E-303284A999C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

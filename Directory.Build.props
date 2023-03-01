@@ -1,0 +1,8 @@
+<Project>
+  <Import Condition=" '$(MSBuildProjectExtension)' == '.csproj' "
+    Project="$(MSBuildThisFileDirectory)targets/CSharp.props" />
+  <Import Condition=" $(MSBuildProjectFile.EndsWith('Tests.csproj')) "
+    Project="$(MSBuildThisFileDirectory)targets/CSharpTests.props" />
+  <Import Condition=" '$(MSBuildProjectExtension)' != '.csproj' "
+    Project="$(MSBuildThisFileDirectory)targets/Common.props" />
+</Project>
