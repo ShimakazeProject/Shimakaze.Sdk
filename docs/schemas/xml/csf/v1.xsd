@@ -1,0 +1,83 @@
+<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:simpleType name="version">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="2" />
+      <xsd:maxInclusive value="3" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="protocol">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="1" />
+      <xsd:maxInclusive value="1" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="d_language">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="-1" />
+      <xsd:maxInclusive value="9" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="sz_language">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="en_US" />
+      <xsd:enumeration value="en_UK" />
+      <xsd:enumeration value="de" />
+      <xsd:enumeration value="fr" />
+      <xsd:enumeration value="es" />
+      <xsd:enumeration value="it" />
+      <xsd:enumeration value="jp" />
+      <xsd:enumeration value="Jabberwockie" />
+      <xsd:enumeration value="kr" />
+      <xsd:enumeration value="zh" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="value">
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attribute name="extra" type="xsd:string" />
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="label" mixed="true">
+    <xsd:choice minOccurs="0">
+      <xsd:element ref="value" />
+
+      <xsd:element name="values">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" ref="value" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:choice>
+
+    <xsd:attribute name="extra" type="xsd:string" use="optional" />
+    <xsd:attribute name="name" type="xsd:Name" use="required" />
+  </xsd:complexType>
+
+  <xsd:element name="Resources">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Label" type="label" maxOccurs="unbounded" />
+      </xsd:sequence>
+      <xsd:attribute name="protocol" type="protocol" use="required" />
+      <xsd:attribute name="version" type="version" use="required" />
+      <xsd:attribute name="language" type="d_language" />
+    </xsd:complexType>
+
+    <xsd:unique name="UniqueLabelName">
+      <xsd:selector xpath="Label" />
+      <xsd:field xpath="name" />
+    </xsd:unique>
+
+  </xsd:element>
+  
+</xsd:schema>
