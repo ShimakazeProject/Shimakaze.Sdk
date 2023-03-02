@@ -37,7 +37,7 @@ public class MixEntryReader : IDisposable
     /// <param name="stream">Mix文件流</param>
     /// <param name="leaveOpen"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public MixEntryReader(Stream stream, bool leaveOpen)
+    public MixEntryReader(Stream stream, bool leaveOpen = false)
     {
         _baseStream = stream ?? throw new ArgumentNullException(nameof(stream));
         _ = OnInitAsync();
@@ -57,13 +57,22 @@ public class MixEntryReader : IDisposable
                 throw new TimeoutException();
 
             // 标识符
-            await _baseStream.ReadAsync(_buffer.AsMemory(0, 10)).ConfigureAwait(false);
+            await _baseStream.ReadAsync(_buffer.AsMemory(0, 4)).ConfigureAwait(false);
             MixFileFlag flag = (MixFileFlag)BitConverter.ToUInt32(_buffer, 0);
             if ((flag & MixFileFlag.ENCRYPTED) is not 0)
                 throw new NotImplementedException("This Mix File is Encrypted.");
 
-            Count = BitConverter.ToInt16(_buffer, 4);
-            BodySize = BitConverter.ToInt32(_buffer, 6);
+            await _baseStream.ReadAsync(_buffer.AsMemory(0, 6)).ConfigureAwait(false);
+
+            MixFileInfo info;
+            unsafe
+            {
+                fixed (byte* ptr = _buffer)
+                    info = *(MixFileInfo*)ptr;
+            }
+
+            Count = info.Files;
+            BodySize = info.Size;
             BodyOffset = _baseStream.Position + 12 * Count;
         }
         finally
@@ -101,7 +110,7 @@ public class MixEntryReader : IDisposable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="disposing"></param>
     protected virtual void Dispose(bool disposing)

@@ -51,3 +51,4 @@
 *.cdxml    text eol=crlf
 # Git LFS
 *.csf filter=lfs diff=lfs merge=lfs -text
+*.mix filter=lfs diff=lfs merge=lfs -text
