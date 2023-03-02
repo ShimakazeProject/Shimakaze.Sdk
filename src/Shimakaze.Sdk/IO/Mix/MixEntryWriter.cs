@@ -18,47 +18,45 @@ public class MixEntryWriter : IDisposable
     /// 流起始位置
     /// </summary>
     protected readonly long _start;
-    /// <summary>
-    /// 线程安全锁
-    /// </summary>
-    protected Mutex _mutex = new();
     private bool _disposedValue;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="stream"></param>
     /// <param name="leaveOpen"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public MixEntryWriter(Stream stream, bool leaveOpen)
+    protected MixEntryWriter(Stream stream, bool leaveOpen = false)
     {
         if (!stream.CanSeek)
             throw new NotSupportedException("The stream cannot support Seek!");
         _baseStream = stream ?? throw new ArgumentNullException(nameof(stream));
         _start = _baseStream.Position;
-        _ = OnInitAsync();
         _leaveOpen = leaveOpen;
     }
+
+
     /// <summary>
-    /// 
+    ///
+    /// </summary>
+    /// <param name="stream">Mix文件流</param>
+    /// <param name="leaveOpen"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static async Task<MixEntryWriter> CreateAsync(Stream stream, bool leaveOpen = false)
+    {
+        MixEntryWriter writer = new(stream, leaveOpen);
+        await writer.OnInitAsync();
+        return writer;
+    }
+
+    /// <summary>
+    ///
     /// </summary>
     /// <returns></returns>
     /// <exception cref="TimeoutException"></exception>
     protected virtual async Task OnInitAsync()
     {
-        try
-        {
-            if (!_mutex.WaitOne(1000))
-                throw new TimeoutException();
-
-            await _baseStream.WriteAsync(BitConverter.GetBytes(0)).ConfigureAwait(false);
-
-            _baseStream.Seek(6, SeekOrigin.Current);
-        }
-        finally
-        {
-            _mutex.ReleaseMutex();
-        }
+        await _baseStream.WriteAsync(new byte[4 + 2 + 4]).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -70,7 +68,7 @@ public class MixEntryWriter : IDisposable
         var tmp = _baseStream.Position;
         _baseStream.Seek(_start + 4, SeekOrigin.Begin);
         await _baseStream.ReadAsync(_buffer.AsMemory(0, 2)).ConfigureAwait(false);
-        var count = BitConverter.ToInt16(_buffer, 2);
+        var count = BitConverter.ToInt16(_buffer, 0);
         _baseStream.Seek(-2, SeekOrigin.Current);
         await _baseStream.WriteAsync(BitConverter.GetBytes((short)(count + offset))).ConfigureAwait(false);
         _baseStream.Seek(tmp, SeekOrigin.Begin);
@@ -94,30 +92,20 @@ public class MixEntryWriter : IDisposable
     /// <returns></returns>
     public async Task WriteAsync(MixIndexEntry entry)
     {
-        try
+        unsafe
         {
-            if (!_mutex.WaitOne(1000))
-                throw new TimeoutException();
-
-            unsafe
+            fixed (byte* ptr = _buffer)
             {
-                fixed (byte* ptr = _buffer)
-                {
-                    MixIndexEntry* p = &entry;
-                    Buffer.MemoryCopy(p, ptr, sizeof(MixIndexEntry), sizeof(MixIndexEntry));
-                }
+                MixIndexEntry* p = &entry;
+                Buffer.MemoryCopy(p, ptr, sizeof(MixIndexEntry), sizeof(MixIndexEntry));
             }
-            await _baseStream.WriteAsync(_buffer).ConfigureAwait(false);
-            await WriteCount(1).ConfigureAwait(false);
         }
-        finally
-        {
-            _mutex.ReleaseMutex();
-        }
+        await _baseStream.WriteAsync(_buffer).ConfigureAwait(false);
+        await WriteCount(1).ConfigureAwait(false);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="disposing"></param>
     protected virtual void Dispose(bool disposing)
@@ -129,7 +117,6 @@ public class MixEntryWriter : IDisposable
                 // TODO: 释放托管状态(托管对象)
                 if (!_leaveOpen)
                     _baseStream.Dispose();
-                _mutex.Dispose();
             }
 
             // TODO: 释放未托管的资源(未托管的对象)并重写终结器

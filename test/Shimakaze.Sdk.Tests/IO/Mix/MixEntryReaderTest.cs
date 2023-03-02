@@ -16,31 +16,31 @@ public class MixEntryReaderTest
     {
         await using Stream fs = File.OpenRead(Path.Combine(Assets, InputFile));
         using MixEntryReader reader = await MixEntryReader.CreateAsync(fs);
-        Assert.AreEqual(fs.Position, 4 + 2 + 4);
-        Assert.AreNotEqual(reader.Count, 0);
-        Assert.AreNotEqual(reader.BodyOffset, 0);
+        Assert.AreEqual(4 + 2 + 4, fs.Position);
+        Assert.AreNotEqual(0, reader.Count);
+        Assert.AreNotEqual(0, reader.BodyOffset);
 
         MixIndexEntry csf = default;
         for (int i = 0; i < reader.Count; i++)
         {
             var entry = await reader.ReadAsync();
             Console.WriteLine(entry);
-            Assert.AreEqual(fs.Position, 4 + 2 + 4 + (i + 1) * 12);
+            Assert.AreEqual(4 + 2 + 4 + (i + 1) * 12, fs.Position);
 
             if (entry.Id is ra2md_csf)
                 csf = entry;
         }
         fs.Seek(reader.BodyOffset, SeekOrigin.Begin);
-        Assert.AreEqual(fs.Position, reader.BodyOffset);
+        Assert.AreEqual(reader.BodyOffset, fs.Position);
 
         fs.Seek(csf.Offset, SeekOrigin.Current);
-        Assert.AreEqual(fs.Position, reader.BodyOffset + csf.Offset);
+        Assert.AreEqual(reader.BodyOffset + csf.Offset, fs.Position);
         await using var ra2mdfs = File.OpenRead(Path.Combine(Assets, CsfFile));
         while (fs.Position < reader.BodyOffset + csf.Offset + csf.Size)
         {
             var _1 = fs.ReadByte();
             var _2 = ra2mdfs.ReadByte();
-            Assert.AreEqual(_1, _2, $"At Position {fs.Position}");
+            Assert.AreEqual(_2, _1, $"At Position {fs.Position}");
         }
     }
 }
