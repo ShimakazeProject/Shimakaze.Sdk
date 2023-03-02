@@ -15,7 +15,7 @@ public class MixEntryReaderTest
     public async Task Test()
     {
         await using Stream fs = File.OpenRead(Path.Combine(Assets, InputFile));
-        using MixEntryReader reader = new(fs);
+        using MixEntryReader reader = await MixEntryReader.CreateAsync(fs);
         Assert.AreEqual(fs.Position, 4 + 2 + 4);
         Assert.AreNotEqual(reader.Count, 0);
         Assert.AreNotEqual(reader.BodyOffset, 0);
@@ -40,7 +40,7 @@ public class MixEntryReaderTest
         {
             var _1 = fs.ReadByte();
             var _2 = ra2mdfs.ReadByte();
-            Assert.AreEqual(_1, _2, $"At Position ${fs.Position}");
+            Assert.AreEqual(_1, _2, $"At Position {fs.Position}");
         }
     }
 }

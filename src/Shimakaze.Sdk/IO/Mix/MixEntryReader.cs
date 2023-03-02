@@ -25,10 +25,6 @@ public class MixEntryReader : IDisposable
     /// 主体部分偏移位置
     /// </summary>
     public long BodyOffset { get; private set; }
-    /// <summary>
-    /// 线程安全锁
-    /// </summary>
-    protected Mutex _mutex = new();
     private bool _disposedValue;
 
     /// <summary>
@@ -37,12 +33,25 @@ public class MixEntryReader : IDisposable
     /// <param name="stream">Mix文件流</param>
     /// <param name="leaveOpen"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public MixEntryReader(Stream stream, bool leaveOpen = false)
+    protected MixEntryReader(Stream stream, bool leaveOpen = false)
     {
         _baseStream = stream ?? throw new ArgumentNullException(nameof(stream));
-        _ = OnInitAsync();
         _leaveOpen = leaveOpen;
     }
+
+    /// <summary>
+    /// 构造一个读取器
+    /// </summary>
+    /// <param name="stream">Mix文件流</param>
+    /// <param name="leaveOpen"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static async Task<MixEntryReader> CreateAsync(Stream stream, bool leaveOpen = false)
+    {
+        MixEntryReader reader = new(stream, leaveOpen);
+        await reader.OnInitAsync();
+        return reader;
+    }
+
     /// <summary>
     /// 初始化方法
     /// </summary>
@@ -51,34 +60,24 @@ public class MixEntryReader : IDisposable
     /// <exception cref="NotImplementedException"></exception>
     protected virtual async Task OnInitAsync()
     {
-        try
+        // 标识符
+        await _baseStream.ReadAsync(_buffer.AsMemory(0, 4)).ConfigureAwait(false);
+        MixFileFlag flag = (MixFileFlag)BitConverter.ToUInt32(_buffer, 0);
+        if ((flag & MixFileFlag.ENCRYPTED) is not 0)
+            throw new NotImplementedException("This Mix File is Encrypted.");
+
+        await _baseStream.ReadAsync(_buffer.AsMemory(0, 6)).ConfigureAwait(false);
+
+        MixFileInfo info;
+        unsafe
         {
-            if (!_mutex.WaitOne(1000))
-                throw new TimeoutException();
-
-            // 标识符
-            await _baseStream.ReadAsync(_buffer.AsMemory(0, 4)).ConfigureAwait(false);
-            MixFileFlag flag = (MixFileFlag)BitConverter.ToUInt32(_buffer, 0);
-            if ((flag & MixFileFlag.ENCRYPTED) is not 0)
-                throw new NotImplementedException("This Mix File is Encrypted.");
-
-            await _baseStream.ReadAsync(_buffer.AsMemory(0, 6)).ConfigureAwait(false);
-
-            MixFileInfo info;
-            unsafe
-            {
-                fixed (byte* ptr = _buffer)
-                    info = *(MixFileInfo*)ptr;
-            }
-
-            Count = info.Files;
-            BodySize = info.Size;
-            BodyOffset = _baseStream.Position + 12 * Count;
+            fixed (byte* ptr = _buffer)
+                info = *(MixFileInfo*)ptr;
         }
-        finally
-        {
-            _mutex.ReleaseMutex();
-        }
+
+        Count = info.Files;
+        BodySize = info.Size;
+        BodyOffset = _baseStream.Position + 12 * Count;
     }
 
     /// <summary>
@@ -88,24 +87,14 @@ public class MixEntryReader : IDisposable
     /// <exception cref="EndOfStreamException">没有可供读取的Entry了</exception>
     public async Task<MixIndexEntry> ReadAsync()
     {
-        try
-        {
-            if (!_mutex.WaitOne(1000))
-                throw new TimeoutException();
+        if (_baseStream.Position >= BodyOffset)
+            throw new EndOfStreamException();
 
-            if (_baseStream.Position >= BodyOffset)
-                throw new EndOfStreamException();
-
-            await _baseStream.ReadAsync(_buffer);
-            unsafe
-            {
-                fixed (byte* ptr = _buffer)
-                    return *(MixIndexEntry*)ptr;
-            }
-        }
-        finally
+        await _baseStream.ReadAsync(_buffer);
+        unsafe
         {
-            _mutex.ReleaseMutex();
+            fixed (byte* ptr = _buffer)
+                return *(MixIndexEntry*)ptr;
         }
     }
 
@@ -122,7 +111,6 @@ public class MixEntryReader : IDisposable
                 // TODO: 释放托管状态(托管对象)
                 if (!_leaveOpen)
                     _baseStream.Dispose();
-                _mutex.Dispose();
             }
 
             // TODO: 释放未托管的资源(未托管的对象)并重写终结器
