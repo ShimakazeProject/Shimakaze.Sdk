@@ -41,6 +41,7 @@ public static class IdCalculaters
     /// </markup>
     /// <param name="name">File Name</param>
     /// <returns>Id</returns>
+    [Obsolete("It's NOT pass the test!")]
     public static uint OldIdCalculater(string name)
     {
         name = name.ToUpper();
