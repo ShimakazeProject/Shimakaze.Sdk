@@ -87,7 +87,6 @@ public class MixExpander
         {
             mixHead = new()
             {
-                Flag = mixFlag,
                 Files = br.ReadInt16(),
                 Size = br.ReadInt32()
             };

@@ -5,32 +5,25 @@ namespace Shimakaze.Sdk.Data.Mix;
 /// <summary>
 /// Structure that contains the information of a mix index entry.
 /// </summary>
+/// <param name="Id">
+/// File ID <br/>
+/// This is the file ID of the file. <br/>
+/// It may be is CRC32 hash of the file name.
+/// </param>
+/// <param name="Offset">
+/// File Offset <br/>
+/// This is the offset of the file in the archive.
+/// </param>
+/// <param name="Size">
+/// File Size <br/>
+/// This is the size of the file in the archive.
+/// </param>
 [StructLayout(LayoutKind.Explicit)]
-public struct MixIndexEntry
-{
-    /// <summary>
-    /// File ID
-    /// </summary>
-    /// <remarks>
-    /// This is the file ID of the file. <br/>
-    /// It may be is CRC32 hash of the file name.
-    /// </remarks>
-    [FieldOffset(0)]
-    public uint Id;
-    /// <summary>
-    /// File Offset
-    /// </summary>
-    /// <remarks>
-    /// This is the offset of the file in the archive.
-    /// </remarks>
-    [FieldOffset(sizeof(uint))]
-    public int Offset;
-    /// <summary>
-    /// File Size
-    /// </summary>
-    /// <remarks>
-    /// This is the size of the file in the archive.
-    /// </remarks>
-    [FieldOffset(sizeof(uint) + sizeof(int))]
-    public int Size;
-}
+public record struct MixIndexEntry(
+    [field: FieldOffset(0)]
+    uint Id,
+    [field: FieldOffset(sizeof(uint))]
+    int Offset,
+    [field: FieldOffset(sizeof(uint) + sizeof(int))]
+    int Size
+);

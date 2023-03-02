@@ -5,30 +5,18 @@ namespace Shimakaze.Sdk.Data.Mix;
 /// <summary>
 /// Mix File Header
 /// </summary>
+/// <param name="Files">
+/// File Count <br/>
+/// it is the number of files in the archive.
+/// </param>
+/// <param name="Size">
+/// File Size <br/>
+/// it is the sum of all file sizes
+/// </param>
 [StructLayout(LayoutKind.Explicit)]
-public struct MixFileInfo
-{
-    /// <summary>
-    /// File Flag
-    /// </summary>
-    [FieldOffset(0)]
-    public uint Flag;
-
-    /// <summary>
-    /// File Count
-    /// </summary>
-    /// <remarks>
-    /// it is the number of files in the archive.
-    /// </remarks>
-    [FieldOffset(sizeof(uint))]
-    public short Files;
-
-    /// <summary>
-    /// File Size
-    /// </summary>
-    /// <remarks>
-    /// it is the sum of all file sizes
-    /// </remarks>
-    [FieldOffset(sizeof(MixFileFlag) + sizeof(short))]
-    public int Size;
-}
+public record struct MixFileInfo(
+    [field: FieldOffset(0)]
+    short Files,
+    [field: FieldOffset(sizeof(short))]
+    int Size
+);
