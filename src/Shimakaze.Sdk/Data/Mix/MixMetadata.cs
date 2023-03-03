@@ -14,7 +14,7 @@ namespace Shimakaze.Sdk.Data.Mix;
 /// it is the sum of all file sizes
 /// </param>
 [StructLayout(LayoutKind.Explicit)]
-public record struct MixFileInfo(
+public record struct MixMetadata(
     [field: FieldOffset(0)]
     short Files,
     [field: FieldOffset(sizeof(short))]

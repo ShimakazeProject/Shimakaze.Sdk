@@ -20,7 +20,7 @@ public class MixEntryReaderTest
         Assert.AreNotEqual(0, reader.Count);
         Assert.AreNotEqual(0, reader.BodyOffset);
 
-        MixIndexEntry csf = default;
+        MixEntry csf = default;
         for (int i = 0; i < reader.Count; i++)
         {
             var entry = await reader.ReadAsync();

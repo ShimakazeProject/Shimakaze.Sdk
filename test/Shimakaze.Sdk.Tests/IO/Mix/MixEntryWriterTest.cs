@@ -6,8 +6,8 @@ namespace Shimakaze.Sdk.Tests.IO.Mix;
 [TestClass()]
 public class MixEntryWriterTest
 {
-    private readonly MixIndexEntry csf = new(3179499641, 0, 573269);
-    private readonly MixIndexEntry lxd = new(913179935, 573280, 85);
+    private readonly MixEntry csf = new(3179499641, 0, 573269);
+    private readonly MixEntry lxd = new(913179935, 573280, 85);
     private const string Assets = "Assets";
     private const string MixFile = "test.mix";
     private const string CsfFile = "ra2md.csf";

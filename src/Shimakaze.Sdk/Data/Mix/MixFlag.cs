@@ -4,7 +4,7 @@ namespace Shimakaze.Sdk.Data.Mix;
 /// Flags for MixFile.
 /// </summary>
 [Flags]
-public enum MixFileFlag : uint
+public enum MixFlag : uint
 {
     /// <summary>
     /// 0x00_00_00_00

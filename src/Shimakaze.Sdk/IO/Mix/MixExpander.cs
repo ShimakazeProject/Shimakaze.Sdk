@@ -73,13 +73,13 @@ public class MixExpander
     }
 
 
-    private (MixFileInfo mixHead, MixIndexEntry[] mixEntries) HeaderParser(BinaryReader br)
+    private (MixMetadata mixHead, MixEntry[] mixEntries) HeaderParser(BinaryReader br)
     {
-        MixFileInfo mixHead;
-        MixIndexEntry[] mixEntries;
+        MixMetadata mixHead;
+        MixEntry[] mixEntries;
 
-        uint mixFlag = NoFlag ? (uint)MixFileFlag.NONE : br.ReadUInt32();
-        if ((mixFlag & (uint)MixFileFlag.ENCRYPTED) != 0)
+        uint mixFlag = NoFlag ? (uint)MixFlag.NONE : br.ReadUInt32();
+        if ((mixFlag & (uint)MixFlag.ENCRYPTED) != 0)
         {
             throw new NotImplementedException("This Mix File is Encrypted.");
         }
@@ -90,7 +90,7 @@ public class MixExpander
                 Files = br.ReadInt16(),
                 Size = br.ReadInt32()
             };
-            mixEntries = new MixIndexEntry[mixHead.Files];
+            mixEntries = new MixEntry[mixHead.Files];
             for (int i = 0; i < mixHead.Files; i++)
             {
                 mixEntries[i] = new()
@@ -106,7 +106,7 @@ public class MixExpander
     }
 
 
-    private async Task<Dictionary<uint, string>> NameMapParserAsync(Stream stream, MixIndexEntry? lxd, long body_offset)
+    private async Task<Dictionary<uint, string>> NameMapParserAsync(Stream stream, MixEntry? lxd, long body_offset)
     {
         Dictionary<uint, string> fileNameMap = new();
         Task<Dictionary<uint, string>>? tLnmf = default;

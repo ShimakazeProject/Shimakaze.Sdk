@@ -62,17 +62,17 @@ public class MixEntryReader : IDisposable
     {
         // 标识符
         await _baseStream.ReadAsync(_buffer.AsMemory(0, 4)).ConfigureAwait(false);
-        MixFileFlag flag = (MixFileFlag)BitConverter.ToUInt32(_buffer, 0);
-        if ((flag & MixFileFlag.ENCRYPTED) is not 0)
+        MixFlag flag = (MixFlag)BitConverter.ToUInt32(_buffer, 0);
+        if ((flag & MixFlag.ENCRYPTED) is not 0)
             throw new NotImplementedException("This Mix File is Encrypted.");
 
         await _baseStream.ReadAsync(_buffer.AsMemory(0, 6)).ConfigureAwait(false);
 
-        MixFileInfo info;
+        MixMetadata info;
         unsafe
         {
             fixed (byte* ptr = _buffer)
-                info = *(MixFileInfo*)ptr;
+                info = *(MixMetadata*)ptr;
         }
 
         Count = info.Files;
@@ -85,7 +85,7 @@ public class MixEntryReader : IDisposable
     /// </summary>
     /// <returns></returns>
     /// <exception cref="EndOfStreamException">没有可供读取的Entry了</exception>
-    public async Task<MixIndexEntry> ReadAsync()
+    public async Task<MixEntry> ReadAsync()
     {
         if (_baseStream.Position >= BodyOffset)
             throw new EndOfStreamException();
@@ -94,7 +94,7 @@ public class MixEntryReader : IDisposable
         unsafe
         {
             fixed (byte* ptr = _buffer)
-                return *(MixIndexEntry*)ptr;
+                return *(MixEntry*)ptr;
         }
     }
 

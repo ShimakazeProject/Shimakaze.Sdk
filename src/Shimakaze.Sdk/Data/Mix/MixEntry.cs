@@ -19,7 +19,7 @@ namespace Shimakaze.Sdk.Data.Mix;
 /// This is the size of the file in the archive.
 /// </param>
 [StructLayout(LayoutKind.Explicit)]
-public record struct MixIndexEntry(
+public record struct MixEntry(
     [field: FieldOffset(0)]
     uint Id,
     [field: FieldOffset(sizeof(uint))]

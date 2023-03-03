@@ -47,7 +47,7 @@ public class MixBuilder
     public virtual void Build(Stream stream, TextWriter writer)
     {
         using BinaryWriter sw = new(stream, Encoding.ASCII, true);
-        uint flag = (uint)MixFileFlag.NONE;
+        uint flag = (uint)MixFlag.NONE;
         short fileCount = (short)Files.Count;
         uint fileSize;
 

@@ -90,14 +90,14 @@ public class MixEntryWriter : IDisposable
     /// </summary>
     /// <param name="entry"></param>
     /// <returns></returns>
-    public async Task WriteAsync(MixIndexEntry entry)
+    public async Task WriteAsync(MixEntry entry)
     {
         unsafe
         {
             fixed (byte* ptr = _buffer)
             {
-                MixIndexEntry* p = &entry;
-                Buffer.MemoryCopy(p, ptr, sizeof(MixIndexEntry), sizeof(MixIndexEntry));
+                MixEntry* p = &entry;
+                Buffer.MemoryCopy(p, ptr, sizeof(MixEntry), sizeof(MixEntry));
             }
         }
         await _baseStream.WriteAsync(_buffer).ConfigureAwait(false);
