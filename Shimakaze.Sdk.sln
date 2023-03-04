@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk", "src\Shimakaze.Sdk\Shimakaze.Sdk.csproj", "{ACBD9A5B-1993-47A4-9295-56F32758AC53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Tests", "test\Shimakaze.Sdk.Tests\Shimakaze.Sdk.Tests.csproj", "{D6A48AC3-1A7F-4124-921E-303284A999C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Tests", "test\Shimakaze.Sdk.Tests\Shimakaze.Sdk.Tests.csproj", "{D6A48AC3-1A7F-4124-921E-303284A999C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Build", "src\Shimakaze.Sdk.Build\Shimakaze.Sdk.Build.csproj", "{23C180FE-3EF2-43B9-988F-393FA5CB0ABF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D6A48AC3-1A7F-4124-921E-303284A999C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6A48AC3-1A7F-4124-921E-303284A999C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6A48AC3-1A7F-4124-921E-303284A999C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23C180FE-3EF2-43B9-988F-393FA5CB0ABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23C180FE-3EF2-43B9-988F-393FA5CB0ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23C180FE-3EF2-43B9-988F-393FA5CB0ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23C180FE-3EF2-43B9-988F-393FA5CB0ABF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
