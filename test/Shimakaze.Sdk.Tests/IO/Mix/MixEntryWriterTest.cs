@@ -27,7 +27,7 @@ public class MixEntryWriterTest
     public async Task Test()
     {
         await using Stream fs = File.Create(Path.Combine(OutputPath, MixFile));
-        using MixEntryWriter writer = await MixEntryWriter.CreateAsync(fs);
+        using MixEntryWriter writer = await MixEntryWriter.CreateAsync(fs).ConfigureAwait(false);
         Assert.AreEqual(4 + 2 + 4, fs.Position);
         await writer.WriteAsync(csf);
         Assert.AreEqual(4 + 2 + 4 + 12, fs.Position);
@@ -49,7 +49,8 @@ public class MixEntryWriterTest
         await lxdfs.CopyToAsync(fs);
         Assert.AreEqual(bodyOffset + lxd.Offset + lxd.Size, fs.Position);
 
-        await writer.WriteBodySize(new[] { csf, lxd }.Max(i => i.Offset + i.Size));
+        await writer.WriteBodySize(new[] { csf, lxd }.Max(i => i.Offset + i.Size)).ConfigureAwait(false);
+        await writer.WriteCount(2).ConfigureAwait(false);
 
         await using var mixfs = File.OpenRead(Path.Combine(Assets, MixFile));
         fs.Seek(0, SeekOrigin.Begin);

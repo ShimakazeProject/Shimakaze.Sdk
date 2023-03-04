@@ -60,19 +60,17 @@ public class MixEntryWriter : IDisposable
     }
 
     /// <summary>
-    /// 用来写入计数的内部方法
+    /// 用来写入计数的方法
     /// </summary>
     /// <returns></returns>
-    protected virtual async Task WriteCount(short offset)
+    public virtual async Task WriteCount(short count)
     {
         var tmp = _baseStream.Position;
         _baseStream.Seek(_start + 4, SeekOrigin.Begin);
-        await _baseStream.ReadAsync(_buffer.AsMemory(0, 2)).ConfigureAwait(false);
-        var count = BitConverter.ToInt16(_buffer, 0);
-        _baseStream.Seek(-2, SeekOrigin.Current);
-        await _baseStream.WriteAsync(BitConverter.GetBytes((short)(count + offset))).ConfigureAwait(false);
+        await _baseStream.WriteAsync(BitConverter.GetBytes(count)).ConfigureAwait(false);
         _baseStream.Seek(tmp, SeekOrigin.Begin);
     }
+
     /// <summary>
     /// 用来写入BodySize的方法
     /// </summary>
@@ -101,7 +99,6 @@ public class MixEntryWriter : IDisposable
             }
         }
         await _baseStream.WriteAsync(_buffer).ConfigureAwait(false);
-        await WriteCount(1).ConfigureAwait(false);
     }
 
     /// <summary>
