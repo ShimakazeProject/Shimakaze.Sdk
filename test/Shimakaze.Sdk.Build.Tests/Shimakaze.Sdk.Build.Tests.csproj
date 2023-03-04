@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.5.0" />
+    <PackageReference Include="Moq" Version="4.18.4" />
+  </ItemGroup>
+</Project>
