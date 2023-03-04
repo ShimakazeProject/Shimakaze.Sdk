@@ -3,7 +3,7 @@ using Shimakaze.Sdk.IO.Mix;
 
 namespace Shimakaze.Sdk.Tests.IO.Mix;
 
-[TestClass()]
+[TestClass]
 public class MixBuilderTest
 {
     private const string Assets = "Assets";
@@ -12,7 +12,8 @@ public class MixBuilderTest
 
     private const string OutputPath = "Out";
 
-    public MixBuilderTest()
+    [TestInitialize]
+    public void Startup()
     {
         if (!Directory.Exists(OutputPath))
         {
@@ -20,7 +21,7 @@ public class MixBuilderTest
         }
     }
 
-    [TestMethod()]
+    [TestMethod]
     public async Task Test()
     {
         await using var fs = File.Create(Path.Combine(OutputPath, MixFile));

@@ -3,7 +3,7 @@ using Shimakaze.Sdk.IO.Mix;
 
 namespace Shimakaze.Sdk.Tests.IO.Mix;
 
-[TestClass()]
+[TestClass]
 public class MixEntryReaderTest
 {
     private const uint ra2md_csf = 3179499641;
@@ -11,7 +11,7 @@ public class MixEntryReaderTest
     private const string InputFile = "test.mix";
     private const string CsfFile = "ra2md.csf";
 
-    [TestMethod()]
+    [TestMethod]
     public async Task Test()
     {
         await using Stream fs = File.OpenRead(Path.Combine(Assets, InputFile));

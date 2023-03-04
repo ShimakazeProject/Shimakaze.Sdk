@@ -7,8 +7,12 @@ namespace Shimakaze.Sdk.Tests.Text.Ini;
 public class IniWriterTests
 {
     private const string OutputPath = "Out";
+    private const string OutputFile1 = "IniWriterTest1.ini";
+    private const string OutputFile2 = "IniWriterTest2.ini";
+    private const string OutputFile3 = "IniWriterTest3.ini";
 
-    public IniWriterTests()
+    [TestInitialize]
+    public void Startup()
     {
         if (!Directory.Exists(OutputPath))
         {
@@ -17,23 +21,23 @@ public class IniWriterTests
     }
 
     [TestMethod]
-    public void IniWriterTest()
+    public void IniWriterTest1()
     {
-        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, "IniWriterTest.ini"));
+        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, OutputFile1));
         IniWriter writer = new(sw);
     }
 
     [TestMethod]
-    public void IniWriterTest1()
+    public void IniWriterTest2()
     {
-        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, "IniWriterTest1.ini"));
+        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, OutputFile2));
         IniWriter writer = new(sw, IniSerializerOptions.Default);
     }
 
     [TestMethod]
     public void WriteTest()
     {
-        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, "WriteTest.ini"));
+        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, OutputFile3));
         IniWriter writer = new(sw);
         writer.Write(IniToken.Comment, "File Comment");
         writer.Write(IniToken.EmptyLine, string.Empty);

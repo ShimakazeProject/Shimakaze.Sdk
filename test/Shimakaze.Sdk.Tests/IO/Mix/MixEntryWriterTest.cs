@@ -3,7 +3,7 @@ using Shimakaze.Sdk.IO.Mix;
 
 namespace Shimakaze.Sdk.Tests.IO.Mix;
 
-[TestClass()]
+[TestClass]
 public class MixEntryWriterTest
 {
     private readonly MixEntry csf = new(3179499641, 0, 573269);
@@ -15,7 +15,8 @@ public class MixEntryWriterTest
 
     private const string OutputPath = "Out";
 
-    public MixEntryWriterTest()
+    [TestInitialize]
+    public void Startup()
     {
         if (!Directory.Exists(OutputPath))
         {
@@ -23,7 +24,7 @@ public class MixEntryWriterTest
         }
     }
 
-    [TestMethod()]
+    [TestMethod]
     public async Task Test()
     {
         await using Stream fs = File.Create(Path.Combine(OutputPath, MixFile));

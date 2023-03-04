@@ -9,6 +9,8 @@ public class IniSerializerTests
     private const string Assets = "Assets";
     private const string InputFile = "rulesmd.ini";
     private const string OutputPath = "Out";
+    private const string OutputFile1 = "SerializeTest1.ini";
+    private const string OutputFile2 = "SerializeTest2.ini";
 
     public IniSerializerTests()
     {
@@ -35,22 +37,22 @@ public class IniSerializerTests
     }
 
     [TestMethod]
-    public void SerializeTest()
-    {
-        using StreamReader sr = File.OpenText(Path.Combine(Assets, InputFile));
-        IniDocument document = IniSerializer.Deserialize(sr);
-
-        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, "SerializeTest.ini"));
-        IniSerializer.Serialize(sw, document);
-    }
-
-    [TestMethod]
     public void SerializeTest1()
     {
         using StreamReader sr = File.OpenText(Path.Combine(Assets, InputFile));
         IniDocument document = IniSerializer.Deserialize(sr);
 
-        using Stream stream = File.Create(Path.Combine(OutputPath, "SerializeTest1.ini"));
+        using StreamWriter sw = File.CreateText(Path.Combine(OutputPath, OutputFile1));
+        IniSerializer.Serialize(sw, document);
+    }
+
+    [TestMethod]
+    public void SerializeTest2()
+    {
+        using StreamReader sr = File.OpenText(Path.Combine(Assets, InputFile));
+        IniDocument document = IniSerializer.Deserialize(sr);
+
+        using Stream stream = File.Create(Path.Combine(OutputPath, OutputFile2));
         IniSerializer.Serialize(stream, document);
     }
 }

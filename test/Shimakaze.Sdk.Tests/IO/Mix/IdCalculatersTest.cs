@@ -3,7 +3,7 @@ using Shimakaze.Sdk.IO.Mix;
 
 namespace Shimakaze.Sdk.Tests.IO.Mix;
 
-[TestClass()]
+[TestClass]
 public class IdCalculatersTest
 {
     private const uint ra2md_csf = 3179499641;
@@ -11,7 +11,7 @@ public class IdCalculatersTest
     private const string CsfFile = "ra2md.csf";
     private const string LxdFile = "local mix database.dat";
 
-    [TestMethod()]
+    [TestMethod]
     public void TSIdCalculaterTest()
     {
         Assert.AreEqual(ra2md_csf, IdCalculaters.TSIdCalculater(CsfFile));

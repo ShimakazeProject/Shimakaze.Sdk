@@ -3,15 +3,18 @@ using Shimakaze.Sdk.Data.Csf.Serialization;
 
 namespace Shimakaze.Sdk.Tests.Data.Csf.Serialization;
 
-[TestClass()]
+[TestClass]
 public class CsfSerializerTests
 {
     private const string Assets = "Assets";
     private const string InputFile = "ra2md.csf";
     private const string OutputPath = "Out";
-    private readonly CsfDocument document;
+    private const string OutputFile1 = "SerializeTest1.csf";
+    private const string OutputFile2 = "SerializeTest2.csf";
+    private CsfDocument? document;
 
-    public CsfSerializerTests()
+    [TestInitialize]
+    public void Startup()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
         document = CsfSerializer.Deserialize(stream);
@@ -23,35 +26,35 @@ public class CsfSerializerTests
     }
 
 
-    [TestMethod()]
-    public void DeserializeTest()
+    [TestMethod]
+    public void DeserializeTest1()
     {
         using Stream fs = File.OpenRead(path: Path.Combine(Assets, InputFile));
         using BinaryReader br = new(fs);
         CsfDocument csf = CsfSerializer.Deserialize(br);
     }
 
-    [TestMethod()]
-    public void DeserializeTest1()
+    [TestMethod]
+    public void DeserializeTest2()
     {
         using Stream fs = File.OpenRead(path: Path.Combine(Assets, InputFile));
         CsfDocument csf = CsfSerializer.Deserialize(fs);
     }
 
-    [TestMethod()]
-    public void SerializeTest()
-    {
-        string path = Path.Combine(OutputPath, "SerializeTest.csf");
-        using Stream stream = File.Create(path);
-        using BinaryWriter bw = new(stream);
-        CsfSerializer.Serialize(bw, document);
-    }
-
-    [TestMethod()]
+    [TestMethod]
     public void SerializeTest1()
     {
-        string path = Path.Combine(OutputPath, "SerializeTest1.csf");
+        string path = Path.Combine(OutputPath, OutputFile1);
         using Stream stream = File.Create(path);
-        CsfSerializer.Serialize(stream, document);
+        using BinaryWriter bw = new(stream);
+        CsfSerializer.Serialize(bw, document!);
+    }
+
+    [TestMethod]
+    public void SerializeTest2()
+    {
+        string path = Path.Combine(OutputPath, OutputFile2);
+        using Stream stream = File.Create(path);
+        CsfSerializer.Serialize(stream, document!);
     }
 }

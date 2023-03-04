@@ -5,7 +5,7 @@ using Moq;
 
 namespace Shimakaze.Sdk.Build.Tests;
 
-[TestClass()]
+[TestClass]
 public class MixPackerTest
 {
     private const string Assets = "Assets";
@@ -15,7 +15,7 @@ public class MixPackerTest
     private Mock<IBuildEngine>? buildEngine;
     private List<BuildErrorEventArgs>? errors;
 
-    [TestInitialize()]
+    [TestInitialize]
     public void Startup()
     {
         buildEngine = new Mock<IBuildEngine>();
@@ -28,7 +28,7 @@ public class MixPackerTest
         }
     }
 
-    [TestMethod()]
+    [TestMethod]
     public void Test()
     {
         MixPacker task = new()
