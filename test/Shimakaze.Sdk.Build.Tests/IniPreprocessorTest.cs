@@ -11,7 +11,7 @@ public class IniPreprocessorTest
     private const string Assets = "Assets";
     private const string InputFile = "conditionTest.ini;defineTest.ini";
     private const string OutputPath = "Out";
-    private const string OutputFile = "IniPreprocessorTest";
+    private const string OutputFile = "obj";
     private const string Defines = "DEFINED;TEST";
     private Mock<IBuildEngine>? buildEngine;
     private List<BuildErrorEventArgs>? errors;
@@ -35,11 +35,12 @@ public class IniPreprocessorTest
         IniPreprocessor task = new()
         {
             Files = string.Join(';', InputFile.Split(';').Select(i => Path.GetFullPath(Path.Combine(Assets, i)))),
-            TargetDirectory = Path.Combine(Path.GetFullPath(OutputFile), OutputFile),
+            TargetDirectory = Path.Combine(Path.GetFullPath(OutputPath), OutputFile),
             BaseDirectory = Path.GetDirectoryName(Path.GetFullPath(OutputFile))!,
             Defines = Defines,
             BuildEngine = buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
+        Assert.AreEqual(2, task.OutputFiles.Length);
     }
 }

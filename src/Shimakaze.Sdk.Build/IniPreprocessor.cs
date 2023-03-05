@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Shimakaze.Sdk.Compiler.Preprocessor;
 using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
-using Shimakaze.Sdk.IO.Mix;
 
 using MSTask = Microsoft.Build.Utilities.Task;
+using TaskItem = Microsoft.Build.Utilities.TaskItem;
 
 namespace Shimakaze.Sdk.Build;
 
@@ -38,6 +38,12 @@ public sealed class IniPreprocessor : MSTask
     [Required]
     public required string BaseDirectory { get; set; }
 
+    /// <summary>
+    /// 输出的文件的地址
+    /// </summary>
+    [Output]
+    public ITaskItem[] OutputFiles { get; private set; } = Array.Empty<ITaskItem>();
+
     /// <inheritdoc/>
     public override bool Execute()
     {
@@ -51,17 +57,26 @@ public sealed class IniPreprocessor : MSTask
         using ServiceProvider serviceProvider = services.BuildServiceProvider();
         IPreprocessor preprocessor = serviceProvider.GetRequiredService<IPreprocessor>();
 
+        List<ITaskItem> outputFiles = new();
         Task.WaitAll(Files.Split(';').Select(i => i.Trim()).Select(Path.GetFullPath).Select(async file =>
         {
-            using var source = File.OpenText(file);
-            await using var target = File.CreateText(
-                Path.GetFileNameWithoutExtension(file.Replace(BaseDirectory, TargetDirectory))
-                + ".g.pp"
-                + Path.GetExtension(file)
+            string path = file.Replace(BaseDirectory, TargetDirectory);
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+
+            path = Path.Combine(
+                Path.GetDirectoryName(path)!,
+                $"{Path.GetFileNameWithoutExtension(path)}.g.pp{Path.GetExtension(file)}"
             );
+
+            outputFiles.Add(new TaskItem(path));
+
+            using var source = File.OpenText(file);
+            await using var target = File.CreateText(path);
 
             await preprocessor.ExecuteAsync(source, target, file);
         }).ToArray());
+        OutputFiles = outputFiles.ToArray();
 
         return true;
     }
