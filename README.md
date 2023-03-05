@@ -2,6 +2,7 @@
 
 |master|develop|
 |:-:|:-:|
+|[![Build](https://github.com/ShimakazeProject/Shimakaze.Sdk/actions/workflows/build.yml/badge.svg?branch=master&event=push)](https://github.com/ShimakazeProject/Shimakaze.Sdk/actions/workflows/build.yml)|[![Build](https://github.com/ShimakazeProject/Shimakaze.Sdk/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/ShimakazeProject/Shimakaze.Sdk/actions/workflows/build.yml)|
 |[![Coverage Status](https://coveralls.io/repos/github/ShimakazeProject/Shimakaze.Sdk/badge.svg?branch=master)](https://coveralls.io/github/ShimakazeProject/Shimakaze.Sdk?branch=master)|[![Coverage Status](https://coveralls.io/repos/github/ShimakazeProject/Shimakaze.Sdk/badge.svg?branch=develop)](https://coveralls.io/github/ShimakazeProject/Shimakaze.Sdk?branch=develop)|
 
 ## 这是什么？
