@@ -4,7 +4,7 @@
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <CollectCoverage>true</CollectCoverage>
-    <CoverletOutputFormat>opencover</CoverletOutputFormat>
+    <CoverletOutputFormat>lcov</CoverletOutputFormat>
   </PropertyGroup>
 
   <ItemGroup>

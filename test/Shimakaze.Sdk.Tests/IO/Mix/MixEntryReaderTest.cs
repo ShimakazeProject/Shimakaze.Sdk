@@ -14,6 +14,15 @@ public class MixEntryReaderTest
     [TestMethod]
     public async Task Test()
     {
+        try
+        {
+            await MixEntryReader.CreateAsync(null!);
+        }
+        catch (System.ArgumentNullException e)
+        {
+            Assert.AreEqual("stream", e.ParamName);
+        }
+
         await using Stream fs = File.OpenRead(Path.Combine(Assets, InputFile));
         using MixEntryReader reader = await MixEntryReader.CreateAsync(fs);
         Assert.AreEqual(4 + 2 + 4, fs.Position);
@@ -30,6 +39,15 @@ public class MixEntryReaderTest
             if (entry.Id is ra2md_csf)
                 csf = entry;
         }
+
+        try
+        {
+            await reader.ReadAsync();
+        }
+        catch (System.IO.EndOfStreamException)
+        {
+        }
+
         fs.Seek(reader.BodyOffset, SeekOrigin.Begin);
         Assert.AreEqual(reader.BodyOffset, fs.Position);
 
@@ -41,6 +59,25 @@ public class MixEntryReaderTest
             var _1 = fs.ReadByte();
             var _2 = ra2mdfs.ReadByte();
             Assert.AreEqual(_2, _1, $"At Position {fs.Position}");
+        }
+    }
+
+    [TestMethod]
+    public async Task NotSupportTest()
+    {
+        await using MemoryStream ms = new(new byte[]{
+            255, 255, 255, 255,
+            0, 0,
+            0, 0, 0, 0,
+        });
+
+        try
+        {
+            await MixEntryReader.CreateAsync(ms);
+        }
+        catch (System.NotImplementedException e)
+        {
+            Assert.AreEqual("This Mix File is Encrypted.", e.Message);
         }
     }
 }

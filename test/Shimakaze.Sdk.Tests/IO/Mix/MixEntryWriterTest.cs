@@ -24,6 +24,23 @@ public class MixEntryWriterTest
     [TestMethod]
     public async Task Test()
     {
+        try
+        {
+            using var tmp = await MixEntryWriter.CreateAsync(new NonSeekableStream()).ConfigureAwait(false);
+        }
+        catch (System.NotSupportedException e)
+        {
+            Assert.AreEqual("The stream cannot support Seek!", e.Message);
+        }
+        try
+        {
+            using var tmp = await MixEntryWriter.CreateAsync(null!).ConfigureAwait(false);
+        }
+        catch (System.ArgumentNullException e)
+        {
+            Assert.AreEqual("stream", e.ParamName);
+        }
+
         await using Stream fs = File.Create(Path.Combine(OutputPath, MixFile));
         using MixEntryWriter writer = await MixEntryWriter.CreateAsync(fs).ConfigureAwait(false);
         Assert.AreEqual(4 + 2 + 4, fs.Position);
@@ -58,5 +75,43 @@ public class MixEntryWriterTest
             var _2 = mixfs.ReadByte();
             Assert.AreEqual(_2, _1, $"At Position {fs.Position}");
         }
+    }
+}
+
+file sealed class NonSeekableStream : Stream
+{
+    public override bool CanRead => throw new NotImplementedException();
+
+    public override bool CanSeek => false;
+
+    public override bool CanWrite => throw new NotImplementedException();
+
+    public override long Length => throw new NotImplementedException();
+
+    public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+    public override void Flush()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override long Seek(long offset, SeekOrigin origin)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void SetLength(long value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Write(byte[] buffer, int offset, int count)
+    {
+        throw new NotImplementedException();
     }
 }

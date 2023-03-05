@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 
 using Shimakaze.Sdk.Compiler.Preprocessor;
+using Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
 
 namespace Shimakaze.Sdk.Tests.Compiler.Preprocessor;
@@ -75,4 +76,29 @@ public class PreprocessorTest
                 """.Trim(), "\n"));
 
     }
+
+    [TestMethod]
+    public async Task AddRegionCommandsTestAsync()
+    {
+        var services = new ServiceCollection()
+            .AddRegionCommands()
+            .AddPreprocessor();
+
+        await using ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IEnumerable<IPreprocessorCommand> enumerable = serviceProvider.GetServices<IPreprocessorCommand>();
+
+        Assert.AreEqual(2, enumerable.Count());
+    }
+
+    [TestMethod]
+    public async Task AddCommandsTestAsync()
+    {
+        var services = new ServiceCollection()
+            .AddCommand<RegionCommand>()
+            .AddPreprocessor();
+
+        await using ServiceProvider serviceProvider = services.BuildServiceProvider();
+        Assert.IsInstanceOfType<RegionCommand>(serviceProvider.GetRequiredService<IPreprocessorCommand>());
+    }
+
 }

@@ -22,11 +22,29 @@ public class MixBuilderTest
     public async Task Test()
     {
         await using var fs = File.Create(Path.Combine(OutputPath, MixFile));
-        await new MixBuilder()
-            .AddFile(new(Path.Combine(Assets, CsfFile)))
-            .SetIdCaculater(IdCalculaters.TSIdCalculater)
-            .BuildAsync(fs)
-            .ConfigureAwait(false);
+        FileInfo fileInfo = new(Path.Combine(Assets, CsfFile));
+        MixBuilder builder = new();
+        builder.AddFile(fileInfo);
+        Assert.AreEqual(1, builder.FileCount);
+
+        builder.RemoveFile(fileInfo);
+        Assert.AreEqual(0, builder.FileCount);
+
+        builder.AddFile(fileInfo);
+        Assert.AreEqual(1, builder.FileCount);
+
+        try
+        {
+            await builder.BuildAsync(fs).ConfigureAwait(false);
+        }
+        catch (System.Exception e)
+        {
+            Assert.AreEqual("idCalculater MUST be set!", e.Message);
+            builder.SetIdCaculater(IdCalculaters.TSIdCalculater);
+        }
+
+        await builder.BuildAsync(fs).ConfigureAwait(false);
+
         await fs.FlushAsync().ConfigureAwait(false);
     }
 }

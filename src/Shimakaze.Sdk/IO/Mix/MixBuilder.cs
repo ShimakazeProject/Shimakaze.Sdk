@@ -19,6 +19,12 @@ public class MixBuilder
     /// ID计算器
     /// </summary>
     protected IdCalculater? idCalculater;
+
+    /// <summary>
+    /// 已被添加到构建器的文件的个数
+    /// </summary>
+    public int FileCount => files.Count;
+
     /// <summary>
     /// 添加一个文件到构建器
     /// </summary>

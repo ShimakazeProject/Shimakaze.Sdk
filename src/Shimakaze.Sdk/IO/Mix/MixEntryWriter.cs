@@ -26,11 +26,12 @@ public class MixEntryWriter : IDisposable
     /// <param name="stream"></param>
     /// <param name="leaveOpen"></param>
     /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotSupportedException"></exception>
     protected MixEntryWriter(Stream stream, bool leaveOpen = false)
     {
+        _baseStream = stream ?? throw new ArgumentNullException(nameof(stream));
         if (!stream.CanSeek)
             throw new NotSupportedException("The stream cannot support Seek!");
-        _baseStream = stream ?? throw new ArgumentNullException(nameof(stream));
         _start = _baseStream.Position;
         _leaveOpen = leaveOpen;
     }

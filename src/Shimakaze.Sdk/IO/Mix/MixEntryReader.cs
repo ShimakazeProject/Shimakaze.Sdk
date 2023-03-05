@@ -45,6 +45,7 @@ public class MixEntryReader : IDisposable
     /// <param name="stream">Mix文件流</param>
     /// <param name="leaveOpen"></param>
     /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotImplementedException"></exception>
     public static async Task<MixEntryReader> CreateAsync(Stream stream, bool leaveOpen = false)
     {
         MixEntryReader reader = new(stream, leaveOpen);
@@ -56,7 +57,6 @@ public class MixEntryReader : IDisposable
     /// 初始化方法
     /// </summary>
     /// <returns></returns>
-    /// <exception cref="TimeoutException">初始化异常</exception>
     /// <exception cref="NotImplementedException"></exception>
     protected virtual async Task OnInitAsync()
     {
@@ -108,18 +108,14 @@ public class MixEntryReader : IDisposable
         {
             if (disposing)
             {
-                // TODO: 释放托管状态(托管对象)
                 if (!_leaveOpen)
                     _baseStream.Dispose();
             }
 
-            // TODO: 释放未托管的资源(未托管的对象)并重写终结器
-            // TODO: 将大型字段设置为 null
             _disposedValue = true;
         }
     }
 
-    // // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
     // ~MixEntryReader()
     // {
     //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
