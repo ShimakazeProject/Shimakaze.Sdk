@@ -1,5 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\conditionTest.ini" Link="Assets\conditionTest.ini" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\defineTest.ini" Link="Assets\defineTest.ini" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\local mix database.dat" Link="Assets\local mix database.dat" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.csf" Link="Assets\ra2md.csf" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.yaml" Link="Assets\ra2md.v1.csf.yaml" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.json" Link="Assets\ra2md.v1.csf.json" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.v2.csf.json" Link="Assets\ra2md.v2.csf.json" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\rulesmd.ini" Link="Assets\rulesmd.ini" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\test.mix" Link="Assets\test.mix" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="17.5.0" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.5.0" />
     <PackageReference Include="Moq" Version="4.18.4" />
