@@ -51,20 +51,17 @@ public sealed class IniPreprocessor : MSTask
         using ServiceProvider serviceProvider = services.BuildServiceProvider();
         IPreprocessor preprocessor = serviceProvider.GetRequiredService<IPreprocessor>();
 
-        List<Task> tasks = new();
-        foreach (var file in Files.Split(';').Select(i => i.Trim()).Select(Path.GetFullPath))
+        Task.WaitAll(Files.Split(';').Select(i => i.Trim()).Select(Path.GetFullPath).Select(async file =>
         {
             using var source = File.OpenText(file);
-            using var target = File.CreateText(
+            await using var target = File.CreateText(
                 Path.GetFileNameWithoutExtension(file.Replace(BaseDirectory, TargetDirectory))
                 + ".g.pp"
                 + Path.GetExtension(file)
             );
 
-            tasks.Add(preprocessor.ExecuteAsync(source, target, file));
-        }
-
-        Task.WaitAll(tasks.ToArray());
+            await preprocessor.ExecuteAsync(source, target, file);
+        }).ToArray());
 
         return true;
     }
