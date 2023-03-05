@@ -18,7 +18,7 @@ internal sealed class PreprocessorVariablesBuilder : IPreprocessorVariablesBuild
         _variables.Defines.Add(define);
         return this;
     }
-    public IPreprocessorVariablesBuilder AddDefines(params string[] defines) => AddDefines(defines);
+    public IPreprocessorVariablesBuilder AddDefines(params string[] defines) => AddDefines(defines as IEnumerable<string>);
 
     public IPreprocessorVariablesBuilder AddDefines(IEnumerable<string> defines)
     {

@@ -19,7 +19,8 @@ public class PreprocessorTest
             .AddLogging()
             .AddConditionCommands()
             .AddPreprocessor(builder => builder
-                .AddDefine("TEST")
+                .AddDefine("TEST1")
+                .AddDefines(new[] { "TEST2" })
             );
 
         await using var provider = services.BuildServiceProvider();
@@ -35,13 +36,17 @@ public class PreprocessorTest
 
         Regex regex = new("\\r?\\n");
         Assert.AreEqual(
-            regex.Replace(result.Trim(), "\n"),
             regex.Replace(
                 """
                 000
                 111
                 444
-                """.Trim(), "\n"));
+                666
+                777
+                999
+                """.Trim(), "\n"),
+            regex.Replace(result.Trim(), "\n")
+        );
 
     }
 
