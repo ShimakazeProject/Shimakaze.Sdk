@@ -26,8 +26,6 @@ internal sealed class Preprocessor : IPreprocessor
     private async Task ParseLineAsync(string line, long lineNumber, string filePath, Dictionary<string, IPreprocessorCommand> commands, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (!line.TrimStart().StartsWith("#"))
-            return;
 
         int index = line.IndexOf('#');
         string[] arr = line[line.IndexOf('#')..].TrimEnd().Split(' ');
@@ -39,13 +37,6 @@ internal sealed class Preprocessor : IPreprocessor
                 The preprocessor cannot resolve {command} preprocessor instructions.
                     at {filePath}:{line},{index}.
                 """);
-
-        // if (_serviceProvider.GetRequiredService(type) is not IPreprocessorCommand preprocessorCommand)
-        //     throw new InvalidOperationException($"""
-        //         The preprocessor cannot continue with the {command} preprocessor instruction
-        //         because the implementation of the instruction contains errors.
-        //             at {filePath}:{line},{index}.
-        //         """);
 
         try
         {

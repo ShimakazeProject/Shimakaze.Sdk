@@ -30,8 +30,6 @@ public sealed class IfCommand : PreprocessorCommand
         string condition = args[0];
         bool value = _conditionParser.Parse(condition);
 
-        _logger?.LogTrace($"[ConditionStack]::Push(\"{condition}\", \"{value}\", \"if\")");
-
         conditionStack.Push(new(value, condition, "if"));
         variable.WriteOutput = value;
 

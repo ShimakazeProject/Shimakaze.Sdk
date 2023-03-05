@@ -41,6 +41,7 @@ public class PreprocessorTest
                 000
                 111
                 444
+
                 666
                 777
                 999
@@ -106,4 +107,49 @@ public class PreprocessorTest
         Assert.IsInstanceOfType<RegionCommand>(serviceProvider.GetRequiredService<IPreprocessorCommand>());
     }
 
+    [TestMethod]
+    public async Task ErrorTest1Async()
+    {
+        var services = new ServiceCollection()
+            .AddLogging()
+            .AddConditionCommands()
+            .AddPreprocessor();
+
+        await using var provider = services.BuildServiceProvider();
+        var pp = provider.GetRequiredService<IPreprocessor>();
+        string path = Path.Combine("Assets", "errorTest.ini");
+        using StreamReader reader = File.OpenText(path);
+        await using MemoryStream ms = new();
+        await using StreamWriter writer = new(ms);
+        try
+        {
+            await pp.ExecuteAsync(reader, writer, path, CancellationToken.None).ConfigureAwait(false);
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+    [TestMethod]
+    public async Task ErrorTest2Async()
+    {
+        var services = new ServiceCollection()
+            .AddLogging()
+            .AddPreprocessor();
+
+        await using var provider = services.BuildServiceProvider();
+        var pp = provider.GetRequiredService<IPreprocessor>();
+        string path = Path.Combine("Assets", "errorTest.ini");
+        using StreamReader reader = File.OpenText(path);
+        await using MemoryStream ms = new();
+        await using StreamWriter writer = new(ms);
+        try
+        {
+            await pp.ExecuteAsync(reader, writer, path, CancellationToken.None).ConfigureAwait(false);
+        }
+        catch (NotSupportedException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
 }

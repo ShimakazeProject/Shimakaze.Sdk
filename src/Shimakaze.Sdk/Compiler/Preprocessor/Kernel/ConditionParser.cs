@@ -35,8 +35,11 @@ internal class ConditionParser : IConditionParser
 
     private bool AND(string condition) => condition.Trim().Split("&&").All(Parse);
 
-    private bool NOT(string condition) => (condition = condition.Trim()).StartsWith('!')
+    private bool NOT(string condition)
+    {
+        condition = condition.Trim();
+        return condition.StartsWith('!')
         ? !Parse(condition[1..])
         : Parse(condition);
-
+    }
 }

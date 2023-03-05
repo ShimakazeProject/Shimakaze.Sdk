@@ -1,7 +1,7 @@
 namespace Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
 
 /// <summary>
-/// IPreprocessor
+/// IPreprocessorVariables
 /// </summary>
 public interface IPreprocessorVariables
 {
@@ -17,4 +17,10 @@ public interface IPreprocessorVariables
     /// WriteOutput
     /// </summary>
     internal bool WriteOutput { get; set; }
+
+    /// <summary>
+    /// Creater
+    /// </summary>
+    /// <returns>IPreprocessorVariables</returns>
+    public static IPreprocessorVariables Create() => new PreprocessorVariables();
 }
