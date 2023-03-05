@@ -5,10 +5,10 @@
 /// </summary>
 public class CsfSerializerOptions
 {
-    private static CsfSerializerOptions? @default = default;
+    private static CsfSerializerOptions? s_default = default;
 
     /// <summary>
     /// Gets default.
     /// </summary>
-    public static CsfSerializerOptions Default => @default ??= new();
+    public static CsfSerializerOptions Default => s_default ??= new();
 }

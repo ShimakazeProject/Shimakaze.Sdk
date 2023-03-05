@@ -4,61 +4,24 @@ namespace Shimakaze.Sdk.Data.Csf;
 /// <summary>
 /// CsfMetadata.
 /// </summary>
+/// <param name="Identifier">identifier.</param>
+/// <param name="Version">version.</param>
+/// <param name="LabelCount">labelCount.</param>
+/// <param name="StringCount">stringCount.</param>
+/// <param name="Unknown">unknown.</param>
+/// <param name="Language">language.</param>
 [StructLayout(LayoutKind.Explicit)]
-public record struct CsfMetadata
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CsfMetadata"/> class.
-    /// </summary>
-    /// <param name="identifier">identifier.</param>
-    /// <param name="version">version.</param>
-    /// <param name="labelCount">labelCount.</param>
-    /// <param name="stringCount">stringCount.</param>
-    /// <param name="unknown">unknown.</param>
-    /// <param name="language">language.</param>
-    public CsfMetadata(int identifier, int version, int labelCount, int stringCount, int unknown, int language)
-    {
-        this.Identifier = identifier;
-        this.Version = version;
-        this.LabelCount = labelCount;
-        this.StringCount = stringCount;
-        this.Unknown = unknown;
-        this.Language = language;
-    }
-
-    /// <summary>
-    /// Gets or sets identifier.
-    /// </summary>
+public record struct CsfMetadata(
     [field: FieldOffset(sizeof(int) * 0)]
-    public int Identifier { readonly get; set; }
-
-    /// <summary>
-    /// Gets or sets version.
-    /// </summary>
+    int Identifier,
     [field: FieldOffset(sizeof(int) * 1)]
-    public int Version { readonly get; set; }
-
-    /// <summary>
-    /// Gets or sets labelCount.
-    /// </summary>
+    int Version,
     [field: FieldOffset(sizeof(int) * 2)]
-    public int LabelCount { readonly get; set; }
-
-    /// <summary>
-    /// Gets or sets stringCount.
-    /// </summary>
+    int LabelCount,
     [field: FieldOffset(sizeof(int) * 3)]
-    public int StringCount { readonly get; set; }
-
-    /// <summary>
-    /// Gets or sets unknown.
-    /// </summary>
+    int StringCount,
     [field: FieldOffset(sizeof(int) * 4)]
-    public int Unknown { readonly get; set; }
-
-    /// <summary>
-    /// Gets or sets language.
-    /// </summary>
+    int Unknown,
     [field: FieldOffset(sizeof(int) * 5)]
-    public int Language { readonly get; set; }
-}
+    int Language
+);

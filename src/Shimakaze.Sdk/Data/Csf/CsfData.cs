@@ -60,7 +60,7 @@ public record CsfData : IList<CsfValue>
         this.StringCount = stringCount;
         this.LabelNameLength = labelNameLength;
         this.LabelName = labelName;
-        this.Values = values is IList<CsfValue> list ? list : values.ToList();
+        this.Values = values.ToList();
     }
 
     /// <summary>

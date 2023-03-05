@@ -31,7 +31,7 @@ public record CsfDocument : IList<CsfData>
     public CsfDocument(CsfMetadata metadata, IEnumerable<CsfData> data)
     {
         this.Metadata = metadata;
-        this.Data = data is IList<CsfData> list ? list : data.ToList();
+        this.Data = data.ToList();
     }
 
     /// <summary>

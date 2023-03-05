@@ -19,6 +19,7 @@ public sealed class CsfSerializer : IBinarySerializer<CsfDocument, CsfSerializer
     /// <returns>CsfDocument.</returns>
     public static CsfDocument Deserialize(BinaryReader reader, CsfSerializerOptions? options = null)
     {
+        options ??= CsfSerializerOptions.Default;
         const int sizeofLabel = sizeof(int) * 3;
         const int sizeofValue = sizeof(int) * 2;
         int i, j, flag, count, length;
@@ -125,6 +126,7 @@ public sealed class CsfSerializer : IBinarySerializer<CsfDocument, CsfSerializer
     /// <param name="options">options.</param>
     public static void Serialize(BinaryWriter writer, CsfDocument document, CsfSerializerOptions? options = null)
     {
+        options ??= CsfSerializerOptions.Default;
         unsafe
         {
             nint ptr = Marshal.AllocHGlobal(sizeof(CsfMetadata));
