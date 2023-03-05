@@ -52,5 +52,5 @@ public record CsfValueExtra : CsfValue
     /// Convert instance to Normal Value.
     /// </summary>
     /// <returns>Normal Value.</returns>
-    public new CsfValue AsExtra() => new(this.Identifier, this.ValueLength, this.Value);
+    public CsfValue ToNormal() => new(this.Identifier, this.ValueLength, this.Value);
 }

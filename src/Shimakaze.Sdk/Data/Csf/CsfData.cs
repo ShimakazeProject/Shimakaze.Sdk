@@ -56,11 +56,11 @@ public record CsfData : IList<CsfValue>
     /// <param name="values">values.</param>
     public CsfData(int identifier, int stringCount, int labelNameLength, string labelName, IEnumerable<CsfValue> values)
     {
-        this.Identifier = identifier;
-        this.StringCount = stringCount;
-        this.LabelNameLength = labelNameLength;
-        this.LabelName = labelName;
-        this.Values = values.ToList();
+        Identifier = identifier;
+        StringCount = stringCount;
+        LabelNameLength = labelNameLength;
+        LabelName = labelName;
+        Values = values.ToList();
     }
 
     /// <summary>
@@ -89,44 +89,44 @@ public record CsfData : IList<CsfValue>
     public IList<CsfValue> Values { get; set; }
 
     /// <inheritdoc/>
-    public int Count => this.Values.Count;
+    public int Count => Values.Count;
 
     /// <inheritdoc/>
-    public bool IsReadOnly => this.Values.IsReadOnly;
+    public bool IsReadOnly => Values.IsReadOnly;
 
     /// <inheritdoc/>
-    public CsfValue this[int index] { get => this.Values[index]; set => this.Values[index] = value; }
+    public CsfValue this[int index] { get => Values[index]; set => Values[index] = value; }
 
     /// <summary>
     /// Re Count.
     /// </summary>
     public void ReCount()
     {
-        this.StringCount = this.Values.Count;
+        StringCount = Values.Count;
     }
 
     /// <inheritdoc/>
     public int IndexOf(CsfValue item)
     {
-        return this.Values.IndexOf(item);
+        return Values.IndexOf(item);
     }
 
     /// <inheritdoc/>
     public void Insert(int index, CsfValue item)
     {
-        this.Values.Insert(index, item);
+        Values.Insert(index, item);
     }
 
     /// <inheritdoc/>
     public void RemoveAt(int index)
     {
-        this.Values.RemoveAt(index);
+        Values.RemoveAt(index);
     }
 
     /// <inheritdoc/>
     public void Add(CsfValue item)
     {
-        this.Values.Add(item);
+        Values.Add(item);
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public record CsfData : IList<CsfValue>
     /// <param name="value">value.</param>
     public void Add(string value)
     {
-        this.Add(new CsfValue(value));
+        Add(new CsfValue(value));
     }
 
     /// <summary>
@@ -145,42 +145,42 @@ public record CsfData : IList<CsfValue>
     /// <param name="extra">extra.</param>
     public void Add(string value, string extra)
     {
-        this.Add(new CsfValueExtra(value, extra));
+        Add(new CsfValueExtra(value, extra));
     }
 
     /// <inheritdoc/>
     public void Clear()
     {
-        this.Values.Clear();
+        Values.Clear();
     }
 
     /// <inheritdoc/>
     public bool Contains(CsfValue item)
     {
-        return this.Values.Contains(item);
+        return Values.Contains(item);
     }
 
     /// <inheritdoc/>
     public void CopyTo(CsfValue[] array, int arrayIndex)
     {
-        this.Values.CopyTo(array, arrayIndex);
+        Values.CopyTo(array, arrayIndex);
     }
 
     /// <inheritdoc/>
     public bool Remove(CsfValue item)
     {
-        return this.Values.Remove(item);
+        return Values.Remove(item);
     }
 
     /// <inheritdoc/>
     public IEnumerator<CsfValue> GetEnumerator()
     {
-        return this.Values.GetEnumerator();
+        return Values.GetEnumerator();
     }
 
     /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return ((IEnumerable)this.Values).GetEnumerator();
+        return ((IEnumerable)Values).GetEnumerator();
     }
 }

@@ -30,14 +30,14 @@ public record CsfDocument : IList<CsfData>
     /// <param name="data">datas.</param>
     public CsfDocument(CsfMetadata metadata, IEnumerable<CsfData> data)
     {
-        this.Metadata = metadata;
-        this.Data = data.ToList();
+        Metadata = metadata;
+        Data = data.ToList();
     }
 
     /// <summary>
     /// Gets or sets metadata.
     /// </summary>
-    public CsfMetadata Metadata { get; set; } = default(CsfMetadata);
+    public CsfMetadata Metadata { get; set; } = default;
 
     /// <summary>
     /// Gets or sets datas.
@@ -45,18 +45,18 @@ public record CsfDocument : IList<CsfData>
     public IList<CsfData> Data { get; set; } = new List<CsfData>();
 
     /// <inheritdoc/>
-    public int Count => this.Data.Count;
+    public int Count => Data.Count;
 
     /// <inheritdoc/>
-    public bool IsReadOnly => this.Data.IsReadOnly;
+    public bool IsReadOnly => Data.IsReadOnly;
 
     /// <inheritdoc/>
-    public CsfData this[int index] { get => this.Data[index]; set => this.Data[index] = value; }
+    public CsfData this[int index] { get => Data[index]; set => Data[index] = value; }
 
     /// <inheritdoc/>
     public void Add(CsfData item)
     {
-        this.Data.Add(item);
+        Data.Add(item);
     }
 
     /// <summary>
@@ -66,43 +66,43 @@ public record CsfDocument : IList<CsfData>
     /// <param name="values">values.</param>
     public void Add(string label, IEnumerable<CsfValue> values)
     {
-        this.Add(new CsfData(label, values));
+        Add(new CsfData(label, values));
     }
 
     /// <inheritdoc/>
     public void Clear()
     {
-        this.Data.Clear();
+        Data.Clear();
     }
 
     /// <inheritdoc/>
     public bool Contains(CsfData item)
     {
-        return this.Data.Contains(item);
+        return Data.Contains(item);
     }
 
     /// <inheritdoc/>
     public void CopyTo(CsfData[] array, int arrayIndex)
     {
-        this.Data.CopyTo(array, arrayIndex);
+        Data.CopyTo(array, arrayIndex);
     }
 
     /// <inheritdoc/>
     public IEnumerator<CsfData> GetEnumerator()
     {
-        return this.Data.GetEnumerator();
+        return Data.GetEnumerator();
     }
 
     /// <inheritdoc/>
     public int IndexOf(CsfData item)
     {
-        return this.Data.IndexOf(item);
+        return Data.IndexOf(item);
     }
 
     /// <inheritdoc/>
     public void Insert(int index, CsfData item)
     {
-        this.Data.Insert(index, item);
+        Data.Insert(index, item);
     }
 
     /// <summary>
@@ -110,31 +110,31 @@ public record CsfDocument : IList<CsfData>
     /// </summary>
     public void ReCount()
     {
-        foreach (CsfData item in this.Data)
+        foreach (CsfData item in Data)
         {
             item.ReCount();
         }
 
-        CsfMetadata head = this.Metadata;
-        head.LabelCount = this.Data.Count;
-        head.StringCount = this.Data.Select(x => x.StringCount).Sum();
+        CsfMetadata head = Metadata;
+        head.LabelCount = Data.Count;
+        head.StringCount = Data.Select(x => x.StringCount).Sum();
     }
 
     /// <inheritdoc/>
     public bool Remove(CsfData item)
     {
-        return this.Data.Remove(item);
+        return Data.Remove(item);
     }
 
     /// <inheritdoc/>
     public void RemoveAt(int index)
     {
-        this.Data.RemoveAt(index);
+        Data.RemoveAt(index);
     }
 
     /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return ((IEnumerable)this.Data).GetEnumerator();
+        return ((IEnumerable)Data).GetEnumerator();
     }
 }

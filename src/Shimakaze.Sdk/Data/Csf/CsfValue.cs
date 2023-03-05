@@ -32,9 +32,9 @@ public record CsfValue
     /// <param name="value">value.</param>
     public CsfValue(int identifier, int valueLength, string value)
     {
-        this.Identifier = identifier;
-        this.ValueLength = valueLength;
-        this.Value = value;
+        Identifier = identifier;
+        ValueLength = valueLength;
+        Value = value;
     }
 
     /// <summary>
@@ -72,12 +72,12 @@ public record CsfValue
     /// Convert instance to Extra Value.
     /// </summary>
     /// <returns>Extra Value.</returns>
-    public CsfValueExtra AsExtra() => new(this.Identifier, this.ValueLength, this.Value, 0, string.Empty);
+    public CsfValueExtra ToExtra() => new(Identifier, ValueLength, Value, 0, string.Empty);
 
     /// <summary>
     /// Convert instance to Extra Value.
     /// </summary>
     /// <param name="extra">Extra Value String.</param>
     /// <returns>Extra Value.</returns>
-    public CsfValueExtra AsExtra(string extra) => new(this.Identifier, this.ValueLength, this.Value, extra.Length, extra);
+    public CsfValueExtra ToExtra(string extra) => new(Identifier, ValueLength, Value, extra.Length, extra);
 }
