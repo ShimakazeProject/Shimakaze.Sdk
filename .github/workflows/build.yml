@@ -30,36 +30,6 @@ jobs:
         run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
       - name: Test
         run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
-      - name: Create the package
-        run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
-      - name: Restore Tool
-        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        run: dotnet tool restore
-      - name: Coverall
-        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        env:
-          GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
-          COMMIT_ID: ${{ github.sha }}
-          COMMIT_BRANCH: ${{ github.ref_name}}
-        shell: pwsh
-        run: "
-          Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
-            dotnet csmacnz.Coveralls `
-              --lcov `
-              --input $_ `
-              --repoToken $env:COVERALL_TOKEN `
-              --useRelativePaths `
-              --commitId $env:COMMIT_ID `
-              --commitBranch $env:COMMIT_BRANCH `
-              --serviceName Ubuntu
-          }
-          "
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: nuget-packages-ubuntu
-          path: src/**/bin/Release/*.*nupkg
-          retention-days: 3
 
   build-windows:
     name: Build on Windows
@@ -84,25 +54,16 @@ jobs:
       - name: Restore Tool
         if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
         run: dotnet tool restore
-      - name: Coverall
+      - name: Coveralls GitHub Action
         if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        env:
-          GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
-          COMMIT_ID: ${{ github.sha }}
-          COMMIT_BRANCH: ${{ github.ref_name}}
-        shell: pwsh
-        run: "
-          Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
-            dotnet csmacnz.Coveralls `
-              --lcov `
-              --input $_ `
-              --repoToken $env:COVERALL_TOKEN `
-              --useRelativePaths `
-              --commitId $env:COMMIT_ID `
-              --commitBranch $env:COMMIT_BRANCH `
-              --serviceName Windows
-          }
-          "
+        uses: coverallsapp/github-action@v1
+        with:
+          path-to-lcov: ./test/Shimakaze.Sdk.Tests/coverage.net7.0.info
+      - name: Coveralls GitHub Action
+        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
+        uses: coverallsapp/github-action@v1
+        with:
+          path-to-lcov: ./test/Shimakaze.Sdk.Build.Tests/coverage.net7.0.info
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
@@ -128,33 +89,3 @@ jobs:
         run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
       - name: Test
         run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
-      - name: Create the package
-        run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
-      - name: Restore Tool
-        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        run: dotnet tool restore
-      - name: Coverall
-        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        env:
-          GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
-          COMMIT_ID: ${{ github.sha }}
-          COMMIT_BRANCH: ${{ github.ref_name}}
-        shell: pwsh
-        run: "
-          Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
-            dotnet csmacnz.Coveralls `
-              --lcov `
-              --input $_ `
-              --repoToken $env:COVERALL_TOKEN `
-              --useRelativePaths `
-              --commitId $env:COMMIT_ID `
-              --commitBranch $env:COMMIT_BRANCH `
-              --serviceName MacOS
-          }
-          "
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: nuget-packages-macos
-          path: src/**/bin/Release/*.*nupkg
-          retention-days: 3
