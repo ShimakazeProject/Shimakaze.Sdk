@@ -61,7 +61,7 @@ jobs:
       - name: Coveralls Shimakaze.Sdk.Build.Tests
         uses: coverallsapp/github-action@v1
         with:
-          flag-name: run-${{ join(matrix.*, '-') }}
+          flag-name: run-msbuild-${{ join(matrix.*, '-') }}
           parallel: true
           path-to-lcov: ./test/Shimakaze.Sdk.Build.Tests/coverage.net7.0.info
 
@@ -74,4 +74,4 @@ jobs:
       uses: coverallsapp/github-action@v1
       with:
         parallel-finished: true
-        carryforward: "run-ubuntu-latest,windows-latest,macos-latest"
+        carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest,run-msbuild-ubuntu-latest,run-msbuild-windows-latest,run-msbuild-macos-latest"
