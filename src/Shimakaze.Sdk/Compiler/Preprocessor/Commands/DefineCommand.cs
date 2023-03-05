@@ -10,9 +10,9 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("define")]
 public sealed class DefineCommand : PreprocessorCommand
 {
-    private readonly ILogger<DefineCommand> _logger;
+    private readonly ILogger<DefineCommand>? _logger;
     /// <inheritdoc/>
-    public DefineCommand(IPreprocessorVariables variable, ILogger<DefineCommand> logger) : base(variable)
+    public DefineCommand(IPreprocessorVariables variable, ILogger<DefineCommand>? logger = null) : base(variable)
     {
         _logger = logger;
     }

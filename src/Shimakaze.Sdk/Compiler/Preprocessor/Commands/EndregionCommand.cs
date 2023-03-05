@@ -10,9 +10,9 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("endregion")]
 public sealed class EndregionCommand : PreprocessorCommand
 {
-    private readonly ILogger<EndregionCommand> _logger;
+    private readonly ILogger<EndregionCommand>? _logger;
     /// <inheritdoc/>
-    public EndregionCommand(IPreprocessorVariables variable, ILogger<EndregionCommand> logger) : base(variable)
+    public EndregionCommand(IPreprocessorVariables variable, ILogger<EndregionCommand>? logger = null) : base(variable)
     {
         _logger = logger;
     }

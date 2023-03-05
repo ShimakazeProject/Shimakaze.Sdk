@@ -10,13 +10,13 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("if")]
 public sealed class IfCommand : PreprocessorCommand
 {
-    private readonly ILogger<IfCommand> _logger;
+    private readonly ILogger<IfCommand>? _logger;
     private readonly IConditionParser _conditionParser;
     /// <inheritdoc/>
-    public IfCommand(IPreprocessorVariables preprocessor, ILogger<IfCommand> logger, IConditionParser conditionParser) : base(preprocessor)
+    public IfCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<IfCommand>? logger = null) : base(preprocessor)
     {
-        _logger = logger;
         _conditionParser = conditionParser;
+        _logger = logger;
     }
 
     /// <inheritdoc/>
@@ -30,7 +30,7 @@ public sealed class IfCommand : PreprocessorCommand
         string condition = args[0];
         bool value = _conditionParser.Parse(condition);
 
-        _logger.LogTrace($"[ConditionStack]::Push(\"{condition}\", \"{value}\", \"if\")");
+        _logger?.LogTrace($"[ConditionStack]::Push(\"{condition}\", \"{value}\", \"if\")");
 
         conditionStack.Push(new(value, condition, "if"));
         variable.WriteOutput = value;

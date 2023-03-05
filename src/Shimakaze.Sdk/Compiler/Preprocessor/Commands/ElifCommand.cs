@@ -10,13 +10,13 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("elif")]
 public sealed class ElifCommand : PreprocessorCommand
 {
-    private readonly ILogger<ElifCommand> _logger;
+    private readonly ILogger<ElifCommand>? _logger;
     private readonly IConditionParser _conditionParser;
     /// <inheritdoc/>
-    public ElifCommand(IPreprocessorVariables preprocessor, ILogger<ElifCommand> logger, IConditionParser conditionParser) : base(preprocessor)
+    public ElifCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<ElifCommand>? logger = null) : base(preprocessor)
     {
-        _logger = logger;
         _conditionParser = conditionParser;
+        _logger = logger;
     }
 
     /// <inheritdoc/>

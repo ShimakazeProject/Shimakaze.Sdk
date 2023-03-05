@@ -10,9 +10,9 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("undef")]
 public sealed class UndefCommand : PreprocessorCommand
 {
-    private readonly ILogger<UndefCommand> _logger;
+    private readonly ILogger<UndefCommand>? _logger;
     /// <inheritdoc/>
-    public UndefCommand(IPreprocessorVariables variable, ILogger<UndefCommand> logger) : base(variable)
+    public UndefCommand(IPreprocessorVariables variable, ILogger<UndefCommand>? logger = null) : base(variable)
     {
         _logger = logger;
     }

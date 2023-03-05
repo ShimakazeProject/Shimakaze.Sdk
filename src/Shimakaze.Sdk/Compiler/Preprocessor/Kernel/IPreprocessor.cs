@@ -8,15 +8,15 @@ public interface IPreprocessor
     /// <summary>
     /// ExecuteAsync
     /// </summary>
-    /// <param name="input"></param>
-    /// <param name="output"></param>
-    /// <param name="filePath"></param>
+    /// <param name="input">输入文件</param>
+    /// <param name="output">输出文件</param>
+    /// <param name="filePath">输入文件的地址</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task ExecuteAsync(
         TextReader input,
         TextWriter output,
         string filePath,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     );
 }

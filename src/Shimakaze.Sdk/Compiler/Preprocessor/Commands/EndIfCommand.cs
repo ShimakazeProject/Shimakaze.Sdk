@@ -9,13 +9,13 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("endif")]
 public sealed class EndIfCommand : PreprocessorCommand
 {
-    private readonly ILogger<EndIfCommand> _logger;
+    private readonly ILogger<EndIfCommand>? _logger;
     private readonly IConditionParser _conditionParser;
     /// <inheritdoc/>
-    public EndIfCommand(IPreprocessorVariables preprocessor, ILogger<EndIfCommand> logger, IConditionParser conditionParser) : base(preprocessor)
+    public EndIfCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<EndIfCommand>? logger = null) : base(preprocessor)
     {
-        _logger = logger;
         _conditionParser = conditionParser;
+        _logger = logger;
     }
 
     /// <inheritdoc/>

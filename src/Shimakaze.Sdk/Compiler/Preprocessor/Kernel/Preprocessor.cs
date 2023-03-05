@@ -9,18 +9,18 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
 
 internal sealed class Preprocessor : IPreprocessor
 {
-    private readonly ILogger<Preprocessor> _logger;
+    private readonly ILogger<Preprocessor>? _logger;
     private readonly IPreprocessorVariables _variables;
     private readonly IServiceProvider _serviceProvider;
 
     public Preprocessor(
         IPreprocessorVariables variables,
-        ILogger<Preprocessor> logger,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ILogger<Preprocessor>? logger = null)
     {
         _variables = variables;
-        _logger = logger;
         _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
     private async Task ParseLineAsync(string line, long lineNumber, string filePath, Dictionary<string, IPreprocessorCommand> commands, CancellationToken cancellationToken)
@@ -66,7 +66,7 @@ internal sealed class Preprocessor : IPreprocessor
         TextReader input,
         TextWriter output,
         string filePath,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         Dictionary<string, IPreprocessorCommand> commands = _serviceProvider
             .GetServices<IPreprocessorCommand>()
@@ -79,8 +79,11 @@ internal sealed class Preprocessor : IPreprocessor
                 ));
 
         cancellationToken.ThrowIfCancellationRequested();
-        foreach (var define in _variables.Defines)
-            _logger.LogTrace("Define: " + define);
+        if (_logger is not null)
+        {
+            foreach (var define in _variables.Defines)
+                _logger.LogTrace("Define: " + define);
+        }
 
         long lineNumber = 0;
         while (input.Peek() is not -1)

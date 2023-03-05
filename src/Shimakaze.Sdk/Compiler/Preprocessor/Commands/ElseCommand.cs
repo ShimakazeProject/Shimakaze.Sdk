@@ -10,13 +10,13 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("else")]
 public sealed class ElseCommand : PreprocessorCommand
 {
-    private readonly ILogger<ElseCommand> _logger;
+    private readonly ILogger<ElseCommand>? _logger;
     private readonly IConditionParser _conditionParser;
     /// <inheritdoc/>
-    public ElseCommand(IPreprocessorVariables preprocessor, ILogger<ElseCommand> logger, IConditionParser conditionParser) : base(preprocessor)
+    public ElseCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<ElseCommand>? logger = null) : base(preprocessor)
     {
-        _logger = logger;
         _conditionParser = conditionParser;
+        _logger = logger;
     }
 
     /// <inheritdoc/>

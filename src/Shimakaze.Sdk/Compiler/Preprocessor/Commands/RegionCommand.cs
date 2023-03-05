@@ -10,9 +10,9 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 [PreprocessorCommand("region")]
 public sealed class RegionCommand : PreprocessorCommand
 {
-    private readonly ILogger<RegionCommand> _logger;
+    private readonly ILogger<RegionCommand>? _logger;
     /// <inheritdoc/>
-    public RegionCommand(IPreprocessorVariables variable, ILogger<RegionCommand> logger) : base(variable)
+    public RegionCommand(IPreprocessorVariables variable, ILogger<RegionCommand>? logger = null) : base(variable)
     {
         _logger = logger;
     }
