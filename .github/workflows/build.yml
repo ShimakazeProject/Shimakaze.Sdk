@@ -32,6 +32,24 @@ jobs:
         run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
       - name: Create the package
         run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
+      - name: Restore Tool
+        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
+        run: dotnet tool restore
+      - name: Coverall
+        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
+        env:
+          GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
+        shell: pwsh
+        run: "
+          Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
+            dotnet csmacnz.Coveralls `
+              --lcov `
+              --input $_ `
+              --repoToken $env:COVERALL_TOKEN `
+              --useRelativePaths `
+              --serviceName Ubuntu
+          }
+          "
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
@@ -59,6 +77,24 @@ jobs:
         run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
       - name: Create the package
         run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
+      - name: Restore Tool
+        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
+        run: dotnet tool restore
+      - name: Coverall
+        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
+        env:
+          GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
+        shell: pwsh
+        run: "
+          Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
+            dotnet csmacnz.Coveralls `
+              --lcov `
+              --input $_ `
+              --repoToken $env:COVERALL_TOKEN `
+              --useRelativePaths `
+              --serviceName Windows
+          }
+          "
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
@@ -86,6 +122,24 @@ jobs:
         run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
       - name: Create the package
         run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
+      - name: Restore Tool
+        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
+        run: dotnet tool restore
+      - name: Coverall
+        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
+        env:
+          GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
+        shell: pwsh
+        run: "
+          Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
+            dotnet csmacnz.Coveralls `
+              --lcov `
+              --input $_ `
+              --repoToken $env:COVERALL_TOKEN `
+              --useRelativePaths `
+              --serviceName MacOS
+          }
+          "
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
