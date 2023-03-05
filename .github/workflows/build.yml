@@ -52,19 +52,26 @@ jobs:
           retention-days: 3
 
       - name: Coveralls Shimakaze.Sdk.Tests
-        if:
-          github.repository == 'ShimakazeProject/Shimakaze.Sdk' &&
-          ( github.ref_name == 'master' || github.ref_name == 'develop' ) &&
-          ${{ matrix.os }} == 'windows-latest'
         uses: coverallsapp/github-action@v1
         with:
+          flag-name: run-${{ join(matrix.*, '-') }}
+          parallel: true
           path-to-lcov: ./test/Shimakaze.Sdk.Tests/coverage.net7.0.info
 
       - name: Coveralls Shimakaze.Sdk.Build.Tests
-        if:
-          github.repository == 'ShimakazeProject/Shimakaze.Sdk' &&
-          ( github.ref_name == 'master' || github.ref_name == 'develop' ) &&
-          ${{ matrix.os }} == 'windows-latest'
         uses: coverallsapp/github-action@v1
         with:
+          flag-name: run-${{ join(matrix.*, '-') }}
+          parallel: true
           path-to-lcov: ./test/Shimakaze.Sdk.Build.Tests/coverage.net7.0.info
+
+  finish:
+    needs: build
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v1
+      with:
+        parallel-finished: true
+        carryforward: "run-ubuntu-latest,windows-latest,macos-latest"
