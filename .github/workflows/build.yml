@@ -39,6 +39,8 @@ jobs:
         if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
         env:
           GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
+          COMMIT_ID: ${{ github.sha }}
+          COMMIT_BRANCH: ${{ github.ref_name}}
         shell: pwsh
         run: "
           Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
@@ -47,6 +49,8 @@ jobs:
               --input $_ `
               --repoToken $env:COVERALL_TOKEN `
               --useRelativePaths `
+              --commitId $env:COMMIT_ID `
+              --commitBranch $env:COMMIT_BRANCH `
               --serviceName Ubuntu
           }
           "
@@ -84,6 +88,8 @@ jobs:
         if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
         env:
           GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
+          COMMIT_ID: ${{ github.sha }}
+          COMMIT_BRANCH: ${{ github.ref_name}}
         shell: pwsh
         run: "
           Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
@@ -92,6 +98,8 @@ jobs:
               --input $_ `
               --repoToken $env:COVERALL_TOKEN `
               --useRelativePaths `
+              --commitId $env:COMMIT_ID `
+              --commitBranch $env:COMMIT_BRANCH `
               --serviceName Windows
           }
           "
@@ -129,6 +137,8 @@ jobs:
         if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
         env:
           GITHUB_TOKEN: ${{ secrets.COVERALL_TOKEN }}
+          COMMIT_ID: ${{ github.sha }}
+          COMMIT_BRANCH: ${{ github.ref_name}}
         shell: pwsh
         run: "
           Get-ChildItem ./test/**/coverage.*.info | ForEach-Object {
@@ -137,6 +147,8 @@ jobs:
               --input $_ `
               --repoToken $env:COVERALL_TOKEN `
               --useRelativePaths `
+              --commitId $env:COMMIT_ID `
+              --commitBranch $env:COMMIT_BRANCH `
               --serviceName MacOS
           }
           "
