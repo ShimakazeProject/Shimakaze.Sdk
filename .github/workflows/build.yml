@@ -12,80 +12,59 @@ on:
       - develop
 
 jobs:
-  build-ubuntu:
-    name: Build on Ubuntu
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3.3.0
         with:
           lfs: true
+
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3.0.3
         with:
           global-json-file: ./global.json
+
       - name: Restore
         run: dotnet restore Shimakaze.Sdk.sln
+
       - name: Build
         run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
+
       - name: Test
         run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
 
-  build-windows:
-    name: Build on Windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3.3.0
-        with:
-          lfs: true
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3.0.3
-        with:
-          global-json-file: ./global.json
-      - name: Restore
-        run: dotnet restore Shimakaze.Sdk.sln
-      - name: Build
-        run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
-      - name: Test
-        run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
-      - name: Create the package
+      - name: Pack
         run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
-      - name: Restore Tool
-        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        run: dotnet tool restore
-      - name: Coveralls GitHub Action
-        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        uses: coverallsapp/github-action@v1
-        with:
-          path-to-lcov: ./test/Shimakaze.Sdk.Tests/coverage.net7.0.info
-      - name: Coveralls GitHub Action
-        if: github.repository == 'ShimakazeProject/Shimakaze.Sdk' && ( github.ref_name == 'master' || github.ref_name == 'develop' )
-        uses: coverallsapp/github-action@v1
-        with:
-          path-to-lcov: ./test/Shimakaze.Sdk.Build.Tests/coverage.net7.0.info
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: nuget-packages-windows
+          name: nuget-packages-${{ matrix.os }}
           path: src/**/bin/Release/*.*nupkg
           retention-days: 3
 
-  build-macos:
-    name: Build on Mac OS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3.3.0
+      - name: Coveralls Shimakaze.Sdk.Tests
+        if:
+          github.repository == 'ShimakazeProject/Shimakaze.Sdk' &&
+          ( github.ref_name == 'master' || github.ref_name == 'develop' ) &&
+          ${{ matrix.os }} == 'windows-latest'
+        uses: coverallsapp/github-action@v1
         with:
-          lfs: true
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3.0.3
+          path-to-lcov: ./test/Shimakaze.Sdk.Tests/coverage.net7.0.info
+
+      - name: Coveralls Shimakaze.Sdk.Build.Tests
+        if:
+          github.repository == 'ShimakazeProject/Shimakaze.Sdk' &&
+          ( github.ref_name == 'master' || github.ref_name == 'develop' ) &&
+          ${{ matrix.os }} == 'windows-latest'
+        uses: coverallsapp/github-action@v1
         with:
-          global-json-file: ./global.json
-      - name: Restore
-        run: dotnet restore Shimakaze.Sdk.sln
-      - name: Build
-        run: dotnet build Shimakaze.Sdk.sln --configuration Release --no-restore
-      - name: Test
-        run: dotnet test Shimakaze.Sdk.sln --configuration Release --no-build
+          path-to-lcov: ./test/Shimakaze.Sdk.Build.Tests/coverage.net7.0.info
