@@ -61,8 +61,7 @@ public sealed class IniPreprocessor : MSTask
         Task.WaitAll(Files.Split(';').Select(i => i.Trim()).Select(Path.GetFullPath).Select(async file =>
         {
             string path = file.Replace(BaseDirectory, TargetDirectory);
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
-                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
             path = Path.Combine(
                 Path.GetDirectoryName(path)!,

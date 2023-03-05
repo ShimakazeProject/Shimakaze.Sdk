@@ -21,10 +21,7 @@ public class CsfJsonV1SerializerTests
     [TestInitialize]
     public void Startup()
     {
-        if (!Directory.Exists(OutputPath))
-        {
-            Directory.CreateDirectory(OutputPath);
-        }
+        Directory.CreateDirectory(OutputPath);
     }
 
     [TestMethod]

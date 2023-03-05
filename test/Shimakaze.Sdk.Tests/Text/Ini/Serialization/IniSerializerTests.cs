@@ -14,10 +14,7 @@ public class IniSerializerTests
 
     public IniSerializerTests()
     {
-        if (!Directory.Exists(OutputPath))
-        {
-            Directory.CreateDirectory(OutputPath);
-        }
+        Directory.CreateDirectory(OutputPath);
     }
 
     [TestMethod]

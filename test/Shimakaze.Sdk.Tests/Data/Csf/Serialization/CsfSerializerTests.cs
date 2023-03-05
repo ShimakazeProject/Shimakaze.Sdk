@@ -19,10 +19,7 @@ public class CsfSerializerTests
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
         document = CsfSerializer.Deserialize(stream);
 
-        if (!Directory.Exists(OutputPath))
-        {
-            Directory.CreateDirectory(OutputPath);
-        }
+        Directory.CreateDirectory(OutputPath);
     }
 
 

@@ -22,10 +22,7 @@ public class MixPackerTest
         errors = new List<BuildErrorEventArgs>();
         buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e));
 
-        if (!Directory.Exists(OutputPath))
-        {
-            Directory.CreateDirectory(OutputPath);
-        }
+        Directory.CreateDirectory(OutputPath);
     }
 
     [TestMethod]
