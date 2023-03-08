@@ -27,6 +27,14 @@ jobs:
         with:
           lfs: true
 
+      - name: Cache Nuget Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3.0.3
         with:
@@ -51,19 +59,12 @@ jobs:
           path: src/**/bin/Release/*.*nupkg
           retention-days: 3
 
-      - name: Coveralls Shimakaze.Sdk.Tests
+      - name: Coveralls
         uses: coverallsapp/github-action@v2
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
-          path-to-lcov: ./test/Shimakaze.Sdk.Tests/coverage.net7.0.info
-
-      - name: Coveralls Shimakaze.Sdk.Build.Tests
-        uses: coverallsapp/github-action@v2
-        with:
-          flag-name: run-msbuild-${{ join(matrix.*, '-') }}
-          parallel: true
-          path-to-lcov: ./test/Shimakaze.Sdk.Build.Tests/coverage.net7.0.info
+          file: ./coverage/lcov.info
 
   finish:
     needs: build
@@ -74,4 +75,4 @@ jobs:
       uses: coverallsapp/github-action@v2
       with:
         parallel-finished: true
-        carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest,run-msbuild-ubuntu-latest,run-msbuild-windows-latest,run-msbuild-macos-latest"
+        carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest"

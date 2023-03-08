@@ -154,6 +154,9 @@ coverage*.info
 *.coverage
 *.coveragexml
 
+# coverage
+coverage/*
+
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml

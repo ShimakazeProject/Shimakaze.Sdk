@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <CollectCoverage>true</CollectCoverage>
     <CoverletOutputFormat>lcov</CoverletOutputFormat>
+    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,10 @@
     <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
     <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="ReportGenerator" Version="5.1.18">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -32,5 +37,20 @@
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
+
+  <Target Name="GenerateHtmlCoverageReport" AfterTargets="GenerateCoverageResultAfterTest">
+    <ItemGroup>
+      <ReportFiles Include="$(MSBuildThisFileDirectory)..\test\**\coverage.*.info" />
+    </ItemGroup>
+    <Message Text="@(ReportFiles)" Importance="high" />
+    <ReportGenerator
+      ReportFiles="@(ReportFiles)"
+      TargetDirectory="$(MSBuildThisFileDirectory)..\coverage\html"
+      ReportTypes="lcov" />
+    <ReportGenerator
+      ReportFiles="@(ReportFiles)"
+      TargetDirectory="$(MSBuildThisFileDirectory)..\coverage"
+      ReportTypes="lcov" />
+  </Target>
 
 </Project>
