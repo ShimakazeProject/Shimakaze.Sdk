@@ -46,7 +46,7 @@
     <ReportGenerator
       ReportFiles="@(ReportFiles)"
       TargetDirectory="$(MSBuildThisFileDirectory)..\coverage\html"
-      ReportTypes="lcov" />
+      ReportTypes="html" />
     <ReportGenerator
       ReportFiles="@(ReportFiles)"
       TargetDirectory="$(MSBuildThisFileDirectory)..\coverage"
