@@ -32,6 +32,7 @@ public record CsfDocument : IList<CsfData>
     {
         Metadata = metadata;
         Data = data.ToList();
+        ReCount();
     }
 
     /// <summary>

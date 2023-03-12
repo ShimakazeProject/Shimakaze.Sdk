@@ -24,4 +24,14 @@ public record struct CsfMetadata(
     int Unknown,
     [field: FieldOffset(sizeof(int) * 5)]
     int Language
-);
+)
+{
+    /// <summary>
+    /// CsfMetadata.
+    /// </summary>
+    /// <param name="version">version.</param>
+    /// <param name="language">language.</param>
+    public CsfMetadata(int version, int language) : this(CsfConstants.CsfFlagRaw, version, 0, 0, 0, language)
+    {
+    }
+};

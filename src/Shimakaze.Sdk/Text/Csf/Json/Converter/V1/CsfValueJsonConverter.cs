@@ -6,69 +6,34 @@ using Shimakaze.Sdk.Data.Csf;
 namespace Shimakaze.Sdk.Text.Csf.Json.Converter.V1;
 
 /// <summary>
-/// CsfValueJsonConverter.
+/// Csf值 转换器
 /// </summary>
-public class CsfValueJsonConverter : JsonConverter<CsfValue>
+public sealed class CsfValueJsonConverter : JsonConverter<CsfValue>
 {
     /// <inheritdoc/>
-    public override CsfValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CsfValue? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        (string value, string extra) = (string.Empty, string.Empty);
-        JsonConverter<string> converter = options.GetConverter<string>();
-        switch (reader.TokenType)
+        return reader.TokenType switch
         {
-            case JsonTokenType.String:
-            case JsonTokenType.StartArray:
-                value = converter.Read(ref reader, options);
-                break;
-
-            case JsonTokenType.StartObject:
-                while (reader.Read())
-                {
-                    if (reader.TokenType is JsonTokenType.EndObject)
-                    {
-                        break;
-                    }
-
-                    if (reader.TokenType != JsonTokenType.PropertyName)
-                    {
-                        throw new JsonException();
-                    }
-
-                    switch (reader.GetString()?.ToLower() ?? throw new JsonException())
-                    {
-                        case "value":
-                            reader.Read();
-                            value = converter.Read(ref reader, options);
-                            break;
-
-                        case "extra":
-                            reader.Read();
-                            extra = (reader.TokenType is JsonTokenType.String ? reader.GetString() : null) ?? throw new JsonException();
-                            break;
-
-                        default:
-                            throw new JsonException();
-                    }
-                }
-
-                break;
-
-            default:
-                throw new JsonException();
-        }
-
-        return string.IsNullOrEmpty(extra) ? new CsfValue(value) : new CsfValueExtra(value, extra);
+            JsonTokenType.String or JsonTokenType.StartArray => new CsfValue(
+                reader
+                    .Get<CsfSimpleValueJsonConverter, string>(options)
+                    .ThrowWhenNull()
+            ),
+            JsonTokenType.StartObject => reader
+                    .Get<CsfAdvancedValueJsonConverter, CsfValue>(options),
+            _ => reader.TokenType.ThrowNotSupportToken<CsfValue>()
+        };
     }
 
     /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, CsfValue value, JsonSerializerOptions options)
     {
-        options.GetConverter<string>().Write(writer, value.Value, options);
-
-        if (value is CsfValueExtra extra)
+        if (value is not CsfValueExtra)
         {
-            writer.WriteString("extra", extra.ExtraValue);
+            writer.WriteValue<CsfSimpleValueJsonConverter, string>(value.Value, options);
+            return;
         }
+        writer.WriteValue<CsfAdvancedValueJsonConverter, CsfValue>(value, options);
     }
 }

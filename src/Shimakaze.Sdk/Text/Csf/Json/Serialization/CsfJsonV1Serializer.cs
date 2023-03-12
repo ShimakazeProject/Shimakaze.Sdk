@@ -9,17 +9,25 @@ namespace Shimakaze.Sdk.Text.Csf.Json.Serialization;
 /// <summary>
 /// CsfJsonV1Serializer.
 /// </summary>
-public sealed class CsfJsonV1Serializer : ITextSerializer<CsfDocument?, CsfJsonSerializerOptions>
+public sealed class CsfJsonV1Serializer : ITextSerializer<CsfDocument?, JsonSerializerOptions>
 {
+    private static JsonSerializerOptions Init(ref JsonSerializerOptions? options)
+    {
+        options ??= new();
+        foreach (var item in CsfJsonSerializerOptions.Converters)
+            options.Converters.Add(item);
+        return options;
+    }
+
     /// <summary>
     /// Deserialize.
     /// </summary>
     /// <param name="reader">reader.</param>
     /// <param name="options">options.</param>
     /// <returns><see cref="CsfDocument"/>.</returns>
-    public static CsfDocument? Deserialize(TextReader reader, CsfJsonSerializerOptions? options = null)
+    public static CsfDocument? Deserialize(TextReader reader, JsonSerializerOptions? options = null)
     {
-        return JsonSerializer.Deserialize<CsfDocument>(reader.ReadToEnd(), CsfJsonConverterUtils.CsfJsonSerializerOptions);
+        return JsonSerializer.Deserialize<CsfDocument>(reader.ReadToEnd(), Init(ref options));
     }
 
     /// <summary>
@@ -28,9 +36,9 @@ public sealed class CsfJsonV1Serializer : ITextSerializer<CsfDocument?, CsfJsonS
     /// <param name="stream">stream.</param>
     /// <param name="options">options.</param>
     /// <returns><see cref="CsfDocument"/>.</returns>
-    public static CsfDocument? Deserialize(Stream stream, CsfJsonSerializerOptions? options = null)
+    public static CsfDocument? Deserialize(Stream stream, JsonSerializerOptions? options = null)
     {
-        return JsonSerializer.Deserialize<CsfDocument>(stream, CsfJsonConverterUtils.CsfJsonSerializerOptions);
+        return JsonSerializer.Deserialize<CsfDocument>(stream, Init(ref options));
     }
 
     /// <summary>
@@ -39,12 +47,9 @@ public sealed class CsfJsonV1Serializer : ITextSerializer<CsfDocument?, CsfJsonS
     /// <param name="writer">writer.</param>
     /// <param name="document">document.</param>
     /// <param name="options">options.</param>
-    public static void Serialize(TextWriter writer, CsfDocument? document, CsfJsonSerializerOptions? options = null)
+    public static void Serialize(TextWriter writer, CsfDocument? document, JsonSerializerOptions? options = null)
     {
-        options ??= CsfJsonSerializerOptions.Default;
-        JsonSerializerOptions opt = CsfJsonConverterUtils.CsfJsonSerializerOptions;
-        opt.WriteIndented = options.WriteIndented;
-        writer.Write(JsonSerializer.Serialize(document, opt));
+        writer.Write(JsonSerializer.Serialize(document, Init(ref options)));
     }
 
     /// <summary>
@@ -53,11 +58,8 @@ public sealed class CsfJsonV1Serializer : ITextSerializer<CsfDocument?, CsfJsonS
     /// <param name="stream">stream.</param>
     /// <param name="document">document.</param>
     /// <param name="options">options.</param>
-    public static void Serialize(Stream stream, CsfDocument? document, CsfJsonSerializerOptions? options = null)
+    public static void Serialize(Stream stream, CsfDocument? document, JsonSerializerOptions? options = null)
     {
-        options ??= CsfJsonSerializerOptions.Default;
-        JsonSerializerOptions opt = CsfJsonConverterUtils.CsfJsonSerializerOptions;
-        opt.WriteIndented = options.WriteIndented;
-        JsonSerializer.Serialize(stream, document, opt);
+        JsonSerializer.Serialize(stream, document, Init(ref options));
     }
 }

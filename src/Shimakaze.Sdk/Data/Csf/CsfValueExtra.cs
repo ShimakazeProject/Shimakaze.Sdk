@@ -1,4 +1,6 @@
-﻿namespace Shimakaze.Sdk.Data.Csf;
+﻿using System.ComponentModel;
+
+namespace Shimakaze.Sdk.Data.Csf;
 
 /// <summary>
 /// Extra Value.
@@ -34,8 +36,16 @@ public record CsfValueExtra : CsfValue
     public CsfValueExtra(int identifier, int valueLength, string value, int extraValueLength, string extraValue)
       : base(identifier, valueLength, value)
     {
-        this.ExtraValueLength = extraValueLength;
-        this.ExtraValue = extraValue;
+        ExtraValueLength = extraValueLength;
+        ExtraValue = extraValue;
+    }
+
+    /// <inheritdoc/>
+    [DefaultValue(CsfConstants.StrwFlgRaw)]
+    public override int Identifier
+    {
+        get => base.Identifier;
+        set => base.Identifier = value;
     }
 
     /// <summary>
@@ -52,5 +62,5 @@ public record CsfValueExtra : CsfValue
     /// Convert instance to Normal Value.
     /// </summary>
     /// <returns>Normal Value.</returns>
-    public CsfValue ToNormal() => new(this.Identifier, this.ValueLength, this.Value);
+    public CsfValue ToNormal() => new(Identifier, ValueLength, Value);
 }

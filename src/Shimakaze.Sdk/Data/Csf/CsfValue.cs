@@ -1,4 +1,6 @@
-﻿namespace Shimakaze.Sdk.Data.Csf;
+﻿using System.ComponentModel;
+
+namespace Shimakaze.Sdk.Data.Csf;
 
 /// <summary>
 /// Csf Value.
@@ -56,7 +58,8 @@ public record CsfValue
     /// <summary>
     /// Gets or sets identifier.
     /// </summary>
-    public int Identifier { get; set; }
+    [DefaultValue(CsfConstants.StrFlagRaw)]
+    public virtual int Identifier { get; set; }
 
     /// <summary>
     /// Gets or sets value length.
