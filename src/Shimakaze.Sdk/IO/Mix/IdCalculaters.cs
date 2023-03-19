@@ -23,11 +23,11 @@ public static class IdCalculaters
         name = name.ToUpper();
         int l = name.Length;
         int a = l >> 2;
-        if ((l & 3) != 0)
+        if ((l & 3) is not 0)
         {
             name += (char)(byte)(l - (a << 2));
             int i = 3 - (l & 3);
-            while (i-- != 0)
+            while (i-- is not 0)
                 name += name[a << 2];
         }
         return BitConverter.ToUInt32(Crc32.Hash(Encoding.ASCII.GetBytes(name)), 0);

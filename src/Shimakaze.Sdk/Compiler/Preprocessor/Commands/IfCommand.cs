@@ -22,7 +22,7 @@ public sealed class IfCommand : PreprocessorCommand
     /// <inheritdoc/>
     public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
     {
-        if (args.Length != 1)
+        if (args.Length is not 1)
             throw new ArgumentException("Invalid arguments");
 
         var conditionStack = variable.ConditionStack;
