@@ -85,4 +85,16 @@ public class CsfBuilderTests
         };
         Assert.IsTrue(task.Execute());
     }
+    [TestMethod]
+    public void UnknownTest()
+    {
+        CsfBuilder task = new()
+        {
+            Files = "",
+            Type = "Unknown",
+            TargetDirectory = "",
+            BuildEngine = buildEngine?.Object,
+        };
+        Assert.ThrowsException<NotSupportedException>(() => task.Execute());
+    }
 }
