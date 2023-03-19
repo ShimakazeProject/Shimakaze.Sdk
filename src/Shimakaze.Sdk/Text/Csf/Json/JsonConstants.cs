@@ -6,23 +6,6 @@ namespace Shimakaze.Sdk.Text.Csf.Json;
 internal class JsonConstants
 {
     /// <summary>
-    /// LanguageList.
-    /// </summary>
-    public static readonly string[] LanguageList = new[]
-    {
-    "en_US",
-    "en_UK",
-    "de",
-    "fr",
-    "es",
-    "it",
-    "jp",
-    "Jabberwockie",
-    "kr",
-    "zh",
-  };
-
-    /// <summary>
     /// SchemaUrls.
     /// </summary>
     public static class SchemaUrls

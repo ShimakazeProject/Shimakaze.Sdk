@@ -1,139 +1,185 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "CSF Json schema",
-    "type": "object",
-    "properties": {
-        "protocol": {
-            "type": "integer",
-            "minimum": 1
+  "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfFile",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Shimakaze.Sdk.Csf.V1.CsfAdvancedData": {
+      "additionalProperties": false,
+      "description": "Csf复杂标签",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfAdvancedValue"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfAdvancedValue": {
+      "additionalProperties": false,
+      "description": "Csf复杂值",
+      "properties": {
+        "extra": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfSimpleValue"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfData": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfSingleData"
+        },
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfAdvancedData"
+        },
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfMultiData"
+        }
+      ],
+      "description": "Csf标签"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfFile": {
+      "additionalProperties": false,
+      "description": "Csf文件",
+      "properties": {
+        "data": {
+          "items": {
+            "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfData"
+          },
+          "type": "array"
         },
         "head": {
-            "type": "object",
-            "description": "文件头",
-            "properties": {
-                "version": {
-                    "type": "integer",
-                    "minimum": 2,
-                    "maximum": 3
-                },
-                "language": {
-                    "oneOf": [
-                        {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 9
-                        },
-                        {
-                            "type": "string",
-                            "enum": [
-                                "en_US",
-                                "en_UK",
-                                "de",
-                                "fr",
-                                "es",
-                                "it",
-                                "jp",
-                                "Jabberwockie",
-                                "kr",
-                                "zh"
-                            ]
-                        }
-                    ]
-                }
-            },
-            "required": [
-                "version"
-            ]
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfMetadata"
         },
-        "data": {
-            "type": "array",
-            "description": "文件主体",
-            "minItems": 1,
-            "maxItems": 2147483647,
-            "items": {
-                "type": "object",
-                "properties": {
-                    "label": {
-                        "type": "string",
-                        "pattern": "^[\\x20-\\x7E]*$"
-                    },
-                    "value": {
-                        "oneOf": [
-                            {
-                                "type": "string",
-                                "pattern": "^((?!\\r).)*$"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "pattern": "^((?!\\r).)*$"
-                                }
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ]
-                    },
-                    "values": {
-                        "type": "array",
-                        "items": {
-                            "oneOf": [
-                                {
-                                    "type": "string",
-                                    "pattern": "^((?!\\r).)*$"
-                                },
-                                {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "pattern": "^((?!\\r).)*$"
-                                    }
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "value": {
-                                            "oneOf": [
-                                                {
-                                                    "type": "string",
-                                                    "pattern": "^((?!\\r).)*$"
-                                                },
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "pattern": "^((?!\\r).)*$"
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        "extra": {
-                                            "type": "string",
-                                            "pattern": "^[\\x20-\\x7E]*$"
-                                        }
-                                    },
-                                    "required": [
-                                        "value"
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "extra": {
-                        "type": "string",
-                        "pattern": "^\\w*$"
-                    }
-                },
-                "required": [
-                    "label"
-                ]
-            }
+        "protocol": {
+          "const": 1,
+          "type": "number"
         }
-    },
-    "required": [
+      },
+      "required": [
         "protocol",
         "head",
         "data"
-    ]
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfLanguage": {
+      "description": "Csf支持的语言",
+      "enum": [
+        "en_US",
+        "en_UK",
+        "de",
+        "fr",
+        "es",
+        "it",
+        "jp",
+        "Jabberwockie",
+        "kr",
+        "zh"
+      ],
+      "type": "string"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfMetadata": {
+      "additionalProperties": false,
+      "description": "Csf元数据",
+      "properties": {
+        "language": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfLanguage"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "version": {
+          "enum": [
+            2,
+            3
+          ],
+          "type": "number"
+        }
+      },
+      "required": [
+        "version"
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfMultiData": {
+      "additionalProperties": false,
+      "description": "Csf多值标签",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "values": {
+          "items": {
+            "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfValue"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "label",
+        "values"
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfSimpleValue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      ],
+      "description": "Csf简单值"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfSingleData": {
+      "additionalProperties": false,
+      "description": "Csf简单标签",
+      "properties": {
+        "extra": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfSimpleValue"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfSimpleValue"
+        },
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfAdvancedValue"
+        }
+      ],
+      "description": "Csf值"
+    }
+  }
 }

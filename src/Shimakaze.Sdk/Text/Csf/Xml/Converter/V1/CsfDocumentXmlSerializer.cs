@@ -14,7 +14,7 @@ public class CsfDocumentXmlSerializer : IXmlSerializer<CsfDocument>
     /// <inheritdoc/>
     public CsfDocument Deserialize(XmlReader reader)
     {
-        CsfMetadata head = new();
+        CsfMetadata head = new(0, 0);
         while (reader.Read())
         {
             if (reader.NodeType is XmlNodeType.Whitespace or XmlNodeType.XmlDeclaration or XmlNodeType.ProcessingInstruction)

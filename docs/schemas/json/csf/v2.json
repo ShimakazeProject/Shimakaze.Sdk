@@ -1,145 +1,134 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "CSF Json v2 schema",
-    "type": "object",
-    "properties": {
-        "protocol": {
-            "type": "integer",
-            "minimum": 2,
-            "maximum": 2
+  "$ref": "#/definitions/Shimakaze.Sdk.Csf.V2.CsfFile",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Shimakaze.Sdk.Csf.V1.CsfAdvancedValue": {
+      "additionalProperties": false,
+      "description": "Csf复杂值",
+      "properties": {
+        "extra": {
+          "type": "string"
         },
-        "version": {
-            "type": "integer",
-            "minimum": 2,
-            "maximum": 3
+        "value": {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfSimpleValue"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfLanguage": {
+      "description": "Csf支持的语言",
+      "enum": [
+        "en_US",
+        "en_UK",
+        "de",
+        "fr",
+        "es",
+        "it",
+        "jp",
+        "Jabberwockie",
+        "kr",
+        "zh"
+      ],
+      "type": "string"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfSimpleValue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      ],
+      "description": "Csf简单值"
+    },
+    "Shimakaze.Sdk.Csf.V1.CsfValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfSimpleValue"
+        },
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfAdvancedValue"
+        }
+      ],
+      "description": "Csf值"
+    },
+    "Shimakaze.Sdk.Csf.V2.CsfDataValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfSimpleValue"
+        },
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfAdvancedValue"
+        },
+        {
+          "$ref": "#/definitions/Shimakaze.Sdk.Csf.V2.CsfMultiValue"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Csf标签的字符串值部分"
+    },
+    "Shimakaze.Sdk.Csf.V2.CsfFile": {
+      "additionalProperties": false,
+      "description": "Csf文件",
+      "properties": {
+        "data": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Shimakaze.Sdk.Csf.V2.CsfDataValue"
+          },
+          "type": "object"
         },
         "language": {
-            "oneOf": [
-                {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9
-                },
-                {
-                    "type": "string",
-                    "enum": [
-                        "en_US",
-                        "en_UK",
-                        "de",
-                        "fr",
-                        "es",
-                        "it",
-                        "jp",
-                        "Jabberwockie",
-                        "kr",
-                        "zh"
-                    ]
-                }
-            ]
-        },
-        "data": {
-            "type": "object",
-            "description": "文件主体",
-            "minProperties": 1,
-            "maxProperties": 2147483647,
-            "patternProperties": {
-                "^[\\x20-\\x7E]*$": {
-                    "oneOf": [
-                        {
-                            "type": "string",
-                            "pattern": "^((?!\\r).)*$"
-                        },
-                        {
-                            "type": "null"
-                        },
-                        {
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "pattern": "^((?!\\r).)*$"
-                            }
-                        },
-                        {
-                            "type": "object",
-                            "additionaProperties": false,
-                            "properties": {
-                                "value": {
-                                    "oneOf": [
-                                        {
-                                            "type": "string",
-                                            "pattern": "^((?!\\r).)*$"
-                                        },
-                                        {
-                                            "type": "null"
-                                        },
-                                        {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "pattern": "^((?!\\r).)*$"
-                                            }
-                                        }
-                                    ]
-                                },
-                                "extra": {
-                                    "type": "string",
-                                    "pattern": "^\\w*$"
-                                },
-                                "values": {
-                                    "type": "array",
-                                    "items": {
-                                        "oneOf": [
-                                            {
-                                                "type": "string",
-                                                "pattern": "^((?!\\r).)*$"
-                                            },
-                                            {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string",
-                                                    "pattern": "^((?!\\r).)*$"
-                                                }
-                                            },
-                                            {
-                                                "type": "object",
-                                                "additionaProperties": false,
-                                                "properties": {
-                                                    "value": {
-                                                        "oneOf": [
-                                                            {
-                                                                "type": "string",
-                                                                "pattern": "^((?!\\r).)*$"
-                                                            },
-                                                            {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "type": "string",
-                                                                    "pattern": "^((?!\\r).)*$"
-                                                                }
-                                                            }
-                                                        ]
-                                                    },
-                                                    "extra": {
-                                                        "type": "string",
-                                                        "pattern": "^[\\x20-\\x7E]*$"
-                                                    }
-                                                },
-                                                "required": [
-                                                    "value"
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                }
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfLanguage"
+            },
+            {
+              "type": "number"
             }
+          ]
+        },
+        "protocol": {
+          "const": 2,
+          "type": "number"
+        },
+        "version": {
+          "enum": [
+            2,
+            3
+          ],
+          "type": "number"
         }
-    },
-    "required": [
+      },
+      "required": [
         "protocol",
         "data"
-    ]
+      ],
+      "type": "object"
+    },
+    "Shimakaze.Sdk.Csf.V2.CsfMultiValue": {
+      "additionalProperties": false,
+      "description": "Csf多值",
+      "properties": {
+        "values": {
+          "items": {
+            "$ref": "#/definitions/Shimakaze.Sdk.Csf.V1.CsfValue"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "type": "object"
+    }
+  }
 }

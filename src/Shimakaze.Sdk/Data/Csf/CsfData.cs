@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 
 namespace Shimakaze.Sdk.Data.Csf;
 
@@ -66,6 +67,7 @@ public record CsfData : IList<CsfValue>
     /// <summary>
     /// Gets or sets identifier.
     /// </summary>
+    [DefaultValue(CsfConstants.LblFlagRaw)]
     public int Identifier { get; set; }
 
     /// <summary>
