@@ -17,6 +17,7 @@ namespace Shimakaze.Sdk.Build.Tests;
 public class CsfBuilderTests
 {
     private const string Assets = "Assets";
+    private const string InputXmlV1File = "ra2md.v1.csf.xml";
     private const string InputYamlV1File = "ra2md.v1.csf.yaml";
     private const string InputJsonV1File = "ra2md.v1.csf.json";
     private const string InputJsonV2File = "ra2md.v2.csf.json";
@@ -67,6 +68,18 @@ public class CsfBuilderTests
         {
             Files = Path.Combine(Assets, InputYamlV1File),
             Type = "YamlV1",
+            TargetDirectory = Path.Combine(OutputPath),
+            BuildEngine = buildEngine?.Object,
+        };
+        Assert.IsTrue(task.Execute());
+    }
+    [TestMethod]
+    public void XmlV1Test()
+    {
+        CsfBuilder task = new()
+        {
+            Files = Path.Combine(Assets, InputXmlV1File),
+            Type = "XmlV1",
             TargetDirectory = Path.Combine(OutputPath),
             BuildEngine = buildEngine?.Object,
         };

@@ -82,9 +82,7 @@ public sealed class CsfBuilder : MSTask
 
             using TextReader tr = File.OpenText(file);
             using Stream output = File.Create(target);
-            var csf = CsfJsonV1Serializer.Deserialize(tr);
-            if (csf is null)
-                throw new Exception();
+            var csf = CsfJsonV1Serializer.Deserialize(tr) ?? throw new Exception();
 
             CsfSerializer.Serialize(output, csf);
         }
@@ -100,9 +98,7 @@ public sealed class CsfBuilder : MSTask
 
             using TextReader tr = File.OpenText(file);
             using Stream output = File.Create(target);
-            var csf = CsfJsonV2Serializer.Deserialize(tr);
-            if (csf is null)
-                throw new Exception();
+            var csf = CsfJsonV2Serializer.Deserialize(tr) ?? throw new Exception();
 
             CsfSerializer.Serialize(output, csf);
         }
@@ -133,9 +129,7 @@ public sealed class CsfBuilder : MSTask
 
             using TextReader tr = File.OpenText(file);
             using Stream output = File.Create(target);
-            var csf = CsfYamlV1Serializer.Deserialize(tr);
-            if (csf is null)
-                throw new Exception();
+            var csf = CsfYamlV1Serializer.Deserialize(tr) ?? throw new Exception();
 
             CsfSerializer.Serialize(output, csf);
         }

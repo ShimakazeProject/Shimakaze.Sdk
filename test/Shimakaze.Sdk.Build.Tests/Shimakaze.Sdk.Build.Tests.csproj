@@ -4,6 +4,7 @@
     <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\defineTest.ini" Link="Assets\defineTest.ini" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\local mix database.dat" Link="Assets\local mix database.dat" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.csf" Link="Assets\ra2md.csf" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.xml" Link="Assets\ra2md.v1.csf.xml" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.yaml" Link="Assets\ra2md.v1.csf.yaml" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.json" Link="Assets\ra2md.v1.csf.json" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(MSBuildThisFileDirectory)..\Shimakaze.Sdk.Tests\Assets\ra2md.v2.csf.json" Link="Assets\ra2md.v2.csf.json" />
