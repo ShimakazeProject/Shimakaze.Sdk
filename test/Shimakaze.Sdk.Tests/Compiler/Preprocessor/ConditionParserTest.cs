@@ -1,4 +1,4 @@
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
 namespace Shimakaze.Sdk.Tests.Compiler.Preprocessor;
 

@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 
-using Shimakaze.Sdk.Compiler.Preprocessor.Commands;
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Commands;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor;
+namespace Shimakaze.Sdk.Preprocessor;
 
 /// <summary>
 /// PreprocessorExtension
@@ -26,8 +26,8 @@ public static class PreprocessorExtension
         Func<IPreprocessorVariablesBuilder, IPreprocessorVariablesBuilder> varBuilder
     ) => service
         .AddSingleton<IConditionParser, ConditionParser>()
-        .AddScoped<IPreprocessorVariables>(provider => varBuilder(new PreprocessorVariablesBuilder(provider)).Build())
-        .AddScoped<IPreprocessor, Preprocessor.Kernel.Preprocessor>();
+        .AddScoped(provider => varBuilder(new PreprocessorVariablesBuilder(provider)).Build())
+        .AddScoped<IPreprocessor, Kernel.Preprocessor>();
 
     /// <summary>
     /// AddCommand
@@ -68,4 +68,3 @@ public static class PreprocessorExtension
         .AddTransient<IPreprocessorCommand, DefineCommand>()
         .AddTransient<IPreprocessorCommand, UndefCommand>();
 }
-

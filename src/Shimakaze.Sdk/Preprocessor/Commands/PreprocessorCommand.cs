@@ -1,6 +1,6 @@
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
 /// PreprocessorCommand Base
@@ -11,6 +11,7 @@ public abstract class PreprocessorCommand : IPreprocessorCommand
     /// Preprocessor Instance
     /// </summary>
     protected readonly IPreprocessorVariables variable;
+
     /// <summary>
     /// Constructor
     /// </summary>

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
 /// #if _________
@@ -12,6 +12,7 @@ public sealed class IfCommand : PreprocessorCommand
 {
     private readonly ILogger<IfCommand>? _logger;
     private readonly IConditionParser _conditionParser;
+
     /// <inheritdoc/>
     public IfCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<IfCommand>? logger = null) : base(preprocessor)
     {

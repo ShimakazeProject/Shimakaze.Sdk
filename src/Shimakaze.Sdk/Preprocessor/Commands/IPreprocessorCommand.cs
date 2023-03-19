@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
 /// PreprocessorCommand Interface

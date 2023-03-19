@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
 /// #else
@@ -12,6 +12,7 @@ public sealed class ElseCommand : PreprocessorCommand
 {
     private readonly ILogger<ElseCommand>? _logger;
     private readonly IConditionParser _conditionParser;
+
     /// <inheritdoc/>
     public ElseCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<ElseCommand>? logger = null) : base(preprocessor)
     {

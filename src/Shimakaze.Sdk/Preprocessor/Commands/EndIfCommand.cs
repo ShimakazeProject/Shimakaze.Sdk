@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
+
 /// <summary>
 /// #endif
 /// </summary>
@@ -11,6 +12,7 @@ public sealed class EndIfCommand : PreprocessorCommand
 {
     private readonly ILogger<EndIfCommand>? _logger;
     private readonly IConditionParser _conditionParser;
+
     /// <inheritdoc/>
     public EndIfCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<EndIfCommand>? logger = null) : base(preprocessor)
     {

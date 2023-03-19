@@ -1,8 +1,8 @@
 ﻿using Microsoft.Build.Framework;
 using Microsoft.Extensions.DependencyInjection;
 
-using Shimakaze.Sdk.Compiler.Preprocessor;
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 using TaskItem = Microsoft.Build.Utilities.TaskItem;

@@ -2,9 +2,9 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Shimakaze.Sdk.Compiler.Preprocessor;
-using Shimakaze.Sdk.Compiler.Preprocessor.Commands;
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor;
+using Shimakaze.Sdk.Preprocessor.Commands;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
 namespace Shimakaze.Sdk.Tests.Compiler.Preprocessor;
 

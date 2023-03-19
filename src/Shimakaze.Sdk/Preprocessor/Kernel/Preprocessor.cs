@@ -3,9 +3,9 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+using Shimakaze.Sdk.Preprocessor.Commands;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+namespace Shimakaze.Sdk.Preprocessor.Kernel;
 
 internal sealed class Preprocessor : IPreprocessor
 {

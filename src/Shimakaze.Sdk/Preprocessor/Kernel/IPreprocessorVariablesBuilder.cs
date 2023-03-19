@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+namespace Shimakaze.Sdk.Preprocessor.Kernel;
 
 /// <summary>
 /// IPreprocessorVariablesBuilder
@@ -11,18 +11,21 @@ public interface IPreprocessorVariablesBuilder
     /// <param name="define"></param>
     /// <returns></returns>
     IPreprocessorVariablesBuilder AddDefine(string define);
+
     /// <summary>
     /// AddDefines
     /// </summary>
     /// <param name="defines"></param>
     /// <returns></returns>
     IPreprocessorVariablesBuilder AddDefines(params string[] defines);
+
     /// <summary>
     /// AddDefines
     /// </summary>
     /// <param name="defines"></param>
     /// <returns></returns>
     IPreprocessorVariablesBuilder AddDefines(IEnumerable<string> defines);
+
     /// <summary>
     /// Build
     /// </summary>

@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+namespace Shimakaze.Sdk.Preprocessor.Kernel;
 
 /// <summary>
 /// IPreprocessorVariables
@@ -9,10 +9,12 @@ public interface IPreprocessorVariables
     /// Defines
     /// </summary>
     HashSet<string> Defines { get; }
+
     /// <summary>
     /// ConditionStack
     /// </summary>
     internal Stack<ConditionStatus> ConditionStack { get; }
+
     /// <summary>
     /// WriteOutput
     /// </summary>

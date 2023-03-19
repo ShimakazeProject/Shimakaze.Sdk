@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
 /// #endregion
@@ -11,11 +11,13 @@ namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
 public sealed class EndregionCommand : PreprocessorCommand
 {
     private readonly ILogger<EndregionCommand>? _logger;
+
     /// <inheritdoc/>
     public EndregionCommand(IPreprocessorVariables variable, ILogger<EndregionCommand>? logger = null) : base(variable)
     {
         _logger = logger;
     }
+
     /// <inheritdoc/>
 
     public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)

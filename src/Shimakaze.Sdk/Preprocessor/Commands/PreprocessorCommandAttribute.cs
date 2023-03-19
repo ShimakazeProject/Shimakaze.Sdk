@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
 /// PreprocessorCommand
@@ -10,6 +10,7 @@ public sealed class PreprocessorCommandAttribute : Attribute
     /// PreprocessorCommand Name
     /// </summary>
     public string CommandName { get; }
+
     /// <summary>
     /// PreprocessorCommand
     /// </summary>

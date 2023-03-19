@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+namespace Shimakaze.Sdk.Preprocessor.Kernel;
 
 internal class ConditionParser : IConditionParser
 {

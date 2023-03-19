@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Compiler.Preprocessor.Kernel;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
-namespace Shimakaze.Sdk.Compiler.Preprocessor.Commands;
+namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
 /// #elif _________
@@ -12,6 +12,7 @@ public sealed class ElifCommand : PreprocessorCommand
 {
     private readonly ILogger<ElifCommand>? _logger;
     private readonly IConditionParser _conditionParser;
+
     /// <inheritdoc/>
     public ElifCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<ElifCommand>? logger = null) : base(preprocessor)
     {
