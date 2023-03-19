@@ -13,7 +13,7 @@ internal class JsonConstants
         /// <summary>
         /// BASEURL.
         /// </summary>
-        public const string BASEURL = "https://shimakazeproject.github.io/Schemas";
+        public const string BASEURL = "https://shimakazeproject.github.io/Shimakaze.Sdk/schemas";
 
         /// <summary>
         /// V1.
