@@ -36,6 +36,12 @@
     </xsd:restriction>
   </xsd:simpleType>
 
+  <xsd:simpleType name="basicLatin">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="\p{IsBasicLatin}*" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
   <xsd:element name="value">
     <xsd:complexType>
       <xsd:simpleContent>
@@ -60,7 +66,7 @@
     </xsd:choice>
 
     <xsd:attribute name="extra" type="xsd:string" use="optional" />
-    <xsd:attribute name="name" type="xsd:Name" use="required" />
+    <xsd:attribute name="name" type="basicLatin" use="required" />
   </xsd:complexType>
 
   <xsd:element name="Resources">
@@ -79,5 +85,5 @@
     </xsd:unique>
 
   </xsd:element>
-  
+
 </xsd:schema>

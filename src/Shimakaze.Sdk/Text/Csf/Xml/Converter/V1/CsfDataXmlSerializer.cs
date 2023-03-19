@@ -3,15 +3,15 @@ using System.Xml;
 
 using Shimakaze.Sdk.Data.Csf;
 
-namespace Shimakaze.Tools.Csf.Serialization.Xml.Converter.V1;
+namespace Shimakaze.Sdk.Text.Csf.Xml.Converter.V1;
 
 /// <summary>
 /// Csf数据序列化器
 /// </summary>
 public class CsfDataXmlSerializer : IXmlSerializer<CsfData>
 {
-    private readonly CsfValueListXmlSerializer csfValueListXmlSerializer = new();
-    private readonly CsfValueXmlSerializer csfValueXmlSerializer = new();
+    private readonly CsfValueListXmlSerializer _csfValueListXmlSerializer = new();
+    private readonly CsfValueXmlSerializer _csfValueXmlSerializer = new();
 
     /// <inheritdoc/>
     public CsfData Deserialize(XmlReader reader)
@@ -20,20 +20,13 @@ public class CsfDataXmlSerializer : IXmlSerializer<CsfData>
         if (reader.NodeType is XmlNodeType.Element && reader.Name is "Label")
         {
             string? lbl = reader.GetAttribute("name");
-            if (lbl is "GUI:Blank")
-            {
-                Debugger.Break();
-            }
-
             if (!string.IsNullOrWhiteSpace(lbl))
-            {
                 label.LabelName = lbl;
-            }
 
             label.Values = reader["extra"] switch
             {
-                not null => new[] { csfValueXmlSerializer.Deserialize(reader) },
-                _ => csfValueListXmlSerializer.Deserialize(reader),
+                not null => new[] { _csfValueXmlSerializer.Deserialize(reader) },
+                _ => _csfValueListXmlSerializer.Deserialize(reader),
             };
         }
         return label;
@@ -46,7 +39,7 @@ public class CsfDataXmlSerializer : IXmlSerializer<CsfData>
         writer.WriteStartElement("Label");
         writer.WriteAttributeString("name", value.LabelName);
 
-        csfValueListXmlSerializer.Serialize(writer, value.Values);
+        _csfValueListXmlSerializer.Serialize(writer, value.Values);
 
         // </Label>
         writer.WriteEndElement();

@@ -2,14 +2,14 @@ using System.Xml;
 
 using Shimakaze.Sdk.Data.Csf;
 
-namespace Shimakaze.Tools.Csf.Serialization.Xml.Converter.V1;
+namespace Shimakaze.Sdk.Text.Csf.Xml.Converter.V1;
 
 /// <summary>
 /// Csf文档序列化器
 /// </summary>
 public class CsfDocumentXmlSerializer : IXmlSerializer<CsfDocument>
 {
-    private readonly CsfDataListXmlSerializer csfDataListXmlSerializer = new();
+    private readonly CsfDataListXmlSerializer _csfDataListXmlSerializer = new();
 
     /// <inheritdoc/>
     public CsfDocument Deserialize(XmlReader reader)
@@ -17,31 +17,23 @@ public class CsfDocumentXmlSerializer : IXmlSerializer<CsfDocument>
         CsfMetadata head = new(0, 0);
         while (reader.Read())
         {
-            if (reader.NodeType is XmlNodeType.Whitespace or XmlNodeType.XmlDeclaration or XmlNodeType.ProcessingInstruction)
+            switch (reader.NodeType)
             {
-                continue;
-            }
+                case XmlNodeType.Element when reader.Name is "Resources":
+                    if (int.TryParse(reader.GetAttribute("version"), out int v))
+                        head.Version = v;
 
-            if (reader.NodeType is XmlNodeType.Element && reader.Name is "Resources")
-            {
-                if (int.TryParse(reader.GetAttribute("version"), out int v))
-                {
-                    head.Version = v;
-                }
-
-                if (int.TryParse(reader.GetAttribute("language"), out int l))
-                {
-                    head.Language = l;
-                }
-
-                break;
+                    if (int.TryParse(reader.GetAttribute("language"), out int l))
+                        head.Language = l;
+                    goto outer;
             }
         }
 
+    outer:
         return new()
         {
             Metadata = head,
-            Data = csfDataListXmlSerializer.Deserialize(reader)
+            Data = _csfDataListXmlSerializer.Deserialize(reader)
         };
     }
 
@@ -57,7 +49,7 @@ public class CsfDocumentXmlSerializer : IXmlSerializer<CsfDocument>
         writer.WriteAttributeString("version", value.Metadata.Version.ToString());
         writer.WriteAttributeString("language", value.Metadata.Language.ToString());
 
-        csfDataListXmlSerializer.Serialize(writer, value.Data);
+        _csfDataListXmlSerializer.Serialize(writer, value.Data);
 
         // </Resources>
         writer.WriteEndElement();

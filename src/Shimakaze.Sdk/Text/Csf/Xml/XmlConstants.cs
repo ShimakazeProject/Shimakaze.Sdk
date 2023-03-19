@@ -1,4 +1,4 @@
-namespace Shimakaze.Tools.Csf.Serialization.Xml;
+namespace Shimakaze.Sdk.Text.Csf.Xml;
 
 internal class XmlConstants
 {

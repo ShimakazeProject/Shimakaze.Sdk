@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace Shimakaze.Tools.Csf.Serialization.Xml.Converter.V1;
+namespace Shimakaze.Sdk.Text.Csf.Xml.Converter;
 
 /// <summary>
 /// XML序列化器
