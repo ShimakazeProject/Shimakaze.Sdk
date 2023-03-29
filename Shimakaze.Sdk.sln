@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Tests", "test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Build.Tests", "test\Shimakaze.Sdk.Build.Tests\Shimakaze.Sdk.Build.Tests.csproj", "{FA879A5B-692F-4528-8CA9-6B0A15D3B77A}"
 EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "Shimakaze.Sdk.NodeJS", "src\Shimakaze.Sdk.NodeJS\Shimakaze.Sdk.NodeJS.msbuildproj", "{C6F64FD8-A1DC-48AD-98F1-3FFD9976BFEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{FA879A5B-692F-4528-8CA9-6B0A15D3B77A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA879A5B-692F-4528-8CA9-6B0A15D3B77A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA879A5B-692F-4528-8CA9-6B0A15D3B77A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F64FD8-A1DC-48AD-98F1-3FFD9976BFEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F64FD8-A1DC-48AD-98F1-3FFD9976BFEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F64FD8-A1DC-48AD-98F1-3FFD9976BFEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F64FD8-A1DC-48AD-98F1-3FFD9976BFEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

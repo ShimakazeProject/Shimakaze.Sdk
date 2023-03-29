@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- HACK: Microsoft.Common.CurrentVersion.targets -->
+  <PropertyGroup>
+    <OutputPath>$(MSBuildProjectFullPath)\</OutputPath>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkMoniker>.NETFramework,Version=$(TargetFrameworkVersion)</TargetFrameworkMoniker>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+  </PropertyGroup>
+  <Target Name="CreateManifestResourceNames" />
+  <!-- HACK: MSB3191 -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Target
+      Name="PrepareForBuild"
+      DependsOnTargets="$(PrepareForBuildDependsOn)" />
+
+  <Target
+      Name="Restore"
+      Condition=" '$(NeedInstall)' == 'true' "
+      Inputs="$(ProjectFileFullPath)"
+      Outputs="$(LockFileFullPath)">
+    <Message
+        Importance="high"
+        Text="Run Command: $(RestoreCommand)" />
+
+    <Exec
+        WorkingDirectory="$(MSBuildProjectDirectory)"
+        Command="$(RestoreCommand)"
+        UseUtf8Encoding="$(UseUtf8Encoding)">
+      <Output
+          TaskParameter="ExitCode"
+          PropertyName="__ExitCode" />
+    </Exec>
+
+    <Touch
+        Files="$(LockFile)"
+        Condition="'$(__ExitCode)' == '0'"
+        AlwaysCreate="true" />
+  </Target>
+
+  <Target
+      Name="CoreCompile"
+      DependsOnTargets="Restore">
+    <Exec
+        Command="$(BuildCommand)"
+        WorkingDirectory="$(BuildCommandWorkingDirectory)"
+        Condition=" '$(BuildCommand)' != '' "
+        UseUtf8Encoding="$(UseUtf8Encoding)" />
+  </Target>
+
+</Project>

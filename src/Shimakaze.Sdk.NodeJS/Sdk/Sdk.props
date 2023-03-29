@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project
+    ToolsVersion="4.0"
+    DefaultTargets="Build"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+
+    <UseUtf8Encoding Condition=" '$(UseUtf8Encoding)' == '' ">Detect</UseUtf8Encoding>
+
+    <NeedInstall Condition=" '$(NeedInstall)' == '' ">True</NeedInstall>
+    <ProjectFile Condition=" '$(ProjectFile)' == '' ">package.json</ProjectFile>
+    <LockFile Condition=" '$(LockFile)' == '' ">package-lock.json</LockFile>
+    <ProjectFileFullPath Condition=" '$(ProjectFileFullPath)' == '' ">$(MSBuildProjectDirectory)\$(ProjectFile)</ProjectFileFullPath>
+    <LockFileFullPath Condition=" '$(LockFileFullPath)' == '' ">$(MSBuildProjectDirectory)\$(LockFile)</LockFileFullPath>
+
+    <RestoreCommand Condition=" '$(InstallCommand)' != '' ">npm install</RestoreCommand>
+    <BuildCommand Condition=" '$(BuildCommand)' != '' ">npm run build</BuildCommand>
+
+  </PropertyGroup>
+
+</Project>
