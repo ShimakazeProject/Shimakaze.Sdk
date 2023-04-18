@@ -49,3 +49,5 @@
 *.pssc     text eol=crlf
 *.psrc     text eol=crlf
 *.cdxml    text eol=crlf
+
+*.csf filter=lfs diff=lfs merge=lfs -text
