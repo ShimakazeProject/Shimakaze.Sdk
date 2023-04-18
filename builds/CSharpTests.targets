@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+
+  <Target Name="GenerateHtmlCoverageReport" AfterTargets="GenerateCoverageResultAfterTest">
+    <ItemGroup>
+      <ReportFiles Include="$(MSBuildThisFileDirectory)..\test\**\coverage.*.info" />
+    </ItemGroup>
+    <Message Text="@(ReportFiles)" Importance="high" />
+    <ReportGenerator
+      ReportFiles="@(ReportFiles)"
+      TargetDirectory="$(MSBuildThisFileDirectory)..\coverage\html"
+      ReportTypes="html" />
+    <ReportGenerator
+      ReportFiles="@(ReportFiles)"
+      TargetDirectory="$(MSBuildThisFileDirectory)..\coverage"
+      ReportTypes="lcov" />
+  </Target>
+
+</Project>

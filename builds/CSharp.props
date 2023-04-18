@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+
+  <PropertyGroup>
+    <TargetFrameworks>net7.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <RootNamespace Condition="$(MSBuildProjectName.EndsWith('.Abstractions'))">$(MSBuildProjectNameWithoutAbstractions)</RootNamespace>
+    <RootNamespace Condition="$(MSBuildProjectName.EndsWith('.Tests'))">$(MSBuildProjectNameWithoutTests)</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IDisposableAnalyzers" Version="4.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference
+      Include="$(ShimakazeSdkSourceFolder)$(MSBuildProjectName).Abstractions\$(MSBuildProjectName).Abstractions.csproj"
+      Condition=" Exists('$(ShimakazeSdkSourceFolder)$(MSBuildProjectName).Abstractions\$(MSBuildProjectName).Abstractions.csproj') " />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+  </ItemGroup>
+
+</Project>
