@@ -49,5 +49,7 @@
 *.pssc     text eol=crlf
 *.psrc     text eol=crlf
 *.cdxml    text eol=crlf
-
+# Git LFS
 *.csf filter=lfs diff=lfs merge=lfs -text
+*.mix filter=lfs diff=lfs merge=lfs -text
+*.dat filter=lfs diff=lfs merge=lfs -text
