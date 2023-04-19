@@ -1,0 +1,114 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - feat/**
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+        with:
+          lfs: true
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3.0.3
+        with:
+          global-json-file: ./global.json
+
+      - name: Restore All
+        shell: pwsh
+        run: |-
+          Get-ChildItem test `
+          | Where-Object {
+            $PSItem -is [System.IO.DirectoryInfo]
+          } `
+          | ForEach-Object {
+            Write-Output "Restore $($PSItem.Name.Replace('.Tests', ''))"
+            dotnet restore $PSItem.FullName
+          }
+
+      - name: Build All
+        shell: pwsh
+        run: |-
+          Get-ChildItem test `
+          | Where-Object {
+            $PSItem -is [System.IO.DirectoryInfo]
+          } `
+          | ForEach-Object {
+            Write-Output "Build $($PSItem.Name.Replace('.Tests', ''))"
+            dotnet build $PSItem.FullName --configuration Release --no-restore
+          }
+
+      - name: Test All
+        shell: pwsh
+        run: |-
+          Get-ChildItem test `
+          | Where-Object {
+            $PSItem -is [System.IO.DirectoryInfo]
+          } `
+          | ForEach-Object {
+            Write-Output "Test $($PSItem.Name.Replace('.Tests', ''))"
+            dotnet test $PSItem.FullName --configuration Release --no-build
+          }
+
+      - name: Pack All
+        shell: pwsh
+        run: |-
+          Get-ChildItem src `
+          | Where-Object {
+            $PSItem -is [System.IO.DirectoryInfo]
+          } `
+          | ForEach-Object {
+            Write-Output "Pack $($PSItem.Name)"
+            dotnet pack $PSItem.FullName --configuration Release --no-restore --no-build --include-symbols --include-source
+          }
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: nuget-packages-${{ matrix.os }}
+          path: src/**/bin/Release/*.*nupkg
+          retention-days: 3
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          flag-name: run-${{ join(matrix.*, '-') }}
+          parallel: true
+          file: ./coverage/lcov.info
+
+  finish:
+    needs: build
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v2
+      with:
+        parallel-finished: true
+        carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest"
