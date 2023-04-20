@@ -189,6 +189,11 @@ public class CsfWriter : IWriter<CsfData>, IAsyncWriter<CsfData, Task>, IDisposa
     {
         unsafe
         {
+            if (!_inited)
+            {
+                Init();
+                BaseStream.Seek(-sizeof(CsfMetadata), SeekOrigin.Current);
+            }
             nint ptr = Marshal.AllocHGlobal(sizeof(CsfMetadata));
             try
             {
