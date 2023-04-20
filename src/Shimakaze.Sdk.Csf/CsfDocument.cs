@@ -119,6 +119,7 @@ public record CsfDocument : IList<CsfData>
         CsfMetadata head = Metadata;
         head.LabelCount = Data.Count;
         head.StringCount = Data.Select(x => x.StringCount).Sum();
+        Metadata = head;
     }
 
     /// <inheritdoc/>
