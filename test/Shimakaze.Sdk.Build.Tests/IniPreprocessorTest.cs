@@ -32,12 +32,10 @@ public class IniPreprocessorTest
         IniPreprocessor task = new()
         {
             Files = string.Join(';', InputFile.Split(';').Select(i => Path.GetFullPath(Path.Combine(Assets, i)))),
-            TargetDirectory = Path.Combine(Path.GetFullPath(OutputPath), OutputFile),
-            BaseDirectory = Path.GetDirectoryName(Path.GetFullPath(OutputFile))!,
+            TargetFiles = string.Join(';', InputFile.Split(';').Select(i => Path.GetFullPath(Path.Combine(OutputPath, i)))),
             Defines = Defines,
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
-        Assert.AreEqual(2, task.OutputFiles.Length);
     }
 }

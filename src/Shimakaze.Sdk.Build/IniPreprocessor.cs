@@ -27,26 +27,22 @@ public sealed class IniPreprocessor : MSTask
     public required string Defines { get; set; }
 
     /// <summary>
-    /// 目标目录
+    /// 目标文件
     /// </summary>
     [Required]
-    public required string TargetDirectory { get; set; }
-
-    /// <summary>
-    /// 项目目录
-    /// </summary>
-    [Required]
-    public required string BaseDirectory { get; set; }
-
-    /// <summary>
-    /// 输出的文件的地址
-    /// </summary>
-    [Output]
-    public ITaskItem[] OutputFiles { get; private set; } = Array.Empty<ITaskItem>();
+    public required string TargetFiles { get; set; }
 
     /// <inheritdoc/>
     public override bool Execute()
     {
+        var inputs = Files.Split(';');
+        var outputs = TargetFiles.Split(';');
+        if (inputs.Length != outputs.Length)
+        {
+            Log.LogError("InputPaths.Length are not equal that OutputPaths.Length");
+            return false;
+        }
+
         ServiceCollection services = new();
         services
             .AddPreprocessor(i => i.AddDefines(Defines.Split(';').Select(i => i.Trim())))
@@ -57,35 +53,23 @@ public sealed class IniPreprocessor : MSTask
         using ServiceProvider serviceProvider = services.BuildServiceProvider();
         IPreprocessor preprocessor = serviceProvider.GetRequiredService<IPreprocessor>();
 
-        List<ITaskItem> outputFiles = new();
-        Task.WaitAll(Files.Split(';').Select(i => i.Trim()).Select(Path.GetFullPath).Select(async file =>
+        for (int i = 0; i < inputs.Length; i++)
         {
-            string path = file.Replace(BaseDirectory, TargetDirectory);
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-
-            path = Path.Combine(
-                Path.GetDirectoryName(path)!,
-                $"{Path.GetFileNameWithoutExtension(path)}.g.pp{Path.GetExtension(file)}"
-            );
-
-            outputFiles.Add(new TaskItem(path));
-
-            var outdir = Path.GetDirectoryName(path);
+            var outdir = Path.GetDirectoryName(outputs[i]);
             if (string.IsNullOrEmpty(outdir))
             {
                 Log.LogError("Unknown Error");
-                return;
+                break;
             }
             if (!Directory.Exists(outdir))
                 Directory.CreateDirectory(outdir);
 
-            using var source = File.OpenText(file);
-            await using var target = File.CreateText(path);
+            using var source = File.OpenText(inputs[i]);
+            using var target = File.CreateText(outputs[i]);
 
-            await preprocessor.ExecuteAsync(source, target, file);
-        }).ToArray());
-        OutputFiles = outputFiles.ToArray();
+            preprocessor.ExecuteAsync(source, target, inputs[i]).Wait();
+        }
 
-        return Log.HasLoggedErrors;
+        return !Log.HasLoggedErrors;
     }
 }

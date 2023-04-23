@@ -46,6 +46,6 @@ public sealed class MixPacker : MSTask
 
         builder.BuildAsync(fs).Wait();
 
-        return Log.HasLoggedErrors;
+        return !Log.HasLoggedErrors;
     }
 }
