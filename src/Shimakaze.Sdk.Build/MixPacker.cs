@@ -36,10 +36,16 @@ public sealed class MixPacker : MSTask
             .Select(builder.AddFile)
             .ToList();
 
+        var outdir = Path.GetDirectoryName(TargetFile);
+        if (string.IsNullOrEmpty(outdir))
+            return false;
+        if (!Directory.Exists(outdir))
+            Directory.CreateDirectory(outdir);
+
         using var fs = File.Create(TargetFile);
 
         builder.BuildAsync(fs).Wait();
 
-        return true;
+        return Log.HasLoggedErrors;
     }
 }

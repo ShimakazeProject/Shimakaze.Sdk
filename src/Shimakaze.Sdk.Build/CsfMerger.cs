@@ -34,6 +34,11 @@ public sealed class CsfMerger : MSTask
             merger.UnionWith(deserializer.Deserialize());
         }
 
+        var outdir = Path.GetDirectoryName(OutputPath);
+        if (string.IsNullOrEmpty(outdir))
+            return false;
+        if (!Directory.Exists(outdir))
+            Directory.CreateDirectory(outdir);
         using Stream output = File.Create(OutputPath);
         merger.BuildAndWriteTo(output);
 

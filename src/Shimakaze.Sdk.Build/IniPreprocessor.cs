@@ -70,6 +70,15 @@ public sealed class IniPreprocessor : MSTask
 
             outputFiles.Add(new TaskItem(path));
 
+            var outdir = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(outdir))
+            {
+                Log.LogError("Unknown Error");
+                return;
+            }
+            if (!Directory.Exists(outdir))
+                Directory.CreateDirectory(outdir);
+
             using var source = File.OpenText(file);
             await using var target = File.CreateText(path);
 
@@ -77,6 +86,6 @@ public sealed class IniPreprocessor : MSTask
         }).ToArray());
         OutputFiles = outputFiles.ToArray();
 
-        return true;
+        return Log.HasLoggedErrors;
     }
 }

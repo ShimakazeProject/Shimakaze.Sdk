@@ -37,6 +37,11 @@ public sealed class CsfBuilder : MSTask
 
     private bool ExecuteOne(string inputPath, string outputPath)
     {
+        var outdir = Path.GetDirectoryName(outputPath);
+        if(string.IsNullOrEmpty(outdir))
+            return false;
+        if (!Directory.Exists(outdir))
+            Directory.CreateDirectory(outdir);
         using Stream stream = File.OpenRead(inputPath);
         using Stream output = File.Create(outputPath);
 
