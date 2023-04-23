@@ -21,7 +21,7 @@ public sealed class CsfBuilder : MSTask
     /// 将要被处理的文件
     /// </summary>
     [Required]
-    public required string InputPath { get; set; }
+    public required string InputPaths { get; set; }
 
     /// <summary>
     /// 文件类型
@@ -33,13 +33,12 @@ public sealed class CsfBuilder : MSTask
     /// 生成的文件
     /// </summary>
     [Required]
-    public required string OutputPath { get; set; }
+    public required string OutputPaths { get; set; }
 
-    /// <inheritdoc/>
-    public override bool Execute()
+    private bool ExecuteOne(string inputPath, string outputPath)
     {
-        using Stream stream = File.OpenRead(InputPath);
-        using Stream output = File.Create(OutputPath);
+        using Stream stream = File.OpenRead(inputPath);
+        using Stream output = File.Create(outputPath);
 
         ServiceCollection services = new();
         services.AddSingleton<ISerializer<CsfDocument>>(new CsfSerializer(output));
@@ -72,6 +71,28 @@ public sealed class CsfBuilder : MSTask
 
         provider.GetRequiredService<ISerializer<CsfDocument>>().Serialize(csf);
 
+        return true;
+    }
+
+    /// <inheritdoc/>
+    public override bool Execute()
+    {
+        var inputs = InputPaths.Split(';');
+        var outputs = OutputPaths.Split(';');
+        if (inputs.Length != outputs.Length)
+        {
+            Log.LogError("InputPaths.Length are not equal that OutputPaths.Length");
+            return false;
+        }
+
+        for (int i = 0; i < inputs.Length; i++)
+        {
+            if (!ExecuteOne(inputs[i], outputs[i]))
+            {
+                Log.LogError($"Cannot build {inputs[i]}. Unknown Error.");
+                return false;
+            }
+        }
         return true;
     }
 }

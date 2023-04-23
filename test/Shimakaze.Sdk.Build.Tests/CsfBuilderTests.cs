@@ -31,9 +31,9 @@ public class CsfBuilderTests
     {
         CsfBuilder task = new()
         {
-            InputPath = Path.Combine(Assets, InputJsonV1File),
+            InputPaths = Path.Combine(Assets, InputJsonV1File),
             Type = "JsonV1",
-            OutputPath = Path.Combine(OutputPath, InputJsonV1File),
+            OutputPaths = Path.Combine(OutputPath, InputJsonV1File),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
@@ -44,9 +44,9 @@ public class CsfBuilderTests
     {
         CsfBuilder task = new()
         {
-            InputPath = Path.Combine(Assets, InputJsonV2File),
+            InputPaths = Path.Combine(Assets, InputJsonV2File),
             Type = "JsonV2",
-            OutputPath = Path.Combine(OutputPath, InputJsonV2File),
+            OutputPaths = Path.Combine(OutputPath, InputJsonV2File),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
@@ -57,9 +57,9 @@ public class CsfBuilderTests
     {
         CsfBuilder task = new()
         {
-            InputPath = Path.Combine(Assets, InputYamlV1File),
+            InputPaths = Path.Combine(Assets, InputYamlV1File),
             Type = "YamlV1",
-            OutputPath = Path.Combine(OutputPath, InputYamlV1File),
+            OutputPaths = Path.Combine(OutputPath, InputYamlV1File),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
@@ -69,9 +69,9 @@ public class CsfBuilderTests
     {
         CsfBuilder task = new()
         {
-            InputPath = Path.Combine(Assets, InputXmlV1File),
+            InputPaths = Path.Combine(Assets, InputXmlV1File),
             Type = "XmlV1",
-            OutputPath = Path.Combine(OutputPath, InputXmlV1File),
+            OutputPaths = Path.Combine(OutputPath, InputXmlV1File),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
@@ -81,9 +81,9 @@ public class CsfBuilderTests
     {
         CsfBuilder task = new()
         {
-            InputPath = Path.Combine(Assets, InputXmlV1File),
+            InputPaths = Path.Combine(Assets, InputXmlV1File),
             Type = "Unknown",
-            OutputPath = Path.Combine(OutputPath, "Unknown"),
+            OutputPaths = Path.Combine(OutputPath, "Unknown"),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.ThrowsException<NotSupportedException>(() => task.Execute());
