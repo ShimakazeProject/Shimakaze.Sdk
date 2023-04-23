@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- 预处理INI -->
+  <ItemGroup>
+    <__IPP
+      Include="@(IniFile)"
+      Destination="$(IntermediateOutputPath)%(RecursiveDir)%(Filename).g.pp%(Extension)"
+      Tag="%(Tag)" />
+  </ItemGroup>
+
+  <Target
+    Name="__PreprocessingINI"
+    Inputs="@(__IPP)"
+    Outputs="%(__IPP.Destination)"
+  >
+    <IniPreprocessor
+      Defines="$(Defines)"
+      SourceFiles="@(__IPP)">
+      <Output TaskParameter="OutputFiles" ItemName="_IniFile" />
+    </IniPreprocessor>
+  </Target>
+
+  <!-- 合并 Rules INI -->
+
+  <Target
+    Name="__MergeRulesIni"
+    Inputs="@(_IniFile -> WithMetadataValue('Tag', 'Rule'))"
+    Outputs="$(OutputPath)$(RulesIniFileName)"
+  >
+    <IniMerger
+      SourceFiles="@(_IniFile -> WithMetadataValue('Tag', 'Rule'))"
+      DestinationFile="$(OutputPath)$(RulesIniFileName)">
+      <Output TaskParameter="OutputFile" ItemName="None" />
+    </IniMerger>
+  </Target>
+
+  <!-- 合并 Art INI -->
+  <Target
+    Name="__MergeArtsIni"
+    Inputs="@(_IniFile -> WithMetadataValue('Tag', 'Art'))"
+    Outputs="$(OutputPath)$(ArtIniFileName)"
+  >
+    <IniMerger
+      SourceFiles="@(_IniFile -> WithMetadataValue('Tag', 'Art'))"
+      DestinationFile="$(OutputPath)$(ArtIniFileName)">
+      <Output TaskParameter="OutputFile" ItemName="None" />
+    </IniMerger>
+  </Target>
+
+  <!-- 合并INI -->
+  <Target Name="__MergeIni">
+    <ItemGroup>
+      <__IniTag Include="@(_IniFile -> Metadata('Tag'))" KeepDuplicates="false" />
+    </ItemGroup>
+    <CallTarget Targets="@(__IniTag -> '__Merge%(Identity)sIni')" />
+  </Target>
+
+</Project>
