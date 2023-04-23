@@ -64,7 +64,7 @@ public class IniSerializer : ISerializer<IniDocument>, IAsyncSerializer<IniDocum
     protected virtual void WriteSectionBody(IniSection section)
     {
         foreach (var item in section)
-            BaseWriter.WriteLine($"{item.Key}=${item.Value}");
+            BaseWriter.WriteLine($"{item.Key}={item.Value}");
     }
 
     /// <inheritdoc cref="WriteSectionBody"/>
@@ -72,7 +72,7 @@ public class IniSerializer : ISerializer<IniDocument>, IAsyncSerializer<IniDocum
     protected virtual async Task WriteSectionBodyAsync(IniSection section, CancellationToken cancellationToken)
     {
         foreach (var item in section)
-            await BaseWriter.WriteLineAsync($"{item.Key}=${item.Value}");
+            await BaseWriter.WriteLineAsync($"{item.Key}={item.Value}");
     }
 
     /// <summary>
