@@ -11,7 +11,7 @@
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
     <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
     <PackageIcon Condition=" '$(IconPath)' != '' ">logo.png</PackageIcon>
-    <PackageReadmeFile Condition=" '$(ReadmeFile)' != '' ">README.md</PackageReadmeFile>
+    <PackageReadmeFile Condition=" '$(ReadmeFile)' != '' ">ReadMe.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
