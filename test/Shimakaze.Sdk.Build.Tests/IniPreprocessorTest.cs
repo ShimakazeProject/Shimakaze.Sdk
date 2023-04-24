@@ -1,5 +1,6 @@
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Moq;
 
@@ -31,8 +32,13 @@ public class IniPreprocessorTest
     {
         IniPreprocessor task = new()
         {
-            Files = string.Join(';', InputFile.Split(';').Select(i => Path.GetFullPath(Path.Combine(Assets, i)))),
-            TargetFiles = string.Join(';', InputFile.Split(';').Select(i => Path.GetFullPath(Path.Combine(OutputPath, i)))),
+            SourceFiles = InputFile.Split(';').Select(i =>
+            {
+                var path = Path.GetFullPath(Path.Combine(Assets, i));
+                TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
+                item.SetMetadata("Destination", Path.GetFullPath(Path.Combine(OutputPath, i)));
+                return item;
+            }).ToArray(),
             Defines = Defines,
             BuildEngine = _buildEngine?.Object,
         };

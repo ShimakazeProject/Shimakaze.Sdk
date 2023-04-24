@@ -1,4 +1,5 @@
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 
 using Shimakaze.Sdk.Csf;
@@ -21,83 +22,120 @@ public sealed class CsfBuilder : MSTask
     /// 将要被处理的文件
     /// </summary>
     [Required]
-    public required string InputPaths { get; set; }
+    public required ITaskItem[] SourceFiles { get; set; }
 
     /// <summary>
-    /// 文件类型
+    /// 生成的目标文件
     /// </summary>
-    [Required]
-    public required string Type { get; set; }
+    [Output]
+    public ITaskItem[] OutputFiles { get; set; } = Array.Empty<ITaskItem>();
 
-    /// <summary>
-    /// 生成的文件
-    /// </summary>
-    [Required]
-    public required string OutputPaths { get; set; }
+    const string Metadata_Destination = "Destination";
+    const string Metadata_Tag = "Tag";
 
-    private bool ExecuteOne(string inputPath, string outputPath)
+    private void ExecuteOne(string inputPath, string outputPath, ref IList<ITaskItem> items)
     {
-        var outdir = Path.GetDirectoryName(outputPath);
-        if(string.IsNullOrEmpty(outdir))
-            return false;
-        if (!Directory.Exists(outdir))
-            Directory.CreateDirectory(outdir);
-        using Stream stream = File.OpenRead(inputPath);
-        using Stream output = File.Create(outputPath);
-
-        ServiceCollection services = new();
-        services.AddSingleton<ISerializer<CsfDocument>>(new CsfSerializer(output));
-
-        switch (Type.ToLowerInvariant())
-        {
-            case "jsonv1":
-                services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfJsonV1Deserializer(stream));
-                break;
-            case "json":
-            case "jsonv2":
-                services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfJsonV2Deserializer(stream));
-                break;
-            case "xml":
-            case "xmlv1":
-                services.AddSingleton<IDeserializer<CsfDocument>>(new CsfXmlV1Deserializer(stream));
-                break;
-            case "yml":
-            case "yaml":
-            case "ymlv1":
-            case "yamlv1":
-                services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfYamlV1Deserializer(stream));
-                break;
-            default:
-                throw new NotSupportedException(Type);
-        }
-        using ServiceProvider provider = services.BuildServiceProvider();
-        var csf = provider.GetRequiredService<IDeserializer<CsfDocument?>>().Deserialize()
-            ?? throw new InvalidDataException("Cannot Deserialize the file content to Csf Document.");
-
-        provider.GetRequiredService<ISerializer<CsfDocument>>().Serialize(csf);
-
-        return true;
+        items.Add(new TaskItem(outputPath));
     }
 
     /// <inheritdoc/>
     public override bool Execute()
     {
-        var inputs = InputPaths.Split(';');
-        var outputs = OutputPaths.Split(';');
-        if (inputs.Length != outputs.Length)
-        {
-            Log.LogError("InputPaths.Length are not equal that OutputPaths.Length");
-            return false;
-        }
+        Log.LogMessage("Generating CSF File...");
 
-        for (int i = 0; i < inputs.Length; i++)
+        ServiceCollection services = new();
+        foreach (var file in SourceFiles)
         {
-            if (!ExecuteOne(inputs[i], outputs[i]))
+            var dest = file.GetMetadata(Metadata_Destination);
+            var tag = file.GetMetadata(Metadata_Tag);
+            if (!dest.CreateParentDirectory(Log))
+                return false;
+
+            services.Clear();
+            using Stream stream = File.OpenRead(file.ItemSpec);
+            using Stream output = File.Create(dest);
+            services.AddSingleton<ISerializer<CsfDocument>>(new CsfSerializer(output));
+
+            switch (tag.ToLowerInvariant())
             {
-                Log.LogError($"Cannot build {inputs[i]}. Unknown Error.");
+                case "jsonv1":
+                    Log.LogWarning(
+                        "Shimakaze.Sdk.Csf",
+                        "CSF0001",
+                        "No Json V1",
+                        file.ItemSpec,
+                        0,
+                        0,
+                        0,
+                        0,
+                        "You shouldn't use the \"CSF Json version 1\". Please port your file to \"version 2\" or use \"Csf Yaml version 1\" to replace that.");
+                    services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfJsonV1Deserializer(stream));
+                    break;
+                case "json":
+                case "jsonv2":
+                    services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfJsonV2Deserializer(stream));
+                    break;
+                case "xml":
+                case "xmlv1":
+                    services.AddSingleton<IDeserializer<CsfDocument>>(new CsfXmlV1Deserializer(stream));
+                    break;
+                case "yml":
+                case "yaml":
+                case "ymlv1":
+                case "yamlv1":
+                    services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfYamlV1Deserializer(stream));
+                    break;
+                case "csf":
+                    Log.LogWarning(
+                        "Shimakaze.Sdk.Csf",
+                        "CSF0001",
+                        "No Json V1",
+                        file.ItemSpec,
+                        0,
+                        0,
+                        0,
+                        0,
+                        "You shouldn't use the \"CSF File\" direct in your project. Please port your file to \"version 2\" or use \"Csf Yaml version 1\" to replace that.");
+                    break;
+                default:
+                    Log.LogError(
+                        "Shimakaze.Sdk.Csf",
+                        "CSF0002",
+                        "Not Support",
+                        file.ItemSpec,
+                        0,
+                        0,
+                        0,
+                        0,
+                        "Unsupport Type: \"{0}\".",
+                        tag);
+                    return false;
+            }
+            using ServiceProvider provider = services.BuildServiceProvider();
+            if (provider.GetRequiredService<IDeserializer<CsfDocument?>>().Deserialize() is not CsfDocument csf)
+            {
+                Log.LogError(
+                    "Shimakaze.Sdk.Csf",
+                    "CSF0003",
+                    "Deserialize Failed",
+                    file.ItemSpec,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "Cannot Deserialize the file content to Csf Document.");
+                if (File.Exists(dest))
+                {
+                    output.Dispose();
+                    File.Delete(dest);
+                }
                 return false;
             }
+            provider.GetRequiredService<ISerializer<CsfDocument>>().Serialize(csf);
+            file.SetMetadata(Metadata_Tag, "Csf");
         }
-        return true;
+        OutputFiles = SourceFiles;
+
+        return !Log.HasLoggedErrors;
     }
 }

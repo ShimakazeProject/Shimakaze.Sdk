@@ -17,7 +17,7 @@ public class MixBuilder
     /// <summary>
     /// ID计算器
     /// </summary>
-    protected IdCalculater? _idCalculater;
+    public required IdCalculater IdCalculater { get; init; }
 
     /// <summary>
     /// 已被添加到构建器的文件的个数
@@ -43,17 +43,6 @@ public class MixBuilder
     public MixBuilder RemoveFile(FileInfo file)
     {
         _files.Remove(file);
-        return this;
-    }
-
-    /// <summary>
-    /// 设置构建器使用的ID计算器
-    /// </summary>
-    /// <param name="idCalculater">ID计算器</param>
-    /// <returns>构建器</returns>
-    public MixBuilder SetIdCaculater(IdCalculater idCalculater)
-    {
-        this._idCalculater = idCalculater;
         return this;
     }
 
@@ -85,9 +74,6 @@ public class MixBuilder
 
     private MixEntry[] GetEntries(ref int position)
     {
-        if (_idCalculater is null)
-            throw new NullIdCalculaterException($"{nameof(_idCalculater)} MUST be set!");
-
         ref FileInfo file = ref MemoryMarshal.GetReference(
             CollectionsMarshal.AsSpan(_files)
         );
@@ -98,7 +84,7 @@ public class MixBuilder
         {
             ref var currentFile = ref Unsafe.Add(ref file, i);
             ref var currentEntry = ref Unsafe.Add(ref entry, i);
-            currentEntry.Id = _idCalculater(currentFile.Name.ToUpper());
+            currentEntry.Id = IdCalculater(currentFile.Name.ToUpper());
             currentEntry.Offset = position;
             position += currentEntry.Size = (int)currentFile.Length;
         }

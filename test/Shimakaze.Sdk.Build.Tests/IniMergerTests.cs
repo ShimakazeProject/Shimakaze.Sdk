@@ -1,4 +1,5 @@
 ﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Moq;
 
@@ -26,10 +27,11 @@ public class IniMergerTests
     [TestMethod]
     public void MergeTest()
     {
+        TaskItem item = new(Path.Combine(Assets, InputFile));
         IniMerger task = new()
         {
-            IniFiles = Path.Combine(Assets, InputFile),
-            OutputPath = Path.Combine(OutputPath, InputFile),
+            SourceFiles = new[] { item },
+            DestinationFile = Path.Combine(OutputPath, InputFile),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());

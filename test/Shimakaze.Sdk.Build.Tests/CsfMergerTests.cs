@@ -1,4 +1,5 @@
 ﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Moq;
 
@@ -26,10 +27,12 @@ public class CsfMergerTests
     [TestMethod]
     public void JsonV1Test()
     {
+        TaskItem item = new(Path.Combine(Assets, InputFile));
+
         CsfMerger task = new()
         {
-            CsfFiles = Path.Combine(Assets, InputFile),
-            OutputPath = Path.Combine(OutputPath, InputFile),
+            SourceFiles = new[] { item },
+            DestinationFile = Path.Combine(OutputPath, InputFile),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());

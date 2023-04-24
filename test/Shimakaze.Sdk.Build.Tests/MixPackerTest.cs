@@ -1,5 +1,6 @@
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Moq;
 
@@ -28,10 +29,12 @@ public class MixPackerTest
     [TestMethod]
     public void Test()
     {
+        TaskItem item = new(Path.Combine(Assets, InputFile));
+
         MixPacker task = new()
         {
-            Files = Path.Combine(Assets, InputFile),
-            TargetFile = Path.Combine(OutputPath, OutputFile),
+            SourceFiles = new[] { item },
+            DestinationFile = Path.Combine(OutputPath, OutputFile),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());

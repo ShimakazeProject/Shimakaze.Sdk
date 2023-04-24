@@ -1,4 +1,5 @@
 ﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Shimakaze.Sdk.IO.Mix;
 
@@ -12,38 +13,42 @@ namespace Shimakaze.Sdk.Build;
 public sealed class MixPacker : MSTask
 {
     /// <summary>
-    /// 将要被打包的文件列表
+    /// 将要被处理的文件
     /// </summary>
     [Required]
-    public required string Files { get; set; }
+    public required ITaskItem[] SourceFiles { get; set; }
 
     /// <summary>
-    /// 目标文件
+    /// 生成的文件
     /// </summary>
     [Required]
-    public required string TargetFile { get; set; }
+    public required string DestinationFile { get; set; }
+
+    /// <summary>
+    /// 生成的目标文件
+    /// </summary>
+    [Output]
+    public ITaskItem? OutputFile { get; set; }
+
 
     /// <inheritdoc/>
     public override bool Execute()
     {
-        var outdir = Path.GetDirectoryName(TargetFile);
-        if (string.IsNullOrEmpty(outdir))
+        Log.LogMessage("Packing Mix...");
+        if (!DestinationFile.CreateParentDirectory(Log))
             return false;
-        if (!Directory.Exists(outdir))
-            Directory.CreateDirectory(outdir);
 
-        using var fs = File.Create(TargetFile);
-        var builder = new MixBuilder()
-            .SetIdCaculater(IdCalculaters.TSIdCalculater);
-
-        foreach (var file in Files.Split(';').Select(i => new FileInfo(Path.GetFullPath(i))))
+        var builder = new MixBuilder() { IdCalculater = IdCalculaters.TSIdCalculater };
+        OutputFile = new TaskItem(DestinationFile);
+        foreach (var file in SourceFiles)
         {
-            Log.LogMessage(MessageImportance.Low, $"Add \"{file}\" into mix.");
-            builder.AddFile(file);
+            Log.LogMessage(MessageImportance.Low, $"Add \"{file.ItemSpec}\" into mix.");
+            builder.AddFile(new(file.ItemSpec));
         }
 
-        builder.BuildAsync(fs).Wait();
+        using var output = File.Create(DestinationFile);
+        builder.BuildAsync(output).Wait();
 
-        return !Log.HasLoggedErrors;
+        return true;
     }
 }
