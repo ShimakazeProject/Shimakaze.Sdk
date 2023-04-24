@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Include="Sdk\**" Pack="True" PackagePath="Sdk" />
     <None Include="lib\**" Pack="True" PackagePath="lib" />
+    <None Include="targets\**" Pack="True" PackagePath="targets" />
     <None Include="ReadMe.md" Pack="True" PackagePath="\" />
   </ItemGroup>
 
