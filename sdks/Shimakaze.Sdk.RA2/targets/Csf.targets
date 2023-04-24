@@ -22,7 +22,7 @@
     Inputs="@(CsfFile)"
     Outputs="$(OutputPath)\$(CsfFileName)">
     <CsfMerger
-      SourceFiles="@(CsfFile)"
+      SourceFiles="@(CsfFile -> WithMetadataValue('Tag', 'Csf'))"
       DestinationFile="$(OutputPath)$(CsfFileName)">
       <Output TaskParameter="OutputFile" ItemName="None" />
     </CsfMerger>
