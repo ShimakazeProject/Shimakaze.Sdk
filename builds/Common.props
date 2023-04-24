@@ -9,6 +9,7 @@
     <ShimakazeSdkSlnFolder>$([MSBuild]::NormalizeDirectory('$(ShimakazeSdkRootFolder)', 'sln'))</ShimakazeSdkSlnFolder>
     <MSBuildProjectNameWithoutTests>$(MSBuildProjectName.Replace('.Tests', ''))</MSBuildProjectNameWithoutTests>
     <MSBuildProjectNameWithoutAbstractions>$(MSBuildProjectName.Replace('.Abstractions', ''))</MSBuildProjectNameWithoutAbstractions>
+    <Version>0.0.1-preview.1</Version>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)SolutionGenerator.props" />
