@@ -26,16 +26,6 @@ public sealed class MixPacker : MSTask
     /// <inheritdoc/>
     public override bool Execute()
     {
-        var builder = new MixBuilder()
-            .SetIdCaculater(IdCalculaters.TSIdCalculater);
-
-        _ = Files
-            .Split(';')
-            .Select(Path.GetFullPath)
-            .Select(i => new FileInfo(i))
-            .Select(builder.AddFile)
-            .ToList();
-
         var outdir = Path.GetDirectoryName(TargetFile);
         if (string.IsNullOrEmpty(outdir))
             return false;
@@ -43,6 +33,14 @@ public sealed class MixPacker : MSTask
             Directory.CreateDirectory(outdir);
 
         using var fs = File.Create(TargetFile);
+        var builder = new MixBuilder()
+            .SetIdCaculater(IdCalculaters.TSIdCalculater);
+
+        foreach (var file in Files.Split(';').Select(i => new FileInfo(Path.GetFullPath(i))))
+        {
+            Log.LogMessage(MessageImportance.Low, $"Add \"{file}\" into mix.");
+            builder.AddFile(file);
+        }
 
         builder.BuildAsync(fs).Wait();
 
