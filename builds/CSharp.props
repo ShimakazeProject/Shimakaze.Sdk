@@ -10,6 +10,7 @@
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
     <RootNamespace Condition="$(MSBuildProjectName.EndsWith('.Abstractions'))">$(MSBuildProjectNameWithoutAbstractions)</RootNamespace>
     <RootNamespace Condition="$(MSBuildProjectName.EndsWith('.Tests'))">$(MSBuildProjectNameWithoutTests)</RootNamespace>
   </PropertyGroup>
