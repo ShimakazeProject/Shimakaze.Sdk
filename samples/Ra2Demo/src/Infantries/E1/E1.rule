@@ -1,0 +1,8 @@
+[E1]
+#if DEBUG
+Name=GI
+#elif RELEASE
+UIName=Name:E1
+#endif
+Image=GI
+Category=Soldier

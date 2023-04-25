@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=https://shimakazeproject.github.io/Schemas/yaml/csf/metadata.yaml
+lang: en_US
+version: 3
+---
+# yaml-language-server: $schema=https://shimakazeproject.github.io/Schemas/yaml/csf/v1.yaml
+Name:E1: GI
