@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="$(ShimakazeSdkPath)targets\Ini.targets" />
-  <Import Project="$(ShimakazeSdkPath)targets\Csf.targets" />
+  <Import Project="$(ShimakazeSdkPath)\targets\Ini.targets" />
+  <Import Project="$(ShimakazeSdkPath)\targets\Csf.targets" />
+  <Import Project="$(ShimakazeSdkPath)\targets\Mix.targets" />
 
   <Target Name="CoreCompile">
-    <CallTarget Targets="__PreprocessingINI;__MergeIni" />
-    <CallTarget Targets="__BuildCsf;__MergeCsf" />
-    <CallTarget Targets="PackMix" Condition=" '$(PackMix)' == 'True' " />
+    <CallTarget Targets="_BuildCsf;_MergeCsf" />
+    <CallTarget Targets="_PreprocessingINI;_MergeIni" />
   </Target>
-
 
   <Target Name="Build" BeforeTargets="Pack">
     <CallTarget Targets="CoreCompile" />
   </Target>
 
-  <Target Name="PackMix" Inputs="@(MixAssetsFile)" Outputs="$(OutputPath)$(MixFileName)">
-    <ItemGroup>
-      <__MixFile Include="@(None -> WithMetadataValue('Pack', 'True'))" />
-    </ItemGroup>
-    <MixPacker
-      SourceFiles="@(__MixFile)"
-      DestinationFile="$(OutputPath)$(MixFileName)">
-      <Output TaskParameter="OutputFile" ItemName="None" />
-    </MixPacker>
-  </Target>
-
   <Target Name="Pack">
-    <CallTarget Targets="PackMix"/>
+    <CallTarget Targets="PackMix" />
   </Target>
 
   <Target Name="Clean">

@@ -29,6 +29,7 @@ public sealed class CsfMerger : MSTask
     /// </summary>
     [Output]
     public ITaskItem? OutputFile { get; set; }
+    const string Metadata_Pack = "Pack";
 
     /// <inheritdoc/>
     public override bool Execute()
@@ -64,7 +65,7 @@ public sealed class CsfMerger : MSTask
             }
         }
 
-        OutputFile.SetMetadata("Pack", "True");
+        OutputFile.SetMetadata(Metadata_Pack, true.ToString());
         using Stream output = File.Create(DestinationFile);
         merger.BuildAndWriteTo(output);
 

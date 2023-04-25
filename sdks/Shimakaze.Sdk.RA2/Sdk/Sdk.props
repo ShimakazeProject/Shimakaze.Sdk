@@ -5,44 +5,46 @@
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <ShimakazeSdkPath>$(MSBuildThisFileDirectory)..\</ShimakazeSdkPath>
-    <BaseOutputPath>$(MSBuildProjectDirectory)\bin\</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\obj\</BaseIntermediateOutputPath>
+    <ShimakazeSdkPath Condition=" '$(ShimakazeSdkPath)' == '' ">$(MSBuildThisFileDirectory)..</ShimakazeSdkPath>
 
-    <Configuration Condition=" '$(Configuration)' == ''">Debug</Configuration>
-    <OutputPath>$(BaseOutputPath)$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)\</IntermediateOutputPath>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Vanilla</Platform>
+    <Defines>$(Configuration.ToUpper());$(Platform.ToUpper());$(Defines)</Defines>
 
-    <CsfFileName>ra2md.csf</CsfFileName>
-    <RulesIniFileName>rulesmd.ini</RulesIniFileName>
-    <ArtIniFileName>artmd.ini</ArtIniFileName>
-    <MixFileName>expandmd01.mix</MixFileName>
+    <BaseIntermediateOutputPath Condition=" '$(BaseIntermediateOutputPath)' == '' ">obj</BaseIntermediateOutputPath>
+    <IntermediateOutputPath Condition=" '$(IntermediateOutputPath)' == '' ">$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)\$(Configuration)</IntermediateOutputPath>
 
-    <Defines Condition=" '$(Configuration)' == 'Debug'">DEBUG;$(Defines)</Defines>
-    <Defines Condition=" '$(Configuration)' == 'Release'">RELEASE;$(Defines)</Defines>
-    <__GlobalIgnore>$(MSBuildProjectDirectory)\bin\**\*;$(MSBuildProjectDirectory)\obj\**\*</__GlobalIgnore>
+    <BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">bin</BaseOutputPath>
+    <OutputPath Condition=" '$(OutputPath)' == '' ">$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)</OutputPath>
+
+    <CsfFileName Condition=" '$(CsfFileName)' == '' ">ra2md.csf</CsfFileName>
+    <RulesIniFileName Condition=" '$(RulesIniFileName)' == '' ">rulesmd.ini</RulesIniFileName>
+    <ArtsIniFileName Condition=" '$(ArtsIniFileName)' == '' ">artmd.ini</ArtsIniFileName>
+    <MixFileName Condition=" '$(MixFileName)' == '' ">expandmd01.mix</MixFileName>
   </PropertyGroup>
 
   <ItemGroup>
-    <IniFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.rule" Tag="Rule" />
-    <IniFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.art" Tag="Art" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf" Tag="Csf" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.json" Tag="Json" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.json" Tag="JsonV1" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.v2.json" Tag="JsonV2" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.xml" Tag="Xml" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.xml" Tag="XmlV1" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.yaml" Tag="Yaml" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.yml" Tag="Yaml" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.yaml" Tag="YamlV1" />
-    <CsfFile Exclude="$(__GlobalIgnore)" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.yml" Tag="YamlV1" />
-    <None Exclude="$(__GlobalIgnore);$(MSBuildProjectFile);@(CsfFile);@(IniFile)" Include="$(MSBuildProjectDirectory)\**\*" Pack="True" />
+    <IniFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.rule" Type="Rule" />
+    <IniFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.art" Type="Art" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf" Type="Csf" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.json" Type="Json" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.json" Type="JsonV1" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.v2.json" Type="JsonV2" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.xml" Type="Xml" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.xml" Type="XmlV1" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.yaml" Type="Yaml" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.yml" Type="Yaml" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.yaml" Type="YamlV1" />
+    <CsfFile Exclude="$(OutputPath)\**\*" Include="$(MSBuildProjectDirectory)\**\*.csf.v1.yml" Type="YamlV1" />
+    <CsfFile Update="$(IntermediateOutputPath)\**\*.csf" Type="Csf" SkipBuild="True" Merge="True" />
+    <IniFile Update="$(IntermediateOutputPath)\**\*.rule" Type="Rule" SkipPreprocess="True" />
+    <IniFile Update="$(IntermediateOutputPath)\**\*.art" Type="Art" SkipPreprocess="True" />
   </ItemGroup>
 
-  <UsingTask TaskName="Shimakaze.Sdk.Build.CsfBuilder" AssemblyFile="$(ShimakazeSdkPath)lib\Shimakaze.Sdk.Build.dll" />
-  <UsingTask TaskName="Shimakaze.Sdk.Build.CsfMerger" AssemblyFile="$(ShimakazeSdkPath)lib\Shimakaze.Sdk.Build.dll" />
-  <UsingTask TaskName="Shimakaze.Sdk.Build.IniMerger" AssemblyFile="$(ShimakazeSdkPath)lib\Shimakaze.Sdk.Build.dll" />
-  <UsingTask TaskName="Shimakaze.Sdk.Build.IniPreprocessor" AssemblyFile="$(ShimakazeSdkPath)lib\Shimakaze.Sdk.Build.dll" />
-  <UsingTask TaskName="Shimakaze.Sdk.Build.MixPacker" AssemblyFile="$(ShimakazeSdkPath)lib\Shimakaze.Sdk.Build.dll" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.CsfBuilder" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.CsfMerger" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.IniPreprocessor" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.IniMerger" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.MixPacker" />
 
 </Project>

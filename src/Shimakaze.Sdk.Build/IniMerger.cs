@@ -22,35 +22,52 @@ public sealed class IniMerger : MSTask
     /// 生成的文件路径
     /// </summary>
     [Required]
-    public required string DestinationFile { get; set; }
+    public required ITaskItem[] DestinationFiles { get; set; }
 
     /// <summary>
     /// 生成的目标文件
     /// </summary>
     [Output]
-    public ITaskItem? OutputFile { get; set; }
+    public ITaskItem[] OutputFiles { get; set; } = Array.Empty<ITaskItem>();
+    const string Metadata_Destination = "Destination";
+    const string Metadata_Type = "Type";
+    const string Metadata_Pack = "Pack";
+    const string Metadata_Merge = "Merge";
 
     /// <inheritdoc/>
     public override bool Execute()
     {
         Log.LogMessage("Merging Ini...");
-        if (!DestinationFile.CreateParentDirectory(Log))
-            return false;
+        var outputs = DestinationFiles
+            .DistinctBy(i => i.ItemSpec)
+            .ToDictionary(i => i.ItemSpec, i => i.GetMetadata(Metadata_Destination))
+            .AsReadOnly();
 
-        IO.Ini.IniMerger merger = new();
-        OutputFile = new TaskItem(DestinationFile);
-        foreach (var file in SourceFiles)
+        IList<ITaskItem> list = new List<ITaskItem>();
+        foreach (var group in SourceFiles.GroupBy(i => i.GetMetadata(Metadata_Type)))
         {
-            using var stream = File.OpenText(file.ItemSpec);
-            using IniDeserializer deserializer = new(stream);
-            merger.UnionWith(deserializer.Deserialize());
-            file.CopyMetadataTo(OutputFile);
+            if (!outputs[group.Key].CreateParentDirectory(Log))
+                continue;
+
+            IO.Ini.IniMerger merger = new();
+            TaskItem item = new(outputs[group.Key]);
+            foreach (var file in group)
+            {
+                using var stream = File.OpenText(file.ItemSpec);
+                using IniDeserializer deserializer = new(stream);
+                merger.UnionWith(deserializer.Deserialize());
+                file.CopyMetadataTo(item);
+            }
+
+            item.SetMetadata(Metadata_Pack, true.ToString());
+            item.RemoveMetadata(Metadata_Merge);
+            using Stream output = File.Create(outputs[group.Key]);
+            merger.BuildAndWriteTo(output);
+            list.Add(item);
         }
 
-        OutputFile.SetMetadata("Pack", "True");
-        using Stream output = File.Create(DestinationFile);
-        merger.BuildAndWriteTo(output);
+        OutputFiles = list.ToArray();
 
-        return true;
+        return !Log.HasLoggedErrors;
     }
 }

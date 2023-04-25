@@ -31,7 +31,7 @@ public sealed class CsfBuilder : MSTask
     public ITaskItem[] OutputFiles { get; set; } = Array.Empty<ITaskItem>();
 
     const string Metadata_Destination = "Destination";
-    const string Metadata_Tag = "Tag";
+    const string Metadata_Type = "Type";
 
     /// <inheritdoc/>
     public override bool Execute()
@@ -43,7 +43,7 @@ public sealed class CsfBuilder : MSTask
         foreach (var file in SourceFiles)
         {
             var dest = file.GetMetadata(Metadata_Destination);
-            var tag = file.GetMetadata(Metadata_Tag);
+            var tag = file.GetMetadata(Metadata_Type);
             if (!dest.CreateParentDirectory(Log))
                 return false;
 
@@ -131,7 +131,7 @@ public sealed class CsfBuilder : MSTask
             TaskItem item = new(dest);
             file.CopyMetadataTo(item);
             item.RemoveMetadata(Metadata_Destination);
-            item.SetMetadata(Metadata_Tag, "Csf");
+            item.SetMetadata(Metadata_Type, "Csf");
             items.Add(item);
         }
         OutputFiles = items.ToArray();

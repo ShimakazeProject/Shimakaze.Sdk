@@ -2,58 +2,58 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!-- 预处理INI -->
-  <ItemGroup>
-    <__IPP
-      Include="@(IniFile)"
-      Destination="$(IntermediateOutputPath)%(RecursiveDir)%(Filename).g.pp%(Extension)"
-      Tag="%(Tag)" />
-  </ItemGroup>
+  <Target
+    Name="_Pre_PreprocessingINI" BeforeTargets="_PreprocessingINI">
+    <!-- 准备将要被预处理的INI -->
+    <ItemGroup>
+      <_IniFile
+        Include="@(IniFile)"
+        Destination="$(IntermediateOutputPath)\%(RecursiveDir)%(Filename).g.pp%(Extension)"
+        Merge="True" />
+      <_IniFile Remove="@(IniFile -> WithMetadataValue('SkipPreprocess', 'True'))" />
+      <IniFile Remove="@(_IniFile)" />
+    </ItemGroup>
+  </Target>
 
   <Target
-    Name="__PreprocessingINI"
-    Inputs="@(__IPP)"
-    Outputs="%(__IPP.Destination)"
+    Name="_PreprocessingINI"
+    Inputs="@(_IniFile)"
+    Outputs="%(_IniFile.Destination)"
+    BeforeTargets="_MergeIni"
   >
     <IniPreprocessor
       Defines="$(Defines)"
-      SourceFiles="@(__IPP)">
-      <Output TaskParameter="OutputFiles" ItemName="_IniFile" />
+      SourceFiles="@(_IniFile)">
+      <Output TaskParameter="OutputFiles" ItemName="IniFile" />
     </IniPreprocessor>
   </Target>
 
-  <!-- 合并 Rules INI -->
-
-  <Target
-    Name="__MergeRulesIni"
-    Inputs="@(_IniFile -> WithMetadataValue('Tag', 'Rule'))"
-    Outputs="$(OutputPath)$(RulesIniFileName)"
-  >
-    <IniMerger
-      SourceFiles="@(_IniFile -> WithMetadataValue('Tag', 'Rule'))"
-      DestinationFile="$(OutputPath)$(RulesIniFileName)">
-      <Output TaskParameter="OutputFile" ItemName="None" />
-    </IniMerger>
-  </Target>
-
-  <!-- 合并 Art INI -->
-  <Target
-    Name="__MergeArtsIni"
-    Inputs="@(_IniFile -> WithMetadataValue('Tag', 'Art'))"
-    Outputs="$(OutputPath)$(ArtIniFileName)"
-  >
-    <IniMerger
-      SourceFiles="@(_IniFile -> WithMetadataValue('Tag', 'Art'))"
-      DestinationFile="$(OutputPath)$(ArtIniFileName)">
-      <Output TaskParameter="OutputFile" ItemName="None" />
-    </IniMerger>
-  </Target>
-
   <!-- 合并INI -->
-  <Target Name="__MergeIni">
+  <Target
+    Name="_Pre_MergeIni" BeforeTargets="_MergeIni">
+    <!-- 准备将要被合并的INI -->
     <ItemGroup>
-      <__IniTag Include="@(_IniFile -> Metadata('Tag'))" KeepDuplicates="false" />
+      <__IniType Include="@(IniFile -> Metadata('Type'))" KeepDuplicates="False"
+        KeepMetadata="False" />
+      <_IniType Include="@(__IniType)" Destination="$(OutputPath)\$(%(Identity)sIniFileName)" />
+      <__IniType Remove="@(__IniType)" />
     </ItemGroup>
-    <CallTarget Targets="@(__IniTag -> '__Merge%(Identity)sIni')" />
+  </Target>
+
+  <Target
+    Name="_MergeIni"
+    Inputs="@(IniFile -> WithMetadataValue('Merge', 'True'))"
+    Outputs="%(_IniFile.Destination)"
+  >
+    <IniMerger
+      SourceFiles="@(IniFile -> WithMetadataValue('Merge', 'True'))"
+      DestinationFiles="@(_IniType)">
+      <Output TaskParameter="OutputFiles" ItemName="IniFile" />
+    </IniMerger>
+    <ItemGroup>
+      <IniFile Remove="@(IniFile -> WithMetadataValue('Merge', 'True'))" />
+      <_IniType Remove="@(_IniType)" />
+    </ItemGroup>
   </Target>
 
 </Project>

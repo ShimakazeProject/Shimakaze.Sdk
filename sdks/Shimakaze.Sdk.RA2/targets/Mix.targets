@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="_PrePackMix" BeforeTargets="PackMix">
+    <ItemGroup>
+      <MixAssetsFile Include="@(None -> WithMetadataValue('Pack', 'True'))" />
+      <MixAssetsFile Include="@(IniFile -> WithMetadataValue('Pack', 'True'))" />
+      <MixAssetsFile Include="@(CsfFile -> WithMetadataValue('Pack', 'True'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PackMix" Inputs="@(MixAssetsFile)" Outputs="$(OutputPath)\$(MixFileName)">
+    <MixPacker
+      SourceFiles="@(MixAssetsFile)"
+      DestinationFile="$(OutputPath)\$(MixFileName)">
+      <Output TaskParameter="OutputFile" ItemName="None" />
+    </MixPacker>
+  </Target>
+
+</Project>
