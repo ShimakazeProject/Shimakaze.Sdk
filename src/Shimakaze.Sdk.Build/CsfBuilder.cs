@@ -33,17 +33,13 @@ public sealed class CsfBuilder : MSTask
     const string Metadata_Destination = "Destination";
     const string Metadata_Tag = "Tag";
 
-    private void ExecuteOne(string inputPath, string outputPath, ref IList<ITaskItem> items)
-    {
-        items.Add(new TaskItem(outputPath));
-    }
-
     /// <inheritdoc/>
     public override bool Execute()
     {
         Log.LogMessage("Generating CSF File...");
 
         ServiceCollection services = new();
+        List<ITaskItem> items = new(SourceFiles.Length);
         foreach (var file in SourceFiles)
         {
             var dest = file.GetMetadata(Metadata_Destination);
@@ -132,9 +128,13 @@ public sealed class CsfBuilder : MSTask
                 return false;
             }
             provider.GetRequiredService<ISerializer<CsfDocument>>().Serialize(csf);
-            file.SetMetadata(Metadata_Tag, "Csf");
+            TaskItem item = new(dest);
+            file.CopyMetadataTo(item);
+            item.RemoveMetadata(Metadata_Destination);
+            item.SetMetadata(Metadata_Tag, "Csf");
+            items.Add(item);
         }
-        OutputFiles = SourceFiles;
+        OutputFiles = items.ToArray();
 
         return !Log.HasLoggedErrors;
     }

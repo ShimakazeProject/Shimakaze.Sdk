@@ -30,4 +30,8 @@
     <CallTarget Targets="PackMix"/>
   </Target>
 
+  <Target Name="Clean">
+    <RemoveDir Directories="$(OutputPath);$(IntermediateOutputPath)" />
+  </Target>
+
 </Project>
