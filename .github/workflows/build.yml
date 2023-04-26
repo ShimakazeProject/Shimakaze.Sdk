@@ -79,7 +79,7 @@ jobs:
       - name: Pack All
         shell: pwsh
         run: |-
-          Get-ChildItem src `
+          Get-ChildItem src, sdks `
           | Where-Object {
             $PSItem -is [System.IO.DirectoryInfo]
           } `
@@ -92,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         with:
           name: nuget-packages-${{ matrix.os }}
-          path: src/**/bin/Release/*.*nupkg
+          path: '{src, sdks}/**/bin/Release/*.*nupkg'
           retention-days: 3
 
       - name: Coveralls
