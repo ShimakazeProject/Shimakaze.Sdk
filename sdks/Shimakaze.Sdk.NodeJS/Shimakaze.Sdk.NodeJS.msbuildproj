@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>0.0.1</VersionPrefix>
+    <Version>0.0.1</Version>
     <Authors>frg2089</Authors>
     <Copyright>Copyright © 2023 frg2089</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -13,13 +13,11 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
     <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk.git</RepositoryUrl>
-    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
     <EnableDefaultNoneItems>False</EnableDefaultNoneItems>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="Sdk\**" Pack="True" PackagePath="Sdk" />
-    <None Include="ReadMe.md" Pack="True" PackagePath="\" />
   </ItemGroup>
 
 </Project>
