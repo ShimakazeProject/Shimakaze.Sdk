@@ -6,10 +6,24 @@ on:
       - master
       - develop
       - feat/**
+    paths:
+      - .github/workflows/build.yml
+      - '**.cs'
+      - '**.*proj'
+      - '**.props'
+      - '**.targets'
+      - '**/Assets/**'
   pull_request:
     branches:
       - master
       - develop
+    paths:
+      - .github/workflows/build.yml
+      - '**.cs'
+      - '**.*proj'
+      - '**.props'
+      - '**.targets'
+      - '**/Assets/**'
 
 jobs:
   build:
@@ -31,16 +45,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: nuget-cache
           restore-keys: |
-            ${{ runner.os }}-nuget-
+            nuget-cache
 
-      - name: Setup .NET Core SDK
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3.0.3
         with:
           global-json-file: ./global.json
 
-      - name: Restore All
+      - name: Restore Shimakaze.Sdk
         shell: pwsh
         run: |-
           Get-ChildItem src, test, sdks `
@@ -52,7 +66,7 @@ jobs:
             dotnet restore $PSItem.FullName
           }
 
-      - name: Build All
+      - name: Build Shimakaze.Sdk
         shell: pwsh
         run: |-
           Get-ChildItem src, test `
@@ -64,7 +78,7 @@ jobs:
             dotnet build $PSItem.FullName --configuration Release --no-restore
           }
 
-      - name: Test All
+      - name: Test Shimakaze.Sdk
         shell: pwsh
         run: |-
           Get-ChildItem test `
@@ -76,7 +90,7 @@ jobs:
             dotnet test $PSItem.FullName --configuration Release --no-build
           }
 
-      - name: Pack All
+      - name: Pack Shimakaze.Sdk
         shell: pwsh
         run: |-
           Get-ChildItem src, sdks `
@@ -88,7 +102,7 @@ jobs:
             dotnet pack $PSItem.FullName --configuration Release --no-restore --no-build --include-symbols --include-source
           }
 
-      - name: Upload a Build Artifact
+      - name: Upload Nuget Packages
         uses: actions/upload-artifact@v3.1.2
         with:
           name: nuget-packages-${{ matrix.os }}
