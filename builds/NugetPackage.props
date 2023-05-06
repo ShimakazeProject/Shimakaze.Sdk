@@ -4,8 +4,8 @@
   <PropertyGroup>
     <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(MSBuildProjectDirectory)\Assets\logo.png')">$(MSBuildProjectDirectory)\Assets\logo.png</IconPath>
     <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(ShimakazeSdkRootFolder)assets\logo.png')">$(ShimakazeSdkRootFolder)assets\logo.png</IconPath>
-    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)\README.md')">$(MSBuildProjectDirectory)\README.md</ReadmeFile>
-    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(ShimakazeSdkRootFolder)README.md')">$(ShimakazeSdkRootFolder)README.md</ReadmeFile>
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)\ReadMe.md')">$(MSBuildProjectDirectory)\ReadMe.md</ReadmeFile>
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(ShimakazeSdkRootFolder)ReadMe.md')">$(ShimakazeSdkRootFolder)ReadMe.md</ReadmeFile>
 
     <Authors>Shimakaze Project</Authors>
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
