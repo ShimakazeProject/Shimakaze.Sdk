@@ -31,7 +31,7 @@ public class IniMergerTests
         IniMerger task = new()
         {
             SourceFiles = new[] { item },
-            DestinationFile = Path.Combine(OutputPath, InputFile),
+            DestinationFiles = new[] { new TaskItem(Path.Combine(OutputPath, InputFile)) },
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
