@@ -59,8 +59,17 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+    - name: Build All
+      shell: pwsh
+      run: |-
+        Get-ChildItem src `
+        | Where-Object {
+          $PSItem -is [System.IO.DirectoryInfo]
+        } `
+        | ForEach-Object {
+          Write-Output "Build $($PSItem.Name.Replace('.Tests', ''))"
+          dotnet build $PSItem.FullName --configuration Release
+        }
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
