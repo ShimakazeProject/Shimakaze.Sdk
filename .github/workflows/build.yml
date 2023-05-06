@@ -43,7 +43,7 @@ jobs:
       - name: Restore All
         shell: pwsh
         run: |-
-          Get-ChildItem test `
+          Get-ChildItem src, test, sdks `
           | Where-Object {
             $PSItem -is [System.IO.DirectoryInfo]
           } `
@@ -55,7 +55,7 @@ jobs:
       - name: Build All
         shell: pwsh
         run: |-
-          Get-ChildItem test `
+          Get-ChildItem src, test `
           | Where-Object {
             $PSItem -is [System.IO.DirectoryInfo]
           } `
