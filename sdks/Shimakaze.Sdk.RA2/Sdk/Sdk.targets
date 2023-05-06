@@ -6,8 +6,8 @@
   <Import Project="$(ShimakazeSdkPath)\targets\Mix.targets" />
 
   <Target Name="CoreCompile">
-    <CallTarget Targets="_BuildCsf;_MergeCsf" />
     <CallTarget Targets="_PreprocessingINI;_MergeIni" />
+    <CallTarget Targets="_BuildCsf;_MergeCsf" />
   </Target>
 
   <Target Name="Build" BeforeTargets="Pack">
