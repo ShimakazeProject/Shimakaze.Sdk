@@ -24,8 +24,8 @@
     <BuildCommand Condition=" '$(BuildCommand)' != '' AND '$(PackageManager)' == 'npm' ">npm run build</BuildCommand>
     <BuildCommand Condition=" '$(BuildCommand)' != '' AND '$(PackageManager)' == 'yarn' ">yarn run build</BuildCommand>
 
-    <ProjectFileFullPath>$([MSBuild]:NormalizePath('$(ProjectFileBasePath)', '$(ProjectFile)'))</ProjectFileFullPath>
-    <LockFileFullPath>$([MSBuild]:NormalizePath('$(LockFileBasePath)', '$(LockFile)'))</LockFileFullPath>
+    <ProjectFileFullPath>$([MSBuild]::NormalizePath('$(ProjectFileBasePath)', '$(ProjectFile)'))</ProjectFileFullPath>
+    <LockFileFullPath>$([MSBuild]::NormalizePath('$(LockFileBasePath)', '$(LockFile)'))</LockFileFullPath>
   </PropertyGroup>
 
 </Project>
