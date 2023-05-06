@@ -15,7 +15,6 @@ internal sealed class JsonRPCHostedService : IHostedService, IDisposable
     private readonly ILogger<JsonRPCHostedService> _logger;
     private readonly JsonRPCHostedServiceOptions _options;
     private readonly JsonRpc _jsonRpc;
-    private bool _disposedValue;
 
     public JsonRPCHostedService(
         IServiceCollection services,
@@ -62,27 +61,8 @@ internal sealed class JsonRPCHostedService : IHostedService, IDisposable
         return Task.CompletedTask;
     }
 
-    private void Dispose(bool disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                _jsonRpc.Dispose();
-            }
-
-            _disposedValue = true;
-        }
-    }
-
-    // ~JsonRPCHostedService()
-    // {
-    //     Dispose(disposing: false);
-    // }
-
     public void Dispose()
     {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        _jsonRpc.Dispose();
     }
 }
