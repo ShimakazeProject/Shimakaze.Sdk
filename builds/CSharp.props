@@ -11,7 +11,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
-    <RootNamespace Condition="$(MSBuildProjectName.EndsWith('.Abstractions'))">$(MSBuildProjectNameWithoutAbstractions)</RootNamespace>
     <RootNamespace Condition="$(MSBuildProjectName.EndsWith('.Tests'))">$(MSBuildProjectNameWithoutTests)</RootNamespace>
   </PropertyGroup>
 
@@ -20,12 +19,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference
-      Include="$(ShimakazeSdkSourceFolder)$(MSBuildProjectName).Abstractions\$(MSBuildProjectName).Abstractions.csproj"
-      Condition=" Exists('$(ShimakazeSdkSourceFolder)$(MSBuildProjectName).Abstractions\$(MSBuildProjectName).Abstractions.csproj') " />
   </ItemGroup>
 
   <ItemGroup>

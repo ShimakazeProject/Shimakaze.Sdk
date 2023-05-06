@@ -5,6 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Abstractions\Shimakaze.Sdk.Abstractions.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
   </ItemGroup>
 </Project>

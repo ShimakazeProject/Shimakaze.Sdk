@@ -8,7 +8,6 @@
     <ShimakazeSdkTestFolder>$([MSBuild]::NormalizeDirectory('$(ShimakazeSdkRootFolder)', 'test'))</ShimakazeSdkTestFolder>
     <ShimakazeSdkSlnFolder>$([MSBuild]::NormalizeDirectory('$(ShimakazeSdkRootFolder)', 'sln'))</ShimakazeSdkSlnFolder>
     <MSBuildProjectNameWithoutTests>$(MSBuildProjectName.Replace('.Tests', ''))</MSBuildProjectNameWithoutTests>
-    <MSBuildProjectNameWithoutAbstractions>$(MSBuildProjectName.Replace('.Abstractions', ''))</MSBuildProjectNameWithoutAbstractions>
     <Version>0.0.1-preview.5</Version>
   </PropertyGroup>
 
