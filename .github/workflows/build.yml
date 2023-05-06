@@ -92,7 +92,9 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         with:
           name: nuget-packages-${{ matrix.os }}
-          path: '{src, sdks}/**/bin/Release/*.*nupkg'
+          path: |
+            src/**/bin/Release/*.*nupkg
+            sdks/**/bin/Release/*.*nupkg
           retention-days: 3
 
       - name: Coveralls
