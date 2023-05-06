@@ -12,41 +12,41 @@
   <!-- HACK: MSB3191 -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Target
-      Name="PrepareForBuild"
-      DependsOnTargets="$(PrepareForBuildDependsOn)" />
+    Name="PrepareForBuild"
+    DependsOnTargets="$(PrepareForBuildDependsOn)" />
 
   <Target
-      Name="Restore"
-      Condition=" '$(NeedInstall)' == 'true' "
-      Inputs="$(ProjectFileFullPath)"
-      Outputs="$(LockFileFullPath)">
+    Name="Restore"
+    Condition="Exists('$(ProjectFileFullPath)')"
+    Inputs="$(ProjectFileFullPath)"
+    Outputs="$(LockFileFullPath)">
     <Message
-        Importance="high"
-        Text="Run Command: $(RestoreCommand)" />
+      Importance="high"
+      Text="Run Command: $(RestoreCommand)" />
 
     <Exec
-        WorkingDirectory="$(MSBuildProjectDirectory)"
-        Command="$(RestoreCommand)"
-        UseUtf8Encoding="$(UseUtf8Encoding)">
+      WorkingDirectory="$(MSBuildProjectDirectory)"
+      Command="$(RestoreCommand)"
+      UseUtf8Encoding="$(UseUtf8Encoding)">
       <Output
-          TaskParameter="ExitCode"
-          PropertyName="__ExitCode" />
+        TaskParameter="ExitCode"
+        PropertyName="__ExitCode" />
     </Exec>
 
     <Touch
-        Files="$(LockFile)"
-        Condition="'$(__ExitCode)' == '0'"
-        AlwaysCreate="true" />
+      Files="$(LockFileFullPath)"
+      Condition="'$(__ExitCode)' == '0'"
+      AlwaysCreate="true" />
   </Target>
 
   <Target
-      Name="CoreCompile"
-      DependsOnTargets="Restore">
+    Name="CoreCompile"
+    DependsOnTargets="Restore">
     <Exec
-        Command="$(BuildCommand)"
-        WorkingDirectory="$(BuildCommandWorkingDirectory)"
-        Condition=" '$(BuildCommand)' != '' "
-        UseUtf8Encoding="$(UseUtf8Encoding)" />
+      Command="$(BuildCommand)"
+      WorkingDirectory="$(BuildCommandWorkingDirectory)"
+      Condition=" '$(BuildCommand)' != '' "
+      UseUtf8Encoding="$(UseUtf8Encoding)" />
   </Target>
 
 </Project>
