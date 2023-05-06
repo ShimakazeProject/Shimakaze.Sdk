@@ -15,6 +15,24 @@
     Name="PrepareForBuild"
     DependsOnTargets="$(PrepareForBuildDependsOn)" />
 
+  <PropertyGroup>
+    <ProjectFileBasePath Condition=" '$(ProjectFileBasePath)' == '' ">$(NodePMWorkingDirectory)</ProjectFileBasePath>
+    <LockFileBasePath Condition=" '$(LockFileBasePath)' == '' ">$(NodePMWorkingDirectory)</LockFileBasePath>
+
+    <LockFile Condition=" '$(LockFile)' == '' And '$(PackageManager)' == 'npm' ">package-lock.json</LockFile>
+    <LockFile Condition=" '$(LockFile)' == '' And '$(PackageManager)' == 'yarn' ">yarn.lock</LockFile>
+
+    <RestoreCommand Condition=" '$(InstallCommand)' == '' And '$(PackageManager)' == 'npm' ">npm install</RestoreCommand>
+    <RestoreCommand Condition=" '$(InstallCommand)' == '' And '$(PackageManager)' == 'yarn' ">yarn install</RestoreCommand>
+
+    <BuildCommand Condition=" '$(BuildCommand)' == '' And '$(PackageManager)' == 'npm' ">npm run build</BuildCommand>
+    <BuildCommand Condition=" '$(BuildCommand)' == '' And '$(PackageManager)' == 'yarn' ">yarn run build</BuildCommand>
+
+    <ProjectFileFullPath>$([MSBuild]::NormalizePath('$(ProjectFileBasePath)', '$(ProjectFile)'))</ProjectFileFullPath>
+    <LockFileFullPath>$([MSBuild]::NormalizePath('$(LockFileBasePath)', '$(LockFile)'))</LockFileFullPath>
+  </PropertyGroup>
+
+
   <Target
     Name="Restore"
     Condition="Exists('$(ProjectFileFullPath)')"

@@ -12,20 +12,7 @@
     <PackageManager Condition=" '$(PackageManager)' == '' ">npm</PackageManager>
     <ProjectFile Condition=" '$(ProjectFile)' == '' ">package.json</ProjectFile>
 
-    <ProjectFileBasePath Condition=" '$(ProjectFileBasePath)' == '' ">$(MSBuildProjectDirectory)</ProjectFileBasePath>
-    <LockFileBasePath Condition=" '$(LockFileBasePath)' == '' ">$(MSBuildProjectDirectory)</LockFileBasePath>
-
-    <LockFile Condition=" '$(LockFile)' == '' AND '$(PackageManager)' == 'npm' ">package-lock.json</LockFile>
-    <LockFile Condition=" '$(LockFile)' == '' AND '$(PackageManager)' == 'yarn' ">yarn.lock</LockFile>
-
-    <RestoreCommand Condition=" '$(InstallCommand)' != '' AND '$(PackageManager)' == 'npm' ">npm install</RestoreCommand>
-    <RestoreCommand Condition=" '$(InstallCommand)' != '' AND '$(PackageManager)' == 'yarn' ">yarn install</RestoreCommand>
-
-    <BuildCommand Condition=" '$(BuildCommand)' != '' AND '$(PackageManager)' == 'npm' ">npm run build</BuildCommand>
-    <BuildCommand Condition=" '$(BuildCommand)' != '' AND '$(PackageManager)' == 'yarn' ">yarn run build</BuildCommand>
-
-    <ProjectFileFullPath>$([MSBuild]::NormalizePath('$(ProjectFileBasePath)', '$(ProjectFile)'))</ProjectFileFullPath>
-    <LockFileFullPath>$([MSBuild]::NormalizePath('$(LockFileBasePath)', '$(LockFile)'))</LockFileFullPath>
+    <NodePMWorkingDirectory>$(MSBuildProjectDirectory)</NodePMWorkingDirectory>
   </PropertyGroup>
 
 </Project>
