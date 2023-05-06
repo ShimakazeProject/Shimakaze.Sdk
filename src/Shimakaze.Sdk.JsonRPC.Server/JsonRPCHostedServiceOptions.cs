@@ -8,15 +8,7 @@ namespace Shimakaze.Sdk.JsonRPC.Server;
 public sealed class JsonRPCHostedServiceOptions
 {
     /// <summary>
-    /// Input Stream
+    /// JsonRpcMessageHandler
     /// </summary>
-    public Stream? Input { get; set; }
-    /// <summary>
-    /// Output Stream
-    /// </summary>
-    public Stream? Output { get; set; }
-    /// <summary>
-    /// JsonRpcMessageTextFormatter
-    /// </summary>
-    public IJsonRpcMessageTextFormatter? JsonRpcMessageTextFormatter { get; set; }
+    public IJsonRpcMessageHandler? JsonRpcMessageHandler { get; internal set; }
 }

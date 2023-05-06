@@ -27,13 +27,7 @@ internal sealed class JsonRPCHostedService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        JsonRpc jsonRpc = new(
-            new NewLineDelimitedMessageHandler(
-                _options.Output ?? throw new ArgumentNullException(nameof(_options.Output)),
-                _options.Input ?? throw new ArgumentNullException(nameof(_options.Input)),
-                _options.JsonRpcMessageTextFormatter ?? throw new ArgumentNullException(nameof(_options.JsonRpcMessageTextFormatter))
-            )
-        );
+        JsonRpc jsonRpc = new(_options.JsonRpcMessageHandler ?? throw new ArgumentNullException(nameof(_options.JsonRpcMessageHandler)));
         int count = 0;
         foreach (var target in _services
             .Select(i => (
