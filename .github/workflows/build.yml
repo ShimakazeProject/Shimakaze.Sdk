@@ -50,7 +50,7 @@ jobs:
             nuget-cache
 
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3.1.0
+        uses: actions/setup-dotnet@v3.2.0
         with:
           global-json-file: ./global.json
 
