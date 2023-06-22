@@ -31,7 +31,7 @@ public class IniSerializer : ISerializer<IniDocument>, IAsyncSerializer<IniDocum
     /// 序列化Ini文档
     /// </summary>
     /// <param name="value">value</param>
-    public virtual void Serialize(IniDocument value)
+    public virtual void Serialize(in IniDocument value)
     {
         WriteSectionBody(value.Default);
         foreach (var item in value)

@@ -26,7 +26,7 @@ public class CsfSerializer : ISerializer<CsfDocument>, IAsyncSerializer<CsfDocum
     }
 
     /// <inheritdoc/>
-    public virtual void Serialize(CsfDocument value)
+    public virtual void Serialize(in CsfDocument value)
     {
         _writer.WriteMetadataDirect(value.Metadata);
         foreach (var item in value.Data)

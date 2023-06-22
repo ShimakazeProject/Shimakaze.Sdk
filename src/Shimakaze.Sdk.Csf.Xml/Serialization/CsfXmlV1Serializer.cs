@@ -32,7 +32,7 @@ public sealed class CsfXmlV1Serializer :
     public Stream BaseStream { get; }
 
     /// <inheritdoc/>
-    public void Serialize(CsfDocument value)
+    public void Serialize(in CsfDocument value)
     {
         CsfDocumentXmlSerializer serializer = new();
         using XmlWriter xmlWriter = XmlWriter.Create(BaseStream);
