@@ -63,7 +63,7 @@ public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, I
     }
 
     /// <inheritdoc/>
-    public virtual void Write(MixEntry value)
+    public virtual void Write(in MixEntry value)
     {
         if (!_inited)
             Init();
@@ -72,8 +72,7 @@ public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, I
         {
             fixed (byte* ptr = _buffer)
             {
-                MixEntry* p = &value;
-                Buffer.MemoryCopy(p, ptr, sizeof(MixEntry), sizeof(MixEntry));
+                Marshal.StructureToPtr(value, (nint)ptr, false);
             }
         }
         BaseStream.Write(_buffer.AsSpan(0, 12));

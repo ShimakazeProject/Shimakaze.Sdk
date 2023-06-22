@@ -40,7 +40,7 @@ public sealed class CsfJsonV2Serializer :
     public Stream BaseStream { get; }
 
     /// <inheritdoc/>
-    public void Serialize(CsfDocument? value)
+    public void Serialize(in CsfDocument? value)
     {
         JsonSerializer.Serialize(BaseStream, value, _options);
     }

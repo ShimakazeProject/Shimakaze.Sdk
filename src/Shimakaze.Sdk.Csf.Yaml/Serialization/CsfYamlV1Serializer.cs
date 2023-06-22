@@ -33,7 +33,7 @@ public sealed class CsfYamlV1Serializer :
     public Stream BaseStream { get; }
 
     /// <inheritdoc/>
-    public void Serialize(CsfDocument? value)
+    public void Serialize(in CsfDocument? value)
     {
         using StreamWriter writer = new(BaseStream, leaveOpen: true);
         new SerializerBuilder()

@@ -105,7 +105,7 @@ public class CsfWriter : IWriter<CsfData>, IAsyncWriter<CsfData, Task>, IDisposa
     }
 
     /// <inheritdoc/>
-    public virtual void Write(CsfData value)
+    public virtual void Write(in CsfData value)
     {
         if (!_inited)
             Init();
