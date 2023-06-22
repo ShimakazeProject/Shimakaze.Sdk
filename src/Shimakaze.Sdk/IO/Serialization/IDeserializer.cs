@@ -4,7 +4,7 @@ namespace Shimakaze.Sdk.IO.Serialization;
 /// 反序列化器
 /// </summary>
 /// <typeparam name="T">值的类型</typeparam>
-public interface IDeserializer<T>
+public interface IDeserializer<out T>
 {
     /// <summary>
     /// 反序列化

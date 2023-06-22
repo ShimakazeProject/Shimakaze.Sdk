@@ -10,5 +10,5 @@ public interface ISerializer<T>
     /// 序列化
     /// </summary>
     /// <param name="value">值</param>
-    void Serialize(T value);
+    void Serialize(in T value);
 }

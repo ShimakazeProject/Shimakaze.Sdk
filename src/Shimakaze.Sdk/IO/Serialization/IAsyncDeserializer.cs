@@ -4,7 +4,7 @@ namespace Shimakaze.Sdk.IO.Serialization;
 /// 异步反序列化器
 /// </summary>
 /// <typeparam name="TTask">异步方法的返回值类型</typeparam>
-public interface IAsyncDeserializer<TTask>
+public interface IAsyncDeserializer<out TTask>
 {
     /// <summary>
     /// 异步反序列化
