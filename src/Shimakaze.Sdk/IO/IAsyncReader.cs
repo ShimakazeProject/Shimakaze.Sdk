@@ -4,7 +4,7 @@ namespace Shimakaze.Sdk.IO;
 /// 异步读取器接口
 /// </summary>
 /// <typeparam name="TTask">读出的数据的异步类型</typeparam>
-public interface IAsyncReader<TTask>
+public interface IAsyncReader<out TTask>
 {
     /// <summary>
     /// 异步的读取一个值

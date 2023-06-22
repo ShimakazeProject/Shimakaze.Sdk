@@ -10,5 +10,5 @@ public interface IWriter<T>
     /// 写入一个值
     /// </summary>
     /// <param name="value">值</param>
-    void Write(T value);
+    void Write(in T value);
 }

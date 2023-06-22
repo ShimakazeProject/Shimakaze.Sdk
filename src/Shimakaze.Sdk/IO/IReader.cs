@@ -4,7 +4,7 @@ namespace Shimakaze.Sdk.IO;
 /// 读取器接口
 /// </summary>
 /// <typeparam name="T">读出的数据的类型</typeparam>
-public interface IReader<T>
+public interface IReader<out T>
 {
     /// <summary>
     /// 读取一个值
