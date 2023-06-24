@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <SlnGenSolutionFileFullPath>$(ShimakazeSdkSlnFolder)$(MSBuildProjectNameWithoutTests).sln</SlnGenSolutionFileFullPath>
-    <SlnGenProjectName>$(MSBuildProjectNameWithoutTests)</SlnGenProjectName>
+    <SlnGenProjectName>$(MSBuildProjectName)</SlnGenProjectName>
   </PropertyGroup>
 
   <ItemGroup>
