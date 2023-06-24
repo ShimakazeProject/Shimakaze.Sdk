@@ -1,27 +1,25 @@
-﻿using System.Collections;
-
-using Shimakaze.Sdk.Pal;
+﻿using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Vpl;
 /// <summary>
 /// VPL文件
 /// </summary>
-public partial struct VoxelPalette : IEnumerable<VoxelPaletteSection>
+public record struct VoxelPalette
 {
     /// <summary>
     /// VPL文件头
     /// </summary>
-    public VoxelPaletteHeader Header { get; set; }
+    public VoxelPaletteHeader Header;
 
     /// <summary>
     /// VPL色板
     /// </summary>
-    public Palette Palette { get; set; }
+    public Palette Palette;
 
     /// <summary>
     /// VPL节
     /// </summary>
-    public VoxelPaletteSection[] Sections { get; set; }
+    public VoxelPaletteSection[] Sections;
 
     /// <summary>
     /// 获取其中一个节
@@ -33,8 +31,4 @@ public partial struct VoxelPalette : IEnumerable<VoxelPaletteSection>
         get => Sections[index];
         set => Sections[index] = value;
     }
-
-    /// <inheritdoc/>
-    public readonly IEnumerator<VoxelPaletteSection> GetEnumerator() => new Enumerator(this);
-    readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

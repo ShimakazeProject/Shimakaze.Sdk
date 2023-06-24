@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-using Shimakaze.Sdk.IO.Pal;
+﻿using Shimakaze.Sdk.IO.Pal;
 using Shimakaze.Sdk.Vpl;
 
 namespace Shimakaze.Sdk.IO.Vpl;
@@ -8,7 +6,7 @@ namespace Shimakaze.Sdk.IO.Vpl;
 /// <summary>
 /// VoxelPaletteWriter
 /// </summary>
-public sealed class VoxelPaletteWriter : IWriter<VoxelPalette>, IAsyncWriter<VoxelPalette, ValueTask>, IDisposable, IAsyncDisposable
+public sealed class VoxelPaletteWriter : IWriter<VoxelPalette>, IDisposable, IAsyncDisposable
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
@@ -39,48 +37,12 @@ public sealed class VoxelPaletteWriter : IWriter<VoxelPalette>, IAsyncWriter<Vox
     /// <inheritdoc/>
     public void Write(in VoxelPalette value)
     {
-        byte[] buffer = new byte[256];
-        unsafe
-        {
-            fixed (byte* ptr = buffer)
-            {
-                Marshal.StructureToPtr(value.Header, (nint)ptr, false);
-                _stream.Write(buffer.AsSpan(0, sizeof(VoxelPaletteHeader)));
-            }
-
-            using (PaletteWriter writer = new(_stream, true))
-                writer.Write(value.Palette);
-
-            int size = value.Sections.Length * sizeof(VoxelPaletteSection);
-            fixed (VoxelPaletteSection* p = value.Sections)
-                _stream.Write(new Span<byte>(p, size));
-        }
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask WriteAsync(VoxelPalette value, CancellationToken cancellationToken = default)
-    {
-        byte[] buffer = new byte[16];
-        unsafe
-        {
-            fixed (byte* ptr = buffer)
-            {
-                Marshal.StructureToPtr(value.Header, (nint)ptr, false);
-            }
-        }
-
-        await _stream.WriteAsync(buffer.AsMemory(0, 16), cancellationToken);
+        _stream.Write(value.Header);
 
         using (PaletteWriter writer = new(_stream, true))
-            await writer.WriteAsync(value.Palette, cancellationToken);
+            writer.Write(value.Palette);
 
-        int size = value.Sections.Length * 256;
-        Memory<byte> memory;
-        unsafe
-        {
-            fixed (VoxelPaletteSection* p = value.Sections)
-                memory = new Span<byte>(p, size).ToArray();
-        }
-        await _stream.WriteAsync(memory, cancellationToken);
+        for (int i = 0; i < value.Sections.Length; i++)
+            _stream.Write<byte>(value.Sections[i].Data);
     }
 }

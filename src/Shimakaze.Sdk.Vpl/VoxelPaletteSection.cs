@@ -3,33 +3,28 @@
 /// <summary>
 /// VPL节
 /// </summary>
-public struct VoxelPaletteSection
+public readonly record struct VoxelPaletteSection
 {
     /// <summary>
     /// VPL节数据（颜色索引）
     /// </summary>
-    public unsafe fixed byte Data[256];
+    public readonly byte[] Data = new byte[256];
+
     /// <summary>
-    /// 获取节数据中的一个颜色索引
+    /// VoxelPaletteSection
     /// </summary>
-    /// <param name="index">颜色索引的索引</param>
-    /// <returns>颜色索引</returns>
-    public readonly byte this[int index]
+    public VoxelPaletteSection()
     {
-        get
-        {
-            unsafe
-            {
-                return Data[index];
-            }
-        }
-        set
-        {
-            unsafe
-            {
-                fixed (byte* ptr = Data)
-                    ptr[index] = value;
-            }
-        }
+    }
+
+    /// <summary>
+    /// 获取 VPL 节数据（颜色索引）
+    /// </summary>
+    /// <param name="index">位置</param>
+    /// <returns>颜色索引</returns>
+    public readonly byte this[byte index]
+    {
+        get => Data[index];
+        set => Data[index] = value;
     }
 }

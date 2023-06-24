@@ -5,7 +5,7 @@ namespace Shimakaze.Sdk.IO.Vpl;
 /// <summary>
 /// VoxelPaletteReader
 /// </summary>
-public sealed class VoxelPaletteReader : IReader<VoxelPalette>, IAsyncReader<ValueTask<VoxelPalette>>, IDisposable, IAsyncDisposable
+public sealed class VoxelPaletteReader : IReader<VoxelPalette>, IDisposable, IAsyncDisposable
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
@@ -39,57 +39,19 @@ public sealed class VoxelPaletteReader : IReader<VoxelPalette>, IAsyncReader<Val
     public VoxelPalette Read()
     {
         VoxelPalette vpl = new();
-        unsafe
-        {
-            _stream.Read(_buffer.AsSpan(0, sizeof(VoxelPaletteHeader)));
-            fixed (byte* p = _buffer)
-                vpl.Header = *(VoxelPaletteHeader*)p;
 
-            using (PaletteReader reader = new(_stream, true))
-                vpl.Palette = reader.Read();
-
-            vpl.Sections = new VoxelPaletteSection[vpl.Header.SectionCount];
-            fixed (VoxelPaletteSection* p = vpl.Sections)
-            fixed (byte* pBuf = _buffer)
-            {
-                for (int i = 0; i < vpl.Header.SectionCount; i++)
-                {
-                    _stream.Read(_buffer.AsSpan(0, sizeof(VoxelPaletteSection)));
-                    p[i] = *(VoxelPaletteSection*)pBuf;
-                }
-            }
-
-        }
-        return vpl;
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask<VoxelPalette> ReadAsync(CancellationToken cancellationToken = default)
-    {
-        VoxelPalette vpl = new();
-        await _stream.ReadAsync(_buffer.AsMemory(0, 16), cancellationToken);
-        unsafe
-        {
-            fixed (byte* p = _buffer)
-                vpl.Header = *(VoxelPaletteHeader*)p;
-        }
+        _stream.Read(_buffer, out vpl.Header);
 
         using (PaletteReader reader = new(_stream, true))
-            vpl.Palette = await reader.ReadAsync(cancellationToken);
+            vpl.Palette = reader.Read();
 
         vpl.Sections = new VoxelPaletteSection[vpl.Header.SectionCount];
-        for (int i = 0; i < vpl.Header.SectionCount; i++)
+        for (int i = 0; i < vpl.Sections.Length; i++)
         {
-            await _stream.ReadAsync(_buffer.AsMemory(0, 256), cancellationToken);
-            unsafe
-            {
-                fixed (VoxelPaletteSection* p = vpl.Sections)
-                fixed (byte* pBuf = _buffer)
-                {
-                    p[i] = *(VoxelPaletteSection*)pBuf;
-                }
-            }
+            vpl.Sections[i] = new();
+            _stream.Read(vpl.Sections[i].Data);
         }
+
         return vpl;
     }
 }
