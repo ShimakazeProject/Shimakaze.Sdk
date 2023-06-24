@@ -9,7 +9,6 @@ public sealed class HvaReader : IReader<HvaFile>, IDisposable, IAsyncDisposable
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
-    private readonly byte[] _buffer = new byte[128];
 
     /// <summary>
     /// HvaReader
@@ -40,16 +39,16 @@ public sealed class HvaReader : IReader<HvaFile>, IDisposable, IAsyncDisposable
     {
         HvaFile hva = new();
 
-        _stream.Read(_buffer, out hva.Header);
+        _stream.Read(out hva.Header);
 
         hva.SectionNames = new Int128[hva.Header.NumSections];
-        _stream.Read(_buffer, hva.SectionNames);
+        _stream.Read(hva.SectionNames);
 
         hva.Frames = new HvaFrame[hva.Header.NumFrames];
         for (int i = 0; i < hva.Frames.Length; i++)
         {
             hva.Frames[i].Matrices = new HvaMatrix[hva.Header.NumSections];
-            _stream.Read(_buffer, hva.Frames[i].Matrices);
+            _stream.Read(hva.Frames[i].Matrices);
         }
 
         return hva;
