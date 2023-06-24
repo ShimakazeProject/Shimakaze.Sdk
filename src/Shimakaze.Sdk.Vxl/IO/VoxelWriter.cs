@@ -10,11 +10,10 @@ namespace Shimakaze.Sdk.IO.Vxl;
 /// <summary>
 /// VoxelWriter
 /// </summary>
-public sealed class VoxelWriter : IWriter<Voxel>, IDisposable, IAsyncDisposable
+public sealed class VoxelWriter : IWriter<VXLFile>, IDisposable, IAsyncDisposable
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
-    private byte[] _buffer = new byte[1024];
 
     /// <summary>
     /// PaletteReader
@@ -41,48 +40,38 @@ public sealed class VoxelWriter : IWriter<Voxel>, IDisposable, IAsyncDisposable
     }
 
     /// <inheritdoc/>
-    public void Write(in Voxel value)
+    public void Write(in VXLFile value)
     {
-        unsafe
+        uint limbDataOffset = 34 + Palette.COLOR_COUNT * 3 + value.Header.NumSections * 28;
+
+        _stream.Write(value.Header);
+
+        using (PaletteWriter writer = new(_stream, true))
+            writer.Write(value.Palette);
+
+        _stream.Write(value.SectionHeaders);
+
+        for (int i = 0; i < value.SectionData.Length; i++)
         {
-            byte[] buffer = new byte[sizeof(VoxelHeader)];
-            fixed (byte* ptr = buffer)
-                Marshal.StructureToPtr(value.Header, (nint)ptr, false);
-            _stream.Write(buffer.AsSpan(0, sizeof(VoxelHeader)));
+            long data = limbDataOffset + value.SectionTailers[i].SpanDataOffset;
+            _stream.Write(value.SectionData[i].SpanStart);
+            _stream.Write(value.SectionData[i].SpanEnd);
 
-            using (PaletteWriter writer = new(_stream, true))
-                writer.Write(value.Palette);
-
-            int size = value.LimbHeads.Length * sizeof(LimbHeader);
-            fixed (LimbHeader* p = value.LimbHeads)
-                _stream.Write(new Span<byte>(p, size));
-
-            foreach (var body in value.LimbBodies)
+            for (int j = 0; j < value.SectionData[i].Voxel.Length; j++)
             {
-                size = body.SpanStart.Length * sizeof(int);
-
-                fixed (int* p = body.SpanStart)
-                    _stream.Write(new Span<byte>(p, size));
-
-                fixed (int* p = body.SpanEnd)
-                    _stream.Write(new Span<byte>(p, size));
-
-                foreach (var span in body.Data)
+                _stream.Seek(data + value.SectionData[i].SpanStart[j], SeekOrigin.Begin);
+                foreach (var span in value.SectionData[i].Voxel[j].Sections)
                 {
                     _stream.WriteByte(span.SkipCount);
                     _stream.WriteByte(span.NumVoxels);
 
-                    size = span.Voxels.Length * sizeof(SpanVoxel);
-                    fixed (SpanVoxel* p = span.Voxels)
-                        _stream.Write(new Span<byte>(p, size));
+                    _stream.Write(span.Voxels);
 
                     _stream.WriteByte(span.NumVoxels2);
                 }
             }
-
-            size = value.LimbTails.Length * sizeof(LimbTailer);
-            fixed (LimbTailer* p = value.LimbTails)
-                _stream.Write(new Span<byte>(p, size));
         }
+
+        _stream.Write(value.SectionTailers);
     }
 }

@@ -8,11 +8,10 @@ namespace Shimakaze.Sdk.IO.Vxl;
 /// <summary>
 /// VoxelReader
 /// </summary>
-public sealed class VoxelReader : IReader<Voxel>, IDisposable, IAsyncDisposable
+public sealed class VoxelReader : IReader<VXLFile>, IDisposable, IAsyncDisposable
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
-    private byte[] _buffer = new byte[1024];
 
     /// <summary>
     /// PaletteReader
@@ -41,97 +40,82 @@ public sealed class VoxelReader : IReader<Voxel>, IDisposable, IAsyncDisposable
     }
 
     /// <inheritdoc/>
-    public Voxel Read()
+    public VXLFile Read()
     {
-        Voxel voxel = new();
-        unsafe
+        VXLFile voxel = new();
+        _stream.Read(out voxel.Header);
+
+        uint limbDataOffset = 34 + Palette.COLOR_COUNT * 3 + voxel.Header.NumSections * 28;
+
+        using (PaletteReader reader = new(_stream, true))
+            voxel.Palette = reader.Read();
+
+        voxel.SectionHeaders = new SectionHeader[voxel.Header.NumSections];
+        for (int i = 0; i < voxel.Header.NumSections; i++)
+            _stream.Read(out voxel.SectionHeaders[i]);
+
+        voxel.SectionTailers = new SectionTailer[voxel.Header.NumSections];
+        for (int i = 0; i < voxel.Header.NumSections; i++)
         {
-            _stream.Read(_buffer.AsSpan(0, sizeof(VoxelHeader)));
-            fixed (byte* ptr = _buffer)
-                voxel.Header = *(VoxelHeader*)ptr;
+            _stream.Seek(limbDataOffset + voxel.Header.BodySize + i * 92, SeekOrigin.Begin);
+            _stream.Read(out voxel.SectionTailers[i]);
+        }
 
-            int limbDataOffset = sizeof(VoxelHeader) + sizeof(Palette) + voxel.Header.LimbsCount * sizeof(LimbHeader);
+        voxel.SectionData = new SectionData[voxel.Header.NumSections];
+        for (int i = 0; i < voxel.Header.NumSections; i++)
+        {
+            int n = voxel.SectionTailers[i].Size.X * voxel.SectionTailers[i].Size.Y;
+            long start = limbDataOffset + voxel.SectionTailers[i].SpanStartOffset;
+            long end = limbDataOffset + voxel.SectionTailers[i].SpanEndOffset;
+            long data = limbDataOffset + voxel.SectionTailers[i].SpanDataOffset;
 
-            using (PaletteReader reader = new(_stream, true))
-                voxel.Palette = reader.Read();
-
-
-            voxel.LimbHeads = new LimbHeader[voxel.Header.LimbsCount];
-            fixed (LimbHeader* p = voxel.LimbHeads)
-            fixed (byte* ptr = _buffer)
+            voxel.SectionData[i] = new()
             {
-                for (int i = 0; i < voxel.Header.LimbsCount; i++)
-                {
-                    _stream.Read(_buffer.AsSpan(0, sizeof(LimbHeader)));
-                    Buffer.MemoryCopy(ptr, p + i, sizeof(LimbHeader), sizeof(LimbHeader));
-                }
-            }
+                SpanStart = new int[n],
+                SpanEnd = new int[n],
+                Voxel = new VoxelSpan[n],
+            };
 
-            voxel.LimbTails = new LimbTailer[voxel.Header.LimbsCount];
-            fixed (LimbTailer* p = voxel.LimbTails)
-            fixed (byte* ptr = _buffer)
+            _stream.Seek(start, SeekOrigin.Begin);
+            _stream.Read(voxel.SectionData[i].SpanStart);
+
+            _stream.Seek(end, SeekOrigin.Begin);
+            _stream.Read(voxel.SectionData[i].SpanEnd);
+
+            for (int j = 0; j < n; j++)
             {
-                for (int i = 0; i < voxel.Header.LimbsCount; i++)
+                voxel.SectionData[i].Voxel[j] = new();
+                if (voxel.SectionData[i].SpanStart[j] is -1 && voxel.SectionData[i].SpanEnd[j] is -1)
+                    continue;
+
+                List<VoxelSpanSegment> sections = new();
+                _stream.Seek(data + voxel.SectionData[i].SpanStart[j], SeekOrigin.Begin);
+                for (byte z = 0; z < voxel.SectionTailers[i].Size.Z;)
                 {
-                    _stream.Seek(limbDataOffset + voxel.Header.BodySize + i * sizeof(LimbTailer), SeekOrigin.Begin);
-                    _stream.Read(_buffer.AsSpan(0, sizeof(LimbTailer)));
-                    Buffer.MemoryCopy(ptr, p + i, sizeof(LimbTailer), sizeof(LimbTailer));
-                }
-            }
-
-            voxel.LimbBodies = new LimbBody[voxel.Header.LimbsCount];
-            for (int i = 0; i < voxel.Header.LimbsCount; i++)
-            {
-                int n = voxel.LimbTails[i].Size.X * voxel.LimbTails[i].Size.Y;
-                long start = limbDataOffset + voxel.LimbTails[i].SpanStartOffset;
-                long end = limbDataOffset + voxel.LimbTails[i].SpanEndOffset;
-                long data = limbDataOffset + voxel.LimbTails[i].SpanDataOffset;
-                int size = n * sizeof(int);
-                if (_buffer.Length < size)
-                    _buffer = new byte[size];
-
-                voxel.LimbBodies[i] = new()
-                {
-                    SpanStart = new int[n],
-                    SpanEnd = new int[n],
-                    Data = new SpanStruct[n],
-                };
-
-                fixed (int* p1 = voxel.LimbBodies[i].SpanStart)
-                fixed (int* p2 = voxel.LimbBodies[i].SpanEnd)
-                fixed (byte* ptr = _buffer)
-                {
-                    _stream.Seek(start, SeekOrigin.Begin);
-                    _stream.Read(_buffer.AsSpan(0, size));
-                    Buffer.MemoryCopy(ptr, p1, size, size);
-
-                    _stream.Seek(end, SeekOrigin.Begin);
-                    _stream.Read(_buffer.AsSpan(0, size));
-                    Buffer.MemoryCopy(ptr, p2, size, size);
-                }
-
-                for (int j = 0; j < n; j++)
-                {
-                    _stream.Seek(data + voxel.LimbBodies[i].SpanStart[j], SeekOrigin.Begin);
-                    voxel.LimbBodies[i].Data[j].SkipCount = (byte)_stream.ReadByte();
-                    voxel.LimbBodies[i].Data[j].NumVoxels = (byte)_stream.ReadByte();
-                    voxel.LimbBodies[i].Data[j].Voxels = new SpanVoxel[voxel.LimbBodies[i].Data[j].NumVoxels];
-                    size = voxel.LimbBodies[i].Data[j].NumVoxels * sizeof(SpanVoxel);
-                    if (_buffer.Length < size)
-                        _buffer = new byte[size];
-                    fixed (SpanVoxel* p = voxel.LimbBodies[i].Data[j].Voxels)
-                    fixed (byte* ptr = _buffer)
+                    VoxelSpanSegment voxelSpanSegment = new()
                     {
-                        _stream.Read(_buffer.AsSpan(0, size));
-                        Buffer.MemoryCopy(ptr, p, size, size);
-                    }
+                        SkipCount = (byte)_stream.ReadByte()
+                    };
+                    z += voxelSpanSegment.SkipCount;
 
-                    voxel.LimbBodies[i].Data[j].NumVoxels2 = (byte)_stream.ReadByte();
-                    if (_stream.Position < data + voxel.LimbBodies[i].SpanStart[j])
-                    {
-                        // 少读内容了
-                    }
+                    voxelSpanSegment.NumVoxels = (byte)_stream.ReadByte();
+                    z += voxelSpanSegment.NumVoxels;
+
+                    // if (z + voxelSpanSegment.NumVoxels > voxel.SectionTailers[i].Size.Z)
+                    //     throw new OverflowException();
+
+                    voxelSpanSegment.Voxels = new Voxel[voxelSpanSegment.NumVoxels];
+                    if (voxelSpanSegment.NumVoxels is > 0)
+                        _stream.Read(voxelSpanSegment.Voxels);
+
+                    voxelSpanSegment.NumVoxels2 = (byte)_stream.ReadByte();
+                    if (voxelSpanSegment.NumVoxels != voxelSpanSegment.NumVoxels2)
+                        throw new FormatException("NumVoxels are not equal than NumVoxels2");
+
+                    sections.Add(voxelSpanSegment);
                 }
+
+                voxel.SectionData[i].Voxel[j].Sections = sections.ToArray();
             }
         }
         return voxel;
