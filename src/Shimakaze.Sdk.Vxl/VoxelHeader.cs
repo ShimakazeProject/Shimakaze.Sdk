@@ -8,8 +8,11 @@ namespace Shimakaze.Sdk.Vxl;
 [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 16 + sizeof(int) * 4 + sizeof(short))]
 public record struct VoxelHeader
 {
-    [FieldOffset(0)]
-    private Int128 _fileType;
+    /// <summary>
+    /// 文件头标识 总是 "Voxel Animation\0"
+    /// </summary>
+    [field: FieldOffset(0)]
+    public Int128 FileType { get; set; }
     /// <summary>
     /// 
     /// </summary>
@@ -37,32 +40,4 @@ public record struct VoxelHeader
     /// </summary>
     [field: FieldOffset(16 + sizeof(int) * 4)]
     public short Unknown2 { get; set; }
-
-    /// <summary>
-    /// 文件头标识 总是 "Voxel Animation\0"
-    /// </summary>
-    public string FileType
-    {
-        readonly get
-        {
-            unsafe
-            {
-                var tmp = _fileType;
-                return new string((sbyte*)&tmp, 0, 16).Split('\0').First();
-            }
-        }
-        set
-        {
-            unsafe
-            {
-                byte* tmp = stackalloc byte[16];
-                char[] chars = value.ToCharArray();
-                fixed (char* pChar = chars)
-                {
-                    int data = Encoding.ASCII.GetBytes(pChar, chars.Length, tmp, 16);
-                    _fileType = *(Int128*)tmp;
-                }
-            }
-        }
-    }
 }
