@@ -3,18 +3,18 @@
 /// <summary>
 /// LimbBody
 /// </summary>
-public record struct LimbBody
+public record struct SectionData
 {
     /// <summary>
     /// SpanStart
     /// </summary>
-    public int[] SpanStart { get; set; }
+    public int[] SpanStart;
     /// <summary>
     /// SpanEnd
     /// </summary>
-    public int[] SpanEnd { get; set; }
+    public int[] SpanEnd;
     /// <summary>
     /// Data
     /// </summary>
-    public SpanStruct[] Data { get; set; }
+    public VoxelSpan[] Voxel;
 }

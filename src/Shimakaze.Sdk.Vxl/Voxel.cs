@@ -1,30 +1,22 @@
-﻿using Shimakaze.Sdk.Pal;
+﻿using System.Runtime.InteropServices;
 
 namespace Shimakaze.Sdk.Vxl;
 
 /// <summary>
-/// VXL 文件
+/// 体素
 /// </summary>
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 2 * sizeof(byte))]
 public record struct Voxel
 {
     /// <summary>
-    /// 文件头
+    /// The colour of the voxel (to be looked up in a palette)
     /// </summary>
-    public VoxelHeader Header { get; set; }
+    [FieldOffset(0)]
+    public byte Color;
+
     /// <summary>
-    /// 文件色板
+    /// The normal vector of the voxel
     /// </summary>
-    public Palette Palette { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
-    public LimbHeader[] LimbHeads { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
-    public LimbBody[] LimbBodies { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
-    public LimbTailer[] LimbTails { get; set; }
+    [FieldOffset(1)]
+    public byte Normal;
 }
