@@ -4,7 +4,7 @@ namespace Shimakaze.Sdk.IO.Pal;
 /// <summary>
 /// PaletteReader
 /// </summary>
-public sealed class PaletteReader : IReader<Palette>, IAsyncReader<ValueTask<Palette>>, IDisposable, IAsyncDisposable
+public sealed class PaletteReader : IReader<Palette>, IDisposable, IAsyncDisposable
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
@@ -37,22 +37,8 @@ public sealed class PaletteReader : IReader<Palette>, IAsyncReader<ValueTask<Pal
     /// <inheritdoc/>
     public Palette Read()
     {
-        _stream.Read(_buffer);
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-                return *(Palette*)ptr;
-        }
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask<Palette> ReadAsync(CancellationToken cancellationToken = default)
-    {
-        await _stream.ReadAsync(_buffer, cancellationToken);
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-                return *(Palette*)ptr;
-        }
+        Palette palette = new();
+        _stream.Read(_buffer, palette.Colors);
+        return palette;
     }
 }
