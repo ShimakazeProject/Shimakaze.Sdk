@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
-    <Using Include="Shimakaze.Sdk.IO.Extensions" />
+    <Using Condition=" '$(AllowUnsafeBlocks)' == 'True' " Include="Shimakaze.Sdk.IO.Extensions" />
   </ItemGroup>
 
 </Project>
