@@ -1,4 +1,8 @@
-﻿using Shimakaze.Sdk.Pal;
+﻿using System;
+using System.Runtime.InteropServices;
+
+using Shimakaze.Sdk.IO.Pal;
+using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Vxl;
 
 namespace Shimakaze.Sdk.IO.Vxl;
@@ -6,52 +10,79 @@ namespace Shimakaze.Sdk.IO.Vxl;
 /// <summary>
 /// VoxelWriter
 /// </summary>
-public sealed class VoxelWriter : IWriter<Voxel>
+public sealed class VoxelWriter : IWriter<Voxel>, IDisposable, IAsyncDisposable
 {
-    private readonly BinaryWriter _writer;
+    private readonly Stream _stream;
+    private readonly bool _leaveOpen;
+    private byte[] _buffer = new byte[1024];
 
     /// <summary>
-    /// VoxelWriter
+    /// PaletteReader
     /// </summary>
-    public VoxelWriter(BinaryWriter writer)
-    {
-        _writer = writer;
-    }
-    /// <inheritdoc/>
 
+    public VoxelWriter(Stream stream, bool leaveOpen = false)
+    {
+        _stream = stream;
+        _leaveOpen = leaveOpen;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        if (!_leaveOpen)
+            _stream.Dispose();
+    }
+
+    /// <inheritdoc/>
+    public async ValueTask DisposeAsync()
+    {
+        if (!_leaveOpen)
+            await _stream.DisposeAsync();
+    }
+
+    /// <inheritdoc/>
     public void Write(in Voxel value)
     {
-        VoxelHeader header = value.Header;
-        Palette palette = value.Palette;
         unsafe
         {
-            _writer.Write(new Span<byte>((byte*)&header, sizeof(VoxelHeader)));
-            _writer.Write(new Span<byte>((byte*)&palette, sizeof(Palette)));
+            byte[] buffer = new byte[sizeof(VoxelHeader)];
+            fixed (byte* ptr = buffer)
+                Marshal.StructureToPtr(value.Header, (nint)ptr, false);
+            _stream.Write(buffer.AsSpan(0, sizeof(VoxelHeader)));
 
-            fixed (LimbHeader* ptr = value.LimbHeads)
-                _writer.Write(new Span<byte>((byte*)&ptr, value.LimbHeads.Length * sizeof(LimbHeader)));
+            using (PaletteWriter writer = new(_stream, true))
+                writer.Write(value.Palette);
+
+            int size = value.LimbHeads.Length * sizeof(LimbHeader);
+            fixed (LimbHeader* p = value.LimbHeads)
+                _stream.Write(new Span<byte>(p, size));
 
             foreach (var body in value.LimbBodies)
             {
-                foreach (var v in body.SpanStart)
-                    _writer.Write(v);
-                foreach (var v in body.SpanEnd)
-                    _writer.Write(v);
+                size = body.SpanStart.Length * sizeof(int);
+
+                fixed (int* p = body.SpanStart)
+                    _stream.Write(new Span<byte>(p, size));
+
+                fixed (int* p = body.SpanEnd)
+                    _stream.Write(new Span<byte>(p, size));
 
                 foreach (var span in body.Data)
                 {
-                    _writer.Write(span.SkipCount);
-                    _writer.Write(span.NumVoxels);
+                    _stream.WriteByte(span.SkipCount);
+                    _stream.WriteByte(span.NumVoxels);
 
-                    fixed (SpanVoxel* ptr = span.Voxels)
-                        _writer.Write(new Span<byte>((byte*)&ptr, span.Voxels.Length * sizeof(SpanVoxel)));
+                    size = span.Voxels.Length * sizeof(SpanVoxel);
+                    fixed (SpanVoxel* p = span.Voxels)
+                        _stream.Write(new Span<byte>(p, size));
 
-                    _writer.Write(span.NumVoxels2);
+                    _stream.WriteByte(span.NumVoxels2);
                 }
             }
 
-            fixed (LimbTailer* ptr = value.LimbTails)
-                _writer.Write(new Span<byte>((byte*)&ptr, value.LimbTails.Length * sizeof(LimbTailer)));
+            size = value.LimbTails.Length * sizeof(LimbTailer);
+            fixed (LimbTailer* p = value.LimbTails)
+                _stream.Write(new Span<byte>(p, size));
         }
     }
 }

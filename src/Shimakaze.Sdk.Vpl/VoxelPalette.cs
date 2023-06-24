@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Runtime.InteropServices;
 
 using Shimakaze.Sdk.Pal;
 
