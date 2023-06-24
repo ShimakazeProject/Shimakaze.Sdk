@@ -5,14 +5,27 @@ namespace Shimakaze.Sdk.Vpl;
 /// <summary>
 /// VPL文件头
 /// </summary>
-/// <param name="RemapPlayerColorStart"></param>
-/// <param name="RemapPlayerColorEnd"></param>
-/// <param name="SectionCount">节数量</param>
-/// <param name="Unknown"></param>
 [StructLayout(LayoutKind.Explicit, Pack = 1, Size = sizeof(uint) * 4)]
-public record struct VoxelPaletteHeader(
-    [field: FieldOffset(0)] uint RemapPlayerColorStart,
-    [field: FieldOffset(4)] uint RemapPlayerColorEnd,
-    [field: FieldOffset(8)] uint SectionCount,
-    [field: FieldOffset(12)] uint Unknown
-);
+public record struct VoxelPaletteHeader
+{
+    /// <summary>
+    /// RemapPlayerColorStart
+    /// </summary>
+    [FieldOffset(0)]
+    public uint RemapPlayerColorStart;
+    /// <summary>
+    /// RemapPlayerColorEnd
+    /// </summary>
+    [FieldOffset(4)]
+    public uint RemapPlayerColorEnd;
+    /// <summary>
+    /// 节数量
+    /// </summary>
+    [FieldOffset(8)]
+    public uint SectionCount;
+    /// <summary>
+    /// Unknown
+    /// </summary>
+    [FieldOffset(12)]
+    public uint Unknown;
+}
