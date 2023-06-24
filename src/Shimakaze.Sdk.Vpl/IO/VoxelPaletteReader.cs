@@ -9,7 +9,6 @@ public sealed class VoxelPaletteReader : IReader<VoxelPalette>, IDisposable, IAs
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
-    private readonly byte[] _buffer = new byte[256];
 
     /// <summary>
     /// VoxelPaletteReader
@@ -40,7 +39,7 @@ public sealed class VoxelPaletteReader : IReader<VoxelPalette>, IDisposable, IAs
     {
         VoxelPalette vpl = new();
 
-        _stream.Read(_buffer, out vpl.Header);
+        _stream.Read(out vpl.Header);
 
         using (PaletteReader reader = new(_stream, true))
             vpl.Palette = reader.Read();

@@ -8,7 +8,6 @@ public sealed class PaletteReader : IReader<Palette>, IDisposable, IAsyncDisposa
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
-    private readonly byte[] _buffer = new byte[Palette.COLOR_COUNT * 3];
 
     /// <summary>
     /// PaletteReader
@@ -38,7 +37,7 @@ public sealed class PaletteReader : IReader<Palette>, IDisposable, IAsyncDisposa
     public Palette Read()
     {
         Palette palette = new();
-        _stream.Read(_buffer, palette.Colors);
+        _stream.Read(palette.Colors);
         return palette;
     }
 }
