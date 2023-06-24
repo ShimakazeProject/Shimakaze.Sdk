@@ -53,3 +53,7 @@
 *.csf filter=lfs diff=lfs merge=lfs -text
 *.mix filter=lfs diff=lfs merge=lfs -text
 *.dat filter=lfs diff=lfs merge=lfs -text
+*.pal filter=lfs diff=lfs merge=lfs -text
+*.vpl filter=lfs diff=lfs merge=lfs -text
+*.vxl filter=lfs diff=lfs merge=lfs -text
+*.hva filter=lfs diff=lfs merge=lfs -text
