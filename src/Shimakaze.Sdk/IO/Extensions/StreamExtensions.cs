@@ -40,7 +40,7 @@ public static unsafe class StreamExtensions
     /// <param name="length">缓冲区可用长度</param>
     /// <returns>值</returns>
     /// <exception cref="OverflowException"></exception>
-    public static T ReadAs<T>(this Stream stream, byte[] buffer, int start = 0, int? length = null)
+    public static T Read<T>(this Stream stream, byte[] buffer, int start = 0, int? length = null)
             where T : unmanaged
     {
         length ??= buffer.Length - start;
@@ -65,7 +65,7 @@ public static unsafe class StreamExtensions
     /// <param name="start">缓冲区起始位置</param>
     /// <param name="length">缓冲区可用长度</param>
     /// <exception cref="OverflowException"></exception>
-    public static void Read<T>(this Stream stream, byte[] buffer, T[] destination, int start = 0, int? length = null)
+    public static void Read<T>(this Stream stream, byte[] buffer, in T[] destination, int start = 0, int? length = null)
         where T : unmanaged
     {
         length ??= buffer.Length - start;
@@ -77,7 +77,7 @@ public static unsafe class StreamExtensions
 
         // 使缓冲区可用长度始终是 结构体长度 的倍数
         if (length % tSize is not 0)
-            length = (length / tSize) * tSize;
+            length = length / tSize * tSize;
 
         for (int i = 0; i < destination.Length;)
         {
