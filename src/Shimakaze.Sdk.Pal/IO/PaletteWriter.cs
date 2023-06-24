@@ -7,7 +7,7 @@ namespace Shimakaze.Sdk.IO.Pal;
 /// <summary>
 /// PaletteWriter
 /// </summary>
-public sealed class PaletteWriter : IWriter<Palette>, IAsyncWriter<Palette, ValueTask>, IDisposable, IAsyncDisposable
+public sealed class PaletteWriter : IWriter<Palette>, IDisposable, IAsyncDisposable
 {
     private readonly Stream _stream;
     private readonly bool _leaveOpen;
@@ -38,28 +38,6 @@ public sealed class PaletteWriter : IWriter<Palette>, IAsyncWriter<Palette, Valu
     /// <inheritdoc/>
     public void Write(in Palette value)
     {
-        byte[] buffer = new byte[Palette.COLOR_COUNT * 3];
-        unsafe
-        {
-            fixed (byte* ptr = buffer)
-            {
-                Marshal.StructureToPtr(value, (nint)ptr, false);
-                _stream.Write(buffer);
-            }
-        }
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask WriteAsync(Palette value, CancellationToken cancellationToken = default)
-    {
-        byte[] buffer = new byte[Palette.COLOR_COUNT * 3];
-        unsafe
-        {
-            fixed (byte* ptr = buffer)
-            {
-                Marshal.StructureToPtr(value, (nint)ptr, false);
-            }
-        }
-        await _stream.WriteAsync(buffer, cancellationToken);
+        _stream.Write(value.Colors);
     }
 }

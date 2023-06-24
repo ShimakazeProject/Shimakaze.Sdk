@@ -5,17 +5,27 @@ namespace Shimakaze.Sdk.Pal;
 /// <summary>
 /// 游戏内使用的颜色
 /// </summary>
-/// <param name="Red">红色</param>
-/// <param name="Green">绿色</param>
-/// <param name="Blue">蓝色</param>
-
 [StructLayout(LayoutKind.Explicit, Pack = 1, Size = sizeof(byte) * 3)]
-public record struct Color(
-    [field: FieldOffset(0)] byte Red,
-    [field: FieldOffset(1)] byte Green,
-    [field: FieldOffset(2)] byte Blue
-)
+public readonly record struct Color
 {
+    /// <summary>
+    /// 红色
+    /// </summary>
+    [FieldOffset(0)]
+    public readonly byte Red;
+        
+    /// <summary>
+    /// 绿色
+    /// </summary>
+    [FieldOffset(1)]
+    public readonly byte Green;
+        
+    /// <summary>
+    /// 蓝色
+    /// </summary>
+    [FieldOffset(2)]
+    public readonly byte Blue;
+
     /// <summary>
     /// R8 => R5
     /// </summary>
