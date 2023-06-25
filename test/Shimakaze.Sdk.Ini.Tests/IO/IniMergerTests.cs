@@ -1,7 +1,7 @@
-﻿using Shimakaze.Sdk.Ini;
-using Shimakaze.Sdk.IO.Ini.Serialization;
+﻿using System.Collections;
 
-using System.Collections;
+using Shimakaze.Sdk.Ini;
+using Shimakaze.Sdk.IO.Ini.Serialization;
 
 namespace Shimakaze.Sdk.IO.Ini;
 
