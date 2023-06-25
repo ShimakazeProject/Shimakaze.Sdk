@@ -1,8 +1,8 @@
 using System.Collections;
-
-using Shimakaze.Sdk.Csf;
 using System.Linq;
 using System.Runtime.CompilerServices;
+
+using Shimakaze.Sdk.Csf;
 
 namespace Shimakaze.Sdk.IO.Csf;
 

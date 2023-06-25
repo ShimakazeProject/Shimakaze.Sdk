@@ -21,7 +21,7 @@ public sealed class CsfYamlV1Deserializer :
     /// </summary>
     /// <param name="baseStream">基础流</param>
     /// <param name="leaveOpen">退出时是否保持流打开</param>
-    public CsfYamlV1Deserializer(Stream baseStream,   bool leaveOpen = false)
+    public CsfYamlV1Deserializer(Stream baseStream, bool leaveOpen = false)
     {
         BaseStream = baseStream;
         _leaveOpen = leaveOpen;

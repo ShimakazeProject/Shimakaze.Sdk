@@ -1,6 +1,6 @@
-﻿using Shimakaze.Sdk.Csf;
+﻿using System.Collections;
 
-using System.Collections;
+using Shimakaze.Sdk.Csf;
 
 namespace Shimakaze.Sdk.IO.Csf;
 

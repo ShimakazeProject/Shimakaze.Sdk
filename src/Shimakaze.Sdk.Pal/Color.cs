@@ -13,13 +13,13 @@ public readonly record struct Color
     /// </summary>
     [FieldOffset(0)]
     public readonly byte Red;
-        
+
     /// <summary>
     /// 绿色
     /// </summary>
     [FieldOffset(1)]
     public readonly byte Green;
-        
+
     /// <summary>
     /// 蓝色
     /// </summary>

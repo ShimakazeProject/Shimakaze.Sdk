@@ -21,11 +21,11 @@ public class CsfDataListXmlSerializer : IXmlSerializer<IList<CsfData>>
                     data.Add(_csfDataXmlSerializer.Deserialize(reader));
                     break;
 
-                // case XmlNodeType.EndElement when reader.Name is "Resources":
-                //     goto outer;
+                    // case XmlNodeType.EndElement when reader.Name is "Resources":
+                    //     goto outer;
             }
         }
-    // outer:
+        // outer:
         return data;
     }
 
