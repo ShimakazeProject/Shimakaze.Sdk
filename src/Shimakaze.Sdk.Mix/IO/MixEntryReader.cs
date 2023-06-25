@@ -1,17 +1,13 @@
-﻿using System.Runtime.InteropServices;
-
-using Shimakaze.Sdk.Mix;
+﻿using Shimakaze.Sdk.Mix;
 
 namespace Shimakaze.Sdk.IO.Mix;
 /// <summary>
 /// Mix Entry 读取器
 /// </summary>
-public class MixEntryReader : IReader<MixEntry>, IAsyncReader<Task<MixEntry>>, IDisposable, IAsyncDisposable
+public sealed class MixEntryReader : IReader<MixEntry>, IDisposable, IAsyncDisposable
 {
     private bool _inited;
-    private bool _disposedValue;
     private readonly bool _leaveOpen;
-    private readonly byte[] _buffer;
 
     /// <summary>
     /// 基础流
@@ -35,10 +31,8 @@ public class MixEntryReader : IReader<MixEntry>, IAsyncReader<Task<MixEntry>>, I
     /// </summary>
     /// <param name="baseStream">基础流</param>
     /// <param name="leaveOpen">退出时是否保持流打开</param>
-    /// <param name="buffer">缓冲区大小</param>
-    public MixEntryReader(Stream baseStream, bool leaveOpen = false, byte[]? buffer = default)
+    public MixEntryReader(Stream baseStream, bool leaveOpen = false)
     {
-        _buffer = buffer ?? new byte[128];
         BaseStream = baseStream;
         _leaveOpen = leaveOpen;
     }
@@ -47,50 +41,14 @@ public class MixEntryReader : IReader<MixEntry>, IAsyncReader<Task<MixEntry>>, I
     /// 初始化
     /// </summary>
     /// <exception cref="NotImplementedException">当Mix Entry被加密时抛出</exception>
-    public virtual void Init()
+    public void Init()
     {
         // 标识符
-        BaseStream.Read(_buffer.AsSpan(0, 4));
-        MixFlag flag = (MixFlag)BitConverter.ToUInt32(_buffer, 0);
+        BaseStream.Read(out MixFlag flag);
         if ((flag & MixFlag.ENCRYPTED) is not 0)
             throw new NotImplementedException("This Mix File is Encrypted.");
 
-        BaseStream.Read(_buffer.AsSpan(0, 6));
-
-        MixMetadata info;
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-                info = *(MixMetadata*)ptr;
-        }
-
-        Count = info.Files;
-        BodySize = info.Size;
-        BodyOffset = BaseStream.Position + 12 * Count;
-
-        _inited = true;
-    }
-
-    /// <inheritdoc cref="Init"/>
-    /// <param name="cancellationToken">cancellationToken</param>
-    /// <returns>可等待的任务</returns>
-    /// <exception cref="NotImplementedException">当Mix Entry被加密时抛出</exception>
-    public virtual async Task InitAsync(CancellationToken cancellationToken = default)
-    {
-        // 标识符
-        await BaseStream.ReadAsync(_buffer.AsMemory(0, 4), cancellationToken);
-        MixFlag flag = (MixFlag)BitConverter.ToUInt32(_buffer, 0);
-        if ((flag & MixFlag.ENCRYPTED) is not 0)
-            throw new NotImplementedException("This Mix File is Encrypted.");
-
-        await BaseStream.ReadAsync(_buffer.AsMemory(0, 6), cancellationToken);
-
-        MixMetadata info;
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-                info = *(MixMetadata*)ptr;
-        }
+        BaseStream.Read(out MixMetadata info);
 
         Count = info.Files;
         BodySize = info.Size;
@@ -104,7 +62,7 @@ public class MixEntryReader : IReader<MixEntry>, IAsyncReader<Task<MixEntry>>, I
     /// </summary>
     /// <returns>Entry</returns>
     /// <exception cref="EndOfEntryTableException">当没有可被读取的Entry时抛出</exception>
-    public virtual MixEntry Read()
+    public MixEntry Read()
     {
         if (!_inited)
             Init();
@@ -112,78 +70,21 @@ public class MixEntryReader : IReader<MixEntry>, IAsyncReader<Task<MixEntry>>, I
         if (BaseStream.Position >= BodyOffset)
             throw new EndOfEntryTableException();
 
-        BaseStream.Read(_buffer.AsSpan(0, Marshal.SizeOf<MixEntry>()));
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-                return *(MixEntry*)ptr;
-        }
+        BaseStream.Read(out MixEntry entry);
+        return entry;
     }
-
-    /// <inheritdoc cref="Read"/>
-    /// <inheritdoc cref="InitAsync"/>
-    public virtual async Task<MixEntry> ReadAsync(CancellationToken cancellationToken = default)
-    {
-        if (!_inited)
-            await InitAsync(cancellationToken);
-
-        if (BaseStream.Position >= BodyOffset)
-            throw new EndOfEntryTableException();
-
-        await BaseStream.ReadAsync(_buffer.AsMemory(0, Marshal.SizeOf<MixEntry>()), cancellationToken);
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-                return *(MixEntry*)ptr;
-        }
-    }
-
-
-    /// <summary>
-    /// 释放资源
-    /// </summary>
-    /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                if (!_leaveOpen)
-                    BaseStream.Dispose();
-            }
-
-            _disposedValue = true;
-        }
-    }
-
-    /// <summary>
-    /// 异步释放核心
-    /// </summary>
-    /// <returns></returns>
-    protected virtual async ValueTask DisposeAsyncCore()
-    {
-        if (!_leaveOpen)
-            await BaseStream.DisposeAsync();
-    }
-
-    // ~CsfReader()
-    // {
-    //     Dispose(disposing: false);
-    // }
 
     /// <inheritdoc/>
     public void Dispose()
     {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        if (!_leaveOpen)
+            BaseStream.Dispose();
     }
 
     /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
-        await DisposeAsyncCore();
-        Dispose(false);
-        GC.SuppressFinalize(this);
+        if (!_leaveOpen)
+            await BaseStream.DisposeAsync();
     }
 }
