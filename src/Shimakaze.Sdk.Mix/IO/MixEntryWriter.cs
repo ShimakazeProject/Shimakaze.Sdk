@@ -1,7 +1,4 @@
-using System;
-using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 using Shimakaze.Sdk.Mix;
 
@@ -9,25 +6,23 @@ namespace Shimakaze.Sdk.IO.Mix;
 /// <summary>
 /// Mix Entry 读取器
 /// </summary>
-public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, IDisposable, IAsyncDisposable
+public sealed class MixEntryWriter : IWriter<MixEntry>, IDisposable, IAsyncDisposable
 {
     private bool _inited;
-    private bool _disposedValue;
     private readonly bool _leaveOpen;
-    private readonly byte[] _buffer;
 
     /// <summary>
     /// 当前文件个数
     /// </summary>
-    protected short _count;
+    private short _count;
     /// <summary>
     /// 当前文件大小
     /// </summary>
-    protected int _size;
+    private int _size;
     /// <summary>
     /// 流开始的位置
     /// </summary>
-    protected long _start;
+    private long _start;
 
     /// <summary>
     /// 基础流
@@ -39,11 +34,8 @@ public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, I
     /// </summary>
     /// <param name="baseStream">基础流</param>
     /// <param name="leaveOpen">退出时是否保持流打开</param>
-    /// <param name="buffer">缓冲区大小</param>
-    public MixEntryWriter(Stream baseStream, bool leaveOpen = false, byte[]? buffer = default)
+    public MixEntryWriter(Stream baseStream, bool leaveOpen = false)
     {
-        _buffer = buffer ?? new byte[12];
-
         if (!baseStream.CanSeek)
             throw new NotSupportedException("The Stream cannot support Seek.");
 
@@ -54,7 +46,7 @@ public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, I
     /// <summary>
     /// 初始化
     /// </summary>
-    public virtual void Init()
+    public void Init()
     {
         _start = BaseStream.Position;
         BaseStream.Seek(4 + 2 + 4, SeekOrigin.Current);
@@ -63,49 +55,21 @@ public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, I
     }
 
     /// <inheritdoc/>
-    public virtual void Write(in MixEntry value)
+    public void Write(in MixEntry value)
     {
         if (!_inited)
             Init();
 
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-            {
-                Marshal.StructureToPtr(value, (nint)ptr, false);
-            }
-        }
-        BaseStream.Write(_buffer.AsSpan(0, 12));
+        BaseStream.Write(value);
 
         _size = Math.Max(_size, value.Offset + value.Size);
         _count++;
     }
-
-    /// <inheritdoc/>
-    public virtual async Task WriteAsync(MixEntry value, CancellationToken cancellationToken = default)
-    {
-        if (!_inited)
-            Init();
-
-        unsafe
-        {
-            fixed (byte* ptr = _buffer)
-            {
-                MixEntry* p = &value;
-                Buffer.MemoryCopy(p, ptr, sizeof(MixEntry), sizeof(MixEntry));
-            }
-        }
-        await BaseStream.WriteAsync(_buffer.AsMemory(0, 12), cancellationToken);
-
-        _size = Math.Max(_size, value.Offset + value.Size);
-        _count++;
-    }
-
 
     /// <summary>
     /// 写入元数据
     /// </summary>
-    public virtual void WriteMetadata()
+    public void WriteMetadata()
     {
         long current = BaseStream.Position;
         BaseStream.Seek(_start, SeekOrigin.Begin);
@@ -118,7 +82,7 @@ public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, I
     /// </summary>
     /// <param name="flag">标记</param>
     /// <param name="metadata">元数据</param>
-    internal protected virtual void WriteMetadataDirect(int flag, MixMetadata metadata)
+    internal void WriteMetadataDirect(int flag, MixMetadata metadata)
     {
         BaseStream.Write(BitConverter.GetBytes(flag));
         unsafe
@@ -136,51 +100,18 @@ public class MixEntryWriter : IWriter<MixEntry>, IAsyncWriter<MixEntry, Task>, I
         }
     }
 
-    /// <summary>
-    /// 释放资源
-    /// </summary>
-    /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                if (!_leaveOpen)
-                    BaseStream.Dispose();
-            }
-
-            _disposedValue = true;
-        }
-    }
-
-    /// <summary>
-    /// 异步释放核心
-    /// </summary>
-    /// <returns></returns>
-    protected virtual async ValueTask DisposeAsyncCore()
-    {
-        if (!_leaveOpen)
-            await BaseStream.DisposeAsync();
-    }
-
-    // ~CsfReader()
-    // {
-    //     Dispose(disposing: false);
-    // }
 
     /// <inheritdoc/>
     public void Dispose()
     {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        if (!_leaveOpen)
+            BaseStream.Dispose();
     }
 
     /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
-        await DisposeAsyncCore();
-        Dispose(false);
-        GC.SuppressFinalize(this);
+        if (!_leaveOpen)
+            await BaseStream.DisposeAsync();
     }
 }

@@ -63,7 +63,8 @@ public class MixBuilder
 
         // 写入若干Entry
         foreach (var entry in entries)
-            await writer.WriteAsync(entry).ConfigureAwait(false);
+            writer.Write(entry);
+
         // 写入文件主体
         foreach (var file in _files)
         {
