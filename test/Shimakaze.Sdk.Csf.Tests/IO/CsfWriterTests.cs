@@ -1,72 +1,40 @@
+using System.Security.Cryptography;
+
+using Shimakaze.Sdk.Csf;
+
 namespace Shimakaze.Sdk.IO.Csf;
 
 [TestClass]
 public class CsfWriterTests
 {
+    private const string Assets = "Assets";
+    private const string InputFile = "ra2md.csf";
+
     private const string OutputPath = "Out";
     private const string OutputFile = "WriteTest.csf";
+    private CsfDocument _csf;
 
     [TestInitialize]
     public void Startup()
     {
         Directory.CreateDirectory(OutputPath);
+        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using CsfReader reader = new(stream);
+        _csf = reader.Read();
     }
 
-    [TestMethod]
-    public void CsfWriterTest()
-    {
-        Assert.ThrowsException<NotSupportedException>(() =>
-        {
-            using Stream ms = new NonSeekableStream();
-            using CsfWriter writer = new(ms);
-        });
-    }
 
     [TestMethod]
     public void WriteTest()
     {
-        using Stream stream = File.Create(Path.Combine(OutputPath, OutputFile));
-        using CsfWriter writer = new(stream);
-        writer.Write(new("Test"));
-        writer.WriteMetadata();
+        using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
+        using (CsfWriter writer = new(stream))
+            writer.Write(_csf);
+
+        var a = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
+        var b = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
+
+        Assert.AreEqual(a, b, true);
     }
 
-}
-
-file sealed class NonSeekableStream : Stream
-{
-    public override bool CanRead => throw new NotImplementedException();
-
-    public override bool CanSeek => false;
-
-    public override bool CanWrite => throw new NotImplementedException();
-
-    public override long Length => throw new NotImplementedException();
-
-    public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public override void Flush()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override int Read(byte[] buffer, int offset, int count)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override long Seek(long offset, SeekOrigin origin)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void SetLength(long value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Write(byte[] buffer, int offset, int count)
-    {
-        throw new NotImplementedException();
-    }
 }

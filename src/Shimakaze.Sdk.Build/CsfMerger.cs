@@ -1,7 +1,7 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Shimakaze.Sdk.IO.Csf.Serialization;
+using Shimakaze.Sdk.IO.Csf;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 
@@ -45,8 +45,8 @@ public sealed class CsfMerger : MSTask
             try
             {
                 using Stream stream = File.OpenRead(file.ItemSpec);
-                using CsfDeserializer deserializer = new(stream);
-                merger.UnionWith(deserializer.Deserialize());
+                using CsfReader reader = new(stream);
+                merger.UnionWith(reader.Read().Data);
                 file.CopyMetadataTo(OutputFile);
             }
             catch (Exception ex)

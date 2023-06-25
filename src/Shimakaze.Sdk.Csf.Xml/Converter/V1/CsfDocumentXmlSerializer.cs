@@ -31,7 +31,7 @@ public class CsfDocumentXmlSerializer : IXmlSerializer<CsfDocument>
         return new()
         {
             Metadata = head,
-            Data = _csfDataListXmlSerializer.Deserialize(reader)
+            Data = _csfDataListXmlSerializer.Deserialize(reader).ToArray()
         };
     }
 

@@ -127,35 +127,6 @@ public class CsfMerger : ISet<CsfData>
     public virtual void BuildAndWriteTo(Stream stream, int language = 0, int version = 3, int unknown = 0)
     {
         using CsfWriter writer = new(stream, true);
-        writer.WriteMetadataDirect(new(version, language)
-        {
-            Unknown = unknown,
-            LabelCount = _cache.Count,
-            StringCount = _cache.Values.Select(i => i.Count).Sum()
-        });
-        foreach (var item in _cache.Values)
-        {
-            writer.Write(item);
-        }
-    }
-
-    /// <summary>
-    /// 异步的写入Csf文件到流
-    /// </summary>
-    /// <inheritdoc cref="BuildAndWriteTo" />
-    public virtual async Task BuildAndWriteToAsync(Stream stream, int language = 0, int version = 3, int unknown = 0, CancellationToken cancellationToken = default)
-    {
-        await using CsfWriter writer = new(stream, true);
-        writer.WriteMetadataDirect(new(version, language)
-        {
-            Unknown = unknown,
-            LabelCount = _cache.Count,
-            StringCount = _cache.Values.Select(i => i.Count).Sum()
-        });
-        foreach (var item in _cache.Values)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            await writer.WriteAsync(item, cancellationToken);
-        }
+        writer.Write(Build(language, version, unknown));
     }
 }

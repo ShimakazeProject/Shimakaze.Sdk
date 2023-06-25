@@ -1,4 +1,6 @@
-﻿using YamlDotNet.Core;
+﻿using System.Collections.Generic;
+
+using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
@@ -36,18 +38,20 @@ public class CsfDataConverter : IYamlTypeConverter
         if (parser.Accept<Scalar>(out var label))
         {
             CsfData data = new(label.Value);
+            List<CsfValue> values = new();
             if (parser.TryConsume<Scalar>(out _))
             {
-                ParseValue(parser, data);
+                ParseValue(parser, values);
             }
             else if (parser.TryConsume<SequenceStart>(out _))
             {
                 while (!parser.TryConsume<SequenceEnd>(out _))
                 {
-                    ParseValue(parser, data);
+                    ParseValue(parser, values);
                 }
             }
 
+            data.Values = values.ToArray();
             return data;
         }
 
@@ -71,7 +75,7 @@ public class CsfDataConverter : IYamlTypeConverter
 
         emitter.Emit(new Scalar(data.LabelName));
 
-        if (data.Values.Count > 1)
+        if (data.Values.Length > 1)
         {
             emitter.Emit(new SequenceStart(AnchorName.Empty, TagName.Empty, true, SequenceStyle.Block));
             foreach (CsfValue item in data.Values)
@@ -83,12 +87,12 @@ public class CsfDataConverter : IYamlTypeConverter
         }
         else
         {
-            CsfValue v = data.Values.FirstOrDefault() ?? CsfValue.Empty;
+            CsfValue v = data.Values.Length is > 0 ? data.Values.First() : CsfValue.Empty;
             CsfValueConverter.Instance.WriteYaml(emitter, v, v.GetType());
         }
     }
 
-    private static void ParseValue(IParser parser, CsfData data)
+    private static void ParseValue(IParser parser, IList<CsfValue> data)
     {
         if (CsfValueConverter.Instance.ReadYaml(parser, typeof(CsfValue)) is CsfValue value)
         {

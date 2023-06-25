@@ -33,7 +33,7 @@ public class CsfValueJsonConverterTests
         var reader = new Utf8JsonReader("""{"value":"Value"}"""u8);
         reader.Read();
         var value = _converter.Read(ref reader, typeof(CsfValue), _options!);
-        Assert.AreEqual("Value", value?.Value);
+        Assert.AreEqual("Value", value.Value);
     }
 
     [TestMethod]
@@ -43,7 +43,7 @@ public class CsfValueJsonConverterTests
         using var stream = new MemoryStream();
         using var writer = new Utf8JsonWriter(stream);
         // Act
-        _converter.Write(writer, new CsfValueExtra("hello", "extra"), _options!);
+        _converter.Write(writer, new CsfValue("hello", "extra"), _options!);
         writer.Flush();
         stream.Position = 0;
 

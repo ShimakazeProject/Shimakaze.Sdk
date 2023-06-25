@@ -33,9 +33,9 @@ public class CsfAdvancedValueJsonConverterTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(CsfValueExtra));
+        Assert.IsInstanceOfType(result, typeof(CsfValue));
         Assert.AreEqual("Hello", result.Value);
-        Assert.AreEqual("World", ((CsfValueExtra)result).ExtraValue);
+        Assert.AreEqual("World", result.ExtraValue);
     }
 
     // This is the test method for Read method
@@ -61,7 +61,7 @@ public class CsfAdvancedValueJsonConverterTests
     public void Write_ShouldWriteCorrectJson()
     {
         // Arrange
-        var value = new CsfValueExtra("Hello", "World");
+        var value = new CsfValue("Hello", "World");
         using var ms = new MemoryStream();
         using var writer = new Utf8JsonWriter(ms);
 

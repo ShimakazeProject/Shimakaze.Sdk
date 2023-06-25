@@ -1,4 +1,4 @@
-﻿using Shimakaze.Sdk.IO.Csf.Serialization;
+﻿using Shimakaze.Sdk.IO.Csf;
 
 namespace Shimakaze.Sdk.Csf.Json.Serialization;
 
@@ -26,11 +26,11 @@ public class CsfJsonV1SerializerTests
         using Stream output1 = File.Create(Path.Combine(OutputPath, OutputTestCsfFile));
         using Stream output2 = File.Create(Path.Combine(OutputPath, OutputTestJsonFile));
         using CsfJsonV1Deserializer deserializer = new(input);
-        using CsfSerializer serializer1 = new(output1);
+        using CsfWriter writer = new(output1);
         using CsfJsonV1Serializer serializer2 = new(output2);
-        CsfDocument? doc = deserializer.Deserialize();
+        CsfDocument doc = deserializer.Deserialize();
         Assert.IsNotNull(doc);
-        serializer1.Serialize(doc);
+        writer.Write(doc);
         serializer2.Serialize(doc);
     }
 
@@ -41,11 +41,11 @@ public class CsfJsonV1SerializerTests
         await using Stream output1 = File.Create(Path.Combine(OutputPath, OutputTestAsyncCsfFile));
         await using Stream output2 = File.Create(Path.Combine(OutputPath, OutputTestAsyncJsonFile));
         await using CsfJsonV1Deserializer deserializer = new(input);
-        await using CsfSerializer serializer1 = new(output1);
+        await using CsfWriter writer = new(output1);
         await using CsfJsonV1Serializer serializer2 = new(output2);
-        CsfDocument? doc = await deserializer.DeserializeAsync();
+        CsfDocument doc = await deserializer.DeserializeAsync();
         Assert.IsNotNull(doc);
-        await serializer1.SerializeAsync(doc);
+        writer.Write(doc);
         await serializer2.SerializeAsync(doc);
     }
 }

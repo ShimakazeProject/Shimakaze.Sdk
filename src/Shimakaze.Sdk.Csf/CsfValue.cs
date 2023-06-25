@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
 /// Csf Value.
 /// </summary>
-public record CsfValue
+public record struct CsfValue
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CsfValue"/> class.
@@ -20,21 +21,26 @@ public record CsfValue
     /// </summary>
     /// <param name="value">value.</param>
     public CsfValue(string value)
-      : this(CsfConstants.StrFlagRaw, value.Length, value)
     {
+        Identifier = CsfConstants.StrFlagRaw;
+        ValueLength = value.Length;
+        Value = value;
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CsfValue"/> class.
     /// </summary>
-    /// <param name="identifier">identifier.</param>
-    /// <param name="valueLength">value length.</param>
     /// <param name="value">value.</param>
-    public CsfValue(int identifier, int valueLength, string value)
+    /// <param name="extraValue">extraValue.</param>
+    public CsfValue(string value, string? extraValue)
+      : this(value)
     {
-        Identifier = identifier;
-        ValueLength = valueLength;
-        Value = value;
+        if (extraValue is null)
+            return;
+
+        Identifier = CsfConstants.StrwFlgRaw;
+        ExtraValueLength = extraValue.Length;
+        ExtraValue = extraValue;
     }
 
     /// <summary>
@@ -43,31 +49,37 @@ public record CsfValue
     public static CsfValue Empty { get; } = new(string.Empty);
 
     /// <summary>
+    /// HasExtra
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(ExtraValueLength), nameof(ExtraValue))]
+    public bool HasExtra
+    {
+        readonly get => Identifier is CsfConstants.StrwFlgRaw;
+        set => Identifier = value ? CsfConstants.StrwFlgRaw : CsfConstants.StrFlagRaw;
+    }
+
+    /// <summary>
     /// Gets or sets identifier.
     /// </summary>
-    [DefaultValue(CsfConstants.StrFlagRaw)]
-    public virtual int Identifier { get; set; }
+    public int Identifier;
 
     /// <summary>
     /// Gets or sets value length.
     /// </summary>
-    public int ValueLength { get; set; }
+    public int ValueLength;
 
     /// <summary>
     /// Gets or sets value.
     /// </summary>
-    public string Value { get; set; }
+    public string Value;
 
     /// <summary>
-    /// Convert instance to Extra Value.
+    /// Gets or sets extra value length.
     /// </summary>
-    /// <returns>Extra Value.</returns>
-    public CsfValueExtra ToExtra() => new(Identifier, ValueLength, Value, 0, string.Empty);
+    public int? ExtraValueLength;
 
     /// <summary>
-    /// Convert instance to Extra Value.
+    /// Gets or sets extra value.
     /// </summary>
-    /// <param name="extra">Extra Value String.</param>
-    /// <returns>Extra Value.</returns>
-    public CsfValueExtra ToExtra(string extra) => new(Identifier, ValueLength, Value, extra.Length, extra);
+    public string? ExtraValue;
 }

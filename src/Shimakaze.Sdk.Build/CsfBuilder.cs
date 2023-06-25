@@ -6,7 +6,8 @@ using Shimakaze.Sdk.Csf;
 using Shimakaze.Sdk.Csf.Json.Serialization;
 using Shimakaze.Sdk.Csf.Xml.Serialization;
 using Shimakaze.Sdk.Csf.Yaml.Serialization;
-using Shimakaze.Sdk.IO.Csf.Serialization;
+using Shimakaze.Sdk.IO;
+using Shimakaze.Sdk.IO.Csf;
 using Shimakaze.Sdk.IO.Serialization;
 
 using MSTask = Microsoft.Build.Utilities.Task;
@@ -29,9 +30,14 @@ public sealed class CsfBuilder : MSTask
     /// </summary>
     [Output]
     public ITaskItem[] OutputFiles { get; set; } = Array.Empty<ITaskItem>();
-
-    const string Metadata_Destination = "Destination";
-    const string Metadata_Type = "Type";
+    /// <summary>
+    /// Destination
+    /// </summary>
+    public const string Metadata_Destination = "Destination";
+    /// <summary>
+    /// Type
+    /// </summary>
+    public const string Metadata_Type = "Type";
 
     /// <inheritdoc/>
     public override bool Execute()
@@ -50,7 +56,7 @@ public sealed class CsfBuilder : MSTask
             services.Clear();
             using Stream stream = File.OpenRead(file.ItemSpec);
             using Stream output = File.Create(dest);
-            services.AddSingleton<ISerializer<CsfDocument>>(new CsfSerializer(output));
+            services.AddSingleton<IWriter<CsfDocument>>(new CsfWriter(output));
 
             switch (tag.ToLowerInvariant())
             {
@@ -65,11 +71,11 @@ public sealed class CsfBuilder : MSTask
                         0,
                         0,
                         "You shouldn't use the \"CSF Json version 1\". Please port your file to \"version 2\" or use \"Csf Yaml version 1\" to replace that.");
-                    services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfJsonV1Deserializer(stream));
+                    services.AddSingleton<IDeserializer<CsfDocument>>(new CsfJsonV1Deserializer(stream));
                     break;
                 case "json":
                 case "jsonv2":
-                    services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfJsonV2Deserializer(stream));
+                    services.AddSingleton<IDeserializer<CsfDocument>>(new CsfJsonV2Deserializer(stream));
                     break;
                 case "xml":
                 case "xmlv1":
@@ -79,7 +85,7 @@ public sealed class CsfBuilder : MSTask
                 case "yaml":
                 case "ymlv1":
                 case "yamlv1":
-                    services.AddSingleton<IDeserializer<CsfDocument?>>(new CsfYamlV1Deserializer(stream));
+                    services.AddSingleton<IDeserializer<CsfDocument>>(new CsfYamlV1Deserializer(stream));
                     break;
                 case "csf":
                     Log.LogWarning(
@@ -108,7 +114,12 @@ public sealed class CsfBuilder : MSTask
                     return false;
             }
             using ServiceProvider provider = services.BuildServiceProvider();
-            if (provider.GetRequiredService<IDeserializer<CsfDocument?>>().Deserialize() is not CsfDocument csf)
+            CsfDocument csf;
+            try
+            {
+                csf = provider.GetRequiredService<IDeserializer<CsfDocument>>().Deserialize();
+            }
+            catch (Exception e)
             {
                 Log.LogError(
                     "Shimakaze.Sdk.Csf",
@@ -120,6 +131,7 @@ public sealed class CsfBuilder : MSTask
                     0,
                     0,
                     "Cannot Deserialize the file content to Csf Document.");
+                Log.LogErrorFromException(e);
                 if (File.Exists(dest))
                 {
                     output.Dispose();
@@ -127,7 +139,7 @@ public sealed class CsfBuilder : MSTask
                 }
                 return false;
             }
-            provider.GetRequiredService<ISerializer<CsfDocument>>().Serialize(csf);
+            provider.GetRequiredService<IWriter<CsfDocument>>().Write(csf);
             TaskItem item = new(dest);
             file.CopyMetadataTo(item);
             item.RemoveMetadata(Metadata_Destination);

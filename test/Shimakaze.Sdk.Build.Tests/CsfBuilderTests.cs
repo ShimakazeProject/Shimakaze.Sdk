@@ -31,8 +31,8 @@ public class CsfBuilderTests
     public void JsonV1Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputJsonV1File));
-        item.SetMetadata("Destination", Path.Combine(OutputPath, InputJsonV1File));
-        item.SetMetadata("Tag", "JsonV1");
+        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, InputJsonV1File));
+        item.SetMetadata(CsfBuilder.Metadata_Type, "JsonV1");
 
         CsfBuilder task = new()
         {
@@ -46,8 +46,8 @@ public class CsfBuilderTests
     public void JsonV2Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputJsonV2File));
-        item.SetMetadata("Destination", Path.Combine(OutputPath, InputJsonV2File));
-        item.SetMetadata("Tag", "JsonV2");
+        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, InputJsonV2File));
+        item.SetMetadata(CsfBuilder.Metadata_Type, "JsonV2");
 
         CsfBuilder task = new()
         {
@@ -61,8 +61,8 @@ public class CsfBuilderTests
     public void YamlV1Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputYamlV1File));
-        item.SetMetadata("Destination", Path.Combine(OutputPath, InputYamlV1File));
-        item.SetMetadata("Tag", "YamlV1");
+        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, InputYamlV1File));
+        item.SetMetadata(CsfBuilder.Metadata_Type, "YamlV1");
 
         CsfBuilder task = new()
         {
@@ -75,8 +75,8 @@ public class CsfBuilderTests
     public void XmlV1Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputXmlV1File));
-        item.SetMetadata("Destination", Path.Combine(OutputPath, InputXmlV1File));
-        item.SetMetadata("Tag", "XmlV1");
+        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, InputXmlV1File));
+        item.SetMetadata(CsfBuilder.Metadata_Type, "XmlV1");
 
         CsfBuilder task = new()
         {
@@ -89,14 +89,14 @@ public class CsfBuilderTests
     public void UnknownTest()
     {
         TaskItem item = new(Path.Combine(Assets, InputXmlV1File));
-        item.SetMetadata("Destination", Path.Combine(OutputPath, "Unknown"));
-        item.SetMetadata("Tag", "Unknown");
+        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, "Unknown"));
+        item.SetMetadata(CsfBuilder.Metadata_Type, "Unknown");
 
         CsfBuilder task = new()
         {
             SourceFiles = new[] { item },
             BuildEngine = _buildEngine?.Object,
         };
-        Assert.ThrowsException<NotSupportedException>(() => task.Execute());
+        Assert.IsFalse(task.Execute());
     }
 }

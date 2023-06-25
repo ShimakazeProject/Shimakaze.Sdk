@@ -28,14 +28,14 @@ public class CsfValueXmlSerializer : IXmlSerializer<CsfValue>
                     break;
             }
         }
-        return string.IsNullOrWhiteSpace(extra) ? new CsfValue(value) : new CsfValueExtra(value, extra);
+        return new CsfValue(value, extra);
     }
 
     /// <inheritdoc/>
     public void Serialize(XmlWriter writer, CsfValue value)
     {
-        if (value is CsfValueExtra extra)
-            writer.WriteAttributeString("extra", extra.ExtraValue);
+        if (value.HasExtra)
+            writer.WriteAttributeString("extra", value.ExtraValue);
 
         writer.WriteString(value.Value);
     }

@@ -8,27 +8,9 @@ namespace Shimakaze.Sdk.IO.Csf;
 /// <summary>
 /// Csf 写入器
 /// </summary>
-public class CsfWriter : IWriter<CsfData>, IAsyncWriter<CsfData, Task>, IDisposable, IAsyncDisposable
+public sealed class CsfWriter : IWriter<CsfDocument>, IDisposable, IAsyncDisposable
 {
-    private bool _disposedValue;
     private readonly bool _leaveOpen;
-
-    /// <summary>
-    /// 是否已经初始化过
-    /// </summary>
-    protected bool _inited;
-    /// <summary>
-    /// 当前Data标签的个数
-    /// </summary>
-    protected int _labelCount;
-    /// <summary>
-    /// 当前Value标签的个数
-    /// </summary>
-    protected int _valueCount;
-    /// <summary>
-    /// 流开始的位置
-    /// </summary>
-    protected long _start;
 
     /// <summary>
     /// 基础流
@@ -49,210 +31,54 @@ public class CsfWriter : IWriter<CsfData>, IAsyncWriter<CsfData, Task>, IDisposa
         BaseStream = baseStream;
         _leaveOpen = leaveOpen;
     }
-    /// <summary>
-    /// 初始化
-    /// </summary>
-    public virtual void Init()
-    {
-        _start = BaseStream.Position;
-        BaseStream.Seek(Marshal.SizeOf<CsfMetadata>(), SeekOrigin.Current);
-
-        _inited = true;
-    }
-
-    /// <summary>
-    /// 写入一个值
-    /// </summary>
-    /// <param name="value">值</param>
-    protected virtual void WriteValue(CsfValue value)
-    {
-        try
-        {
-            BaseStream.Write(BitConverter.GetBytes(value.Identifier));
-            BaseStream.Write(BitConverter.GetBytes(value.ValueLength));
-            BaseStream.Write(CsfConstants.CodingValue(Encoding.Unicode.GetBytes(value.Value)));
-            if (value is not CsfValueExtra extra)
-                return;
-
-            BaseStream.Write(BitConverter.GetBytes(extra.ExtraValueLength));
-            BaseStream.Write(Encoding.ASCII.GetBytes(extra.ExtraValue));
-        }
-        finally
-        {
-            _valueCount++;
-        }
-    }
-
-    /// <inheritdoc cref="WriteValue"/>
-    /// <inheritdoc cref="CsfReader.InitAsync"/>
-    protected virtual async Task WriteValueAsync(CsfValue value, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            await BaseStream.WriteAsync(BitConverter.GetBytes(value.Identifier), cancellationToken);
-            await BaseStream.WriteAsync(BitConverter.GetBytes(value.ValueLength), cancellationToken);
-            await BaseStream.WriteAsync(CsfConstants.CodingValue(Encoding.Unicode.GetBytes(value.Value)), cancellationToken);
-            if (value is not CsfValueExtra extra)
-                return;
-
-            await BaseStream.WriteAsync(BitConverter.GetBytes(extra.ExtraValueLength), cancellationToken);
-            await BaseStream.WriteAsync(Encoding.ASCII.GetBytes(extra.ExtraValue), cancellationToken);
-        }
-        finally
-        {
-            _valueCount++;
-        }
-    }
 
     /// <inheritdoc/>
-    public virtual void Write(in CsfData value)
+    public void Write(in CsfDocument value)
     {
-        if (!_inited)
-            Init();
-
-        try
+        BaseStream.Write(value.Metadata);
+        for (int i = 0; i < value.Data.Length; i++)
         {
-            BaseStream.Write(BitConverter.GetBytes(value.Identifier));
-            BaseStream.Write(BitConverter.GetBytes(value.StringCount));
-            BaseStream.Write(BitConverter.GetBytes(value.LabelNameLength));
-            BaseStream.Write(Encoding.ASCII.GetBytes(value.LabelName));
-            if (!value.Values.Any())
+            BaseStream.Write(value.Data[i].Identifier);
+            BaseStream.Write(value.Data[i].StringCount);
+            BaseStream.Write(value.Data[i].LabelNameLength);
+            BaseStream.Write(value.Data[i].LabelName, value.Data[i].LabelNameLength);
+
+            for (int j = 0; j < value.Data[i].Values.Length; j++)
             {
-                BaseStream.Write(BitConverter.GetBytes(CsfConstants.StrFlagRaw));
-                BaseStream.Write(BitConverter.GetBytes(0));
-                return;
-            }
+                BaseStream.Write(value.Data[i].Values[j].Identifier);
+                BaseStream.Write(value.Data[i].Values[j].ValueLength);
+                unsafe
+                {
+                    fixed (char* ptr = value.Data[i].Values[j].Value)
+                        CsfConstants.CodingValue((byte*)ptr, value.Data[i].Values[j].ValueLength * sizeof(char));
+                }
+                BaseStream.Write(value.Data[i].Values[j].Value, value.Data[i].Values[j].ValueLength, true);
 
-            foreach (CsfValue i in value.Values)
-                WriteValue(i);
-        }
-        finally
-        {
-            _labelCount++;
-        }
-
-    }
-
-    /// <inheritdoc/>
-    public virtual async Task WriteAsync(CsfData value, CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        if (!_inited)
-            Init();
-
-        try
-        {
-            await BaseStream.WriteAsync(BitConverter.GetBytes(value.Identifier), cancellationToken);
-            await BaseStream.WriteAsync(BitConverter.GetBytes(value.StringCount), cancellationToken);
-            await BaseStream.WriteAsync(BitConverter.GetBytes(value.LabelNameLength), cancellationToken);
-            await BaseStream.WriteAsync(Encoding.ASCII.GetBytes(value.LabelName), cancellationToken);
-            if (!value.Values.Any())
-            {
-                await BaseStream.WriteAsync(BitConverter.GetBytes(CsfConstants.StrFlagRaw), cancellationToken);
-                await BaseStream.WriteAsync(BitConverter.GetBytes(0), cancellationToken);
-                return;
-            }
-
-            foreach (CsfValue i in value.Values)
-                await WriteValueAsync(i, cancellationToken);
-        }
-        finally
-        {
-            _labelCount++;
-        }
-    }
-
-    /// <summary>
-    /// 写入元数据
-    /// </summary>
-    /// <param name="version">版本 2 或 3</param>
-    /// <param name="language">语言</param>
-    /// <param name="unknown">未知</param>
-    public virtual void WriteMetadata(int version = 3, int language = 0, int unknown = 0)
-    {
-        long current = BaseStream.Position;
-        BaseStream.Seek(_start, SeekOrigin.Begin);
-        WriteMetadataDirect(new(version, language)
-        {
-            LabelCount = _labelCount,
-            StringCount = _valueCount,
-            Unknown = unknown
-        });
-        BaseStream.Seek(current, SeekOrigin.Begin);
-    }
-
-    /// <summary>
-    /// 直接写入元数据
-    /// </summary>
-    /// <param name="metadata">元数据</param>
-    internal protected virtual void WriteMetadataDirect(CsfMetadata metadata)
-    {
-        unsafe
-        {
-            if (!_inited)
-            {
-                Init();
-                BaseStream.Seek(-sizeof(CsfMetadata), SeekOrigin.Current);
-            }
-            nint ptr = Marshal.AllocHGlobal(sizeof(CsfMetadata));
-            try
-            {
-                Marshal.StructureToPtr(metadata, ptr, true);
-                BaseStream.Write(new Span<byte>((byte*)ptr, sizeof(CsfMetadata)));
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(ptr);
+                if (value.Data[i].Values[j] is
+                    {
+                        HasExtra: true,
+                        ExtraValue: not null
+                    } e)
+                {
+                    BaseStream.Write(e.ExtraValueLength.Value);
+                    BaseStream.Write(e.ExtraValue, e.ExtraValueLength.Value);
+                }
             }
         }
     }
 
-
-    /// <summary>
-    /// 释放资源
-    /// </summary>
-    /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                if (!_leaveOpen)
-                    BaseStream.Dispose();
-            }
-
-            _disposedValue = true;
-        }
-    }
-
-    /// <summary>
-    /// 异步释放核心
-    /// </summary>
-    /// <returns></returns>
-    protected virtual async ValueTask DisposeAsyncCore()
-    {
-        if (!_leaveOpen)
-            await BaseStream.DisposeAsync();
-    }
-
-    // ~CsfWriter()
-    // {
-    //     Dispose(disposing: false);
-    // }
 
     /// <inheritdoc/>
     public void Dispose()
     {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        if (!_leaveOpen)
+            BaseStream.Dispose();
     }
 
     /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
-        await DisposeAsyncCore();
-        Dispose(false);
-        GC.SuppressFinalize(this);
+        if (!_leaveOpen)
+            await BaseStream.DisposeAsync();
     }
 }

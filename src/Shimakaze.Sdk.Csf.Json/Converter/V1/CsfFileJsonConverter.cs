@@ -9,7 +9,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
 {
     /// <inheritdoc/>
-    public override CsfDocument? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CsfDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
 
