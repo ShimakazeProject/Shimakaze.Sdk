@@ -9,7 +9,7 @@ namespace Shimakaze.Sdk.Csf.Json.Serialization;
 /// CsfJsonV1Deserializer.
 /// </summary>
 public sealed class CsfJsonV1Deserializer :
-    IDeserializer<CsfDocument?>, IAsyncDeserializer<Task<CsfDocument?>>,
+    IDeserializer<CsfDocument>, IAsyncDeserializer<Task<CsfDocument>>,
     IDisposable, IAsyncDisposable
 {
     private bool _disposedValue;
@@ -40,13 +40,13 @@ public sealed class CsfJsonV1Deserializer :
     public Stream BaseStream { get; }
 
     /// <inheritdoc/>
-    public CsfDocument? Deserialize()
+    public CsfDocument Deserialize()
     {
         return JsonSerializer.Deserialize<CsfDocument>(BaseStream, _options);
     }
 
     /// <inheritdoc/>
-    public async Task<CsfDocument?> DeserializeAsync(CancellationToken cancellationToken = default)
+    public async Task<CsfDocument> DeserializeAsync(CancellationToken cancellationToken = default)
     {
         return await JsonSerializer.DeserializeAsync<CsfDocument>(BaseStream, _options, cancellationToken);
     }

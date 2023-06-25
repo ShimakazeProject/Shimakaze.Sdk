@@ -23,7 +23,7 @@ public class CsfDataXmlSerializer : IXmlSerializer<CsfData>
             label.Values = reader.GetAttribute("extra") switch
             {
                 not null => new[] { _csfValueXmlSerializer.Deserialize(reader) },
-                _ => _csfValueListXmlSerializer.Deserialize(reader),
+                _ => _csfValueListXmlSerializer.Deserialize(reader).ToArray(),
             };
         }
         return label;

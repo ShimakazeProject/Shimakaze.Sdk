@@ -57,9 +57,8 @@ public class CsfValueConverter : IYamlTypeConverter
                 }
             }
 
-            return map.TryGetValue("extra", out string? extra)
-                ? new CsfValueExtra(map["value"], extra)
-                : new CsfValue(map["value"]);
+            map.TryGetValue("extra", out string? extra);
+            return new CsfValue(map["value"], extra);
         }
 
         if (parser.Current is null)
@@ -77,7 +76,7 @@ public class CsfValueConverter : IYamlTypeConverter
     {
         switch (value)
         {
-            case CsfValueExtra extra:
+            case CsfValue extra when extra.HasExtra:
                 emitter.Emit(new MappingStart());
                 emitter.Emit(new Scalar("value"));
                 emitter.Emit(new Scalar(extra.Value));

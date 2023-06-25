@@ -47,6 +47,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
 
         CsfDocument doc = new();
         CsfMetadata metadata = doc.Metadata;
+        List<CsfData> datas = new();
 
         parser.Consume<MappingStart>();
         while (!parser.TryConsume<MappingEnd>(out _))
@@ -87,14 +88,15 @@ public class CsfDocumentConverter : IYamlTypeConverter
         {
             if (CsfDataConverter.Instance.ReadYaml(parser, typeof(CsfData)) is CsfData data)
             {
-                doc.Add(data);
+                datas.Add(data);
             }
         }
 
         metadata.Identifier = CsfConstants.CsfFlagRaw;
-        metadata.LabelCount = doc.Data.Count;
+        metadata.LabelCount = doc.Data.Length;
         metadata.StringCount = doc.Data.Sum(i => i.StringCount);
         doc.Metadata = metadata;
+        doc.Data = datas.ToArray();
         return doc;
     }
 

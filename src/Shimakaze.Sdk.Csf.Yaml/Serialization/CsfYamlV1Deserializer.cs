@@ -9,7 +9,7 @@ namespace Shimakaze.Sdk.Csf.Yaml.Serialization;
 /// CSF YAML Deserializer.
 /// </summary>
 public sealed class CsfYamlV1Deserializer :
-    IDeserializer<CsfDocument?>,
+    IDeserializer<CsfDocument>,
     IDisposable, IAsyncDisposable
 {
 

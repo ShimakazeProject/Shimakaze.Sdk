@@ -2,7 +2,7 @@
 
 using Shimakaze.Sdk.Csf;
 using Shimakaze.Sdk.Csf.Xml.Serialization;
-using Shimakaze.Sdk.IO.Csf.Serialization;
+using Shimakaze.Sdk.IO.Csf;
 
 namespace Shimakaze.Sdk.Tests.Text.Csf.Xml.Serialization;
 
@@ -31,10 +31,10 @@ public class CsfXmlV1SerializerTests
         using Stream csfout = File.Create(Path.Combine(OutputPath, OutputDeserializeCsfFile));
         using CsfXmlV1Deserializer deserializer = new(stream);
         using CsfXmlV1Serializer xmlSerializer = new(xmlout);
-        using CsfSerializer csfSerializer = new(csfout);
+        using CsfWriter writer = new(csfout);
         CsfDocument doc = deserializer.Deserialize();
         Assert.IsNotNull(doc);
-        csfSerializer.Serialize(doc);
+        writer.Write(doc);
         xmlSerializer.Serialize(doc);
     }
 
@@ -43,9 +43,9 @@ public class CsfXmlV1SerializerTests
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputCsfFile));
         using Stream output = File.Create(Path.Combine(OutputPath, OutputSerializeFile));
-        using CsfDeserializer deserializer = new(stream);
+        using CsfReader reader = new(stream);
         using CsfXmlV1Serializer serializer = new(output);
-        CsfDocument document = deserializer.Deserialize();
+        CsfDocument document = reader.Read();
         serializer.Serialize(document);
     }
 

@@ -35,7 +35,7 @@ public class CsfDataJsonConverterTests
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(CsfData));
         Assert.AreEqual("Hello", result.LabelName);
-        Assert.AreEqual(2, result.Values.Count);
+        Assert.AreEqual(2, result.Values.Length);
         Assert.AreEqual("The", result.Values[0].Value);
         Assert.AreEqual("World", result.Values[1].Value);
     }
@@ -56,7 +56,7 @@ public class CsfDataJsonConverterTests
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(CsfData));
         Assert.AreEqual("Hello", result.LabelName);
-        Assert.AreEqual(1, result.Values.Count);
+        Assert.AreEqual(1, result.Values.Length);
         Assert.AreEqual("World", result.Values[0].Value);
     }
 

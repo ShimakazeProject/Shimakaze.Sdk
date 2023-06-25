@@ -71,8 +71,8 @@ public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
         {
             string.IsNullOrEmpty(extra) switch
             {
-                true => value,
-                false => new CsfValueExtra(value.Value, extra)
+                true => value.Value,
+                false => new CsfValue(value.Value.Value, extra)
             }
         };
     }
@@ -94,7 +94,7 @@ public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
-        else if (value[0] is not CsfValueExtra extra)
+        else if (value[0].HasExtra)
         {
             writer.WriteValue<CsfSimpleValueJsonConverter, string>(value[0].Value, options);
         }
@@ -102,7 +102,7 @@ public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
         {
             writer.WriteStartObject();
             writer.WriteProperty<CsfSimpleValueJsonConverter, string>("value", value[0].Value, options);
-            writer.WriteString("extra", extra.ExtraValue);
+            writer.WriteString("extra", value[0].ExtraValue);
             writer.WriteEndObject();
         }
     }

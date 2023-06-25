@@ -9,7 +9,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 public sealed class CsfValueJsonConverter : JsonConverter<CsfValue>
 {
     /// <inheritdoc/>
-    public override CsfValue? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CsfValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return reader.TokenType switch
         {
@@ -27,7 +27,7 @@ public sealed class CsfValueJsonConverter : JsonConverter<CsfValue>
     /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, CsfValue value, JsonSerializerOptions options)
     {
-        if (value is not CsfValueExtra)
+        if (!value.HasExtra)
         {
             writer.WriteValue<CsfSimpleValueJsonConverter, string>(value.Value, options);
             return;

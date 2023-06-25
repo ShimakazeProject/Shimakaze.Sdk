@@ -9,7 +9,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
 {
     /// <inheritdoc/>
-    public override CsfData? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CsfData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
         string label = string.Empty;
@@ -52,7 +52,7 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
         {
             return new(label)
             {
-                Values = values
+                Values = values.ToArray()
             };
         }
         else
@@ -61,11 +61,10 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
 
             return new(label)
             {
-                Values = {
-                    string.IsNullOrEmpty(extra) switch
+                Values = new CsfValue[] {string.IsNullOrEmpty(extra) switch
                     {
-                        true => value,
-                        false => new CsfValueExtra(value.Value, extra)
+                        true => value.Value,
+                        false => new CsfValue(value.Value.Value, extra)
                     }
                 }
             };
@@ -109,13 +108,13 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
     /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, CsfData value, JsonSerializerOptions options)
     {
-        if (value.Count is 1)
+        if (value.Values.Length is 1)
         {
             writer.WriteStartObject();
             writer.WriteString("label", value.LabelName);
             writer.WriteProperty<CsfSimpleValueJsonConverter, string>("value", value.Values[0].Value, options);
-            if (value.Values[0] is CsfValueExtra extra)
-                writer.WriteString("extra", extra.ExtraValue);
+            if (value.Values[0].HasExtra)
+                writer.WriteString("extra", value.Values[0].ExtraValue);
 
             writer.WriteEndObject();
         }
