@@ -9,6 +9,26 @@ namespace Shimakaze.Sdk.Pal;
 public readonly record struct Color
 {
     /// <summary>
+    /// 创建颜色
+    /// </summary>
+    public Color()
+    {
+    }
+
+    /// <summary>
+    /// 创建颜色
+    /// </summary>
+    /// <param name="red">红</param>
+    /// <param name="green">绿</param>
+    /// <param name="blue">蓝</param>
+    public Color(byte red, byte green, byte blue) : this()
+    {
+        Red = red;
+        Green = green;
+        Blue = blue;
+    }
+
+    /// <summary>
     /// 红色
     /// </summary>
     [FieldOffset(0)]
