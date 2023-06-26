@@ -5,7 +5,4 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\build\NugetPackage.props" />
 
-  <Import Condition=" '$(MSBuildProjectExtension)' == '.csproj' "
-    Project="$(MSBuildThisFileDirectory)..\build\CSharp.props" />
-
 </Project>
