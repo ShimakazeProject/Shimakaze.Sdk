@@ -8,40 +8,34 @@ on:
       - feat/**
     paths:
       - .github/workflows/build.yml
-      - '**.cs'
-      - '**.*proj'
-      - '**.props'
-      - '**.targets'
-      - '**/Assets/**'
+      - "build/**/*"
+      - "script/**/*"
+      - "sdk/**/*"
+      - "src/**/*"
+      - "test/**/*"
   pull_request:
     branches:
       - master
       - develop
     paths:
       - .github/workflows/build.yml
-      - '**.cs'
-      - '**.*proj'
-      - '**.props'
-      - '**.targets'
-      - '**/Assets/**'
+      - "build/**/*"
+      - "script/**/*"
+      - "sdk/**/*"
+      - "src/**/*"
+      - "test/**/*"
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-    name: Build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  build-sdk:
+    name: 构建 MSBuild Sdk
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 签出仓库
         uses: actions/checkout@v3.3.0
         with:
           lfs: true
 
-      - name: Cache Nuget Packages
+      - name: 配置 Nuget 缓存
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
@@ -49,51 +43,27 @@ jobs:
           restore-keys: |
             nuget-cache
 
-      - name: Setup .NET SDK
+      - name: 配置 .Net 环境
         uses: actions/setup-dotnet@v3.2.0
         with:
           global-json-file: ./global.json
 
-      - name: Restore Shimakaze.Sdk
+      - name: 还原
         shell: pwsh
         run: |-
-          Get-ChildItem src, test, sdk `
+          Get-ChildItem sdk `
           | Where-Object {
             $PSItem -is [System.IO.DirectoryInfo]
           } `
           | ForEach-Object {
-            Write-Output "Restore $($PSItem.Name.Replace('.Tests', ''))"
+            Write-Output "Restore $($PSItem.Name)"
             dotnet restore $PSItem.FullName
           }
 
-      - name: Build Shimakaze.Sdk
+      - name: 打包
         shell: pwsh
         run: |-
-          Get-ChildItem src, test `
-          | Where-Object {
-            $PSItem -is [System.IO.DirectoryInfo]
-          } `
-          | ForEach-Object {
-            Write-Output "Build $($PSItem.Name.Replace('.Tests', ''))"
-            dotnet build $PSItem.FullName --configuration Release --no-restore
-          }
-
-      - name: Test Shimakaze.Sdk
-        shell: pwsh
-        run: |-
-          Get-ChildItem test `
-          | Where-Object {
-            $PSItem -is [System.IO.DirectoryInfo]
-          } `
-          | ForEach-Object {
-            Write-Output "Test $($PSItem.Name.Replace('.Tests', ''))"
-            dotnet test $PSItem.FullName --configuration Release --no-build
-          }
-
-      - name: Pack Shimakaze.Sdk
-        shell: pwsh
-        run: |-
-          Get-ChildItem src, sdk `
+          Get-ChildItem sdk `
           | Where-Object {
             $PSItem -is [System.IO.DirectoryInfo]
           } `
@@ -102,29 +72,101 @@ jobs:
             dotnet pack $PSItem.FullName --configuration Release --no-restore --no-build --include-symbols --include-source
           }
 
-      - name: Upload Nuget Packages
+      - name: 上传 Nuget 包
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: nuget-packages-sdk
+          path: |
+            sdk/**/bin/Release/*.*nupkg
+          retention-days: 3
+
+  build-dotnet:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    name: .Net 构建 ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 签出仓库
+        uses: actions/checkout@v3.3.0
+        with:
+          lfs: true
+
+      - name: 配置 Nuget 缓存
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-cache
+          restore-keys: |
+            nuget-cache
+
+      - name: 配置 .Net 环境
+        uses: actions/setup-dotnet@v3.2.0
+        with:
+          global-json-file: ./global.json
+
+      - name: 生成解决方案
+        shell: pwsh
+        run: ./script/Generate-Solutions.ps1
+
+      - name: 还原
+        shell: pwsh
+        run: |-
+          . ./script/Invoke-AllSolutions.ps1
+          Invoke-AllProject {
+            dotnet restore $args | Out-Default
+          } -Echo "Restore ""{0}"""
+
+      - name: 构建
+        shell: pwsh
+        run: |-
+          . ./script/Invoke-AllSolutions.ps1
+          Invoke-AllProject {
+            dotnet build $args --configuration Release --no-restore | Out-Default
+          } -Echo "Build ""{0}"""
+
+      - name: 测试
+        shell: pwsh
+        run: |-
+          . ./script/Invoke-AllSolutions.ps1
+          Invoke-AllProject {
+            dotnet test $args --configuration Release --no-build | Out-Default
+          } -Echo "Test ""{0}"""
+
+      - name: 打包
+        shell: pwsh
+        run: |-
+          . ./script/Invoke-AllSolutions.ps1
+          Invoke-AllProject {
+            dotnet pack $args --configuration Release --no-restore --no-build --include-symbols --include-source | Out-Default
+          } -Echo "Pack ""{0}"""
+
+      - name: 上传 Nuget 包
         uses: actions/upload-artifact@v3.1.2
         with:
           name: nuget-packages-${{ matrix.os }}
           path: |
             src/**/bin/Release/*.*nupkg
-            sdk/**/bin/Release/*.*nupkg
           retention-days: 3
 
-      - name: Coveralls
+      - name: 收集测试覆盖率
         uses: coverallsapp/github-action@v2
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
           file: ./coverage/lcov.info
 
-  finish:
-    needs: build
+  coverage-upload:
+    needs: build-dotnet
     if: ${{ always() }}
+    name: 上传测试覆盖率
     runs-on: ubuntu-latest
     steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@v2
-      with:
-        parallel-finished: true
-        carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest"
+      - name: 上传测试覆盖率
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+          carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest"
