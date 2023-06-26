@@ -2,9 +2,9 @@
 <Project>
 
   <Import Condition=" '$(MSBuildProjectExtension)' == '.csproj' "
-    Project="$(MSBuildThisFileDirectory)..\builds\CSharp.targets" />
+    Project="$(MSBuildThisFileDirectory)..\build\CSharp.targets" />
 
   <Import Condition=" $(MSBuildProjectFile.EndsWith('Tests.csproj')) "
-    Project="$(MSBuildThisFileDirectory)..\builds\CSharpTests.targets" />
+    Project="$(MSBuildThisFileDirectory)..\build\CSharpTests.targets" />
 
 </Project>

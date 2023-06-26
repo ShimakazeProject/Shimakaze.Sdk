@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\builds\Common.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\build\Common.props" />
 
   <Import Condition=" '$(MSBuildProjectExtension)' == '.csproj' "
-    Project="$(MSBuildThisFileDirectory)..\builds\CSharp.props" />
+    Project="$(MSBuildThisFileDirectory)..\build\CSharp.props" />
 
   <Import Condition=" $(MSBuildProjectFile.EndsWith('Tests.csproj')) "
-    Project="$(MSBuildThisFileDirectory)..\builds\CSharpTests.props" />
+    Project="$(MSBuildThisFileDirectory)..\build\CSharpTests.props" />
 
 </Project>

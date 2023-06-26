@@ -57,7 +57,7 @@ jobs:
       - name: Restore Shimakaze.Sdk
         shell: pwsh
         run: |-
-          Get-ChildItem src, test, sdks `
+          Get-ChildItem src, test, sdk `
           | Where-Object {
             $PSItem -is [System.IO.DirectoryInfo]
           } `
@@ -93,7 +93,7 @@ jobs:
       - name: Pack Shimakaze.Sdk
         shell: pwsh
         run: |-
-          Get-ChildItem src, sdks `
+          Get-ChildItem src, sdk `
           | Where-Object {
             $PSItem -is [System.IO.DirectoryInfo]
           } `
@@ -108,7 +108,7 @@ jobs:
           name: nuget-packages-${{ matrix.os }}
           path: |
             src/**/bin/Release/*.*nupkg
-            sdks/**/bin/Release/*.*nupkg
+            sdk/**/bin/Release/*.*nupkg
           retention-days: 3
 
       - name: Coveralls
