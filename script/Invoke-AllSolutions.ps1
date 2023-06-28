@@ -28,7 +28,9 @@ function Invoke-AllProject {
         Start-Job -ScriptBlock $Action -ArgumentList $PSItem.FullName -WorkingDirectory $ProjectRoot
       }
       else {
-        Invoke-Command -ScriptBlock $Action -ArgumentList $PSItem.FullName | Receive-PSSession
+        $Job = Start-Job -ScriptBlock $Action -ArgumentList $PSItem.FullName -WorkingDirectory $ProjectRoot | Wait-Job
+        Receive-Job $Job
+        $Job | Remove-Job | Out-Null
       }
     }
   }
