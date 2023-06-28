@@ -35,7 +35,7 @@ public class MixEntryWriterTest
         Assert.AreEqual(4 + 2 + 4, fs.Position);
         writer.Write(_csf);
         Assert.AreEqual(4 + 2 + 4 + 12, fs.Position);
-        await writer.WriteAsync(_lxd);
+        writer.Write(_lxd);
         Assert.AreEqual(4 + 2 + 4 + 12 + 12, fs.Position);
         var bodyOffset = fs.Position;
 
