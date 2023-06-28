@@ -14,8 +14,8 @@ function Invoke-AllProject {
   begin {
     $ProjectRoot = Join-Path $PSScriptRoot '..'
     $SlnRoot = Join-Path $ProjectRoot 'sln'
-
-    $env:DOTNET_CLI_UI_LANGUAGE = "en_US"
+    
+    $env:DOTNET_CLI_UI_LANGUAGE = 'en'
   }
 
   process {
@@ -29,7 +29,15 @@ function Invoke-AllProject {
       }
       else {
         $Job = Start-Job -ScriptBlock $Action -ArgumentList $PSItem.FullName -WorkingDirectory $ProjectRoot | Wait-Job
-        Receive-Job $Job
+        # 使用 Receive-Job 获取作业的输出，其中包含 dotnet build 的退出代码
+        $ExitCode = Receive-Job $Job
+
+        # 检查退出代码
+        if ($ExitCode -ne 0) {
+          Write-Error "Failed"
+          Remove-Item Env:\DOTNET_CLI_UI_LANGUAGE
+          break
+        }
         $Job | Remove-Job | Out-Null
       }
     }
@@ -40,5 +48,6 @@ function Invoke-AllProject {
       $result | Wait-Job | Remove-Job | Out-Null
     }
     Write-Host -ForegroundColor Green 'All Done !'
+    Remove-Item Env:\DOTNET_CLI_UI_LANGUAGE
   }
 }

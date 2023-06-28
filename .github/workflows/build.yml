@@ -118,6 +118,7 @@ jobs:
           . ./script/Invoke-AllSolutions.ps1
           Invoke-AllProject {
             dotnet restore $args | Out-Default
+            return $LASTEXITCODE
           } -Echo "Restore ""{0}"""
 
       - name: 构建
@@ -126,6 +127,7 @@ jobs:
           . ./script/Invoke-AllSolutions.ps1
           Invoke-AllProject {
             dotnet build $args --configuration Release --no-restore | Out-Default
+            return $LASTEXITCODE
           } -Echo "Build ""{0}"""
 
       - name: 测试
@@ -134,6 +136,7 @@ jobs:
           . ./script/Invoke-AllSolutions.ps1
           Invoke-AllProject {
             dotnet test $args --configuration Release --no-build | Out-Default
+            return $LASTEXITCODE
           } -Echo "Test ""{0}"""
 
       - name: 打包
@@ -142,6 +145,7 @@ jobs:
           . ./script/Invoke-AllSolutions.ps1
           Invoke-AllProject {
             dotnet pack $args --configuration Release --no-restore --no-build --include-symbols --include-source | Out-Default
+            return $LASTEXITCODE
           } -Echo "Pack ""{0}"""
 
       - name: 上传 Nuget 包
