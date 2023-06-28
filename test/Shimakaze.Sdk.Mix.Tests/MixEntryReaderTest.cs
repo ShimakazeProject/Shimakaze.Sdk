@@ -23,7 +23,7 @@ public class MixEntryReaderTest
         MixEntry csf = default;
         for (int i = 0; i < reader.Count; i++)
         {
-            var entry = i % 2 is 0 ? await reader.ReadAsync() : reader.Read();
+            var entry = reader.Read();
             Console.WriteLine(entry);
             Assert.AreEqual(4 + 2 + 4 + (i + 1) * 12, fs.Position);
 
@@ -32,7 +32,6 @@ public class MixEntryReaderTest
         }
 
         Assert.ThrowsException<EndOfEntryTableException>(() => reader.Read());
-        await Assert.ThrowsExceptionAsync<EndOfEntryTableException>(async () => await reader.ReadAsync());
 
         fs.Seek(reader.BodyOffset, SeekOrigin.Begin);
         Assert.AreEqual(reader.BodyOffset, fs.Position);
@@ -90,7 +89,7 @@ public class MixEntryReaderTest
                 0, 0, 0, 0,
             });
             await using MixEntryReader reader = new(ms);
-            await reader.InitAsync();
+            reader.Init();
         });
     }
 }

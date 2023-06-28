@@ -28,10 +28,13 @@ public class IniMergerTests
     public void MergeTest()
     {
         TaskItem item = new(Path.Combine(Assets, InputFile));
+        item.SetMetadata(IniMerger.Metadata_Type, "Rule");
+        TaskItem output = new("Rule");
+        output.SetMetadata(IniMerger.Metadata_Destination, Path.Combine(OutputPath, InputFile));
         IniMerger task = new()
         {
             SourceFiles = new[] { item },
-            DestinationFiles = new[] { new TaskItem(Path.Combine(OutputPath, InputFile)) },
+            DestinationFiles = new[] { output },
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());

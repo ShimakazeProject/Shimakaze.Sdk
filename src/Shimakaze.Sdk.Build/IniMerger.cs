@@ -29,10 +29,22 @@ public sealed class IniMerger : MSTask
     /// </summary>
     [Output]
     public ITaskItem[] OutputFiles { get; set; } = Array.Empty<ITaskItem>();
-    const string Metadata_Destination = "Destination";
-    const string Metadata_Type = "Type";
-    const string Metadata_Pack = "Pack";
-    const string Metadata_Merge = "Merge";
+    /// <summary>
+    /// Destination
+    /// </summary>
+    public const string Metadata_Destination = "Destination";
+    /// <summary>
+    /// Type
+    /// </summary>
+    public const string Metadata_Type = "Type";
+    /// <summary>
+    /// Pack
+    /// </summary>
+    public const string Metadata_Pack = "Pack";
+    /// <summary>
+    /// Merge
+    /// </summary>
+    public const string Metadata_Merge = "Merge";
 
     /// <inheritdoc/>
     public override bool Execute()
