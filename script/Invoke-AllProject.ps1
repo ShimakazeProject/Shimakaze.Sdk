@@ -17,7 +17,7 @@ function Invoke-AllProject {
     $SrcRoot = Join-Path $ProjectRoot 'src'
     $TestRoot = Join-Path $ProjectRoot 'test'
 
-    $env:DOTNET_CLI_UI_LANGUAGE = "en_US"
+    $env:DOTNET_CLI_UI_LANGUAGE = 'en'
   }
 
   process {
@@ -42,7 +42,17 @@ function Invoke-AllProject {
         Start-Job -ScriptBlock $Action -ArgumentList $PSItem.FullName -WorkingDirectory $ProjectRoot
       }
       else {
-        Invoke-Command -ScriptBlock $Action -ArgumentList $PSItem.FullName
+        $Job = Start-Job -ScriptBlock $Action -ArgumentList $PSItem.FullName -WorkingDirectory $ProjectRoot | Wait-Job
+        # 使用 Receive-Job 获取作业的输出，其中包含 dotnet build 的退出代码
+        $ExitCode = Receive-Job $Job
+
+        # 检查退出代码
+        if ($ExitCode -ne 0) {
+          Write-Error "Failed"
+          Remove-Item Env:\DOTNET_CLI_UI_LANGUAGE
+          break
+        }
+        $Job | Remove-Job | Out-Null
       }
     }
   }
@@ -52,5 +62,6 @@ function Invoke-AllProject {
       $result | Wait-Job | Remove-Job | Out-Null
     }
     Write-Host -ForegroundColor Green 'All Done !'
+    Remove-Item Env:\DOTNET_CLI_UI_LANGUAGE
   }
 }

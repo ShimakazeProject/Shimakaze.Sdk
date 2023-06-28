@@ -6,7 +6,7 @@
     {
       "label": "Generate Solutions",
       "type": "shell",
-      "command": "${workspaceFolder}/scripts/Generate-Solutions.ps1",
+      "command": "${workspaceFolder}/script/Generate-Solutions.ps1",
       "problemMatcher": []
     }
   ]
