@@ -12,7 +12,6 @@ public class IniPreprocessorTest
     private const string Assets = "Assets";
     private const string InputFile = "conditionTest.ini;defineTest.ini";
     private const string OutputPath = "Out";
-    private const string OutputFile = "obj";
     private const string Defines = "DEFINED;TEST";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;

@@ -25,7 +25,7 @@ public class CsfMergerTests
     }
 
     [TestMethod]
-    public void JsonV1Test()
+    public void MergeTest()
     {
         TaskItem item = new(Path.Combine(Assets, InputFile));
 
