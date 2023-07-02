@@ -9,7 +9,7 @@ namespace Shimakaze.Sdk.Build.Tests;
 public class IniMergerTests
 {
     private const string Assets = "Assets";
-    private const string InputFile = "normal.Ini";
+    private const string InputFile = "normal.ini";
     private const string OutputPath = "Out";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;

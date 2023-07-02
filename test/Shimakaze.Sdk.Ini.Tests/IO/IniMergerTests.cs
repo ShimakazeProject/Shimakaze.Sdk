@@ -9,10 +9,10 @@ namespace Shimakaze.Sdk.IO.Ini;
 public class IniMergerTests
 {
     private const string Assets = "Assets";
-    private const string InputFile = "normal.Ini";
+    private const string InputFile = "normal.ini";
     private const string OutputPath = "Out";
-    private const string OutputFile = "MergeTest.Ini";
-    private const string OutputFileAsync = "MergeAsyncTest.Ini";
+    private const string OutputFile = "MergeTest.ini";
+    private const string OutputFileAsync = "MergeAsyncTest.ini";
 
     [TestInitialize]
     public void Startup()
