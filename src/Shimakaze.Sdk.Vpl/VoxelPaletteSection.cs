@@ -22,7 +22,7 @@ public readonly record struct VoxelPaletteSection
     /// </summary>
     /// <param name="index">位置</param>
     /// <returns>颜色索引</returns>
-    public readonly byte this[byte index]
+    public readonly byte this[int index]
     {
         get => Data[index];
         set => Data[index] = value;
