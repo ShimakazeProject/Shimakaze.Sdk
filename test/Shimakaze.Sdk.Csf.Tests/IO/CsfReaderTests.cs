@@ -7,10 +7,10 @@ public class CsfReaderTests
     private const string InputFile = "ra2md.csf";
 
     [TestMethod]
-    public void ReadTest()
+    public async Task ReadTestAsync()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
         using CsfReader reader = new(stream);
-        Assert.IsNotNull(reader.Read());
+        Assert.IsNotNull(await reader.ReadAsync());
     }
 }

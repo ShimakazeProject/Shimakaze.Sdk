@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
@@ -10,15 +8,12 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 [PreprocessorCommand("undef")]
 public sealed class UndefCommand : PreprocessorCommand
 {
-    private readonly ILogger<UndefCommand>? _logger;
-
-    /// <inheritdoc/>
-    public UndefCommand(IPreprocessorVariables variable, ILogger<UndefCommand>? logger = null) : base(variable)
+    /// <inheritdoc />
+    public UndefCommand(IPreprocessorVariables variable) : base(variable)
     {
-        _logger = logger;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
 
     public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
     {
@@ -27,7 +22,7 @@ public sealed class UndefCommand : PreprocessorCommand
 
         string identifier = args[0];
 
-        variable.Defines.Remove(identifier);
+        _variable.Defines.Remove(identifier);
 
         return Task.CompletedTask;
     }

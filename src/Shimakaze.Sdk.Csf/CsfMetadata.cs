@@ -17,8 +17,8 @@ public record struct CsfMetadata
     /// <summary>
     /// CsfMetadata.
     /// </summary>
-    /// <param name="version">version.</param>
-    /// <param name="language">language.</param>
+    /// <param name="version"> version. </param>
+    /// <param name="language"> language. </param>
     public CsfMetadata(int version, int language)
     {
         Identifier = CsfConstants.CsfFlagRaw;
@@ -28,8 +28,6 @@ public record struct CsfMetadata
         Unknown = 0;
         Language = language;
     }
-
-
 
     /// <summary>
     /// Identifier.

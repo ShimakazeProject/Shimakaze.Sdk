@@ -1,8 +1,11 @@
-﻿namespace Shimakaze.Sdk.Csf;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
 /// CsfConstants.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public static class CsfConstants
 {
     /// <summary>
@@ -26,13 +29,12 @@ public static class CsfConstants
     public const int StrwFlgRaw = 0x53_54_52_57;
 
     /// <summary>
-    /// Value string Encode/decode<br/>
-    /// The Unicode encoded content in CSF documents are all bitwise isochronous<br/>
-    /// This method is implemented using a for loop.
+    /// Value string Encode/decode <br /> The Unicode encoded content in CSF documents are all
+    /// bitwise isochronous <br /> This method is implemented using a for loop.
     /// </summary>
-    /// <param name="data">data.</param>
-    /// <param name="length">length.</param>
-    /// <param name="start">start index.</param>
+    /// <param name="data"> data. </param>
+    /// <param name="length"> length. </param>
+    /// <param name="start"> start index. </param>
     public static unsafe void CodingValue(byte* data, int length, int start = 0)
     {
         for (int i = 0; i < length; i++)
@@ -42,12 +44,11 @@ public static class CsfConstants
     }
 
     /// <summary>
-    /// Value string Encode/decode<br/>
-    /// The Unicode encoded content in CSF documents are all bitwise isochronous<br/>
-    /// This method is implemented using a for loop.
+    /// Value string Encode/decode <br /> The Unicode encoded content in CSF documents are all
+    /// bitwise isochronous <br /> This method is implemented using a for loop.
     /// </summary>
-    /// <param name="data">data.</param>
-    /// <returns>result.</returns>
+    /// <param name="data"> data. </param>
+    /// <returns> result. </returns>
     public static byte[] CodingValue(byte[] data)
     {
         unsafe

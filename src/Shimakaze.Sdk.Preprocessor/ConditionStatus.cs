@@ -1,5 +1,3 @@
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor;
 
 internal record ConditionStatus : IConditionStatus

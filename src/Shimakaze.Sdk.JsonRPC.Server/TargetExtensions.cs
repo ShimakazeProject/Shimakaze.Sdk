@@ -9,14 +9,14 @@ namespace Shimakaze.Sdk.JsonRPC.Server;
 /// <summary>
 /// JsonRpc Server Helper
 /// </summary>
-public static class TargetExtensions
+public static partial class TargetExtensions
 {
     /// <summary>
     /// 添加所有的Handler
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="optionsBuilder"></param>
-    /// <returns></returns>
+    /// <param name="services"> </param>
+    /// <param name="optionsBuilder"> </param>
+    /// <returns> </returns>
     public static IServiceCollection AddJsonRpcHandlers(this IServiceCollection services, Action<JsonRPCHostedServiceOptions> optionsBuilder)
     {
         foreach (var t in AppDomain
@@ -27,11 +27,11 @@ public static class TargetExtensions
             services.AddTransient(t, t);
 
         return services
-            .AddSingleton<JsonRPCHostedServiceOptions>(provider =>
+            .AddSingleton(provider =>
             {
                 JsonRPCHostedServiceOptions options;
-                optionsBuilder(options = new());
-                return options;
+                optionsBuilder(options = new() { JsonRpcMessageHandler = default! });
+                return options.JsonRpcMessageHandler is null ? throw new NullReferenceException() : options;
             })
             .AddHostedService<JsonRPCHostedService>(provider => new(services, provider));
     }
@@ -47,7 +47,7 @@ public static class TargetExtensions
 
     private static string GetFullPath(this Type type, string? route, string? method, MethodInfo m)
     {
-        route ??= Regex.Replace(type.Name, "Handlers?|Controllers?", string.Empty);
+        route ??= HandlerRegex().Replace(type.Name, string.Empty);
         method ??= m.Name;
         if (method.StartsWith('/'))
             return method;
@@ -62,4 +62,7 @@ public static class TargetExtensions
         sb.Append(method);
         return sb.ToString();
     }
+
+    [GeneratedRegex("Handlers?|Controllers?")]
+    private static partial Regex HandlerRegex();
 }

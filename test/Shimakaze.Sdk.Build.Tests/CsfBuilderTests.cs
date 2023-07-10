@@ -9,23 +9,13 @@ namespace Shimakaze.Sdk.Build.Tests;
 public class CsfBuilderTests
 {
     private const string Assets = "Assets";
-    private const string InputXmlV1File = "ra2md.v1.csf.xml";
-    private const string InputYamlV1File = "ra2md.v1.csf.yaml";
     private const string InputJsonV1File = "ra2md.v1.csf.json";
     private const string InputJsonV2File = "ra2md.v2.csf.json";
+    private const string InputXmlV1File = "ra2md.v1.csf.xml";
+    private const string InputYamlV1File = "ra2md.v1.csf.yaml";
     private const string OutputPath = "Out";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;
-
-    [TestInitialize]
-    public void Startup()
-    {
-        _buildEngine = new Mock<IBuildEngine>();
-        _errors = new List<BuildErrorEventArgs>();
-        _buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => _errors.Add(e));
-
-        Directory.CreateDirectory(OutputPath);
-    }
 
     [TestMethod]
     public void JsonV1Test()
@@ -57,20 +47,31 @@ public class CsfBuilderTests
         Assert.IsTrue(task.Execute());
     }
 
-    [TestMethod]
-    public void YamlV1Test()
+    [TestInitialize]
+    public void Startup()
     {
-        TaskItem item = new(Path.Combine(Assets, InputYamlV1File));
-        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, InputYamlV1File));
-        item.SetMetadata(CsfBuilder.Metadata_Type, "YamlV1");
+        _buildEngine = new Mock<IBuildEngine>();
+        _errors = new List<BuildErrorEventArgs>();
+        _buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => _errors.Add(e));
+
+        Directory.CreateDirectory(OutputPath);
+    }
+
+    [TestMethod]
+    public void UnknownTest()
+    {
+        TaskItem item = new(Path.Combine(Assets, InputXmlV1File));
+        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, "Unknown"));
+        item.SetMetadata(CsfBuilder.Metadata_Type, "Unknown");
 
         CsfBuilder task = new()
         {
             SourceFiles = new[] { item },
             BuildEngine = _buildEngine?.Object,
         };
-        Assert.IsTrue(task.Execute());
+        Assert.IsFalse(task.Execute());
     }
+
     [TestMethod]
     public void XmlV1Test()
     {
@@ -85,18 +86,19 @@ public class CsfBuilderTests
         };
         Assert.IsTrue(task.Execute());
     }
+
     [TestMethod]
-    public void UnknownTest()
+    public void YamlV1Test()
     {
-        TaskItem item = new(Path.Combine(Assets, InputXmlV1File));
-        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, "Unknown"));
-        item.SetMetadata(CsfBuilder.Metadata_Type, "Unknown");
+        TaskItem item = new(Path.Combine(Assets, InputYamlV1File));
+        item.SetMetadata(CsfBuilder.Metadata_Destination, Path.Combine(OutputPath, InputYamlV1File));
+        item.SetMetadata(CsfBuilder.Metadata_Type, "YamlV1");
 
         CsfBuilder task = new()
         {
             SourceFiles = new[] { item },
             BuildEngine = _buildEngine?.Object,
         };
-        Assert.IsFalse(task.Execute());
+        Assert.IsTrue(task.Execute());
     }
 }

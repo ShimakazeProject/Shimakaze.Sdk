@@ -1,5 +1,3 @@
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor;
 
 internal class ConditionParser : IConditionParser
@@ -18,22 +16,16 @@ internal class ConditionParser : IConditionParser
         {
             case "true": return true;
             case "false": return false;
+            default: break;
         }
 
-        if (_variables.Defines.Any(i => i.Equals(condition, StringComparison.OrdinalIgnoreCase)))
-            return true;
-
-        if (condition.Contains("||"))
-            return OR(condition);
-        else if (condition.Contains("&&"))
-            return AND(condition);
-        else if (condition.TrimStart().StartsWith('!'))
-            return NOT(condition);
-        else
-            return false;
+        return _variables.Defines.Any(i => i.Equals(condition, StringComparison.OrdinalIgnoreCase))
+            || (condition.Contains("||")
+            ? OR(condition)
+            : condition.Contains("&&")
+            ? AND(condition)
+            : condition.TrimStart().StartsWith('!') && NOT(condition));
     }
-
-    private bool OR(string condition) => condition.Trim().Split("||").Any(Parse);
 
     private bool AND(string condition) => condition.Trim().Split("&&").All(Parse);
 
@@ -44,4 +36,6 @@ internal class ConditionParser : IConditionParser
             ? !Parse(condition[1..])
             : Parse(condition);
     }
+
+    private bool OR(string condition) => condition.Trim().Split("||").Any(Parse);
 }

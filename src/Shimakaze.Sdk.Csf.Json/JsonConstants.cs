@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Shimakaze.Sdk.Csf.Json;
 
 /// <summary>
 /// JsonConstants.
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal class JsonConstants
 {
     /// <summary>

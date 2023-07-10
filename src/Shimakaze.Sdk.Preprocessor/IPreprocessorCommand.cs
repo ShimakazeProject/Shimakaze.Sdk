@@ -8,8 +8,8 @@ public interface IPreprocessorCommand
     /// <summary>
     /// Execute Command
     /// </summary>
-    /// <param name="args">command params</param>
-    /// <param name="cancellationToken">cancellationToken</param>
-    /// <returns></returns>
+    /// <param name="args"> command params </param>
+    /// <param name="cancellationToken"> cancellationToken </param>
+    /// <returns> </returns>
     Task ExecuteAsync(string[] args, CancellationToken cancellationToken);
 }

@@ -8,8 +8,31 @@ using Shimakaze.Sdk.Preprocessor.Extensions;
 namespace Shimakaze.Sdk.Preprocessor;
 
 [TestClass]
-public class PreprocessorTest
+public partial class PreprocessorTest
 {
+    [TestMethod]
+    public async Task AddCommandsTestAsync()
+    {
+        var services = new ServiceCollection()
+            .AddCommand<RegionCommand>()
+            .AddPreprocessor();
+
+        await using ServiceProvider serviceProvider = services.BuildServiceProvider();
+        Assert.IsInstanceOfType<RegionCommand>(serviceProvider.GetRequiredService<IPreprocessorCommand>());
+    }
+
+    [TestMethod]
+    public async Task AddRegionCommandsTestAsync()
+    {
+        var services = new ServiceCollection()
+            .AddRegionCommands()
+            .AddPreprocessor();
+
+        await using ServiceProvider serviceProvider = services.BuildServiceProvider();
+        IEnumerable<IPreprocessorCommand> enumerable = serviceProvider.GetServices<IPreprocessorCommand>();
+
+        Assert.AreEqual(2, enumerable.Count());
+    }
 
     [TestMethod]
     public async Task ConditionTestAsync()
@@ -33,7 +56,7 @@ public class PreprocessorTest
         using StreamReader sr = new(ms);
         var result = await sr.ReadToEndAsync();
 
-        Regex regex = new("\\r?\\n");
+        Regex regex = NewLineRegex();
         Assert.AreEqual(
             regex.Replace(
                 """
@@ -47,7 +70,6 @@ public class PreprocessorTest
                 """.Trim(), "\n"),
             regex.Replace(result.Trim(), "\n")
         );
-
     }
 
     [TestMethod]
@@ -70,7 +92,7 @@ public class PreprocessorTest
         using StreamReader sr = new(ms);
         var result = await sr.ReadToEndAsync();
 
-        Regex regex = new("\\r?\\n");
+        Regex regex = NewLineRegex();
         Assert.AreEqual(
             regex.Replace(result.Trim(), "\n"),
             regex.Replace(
@@ -79,31 +101,6 @@ public class PreprocessorTest
                 222
                 444
                 """.Trim(), "\n"));
-
-    }
-
-    [TestMethod]
-    public async Task AddRegionCommandsTestAsync()
-    {
-        var services = new ServiceCollection()
-            .AddRegionCommands()
-            .AddPreprocessor();
-
-        await using ServiceProvider serviceProvider = services.BuildServiceProvider();
-        IEnumerable<IPreprocessorCommand> enumerable = serviceProvider.GetServices<IPreprocessorCommand>();
-
-        Assert.AreEqual(2, enumerable.Count());
-    }
-
-    [TestMethod]
-    public async Task AddCommandsTestAsync()
-    {
-        var services = new ServiceCollection()
-            .AddCommand<RegionCommand>()
-            .AddPreprocessor();
-
-        await using ServiceProvider serviceProvider = services.BuildServiceProvider();
-        Assert.IsInstanceOfType<RegionCommand>(serviceProvider.GetRequiredService<IPreprocessorCommand>());
     }
 
     [TestMethod]
@@ -129,6 +126,7 @@ public class PreprocessorTest
             Console.WriteLine(e.Message);
         }
     }
+
     [TestMethod]
     public async Task ErrorTest2Async()
     {
@@ -151,4 +149,7 @@ public class PreprocessorTest
             Console.WriteLine(e.Message);
         }
     }
+
+    [GeneratedRegex("\\r?\\n")]
+    private static partial Regex NewLineRegex();
 }

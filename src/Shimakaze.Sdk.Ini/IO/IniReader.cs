@@ -1,16 +1,12 @@
 using Shimakaze.Sdk.Ini;
-using Shimakaze.Sdk.IO.Serialization;
 
-namespace Shimakaze.Sdk.IO.Ini.Serialization;
+namespace Shimakaze.Sdk.IO.Ini;
 
 /// <summary>
 /// Ini反序列化器
 /// </summary>
-public class IniDeserializer : IDeserializer<IniDocument>, IAsyncDeserializer<Task<IniDocument>>, IDisposable
+public class IniReader : AsyncReader<IniDocument>
 {
-    private bool _disposedValue;
-    private readonly bool _leaveOpen;
-
     /// <summary>
     /// 基础读取器
     /// </summary>
@@ -19,19 +15,18 @@ public class IniDeserializer : IDeserializer<IniDocument>, IAsyncDeserializer<Ta
     /// <summary>
     /// 构造 Ini反序列化器
     /// </summary>
-    /// <param name="reader">基础流</param>
-    /// <param name="leaveOpen">退出时是否保持流打开</param>
-    public IniDeserializer(TextReader reader, bool leaveOpen = false)
+    /// <param name="stream"> 基础流 </param>
+    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
+    public IniReader(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
     {
-        BaseReader = reader;
-        _leaveOpen = leaveOpen;
+        BaseReader = new StreamReader(stream, leaveOpen);
     }
 
     /// <summary>
     /// 反序列化INI
     /// </summary>
-    /// <returns></returns>
-    public virtual IniDocument Deserialize()
+    /// <returns> </returns>
+    public virtual IniDocument Read()
     {
         IniDocument doc = new();
         IniSection current = doc.Default;
@@ -63,10 +58,8 @@ public class IniDeserializer : IDeserializer<IniDocument>, IAsyncDeserializer<Ta
         return doc;
     }
 
-    /// <inheritdoc cref="Deserialize"/>
-    /// <param name="cancellationToken">cancellationToken</param>
-    /// <returns>异步任务</returns>
-    public virtual async Task<IniDocument> DeserializeAsync(CancellationToken cancellationToken = default)
+    /// <inheritdoc />
+    public override async Task<IniDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
         IniDocument doc = new();
         IniSection current = doc.Default;
@@ -101,33 +94,24 @@ public class IniDeserializer : IDeserializer<IniDocument>, IAsyncDeserializer<Ta
         return doc;
     }
 
-    /// <summary>
-    /// 释放资源
-    /// </summary>
-    /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (disposing)
         {
-            if (disposing)
-            {
-                if (!_leaveOpen)
-                    BaseReader.Dispose();
-            }
-
-            _disposedValue = true;
+            if (!_leaveOpen)
+                BaseReader.Dispose();
         }
+
+        base.Dispose(disposing);
     }
 
-    // ~CsfReader()
-    // {
-    //     Dispose(disposing: false);
-    // }
-
-    /// <inheritdoc/>
-    public void Dispose()
+    /// <inheritdoc />
+    protected override ValueTask DisposeAsyncCore()
     {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        if (!_leaveOpen)
+            BaseReader.Dispose();
+
+        return base.DisposeAsyncCore();
     }
 }

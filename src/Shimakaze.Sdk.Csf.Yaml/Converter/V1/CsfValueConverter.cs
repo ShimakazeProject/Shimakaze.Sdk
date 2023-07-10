@@ -27,10 +27,10 @@ public class CsfValueConverter : IYamlTypeConverter
         }
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public bool Accepts(Type type) => typeof(CsfValue).IsAssignableFrom(type);
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type)
     {
         if (parser.TryConsume<Scalar>(out var scalar))
@@ -71,7 +71,7 @@ public class CsfValueConverter : IYamlTypeConverter
         throw new FormatException("Not Supported", new YamlException(start, end, "Unknown Token"));
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void WriteYaml(IEmitter emitter, object? value, Type type)
     {
         switch (value)

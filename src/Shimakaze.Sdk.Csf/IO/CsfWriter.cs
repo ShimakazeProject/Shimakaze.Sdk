@@ -1,43 +1,36 @@
-﻿using System.Runtime.InteropServices;
-using System.Text;
-
-using Shimakaze.Sdk.Csf;
+﻿using Shimakaze.Sdk.Csf;
 
 namespace Shimakaze.Sdk.IO.Csf;
 
 /// <summary>
 /// Csf 写入器
 /// </summary>
-public sealed class CsfWriter : IWriter<CsfDocument>, IDisposable, IAsyncDisposable
+public sealed class CsfWriter : AsyncWriter<CsfDocument>, IDisposable, IAsyncDisposable
 {
-    private readonly bool _leaveOpen;
-
-    /// <summary>
-    /// 基础流
-    /// </summary>
-    public Stream BaseStream { get; }
-
     /// <summary>
     /// 构造 Csf 写入器
     /// </summary>
-    /// <param name="baseStream">基础流</param>
-    /// <param name="leaveOpen">退出时是否保持流打开</param>
-    /// <exception cref="NotSupportedException">当流不支持Seek时抛出</exception>
-    public CsfWriter(Stream baseStream, bool leaveOpen = false)
+    /// <param name="stream"> 基础流 </param>
+    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
+    /// <exception cref="NotSupportedException"> 当流不支持Seek时抛出 </exception>
+    public CsfWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
     {
-        if (!baseStream.CanSeek)
+        if (!stream.CanSeek)
             throw new NotSupportedException("The Stream cannot support Seek.");
-
-        BaseStream = baseStream;
-        _leaveOpen = leaveOpen;
     }
 
-    /// <inheritdoc/>
-    public void Write(in CsfDocument value)
+    /// <inheritdoc />
+    public override async Task WriteAsync(CsfDocument value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
         BaseStream.Write(value.Metadata);
+
+        await Task.Yield();
+
         for (int i = 0; i < value.Data.Length; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            progress?.Report((float)i / value.Data.Length);
+
             BaseStream.Write(value.Data[i].Identifier);
             BaseStream.Write(value.Data[i].StringCount);
             BaseStream.Write(value.Data[i].LabelNameLength);
@@ -45,6 +38,8 @@ public sealed class CsfWriter : IWriter<CsfDocument>, IDisposable, IAsyncDisposa
 
             for (int j = 0; j < value.Data[i].Values.Length; j++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 BaseStream.Write(value.Data[i].Values[j].Identifier);
                 BaseStream.Write(value.Data[i].Values[j].ValueLength);
                 unsafe
@@ -65,20 +60,5 @@ public sealed class CsfWriter : IWriter<CsfDocument>, IDisposable, IAsyncDisposa
                 }
             }
         }
-    }
-
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        if (!_leaveOpen)
-            BaseStream.Dispose();
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask DisposeAsync()
-    {
-        if (!_leaveOpen)
-            await BaseStream.DisposeAsync();
     }
 }

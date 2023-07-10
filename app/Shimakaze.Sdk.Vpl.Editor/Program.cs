@@ -14,18 +14,18 @@ Palette pal;
 
 await using (var vplStream = File.OpenRead(vplPath))
 await using (VoxelPaletteReader vplReader = new(vplStream))
-    vpl = vplReader.Read();
+    vpl = await vplReader.ReadAsync();
 
 await using (var palStream = File.OpenRead(palPath))
 await using (PaletteReader palReader = new(palStream))
-    pal = palReader.Read();
+    pal = await palReader.ReadAsync();
 
 VplEditor editor = new(vpl, pal, async (editor) =>
 {
     string path = Prompt.Input<string>("Where is your new VPL file save to?", vplPath);
     await using var fs = File.Create(path);
     await using VoxelPaletteWriter writer = new(fs);
-    writer.Write(editor.Vpl);
+    await writer.WriteAsync(editor.Vpl);
 });
 
 await editor.RunAsync();

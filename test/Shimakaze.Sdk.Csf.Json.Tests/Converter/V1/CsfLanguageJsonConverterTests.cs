@@ -10,14 +10,6 @@ public class CsfLanguageJsonConverterTests
 
     private JsonSerializerOptions? _options;
 
-    [TestInitialize]
-    public void Startup()
-    {
-        _options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
-            _options.Converters.Add(item);
-    }
-
     [TestMethod]
     public void Read_ShouldReturnIntValue_WhenReaderHasNumberToken()
     {
@@ -100,6 +92,32 @@ public class CsfLanguageJsonConverterTests
         });
     }
 
+    [TestInitialize]
+    public void Startup()
+    {
+        _options ??= new();
+        foreach (var item in CsfJsonSerializerOptions.Converters)
+            _options.Converters.Add(item);
+    }
+
+    [TestMethod]
+    public void Write_ShouldWriteNumberValue_WhenValueIsUnknownLanguageCode()
+    {
+        // Arrange
+        var value = 10;
+        using var stream = new MemoryStream();
+        using var writer = new Utf8JsonWriter(stream);
+        // Act
+        _converter.Write(writer, value, _options!);
+        writer.Flush();
+        stream.Position = 0;
+
+        // Assert
+        using var reader = new StreamReader(stream);
+        var json = reader.ReadToEnd();
+        Assert.AreEqual("10", json);
+    }
+
     [TestMethod]
     public void Write_ShouldWriteStringValue_WhenValueIsKnownLanguageCode()
     {
@@ -149,23 +167,5 @@ public class CsfLanguageJsonConverterTests
             var json = reader.ReadToEnd();
             Assert.AreEqual(arr[i], json);
         }
-    }
-
-    [TestMethod]
-    public void Write_ShouldWriteNumberValue_WhenValueIsUnknownLanguageCode()
-    {
-        // Arrange
-        var value = 10;
-        using var stream = new MemoryStream();
-        using var writer = new Utf8JsonWriter(stream);
-        // Act
-        _converter.Write(writer, value, _options!);
-        writer.Flush();
-        stream.Position = 0;
-
-        // Assert
-        using var reader = new StreamReader(stream);
-        var json = reader.ReadToEnd();
-        Assert.AreEqual("10", json);
     }
 }

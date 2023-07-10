@@ -6,43 +6,29 @@ namespace Shimakaze.Sdk.IO.Vpl;
 /// <summary>
 /// VoxelPaletteWriter
 /// </summary>
-public sealed class VoxelPaletteWriter : IWriter<VoxelPalette>, IDisposable, IAsyncDisposable
+public sealed class VoxelPaletteWriter : AsyncWriter<VoxelPalette>, IDisposable, IAsyncDisposable
 {
-    private readonly Stream _stream;
-    private readonly bool _leaveOpen;
-
     /// <summary>
     /// VoxelPaletteWriter
     /// </summary>
-    public VoxelPaletteWriter(Stream stream, bool leaveOpen = false)
+    public VoxelPaletteWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
     {
-        _stream = stream;
-        _leaveOpen = leaveOpen;
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
+    /// <inheritdoc />
+    public override async Task WriteAsync(VoxelPalette value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
-        if (!_leaveOpen)
-            _stream.Dispose();
-    }
+        BaseStream.Write(value.Header);
 
-    /// <inheritdoc/>
-    public async ValueTask DisposeAsync()
-    {
-        if (!_leaveOpen)
-            await _stream.DisposeAsync();
-    }
-
-    /// <inheritdoc/>
-    public void Write(in VoxelPalette value)
-    {
-        _stream.Write(value.Header);
-
-        using (PaletteWriter writer = new(_stream, true))
-            writer.Write(value.Palette);
+        await using (PaletteWriter writer = new(BaseStream, true))
+            await writer.WriteAsync(value.Palette, cancellationToken);
 
         for (int i = 0; i < value.Sections.Length; i++)
-            _stream.Write<byte>(value.Sections[i].Data);
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            progress?.Report((float)i / value.Sections.Length);
+
+            BaseStream.Write<byte>(value.Sections[i].Data);
+        }
     }
 }

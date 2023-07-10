@@ -1,7 +1,6 @@
 namespace Shimakaze.Sdk.Hva;
 
 /// <summary>
-/// 
 /// </summary>
 public record struct HvaFrame
 {

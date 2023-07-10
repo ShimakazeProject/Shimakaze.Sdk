@@ -6,14 +6,14 @@ namespace Shimakaze.Sdk.Preprocessor;
 public interface IPreprocessorVariables
 {
     /// <summary>
-    /// Defines
-    /// </summary>
-    HashSet<string> Defines { get; }
-
-    /// <summary>
     /// ConditionStack
     /// </summary>
     Stack<IConditionStatus> ConditionStack { get; }
+
+    /// <summary>
+    /// Defines
+    /// </summary>
+    HashSet<string> Defines { get; }
 
     /// <summary>
     /// WriteOutput

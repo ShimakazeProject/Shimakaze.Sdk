@@ -6,7 +6,7 @@
 public record struct CsfData
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData"/> class.
+    /// Initializes a new instance of the <see cref="CsfData" /> class.
     /// </summary>
     public CsfData()
       : this(string.Empty)
@@ -14,19 +14,19 @@ public record struct CsfData
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData"/> class.
+    /// Initializes a new instance of the <see cref="CsfData" /> class.
     /// </summary>
-    /// <param name="labelName">labelName.</param>
+    /// <param name="labelName"> labelName. </param>
     public CsfData(string labelName)
       : this(labelName, new List<CsfValue>())
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData"/> class.
+    /// Initializes a new instance of the <see cref="CsfData" /> class.
     /// </summary>
-    /// <param name="labelName">labelName.</param>
-    /// <param name="values">values.</param>
+    /// <param name="labelName"> labelName. </param>
+    /// <param name="values"> values. </param>
     public CsfData(string labelName, IEnumerable<CsfValue> values)
       : this(CsfConstants.LblFlagRaw, 1, labelName.Length, labelName, values)
     {
@@ -34,13 +34,13 @@ public record struct CsfData
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData"/> class.
+    /// Initializes a new instance of the <see cref="CsfData" /> class.
     /// </summary>
-    /// <param name="identifier">identifier.</param>
-    /// <param name="stringCount">stringCount.</param>
-    /// <param name="labelNameLength">labelNameLength.</param>
-    /// <param name="labelName">labelName.</param>
-    /// <param name="values">values.</param>
+    /// <param name="identifier"> identifier. </param>
+    /// <param name="stringCount"> stringCount. </param>
+    /// <param name="labelNameLength"> labelNameLength. </param>
+    /// <param name="labelName"> labelName. </param>
+    /// <param name="values"> values. </param>
     public CsfData(int identifier, int stringCount, int labelNameLength, string labelName, IEnumerable<CsfValue> values)
     {
         Identifier = identifier;

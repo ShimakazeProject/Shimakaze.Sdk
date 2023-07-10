@@ -9,7 +9,7 @@ public class CsfValueListXmlSerializer : IXmlSerializer<IList<CsfValue>>
 {
     private readonly CsfValueXmlSerializer _csfValueXmlSerializer = new();
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public IList<CsfValue> Deserialize(XmlReader reader)
     {
         List<CsfValue> values = new();
@@ -47,7 +47,7 @@ public class CsfValueListXmlSerializer : IXmlSerializer<IList<CsfValue>>
         return values.ToArray();
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Serialize(XmlWriter writer, IList<CsfValue> value)
     {
         if (value.Count is not 1)

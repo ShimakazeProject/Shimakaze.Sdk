@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 /// </summary>
 public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override CsfData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
@@ -71,6 +71,32 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
         }
     }
 
+    /// <inheritdoc />
+    public override void Write(Utf8JsonWriter writer, CsfData value, JsonSerializerOptions options)
+    {
+        if (value.Values.Length is 1)
+        {
+            writer.WriteStartObject();
+            writer.WriteString("label", value.LabelName);
+            writer.WriteProperty<CsfSimpleValueJsonConverter, string>("value", value.Values[0].Value, options);
+            if (value.Values[0].HasExtra)
+                writer.WriteString("extra", value.Values[0].ExtraValue);
+
+            writer.WriteEndObject();
+        }
+        else
+        {
+            writer.WriteStartObject();
+            writer.WriteString("label", value.LabelName);
+            writer.WriteStartArray("values");
+            foreach (var item in value.Values)
+                writer.WriteValue<CsfValueJsonConverter, CsfValue>(item, options);
+
+            writer.WriteEndArray();
+            writer.WriteEndObject();
+        }
+    }
+
     internal static CsfValue ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
         reader.Read().ThrowWhenFalse();
@@ -103,31 +129,5 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
             );
         }
         return values;
-    }
-
-    /// <inheritdoc/>
-    public override void Write(Utf8JsonWriter writer, CsfData value, JsonSerializerOptions options)
-    {
-        if (value.Values.Length is 1)
-        {
-            writer.WriteStartObject();
-            writer.WriteString("label", value.LabelName);
-            writer.WriteProperty<CsfSimpleValueJsonConverter, string>("value", value.Values[0].Value, options);
-            if (value.Values[0].HasExtra)
-                writer.WriteString("extra", value.Values[0].ExtraValue);
-
-            writer.WriteEndObject();
-        }
-        else
-        {
-            writer.WriteStartObject();
-            writer.WriteString("label", value.LabelName);
-            writer.WriteStartArray("values");
-            foreach (var item in value.Values)
-                writer.WriteValue<CsfValueJsonConverter, CsfValue>(item, options);
-
-            writer.WriteEndArray();
-            writer.WriteEndObject();
-        }
     }
 }

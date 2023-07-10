@@ -14,7 +14,7 @@ public sealed class PreprocessorCommandAttribute : Attribute
     /// <summary>
     /// PreprocessorCommand
     /// </summary>
-    /// <param name="command">Name</param>
+    /// <param name="command"> Name </param>
     public PreprocessorCommandAttribute(string command)
     {
         CommandName = command;

@@ -9,7 +9,7 @@ public class CsfDocumentXmlSerializer : IXmlSerializer<CsfDocument>
 {
     private readonly CsfDataListXmlSerializer _csfDataListXmlSerializer = new();
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public CsfDocument Deserialize(XmlReader reader)
     {
         CsfMetadata head = new(0, 0);
@@ -35,7 +35,7 @@ public class CsfDocumentXmlSerializer : IXmlSerializer<CsfDocument>
         };
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Serialize(XmlWriter writer, CsfDocument value)
     {
         writer.WriteStartDocument();

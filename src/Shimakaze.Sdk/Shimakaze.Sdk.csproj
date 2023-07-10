@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk" >
-  <PropertyGroup>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Hva\Shimakaze.Sdk.Hva.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Vxl\Shimakaze.Sdk.Vxl.csproj" />
+  </ItemGroup>
+
 </Project>

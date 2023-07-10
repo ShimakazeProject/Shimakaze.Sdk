@@ -5,41 +5,33 @@ namespace Shimakaze.Sdk.IO.Hva;
 /// <summary>
 /// HvaWriter
 /// </summary>
-public sealed class HvaWriter : IWriter<HvaFile>, IDisposable, IAsyncDisposable
+public sealed class HvaWriter : AsyncWriter<HvaFile>, IDisposable, IAsyncDisposable
 {
-    private readonly Stream _stream;
-    private readonly bool _leaveOpen;
-    private readonly byte[] _buffer = new byte[128];
-
     /// <summary>
     /// HvaWriter
     /// </summary>
-    public HvaWriter(Stream stream, bool leaveOpen = false)
+    public HvaWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
     {
-        _stream = stream;
-        _leaveOpen = leaveOpen;
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
+    /// <inheritdoc />
+    public override async Task WriteAsync(HvaFile value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
-        if (!_leaveOpen)
-            _stream.Dispose();
-    }
+        BaseStream.Write(value.Header);
+        BaseStream.Write(value.SectionNames);
 
-    /// <inheritdoc/>
-    public async ValueTask DisposeAsync()
-    {
-        if (!_leaveOpen)
-            await _stream.DisposeAsync();
-    }
+        cancellationToken.ThrowIfCancellationRequested();
+        progress?.Report(1f / 3);
 
-    /// <inheritdoc/>
-    public void Write(in HvaFile value)
-    {
-        _stream.Write(value.Header);
-        _stream.Write(value.SectionNames);
-        foreach (var item in value.Frames)
-            _stream.Write(item.Matrices);
+        await Task.Yield();
+
+        for (int i = 0; i < value.Frames.Length; i++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            progress?.Report(1f / 3 + (2f / 3) * ((float)i / value.Frames.Length));
+
+            HvaFrame item = value.Frames[i];
+            BaseStream.Write(item.Matrices);
+        }
     }
 }

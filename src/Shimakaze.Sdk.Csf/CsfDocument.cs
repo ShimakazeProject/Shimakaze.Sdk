@@ -6,26 +6,26 @@
 public record struct CsfDocument
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfDocument"/> class.
+    /// Initializes a new instance of the <see cref="CsfDocument" /> class.
     /// </summary>
     public CsfDocument()
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfDocument"/> class.
+    /// Initializes a new instance of the <see cref="CsfDocument" /> class.
     /// </summary>
-    /// <param name="metadata">metadata.</param>
+    /// <param name="metadata"> metadata. </param>
     public CsfDocument(CsfMetadata metadata)
       : this(metadata, new List<CsfData>(metadata.LabelCount))
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfDocument"/> class.
+    /// Initializes a new instance of the <see cref="CsfDocument" /> class.
     /// </summary>
-    /// <param name="metadata">metadata.</param>
-    /// <param name="data">datas.</param>
+    /// <param name="metadata"> metadata. </param>
+    /// <param name="data"> datas. </param>
     public CsfDocument(CsfMetadata metadata, IEnumerable<CsfData> data)
     {
         Metadata = metadata;
