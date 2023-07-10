@@ -95,7 +95,7 @@ public sealed class CsfBuilder : MSTask
                     Log.LogWarning(
                         "Shimakaze.Sdk.Csf",
                         "CSF0001",
-                        "No Json V1",
+                        "No CSF",
                         file.ItemSpec,
                         0,
                         0,

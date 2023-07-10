@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Shimakaze.Sdk.Ini;
 
 namespace Shimakaze.Sdk.IO.Ini;
@@ -22,42 +24,6 @@ public class IniReader : AsyncReader<IniDocument>
         BaseReader = new StreamReader(stream, leaveOpen);
     }
 
-    /// <summary>
-    /// 反序列化INI
-    /// </summary>
-    /// <returns> </returns>
-    public virtual IniDocument Read()
-    {
-        IniDocument doc = new();
-        IniSection current = doc.Default;
-        string? line;
-        while ((line = BaseReader.ReadLine()) is not null)
-        {
-            line = line.Split(';', '#').First().Trim();
-
-            if (string.IsNullOrEmpty(line))
-                continue;
-
-            if (line.StartsWith('[') && line.EndsWith(']'))
-            {
-                current = new()
-                {
-                    Name = line.Substring(1, line.Length - 2)
-                };
-                doc.Add(current);
-
-                continue;
-            }
-
-            var index = line.IndexOf('=');
-            if (index is -1)
-                current.Add(line, string.Empty);
-            else
-                current.Add(line.Substring(0, index).TrimEnd(), line.Substring(index + 1).TrimStart());
-        }
-        return doc;
-    }
-
     /// <inheritdoc />
     public override async Task<IniDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
@@ -77,7 +43,7 @@ public class IniReader : AsyncReader<IniDocument>
             {
                 current = new()
                 {
-                    Name = line.Substring(1, line.Length - 2)
+                    Name = line[1..^1]
                 };
                 doc.Add(current);
 
@@ -89,12 +55,13 @@ public class IniReader : AsyncReader<IniDocument>
             if (index is -1)
                 current.Add(line, string.Empty);
             else
-                current.Add(line.Substring(0, index).TrimEnd(), line.Substring(index + 1).TrimStart());
+                current.Add(line[..index].TrimEnd(), line[(index + 1)..].TrimStart());
         }
         return doc;
     }
 
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -107,6 +74,7 @@ public class IniReader : AsyncReader<IniDocument>
     }
 
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     protected override ValueTask DisposeAsyncCore()
     {
         if (!_leaveOpen)

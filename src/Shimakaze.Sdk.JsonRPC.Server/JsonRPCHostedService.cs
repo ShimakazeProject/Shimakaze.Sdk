@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,7 @@ internal sealed class JsonRPCHostedService : IHostedService, IDisposable
         _options = serviceProvider.GetRequiredService<JsonRPCHostedServiceOptions>();
         _jsonRpc = new(_options.JsonRpcMessageHandler);
     }
-
+    [ExcludeFromCodeCoverage]
     public void Dispose()
     {
         _jsonRpc.Dispose();
