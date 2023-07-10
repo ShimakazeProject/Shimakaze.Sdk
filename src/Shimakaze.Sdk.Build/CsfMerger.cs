@@ -43,27 +43,10 @@ public sealed class CsfMerger : MSTask
         OutputFile = new TaskItem(DestinationFile);
         foreach (var file in SourceFiles)
         {
-            try
-            {
-                using Stream stream = File.OpenRead(file.ItemSpec);
-                using CsfReader reader = new(stream);
-                merger.UnionWith(reader.ReadAsync().Result.Data);
-                file.CopyMetadataTo(OutputFile);
-            }
-            catch (Exception ex)
-            {
-                Log.LogError(
-                    "Shimakaze.Sdk.Csf",
-                    "CSF0004",
-                    "Merge Failed",
-                    file.ItemSpec,
-                    0,
-                    0,
-                    0,
-                    0,
-                    "Cannot Merge file into CSF.");
-                Log.LogErrorFromException(ex);
-            }
+            using Stream stream = File.OpenRead(file.ItemSpec);
+            using CsfReader reader = new(stream);
+            merger.UnionWith(reader.ReadAsync().Result.Data);
+            file.CopyMetadataTo(OutputFile);
         }
 
         OutputFile.SetMetadata(Metadata_Pack, true.ToString());

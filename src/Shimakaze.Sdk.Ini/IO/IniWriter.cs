@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Shimakaze.Sdk.Ini;
 
 namespace Shimakaze.Sdk.IO.Ini;
@@ -38,23 +40,10 @@ public class IniWriter : AsyncWriter<IniDocument>
     }
 
     /// <summary>
-    /// 序列化Ini文档
-    /// </summary>
-    /// <param name="value"> value </param>
-    public virtual void Writer(in IniDocument value)
-    {
-        WriteSectionBody(value.Default);
-        foreach (var item in value)
-        {
-            BaseWriter.WriteLine($"[{item.Name}]");
-            WriteSectionBody(item);
-        }
-    }
-
-    /// <summary>
     /// 释放资源
     /// </summary>
     /// <param name="disposing"> </param>
+    [ExcludeFromCodeCoverage]
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -67,6 +56,7 @@ public class IniWriter : AsyncWriter<IniDocument>
     }
 
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     protected override ValueTask DisposeAsyncCore()
     {
         if (!_leaveOpen)
