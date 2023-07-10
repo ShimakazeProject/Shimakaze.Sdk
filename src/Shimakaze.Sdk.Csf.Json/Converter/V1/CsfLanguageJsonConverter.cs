@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 /// </summary>
 public sealed class CsfLanguageJsonConverter : JsonConverter<int>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return reader.TokenType switch
@@ -32,7 +32,7 @@ public sealed class CsfLanguageJsonConverter : JsonConverter<int>
         };
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
     {
         switch (value)

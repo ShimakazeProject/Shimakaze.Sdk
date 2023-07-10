@@ -1,4 +1,6 @@
-﻿using Shimakaze.Sdk.Pal;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Vpl;
 /// <summary>
@@ -24,8 +26,9 @@ public record struct VoxelPalette
     /// <summary>
     /// 获取其中一个节
     /// </summary>
-    /// <param name="index">节索引</param>
-    /// <returns></returns>
+    /// <param name="index"> 节索引 </param>
+    /// <returns> </returns>
+    [ExcludeFromCodeCoverage]
     public readonly VoxelPaletteSection this[int index]
     {
         get => Sections[index];

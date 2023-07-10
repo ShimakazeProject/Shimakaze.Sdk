@@ -6,42 +6,6 @@ namespace Shimakaze.Sdk.Csf.Json;
 public class ThrowHelperTests
 {
     [TestMethod]
-    public void ThrowWhenNotTokenTest()
-    {
-        try
-        {
-            JsonTokenType.Null.ThrowWhenNotToken(JsonTokenType.True);
-        }
-        catch (JsonException)
-        {
-        }
-    }
-
-    [TestMethod]
-    public void ThrowWhenFalseTest()
-    {
-        try
-        {
-            false.ThrowWhenFalse();
-        }
-        catch (JsonException)
-        {
-        }
-    }
-
-    [TestMethod]
-    public void ThrowWhenNullTest()
-    {
-        try
-        {
-            ((object?)null).ThrowWhenNull();
-        }
-        catch (ArgumentNullException)
-        {
-        }
-    }
-
-    [TestMethod]
     public void ThrowNotSupportTokenTest()
     {
         try
@@ -61,6 +25,42 @@ public class ThrowHelperTests
             JsonTokenType.Null.ThrowNotSupportValue<JsonTokenType, int>();
         }
         catch (JsonException)
+        {
+        }
+    }
+
+    [TestMethod]
+    public void ThrowWhenFalseTest()
+    {
+        try
+        {
+            false.ThrowWhenFalse();
+        }
+        catch (JsonException)
+        {
+        }
+    }
+
+    [TestMethod]
+    public void ThrowWhenNotTokenTest()
+    {
+        try
+        {
+            JsonTokenType.Null.ThrowWhenNotToken(JsonTokenType.True);
+        }
+        catch (JsonException)
+        {
+        }
+    }
+
+    [TestMethod]
+    public void ThrowWhenNullTest()
+    {
+        try
+        {
+            ((object?)null).ThrowWhenNull();
+        }
+        catch (ArgumentNullException)
         {
         }
     }

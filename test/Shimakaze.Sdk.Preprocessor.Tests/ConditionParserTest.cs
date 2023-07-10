@@ -4,6 +4,7 @@ namespace Shimakaze.Sdk.Preprocessor;
 public class ConditionParserTest
 {
     private readonly IConditionParser _parser;
+
     public ConditionParserTest()
     {
         _parser = new ConditionParser(new PreprocessorVariables() { Defines = { "DEFINED" } });
@@ -48,6 +49,27 @@ public class ConditionParserTest
         Assert.AreEqual(_parser.Parse("DEFINED && UNDEFINED && DEFINED"), true && false && true, "T && F && T");
         Assert.AreEqual(_parser.Parse("UNDEFINED && DEFINED && UNDEFINED"), false && true && false, "F && T && F");
     }
+
+    [TestMethod]
+    public void BooleanTest()
+    {
+        Assert.AreEqual(_parser.Parse("TRUE"), true, "T");
+        Assert.AreEqual(_parser.Parse("FALSE"), false, "F");
+
+        Assert.AreEqual(_parser.Parse("DEFINED"), true, "T");
+        Assert.AreEqual(_parser.Parse("UNDEFINED"), false, "F");
+    }
+
+    [TestMethod]
+    public void NOTTest()
+    {
+        Assert.AreEqual(_parser.Parse("!TRUE"), !true, "!T");
+        Assert.AreEqual(_parser.Parse("!FALSE"), !false, "!F");
+
+        Assert.AreEqual(_parser.Parse("!DEFINED"), !true, "!T");
+        Assert.AreEqual(_parser.Parse("!UNDEFINED"), !false, "!F");
+    }
+
     [TestMethod]
     public void ORTest()
     {
@@ -89,29 +111,8 @@ public class ConditionParserTest
     }
 
     [TestMethod]
-    public void NOTTest()
-    {
-        Assert.AreEqual(_parser.Parse("!TRUE"), !true, "!T");
-        Assert.AreEqual(_parser.Parse("!FALSE"), !false, "!F");
-
-        Assert.AreEqual(_parser.Parse("!DEFINED"), !true, "!T");
-        Assert.AreEqual(_parser.Parse("!UNDEFINED"), !false, "!F");
-    }
-
-    [TestMethod]
-    public void BooleanTest()
-    {
-        Assert.AreEqual(_parser.Parse("TRUE"), true, "T");
-        Assert.AreEqual(_parser.Parse("FALSE"), false, "F");
-
-        Assert.AreEqual(_parser.Parse("DEFINED"), true, "T");
-        Assert.AreEqual(_parser.Parse("UNDEFINED"), false, "F");
-    }
-
-    [TestMethod]
     public void ParseTest()
     {
         Assert.AreEqual(_parser.Parse("!TRUE && FALSE || DEFINED || TRUE && TRUE"), !true && false || true || true && true);
     }
-
 }

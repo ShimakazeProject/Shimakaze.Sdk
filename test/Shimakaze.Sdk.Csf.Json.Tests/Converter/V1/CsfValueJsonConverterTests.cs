@@ -8,14 +8,6 @@ public class CsfValueJsonConverterTests
     private readonly CsfValueJsonConverter _converter = new();
     private JsonSerializerOptions? _options;
 
-    [TestInitialize]
-    public void Startup()
-    {
-        _options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
-            _options.Converters.Add(item);
-    }
-
     [TestMethod]
     public void ReadTest()
     {
@@ -34,6 +26,14 @@ public class CsfValueJsonConverterTests
         reader.Read();
         var value = _converter.Read(ref reader, typeof(CsfValue), _options!);
         Assert.AreEqual("Value", value.Value);
+    }
+
+    [TestInitialize]
+    public void Startup()
+    {
+        _options ??= new();
+        foreach (var item in CsfJsonSerializerOptions.Converters)
+            _options.Converters.Add(item);
     }
 
     [TestMethod]

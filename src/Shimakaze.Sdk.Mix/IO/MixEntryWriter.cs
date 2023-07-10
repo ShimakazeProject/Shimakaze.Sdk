@@ -3,44 +3,38 @@ using System.Runtime.InteropServices;
 using Shimakaze.Sdk.Mix;
 
 namespace Shimakaze.Sdk.IO.Mix;
+
 /// <summary>
 /// Mix Entry 读取器
 /// </summary>
-public sealed class MixEntryWriter : IWriter<MixEntry>, IDisposable, IAsyncDisposable
+public sealed class MixEntryWriter : AsyncWriter<MixEntry>, IDisposable, IAsyncDisposable
 {
-    private bool _inited;
-    private readonly bool _leaveOpen;
-
     /// <summary>
     /// 当前文件个数
     /// </summary>
     private short _count;
+
+    private bool _inited;
+
     /// <summary>
     /// 当前文件大小
     /// </summary>
     private int _size;
+
     /// <summary>
     /// 流开始的位置
     /// </summary>
     private long _start;
 
     /// <summary>
-    /// 基础流
-    /// </summary>
-    public Stream BaseStream { get; }
-
-    /// <summary>
     /// 构造 Mix Entry 读取器
     /// </summary>
-    /// <param name="baseStream">基础流</param>
-    /// <param name="leaveOpen">退出时是否保持流打开</param>
-    public MixEntryWriter(Stream baseStream, bool leaveOpen = false)
+    /// <param name="stream"> 基础流 </param>
+    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
+    public MixEntryWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
     {
-        if (!baseStream.CanSeek)
+        if (!stream.CanSeek)
             throw new NotSupportedException("The Stream cannot support Seek.");
-
-        BaseStream = baseStream;
-        _leaveOpen = leaveOpen;
     }
 
     /// <summary>
@@ -54,7 +48,7 @@ public sealed class MixEntryWriter : IWriter<MixEntry>, IDisposable, IAsyncDispo
         _inited = true;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Write(in MixEntry value)
     {
         if (!_inited)
@@ -64,6 +58,13 @@ public sealed class MixEntryWriter : IWriter<MixEntry>, IDisposable, IAsyncDispo
 
         _size = Math.Max(_size, value.Offset + value.Size);
         _count++;
+    }
+
+    /// <inheritdoc />
+    public override async Task WriteAsync(MixEntry value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        Write(value);
     }
 
     /// <summary>
@@ -80,8 +81,8 @@ public sealed class MixEntryWriter : IWriter<MixEntry>, IDisposable, IAsyncDispo
     /// <summary>
     /// 直接写入元数据
     /// </summary>
-    /// <param name="flag">标记</param>
-    /// <param name="metadata">元数据</param>
+    /// <param name="flag"> 标记 </param>
+    /// <param name="metadata"> 元数据 </param>
     internal void WriteMetadataDirect(int flag, MixMetadata metadata)
     {
         BaseStream.Write(BitConverter.GetBytes(flag));
@@ -98,20 +99,5 @@ public sealed class MixEntryWriter : IWriter<MixEntry>, IDisposable, IAsyncDispo
                 Marshal.FreeHGlobal(ptr);
             }
         }
-    }
-
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        if (!_leaveOpen)
-            BaseStream.Dispose();
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask DisposeAsync()
-    {
-        if (!_leaveOpen)
-            await BaseStream.DisposeAsync();
     }
 }

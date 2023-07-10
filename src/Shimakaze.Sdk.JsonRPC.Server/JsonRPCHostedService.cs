@@ -10,11 +10,11 @@ namespace Shimakaze.Sdk.JsonRPC.Server;
 
 internal sealed class JsonRPCHostedService : IHostedService, IDisposable
 {
-    private readonly IServiceCollection _services;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly JsonRpc _jsonRpc;
     private readonly ILogger<JsonRPCHostedService> _logger;
     private readonly JsonRPCHostedServiceOptions _options;
-    private readonly JsonRpc _jsonRpc;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceCollection _services;
 
     public JsonRPCHostedService(
         IServiceCollection services,
@@ -24,7 +24,12 @@ internal sealed class JsonRPCHostedService : IHostedService, IDisposable
         _serviceProvider = serviceProvider;
         _logger = serviceProvider.GetRequiredService<ILogger<JsonRPCHostedService>>();
         _options = serviceProvider.GetRequiredService<JsonRPCHostedServiceOptions>();
-        _jsonRpc = new(_options.JsonRpcMessageHandler ?? throw new ArgumentNullException(nameof(_options.JsonRpcMessageHandler)));
+        _jsonRpc = new(_options.JsonRpcMessageHandler);
+    }
+
+    public void Dispose()
+    {
+        _jsonRpc.Dispose();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -59,10 +64,5 @@ internal sealed class JsonRPCHostedService : IHostedService, IDisposable
     {
         _logger.LogInformation("See you next time!");
         return Task.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        _jsonRpc.Dispose();
     }
 }

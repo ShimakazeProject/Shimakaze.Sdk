@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
@@ -10,15 +8,12 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 [PreprocessorCommand("define")]
 public sealed class DefineCommand : PreprocessorCommand
 {
-    private readonly ILogger<DefineCommand>? _logger;
-
-    /// <inheritdoc/>
-    public DefineCommand(IPreprocessorVariables variable, ILogger<DefineCommand>? logger = null) : base(variable)
+    /// <inheritdoc />
+    public DefineCommand(IPreprocessorVariables variable) : base(variable)
     {
-        _logger = logger;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
 
     public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
     {
@@ -27,7 +22,7 @@ public sealed class DefineCommand : PreprocessorCommand
 
         string identifier = args[0];
 
-        variable.Defines.Add(identifier);
+        _variable.Defines.Add(identifier);
 
         return Task.CompletedTask;
     }

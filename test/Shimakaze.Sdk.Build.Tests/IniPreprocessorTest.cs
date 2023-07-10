@@ -1,4 +1,3 @@
-
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -10,9 +9,9 @@ namespace Shimakaze.Sdk.Build.Tests;
 public class IniPreprocessorTest
 {
     private const string Assets = "Assets";
+    private const string Defines = "DEFINED;TEST";
     private const string InputFile = "conditionTest.ini;defineTest.ini";
     private const string OutputPath = "Out";
-    private const string Defines = "DEFINED;TEST";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;
 

@@ -1,7 +1,4 @@
-
-
 namespace Shimakaze.Sdk.IO.Hva.Tests;
-
 
 [TestClass]
 public sealed class HvaReaderTest
@@ -9,15 +6,14 @@ public sealed class HvaReaderTest
     private const string Assets = "Assets";
     private const string InputFile = "jeep.hva";
 
-
     [TestMethod]
-    public void ReadTest()
+    public async Task ReadTestAsync()
     {
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         using HvaReader reader = new(stream);
 
-        var res = reader.Read();
+        var res = await reader.ReadAsync();
 
         Console.WriteLine(res);
         foreach (var a in res.Frames)

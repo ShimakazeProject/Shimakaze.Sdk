@@ -5,10 +5,57 @@ namespace Shimakaze.Sdk.Mix;
 [TestClass]
 public class MixEntryReaderTest
 {
-    private const uint Ra2mdCsf = 3179499641;
     private const string Assets = "Assets";
-    private const string InputFile = "test.mix";
     private const string CsfFile = "ra2md.csf";
+    private const string InputFile = "test.mix";
+    private const uint Ra2mdCsf = 3179499641;
+
+    [TestMethod]
+    public async Task InitTestAsync()
+    {
+        using MemoryStream ms = new(new byte[]{
+            0, 0, 0, 0,
+            1, 0,
+            0, 0, 0, 0,
+
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+        });
+        ms.Seek(0, SeekOrigin.Begin);
+        using MixEntryReader reader = new(ms);
+        await reader.ReadAsync();
+    }
+
+    [TestMethod]
+    public async Task NotSupportAsyncTest()
+    {
+        await Assert.ThrowsExceptionAsync<NotImplementedException>(async () =>
+        {
+            await using MemoryStream ms = new(new byte[]{
+                255, 255, 255, 255,
+                0, 0,
+                0, 0, 0, 0,
+            });
+            await using MixEntryReader reader = new(ms);
+            reader.Init();
+        });
+    }
+
+    [TestMethod]
+    public void NotSupportTest()
+    {
+        Assert.ThrowsException<NotImplementedException>(() =>
+        {
+            using MemoryStream ms = new(new byte[]{
+                255, 255, 255, 255,
+                0, 0,
+                0, 0, 0, 0,
+            });
+            using MixEntryReader reader = new(ms);
+            reader.Init();
+        });
+    }
 
     [TestMethod]
     public async Task Test()
@@ -23,7 +70,7 @@ public class MixEntryReaderTest
         MixEntry csf = default;
         for (int i = 0; i < reader.Count; i++)
         {
-            var entry = reader.Read();
+            var entry = await reader.ReadAsync();
             Console.WriteLine(entry);
             Assert.AreEqual(4 + 2 + 4 + (i + 1) * 12, fs.Position);
 
@@ -45,51 +92,5 @@ public class MixEntryReaderTest
             var _2 = ra2mdfs.ReadByte();
             Assert.AreEqual(_2, _1, $"At Position {fs.Position}");
         }
-    }
-
-    [TestMethod]
-    public void InitTest()
-    {
-        using MemoryStream ms = new(new byte[]{
-            0, 0, 0, 0,
-            1, 0,
-            0, 0, 0, 0,
-
-            0, 0, 0, 0,
-            0, 0, 0, 0,
-            0, 0, 0, 0,
-        });
-        ms.Seek(0, SeekOrigin.Begin);
-        using MixEntryReader reader = new(ms);
-        reader.Read();
-    }
-
-    [TestMethod]
-    public void NotSupportTest()
-    {
-        Assert.ThrowsException<NotImplementedException>(() =>
-        {
-            using MemoryStream ms = new(new byte[]{
-                255, 255, 255, 255,
-                0, 0,
-                0, 0, 0, 0,
-            });
-            using MixEntryReader reader = new(ms);
-            reader.Init();
-        });
-    }
-    [TestMethod]
-    public async Task NotSupportAsyncTest()
-    {
-        await Assert.ThrowsExceptionAsync<NotImplementedException>(async () =>
-        {
-            await using MemoryStream ms = new(new byte[]{
-                255, 255, 255, 255,
-                0, 0,
-                0, 0, 0, 0,
-            });
-            await using MixEntryReader reader = new(ms);
-            reader.Init();
-        });
     }
 }

@@ -1,7 +1,4 @@
-
-
 namespace Shimakaze.Sdk.IO.Vpl.Tests;
-
 
 [TestClass]
 public sealed class VoxelPaletteReaderTest
@@ -9,15 +6,14 @@ public sealed class VoxelPaletteReaderTest
     private const string Assets = "Assets";
     private const string InputFile = "voxels.vpl";
 
-
     [TestMethod]
-    public void ReadTest()
+    public async Task ReadTestAsync()
     {
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         using VoxelPaletteReader reader = new(stream);
 
-        var res = reader.Read();
+        var res = await reader.ReadAsync();
 
         Assert.AreEqual(16u, res.Header.RemapPlayerColorStart);
         Assert.AreEqual(31u, res.Header.RemapPlayerColorEnd);

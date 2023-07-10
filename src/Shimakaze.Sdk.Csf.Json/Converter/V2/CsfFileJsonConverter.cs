@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V2;
 /// </summary>
 public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override CsfDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
@@ -48,6 +48,22 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
         return new(metadata, data);
     }
 
+    /// <inheritdoc />
+    public override void Write(Utf8JsonWriter writer, CsfDocument value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("$schema", JsonConstants.SchemaUrls.V2);
+        writer.WriteNumber("version", value.Metadata.Version);
+        writer.WriteProperty<V1.CsfLanguageJsonConverter, int>("language", value.Metadata.Language, options);
+
+        writer.WriteStartObject("data");
+        foreach (var item in value.Data)
+            writer.WriteProperty<CsfDataValueJsonConverter, IList<CsfValue>>(item.LabelName, item.Values, options);
+
+        writer.WriteEndObject();
+        writer.WriteEndObject();
+    }
+
     private static List<CsfData> ReadDataList(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
         reader.Read().ThrowWhenNull();
@@ -65,21 +81,5 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
         }
 
         return list;
-    }
-
-    /// <inheritdoc/>
-    public override void Write(Utf8JsonWriter writer, CsfDocument value, JsonSerializerOptions options)
-    {
-        writer.WriteStartObject();
-        writer.WriteString("$schema", JsonConstants.SchemaUrls.V2);
-        writer.WriteNumber("version", value.Metadata.Version);
-        writer.WriteProperty<V1.CsfLanguageJsonConverter, int>("language", value.Metadata.Language, options);
-
-        writer.WriteStartObject("data");
-        foreach (var item in value.Data)
-            writer.WriteProperty<CsfDataValueJsonConverter, IList<CsfValue>>(item.LabelName, item.Values, options);
-
-        writer.WriteEndObject();
-        writer.WriteEndObject();
     }
 }

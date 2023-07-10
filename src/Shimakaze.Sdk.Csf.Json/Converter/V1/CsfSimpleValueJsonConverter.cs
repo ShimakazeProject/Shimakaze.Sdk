@@ -9,7 +9,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 /// </summary>
 public sealed class CsfSimpleValueJsonConverter : JsonConverter<string>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return reader.TokenType switch
@@ -20,22 +20,7 @@ public sealed class CsfSimpleValueJsonConverter : JsonConverter<string>
         };
     }
 
-    private static string ReadStringArray(ref Utf8JsonReader reader)
-    {
-        StringBuilder sb = new();
-        while (reader.Read().ThrowWhenNull())
-        {
-            if (reader.TokenType is JsonTokenType.EndArray)
-                break;
-            sb.AppendLine(reader.GetString());
-        }
-
-        // 去掉最后一个换行符的魔法
-        sb.Length -= Environment.NewLine.Length;
-        return sb.ToString();
-    }
-
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
     {
         // CR / LF / CRLF
@@ -53,5 +38,20 @@ public sealed class CsfSimpleValueJsonConverter : JsonConverter<string>
         {
             writer.WriteStringValue(value);
         }
+    }
+
+    private static string ReadStringArray(ref Utf8JsonReader reader)
+    {
+        StringBuilder sb = new();
+        while (reader.Read().ThrowWhenNull())
+        {
+            if (reader.TokenType is JsonTokenType.EndArray)
+                break;
+            sb.AppendLine(reader.GetString());
+        }
+
+        // 去掉最后一个换行符的魔法
+        sb.Length -= Environment.NewLine.Length;
+        return sb.ToString();
     }
 }

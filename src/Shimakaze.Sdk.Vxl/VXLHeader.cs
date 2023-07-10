@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Shimakaze.Sdk.Vxl;
 /// <summary>
@@ -14,7 +13,6 @@ public record struct VXLHeader
     [FieldOffset(0)]
     public Int128 FileType;
     /// <summary>
-    /// 
     /// </summary>
     [FieldOffset(16)]
     public uint Unknown;
@@ -36,12 +34,10 @@ public record struct VXLHeader
     [FieldOffset(16 + sizeof(int) * 3)]
     public uint BodySize;
     /// <summary>
-    /// 
     /// </summary>
     [FieldOffset(16 + sizeof(int) * 4)]
     public byte StartPaletteRemap;
     /// <summary>
-    /// 
     /// </summary>
     [FieldOffset(16 + sizeof(int) * 4 + 1)]
     public byte EndPaletteRemap;

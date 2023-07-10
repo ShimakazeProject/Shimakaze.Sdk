@@ -4,14 +4,15 @@ using Microsoft.Build.Utilities;
 
 namespace Shimakaze.Sdk.Build;
 
+[ExcludeFromCodeCoverage]
 internal static class CommonUtil
 {
     /// <summary>
     /// 根据文件路径创建上级目录
     /// </summary>
-    /// <param name="file">文件</param>
-    /// <param name="log">日志帮助程序</param>
-    /// <returns></returns>
+    /// <param name="file"> 文件 </param>
+    /// <param name="log"> 日志帮助程序 </param>
+    /// <returns> </returns>
     public static bool CreateParentDirectory([NotNullWhen(true)] this string? file, TaskLoggingHelper? log = null)
     {
         if (string.IsNullOrEmpty(file))

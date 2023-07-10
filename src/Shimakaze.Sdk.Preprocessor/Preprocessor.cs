@@ -3,15 +3,13 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor;
 
 internal sealed class Preprocessor : IPreprocessor
 {
     private readonly ILogger<Preprocessor>? _logger;
-    private readonly IPreprocessorVariables _variables;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IPreprocessorVariables _variables;
 
     public Preprocessor(
         IPreprocessorVariables variables,
@@ -23,36 +21,7 @@ internal sealed class Preprocessor : IPreprocessor
         _logger = logger;
     }
 
-    private async Task ParseLineAsync(string line, long lineNumber, string filePath, Dictionary<string, IPreprocessorCommand> commands, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        int index = line.IndexOf('#');
-        string[] arr = line[line.IndexOf('#')..].TrimEnd().Split(' ');
-        string command = arr[0][1..];
-        string[] args = arr[1..];
-
-        if (!commands.TryGetValue(command, out IPreprocessorCommand? preprocessorCommand))
-            throw new NotSupportedException($"""
-                The preprocessor cannot resolve {command} preprocessor instructions.
-                    at {filePath}:{line},{index}.
-                """);
-
-        try
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            await preprocessorCommand.ExecuteAsync(args, cancellationToken);
-        }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            throw new InvalidOperationException($"""
-                {ex.Message}
-                    at {filePath}:{line},{index}.
-                """, ex);
-        }
-    }
-
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async Task ExecuteAsync(
         TextReader input,
         TextWriter output,
@@ -70,17 +39,13 @@ internal sealed class Preprocessor : IPreprocessor
                 ));
 
         cancellationToken.ThrowIfCancellationRequested();
-        if (_logger is not null)
-        {
-            foreach (var define in _variables.Defines)
-                _logger.LogTrace("Define: " + define);
-        }
+        _logger?.LogTrace("Define: {define}", string.Join(';', _variables.Defines));
 
         long lineNumber = 0;
         while (input.Peek() is not -1)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var line = await input.ReadLineAsync();
+            var line = await input.ReadLineAsync(cancellationToken);
             lineNumber++;
 
             if (!string.IsNullOrWhiteSpace(line) && line.TrimStart().StartsWith('#'))
@@ -93,5 +58,34 @@ internal sealed class Preprocessor : IPreprocessor
                 await output.WriteLineAsync(line);
         }
         await output.FlushAsync();
+    }
+
+    private static async Task ParseLineAsync(string line, long lineNumber, string filePath, Dictionary<string, IPreprocessorCommand> commands, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        int index = line.IndexOf('#');
+        string[] arr = line[line.IndexOf('#')..].TrimEnd().Split(' ');
+        string command = arr[0][1..];
+        string[] args = arr[1..];
+
+        if (!commands.TryGetValue(command, out IPreprocessorCommand? preprocessorCommand))
+            throw new NotSupportedException($"""
+                The preprocessor cannot resolve {command} preprocessor instructions.
+                    at {filePath}:{lineNumber},{index}.
+                """);
+
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await preprocessorCommand.ExecuteAsync(args, cancellationToken);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            throw new InvalidOperationException($"""
+                {ex.Message}
+                    at {filePath}:{lineNumber},{index}.
+                """, ex);
+        }
     }
 }

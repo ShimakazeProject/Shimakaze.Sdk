@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Shimakaze.Sdk.Csf.Xml;
 
+[ExcludeFromCodeCoverage]
 internal class XmlConstants
 {
     public static class SchemaUrls

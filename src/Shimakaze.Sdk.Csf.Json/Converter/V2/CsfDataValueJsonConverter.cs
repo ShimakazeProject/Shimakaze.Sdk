@@ -10,7 +10,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V2;
 /// </summary>
 public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override IList<CsfValue>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return reader.TokenType switch
@@ -26,6 +26,36 @@ public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
             JsonTokenType.Null => new(),
             _ => reader.TokenType.ThrowNotSupportToken<List<CsfValue>>(),
         };
+    }
+
+    /// <inheritdoc />
+    public override void Write(Utf8JsonWriter writer, IList<CsfValue> value, JsonSerializerOptions options)
+    {
+        if (value.Count is 0)
+        {
+            writer.WriteNullValue();
+        }
+        else if (value.Count is not 1)
+        {
+            writer.WriteStartObject();
+            writer.WriteStartArray("values");
+            foreach (var item in value)
+                writer.WriteValue<CsfValueJsonConverter, CsfValue>(item, options);
+
+            writer.WriteEndArray();
+            writer.WriteEndObject();
+        }
+        else if (value[0].HasExtra)
+        {
+            writer.WriteValue<CsfSimpleValueJsonConverter, string>(value[0].Value, options);
+        }
+        else
+        {
+            writer.WriteStartObject();
+            writer.WriteProperty<CsfSimpleValueJsonConverter, string>("value", value[0].Value, options);
+            writer.WriteString("extra", value[0].ExtraValue);
+            writer.WriteEndObject();
+        }
     }
 
     private static List<CsfValue> ReadAdvancedValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
@@ -75,35 +105,5 @@ public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
                 false => new CsfValue(value.Value.Value, extra)
             }
         };
-    }
-
-    /// <inheritdoc/>
-    public override void Write(Utf8JsonWriter writer, IList<CsfValue> value, JsonSerializerOptions options)
-    {
-        if (value.Count is 0)
-        {
-            writer.WriteNullValue();
-        }
-        else if (value.Count is not 1)
-        {
-            writer.WriteStartObject();
-            writer.WriteStartArray("values");
-            foreach (var item in value)
-                writer.WriteValue<CsfValueJsonConverter, CsfValue>(item, options);
-
-            writer.WriteEndArray();
-            writer.WriteEndObject();
-        }
-        else if (value[0].HasExtra)
-        {
-            writer.WriteValue<CsfSimpleValueJsonConverter, string>(value[0].Value, options);
-        }
-        else
-        {
-            writer.WriteStartObject();
-            writer.WriteProperty<CsfSimpleValueJsonConverter, string>("value", value[0].Value, options);
-            writer.WriteString("extra", value[0].ExtraValue);
-            writer.WriteEndObject();
-        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Shimakaze.Sdk.Vpl;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Shimakaze.Sdk.Vpl;
 
 /// <summary>
 /// VPL节
@@ -20,8 +22,9 @@ public readonly record struct VoxelPaletteSection
     /// <summary>
     /// 获取 VPL 节数据（颜色索引）
     /// </summary>
-    /// <param name="index">位置</param>
-    /// <returns>颜色索引</returns>
+    /// <param name="index"> 位置 </param>
+    /// <returns> 颜色索引 </returns>
+    [ExcludeFromCodeCoverage]
     public readonly byte this[int index]
     {
         get => Data[index];

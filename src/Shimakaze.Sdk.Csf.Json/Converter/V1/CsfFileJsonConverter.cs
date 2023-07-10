@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 /// </summary>
 public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override CsfDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
@@ -44,21 +44,7 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
         return new(metadata.Value, data);
     }
 
-    private static List<CsfData> ReadDataList(ref Utf8JsonReader reader, JsonSerializerOptions options)
-    {
-        reader.Read().ThrowWhenNull();
-        reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartArray);
-        List<CsfData> data = new();
-        while (reader.Read().ThrowWhenNull())
-        {
-            if (reader.TokenType is JsonTokenType.EndArray)
-                break;
-            data.Add(reader.Get<CsfDataJsonConverter, CsfData>(options).ThrowWhenNull());
-        }
-        return data;
-    }
-
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, CsfDocument value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
@@ -72,5 +58,19 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
         writer.WriteEndArray();
 
         writer.WriteEndObject();
+    }
+
+    private static List<CsfData> ReadDataList(ref Utf8JsonReader reader, JsonSerializerOptions options)
+    {
+        reader.Read().ThrowWhenNull();
+        reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartArray);
+        List<CsfData> data = new();
+        while (reader.Read().ThrowWhenNull())
+        {
+            if (reader.TokenType is JsonTokenType.EndArray)
+                break;
+            data.Add(reader.Get<CsfDataJsonConverter, CsfData>(options).ThrowWhenNull());
+        }
+        return data;
     }
 }

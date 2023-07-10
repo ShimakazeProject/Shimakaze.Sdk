@@ -14,6 +14,8 @@ namespace Shimakaze.Sdk.Build;
 /// </summary>
 public sealed class IniPreprocessor : MSTask
 {
+    private const string Metadata_Destination = "Destination";
+
     /// <summary>
     /// 符号
     /// </summary>
@@ -21,20 +23,18 @@ public sealed class IniPreprocessor : MSTask
     public required string Defines { get; set; }
 
     /// <summary>
-    /// 将要被预处理的文件列表
-    /// </summary>
-    [Required]
-    public required ITaskItem[] SourceFiles { get; set; }
-
-    /// <summary>
     /// 输出的文件
     /// </summary>
     [Output]
     public ITaskItem[] OutputFiles { get; set; } = Array.Empty<ITaskItem>();
 
-    const string Metadata_Destination = "Destination";
+    /// <summary>
+    /// 将要被预处理的文件列表
+    /// </summary>
+    [Required]
+    public required ITaskItem[] SourceFiles { get; set; }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override bool Execute()
     {
         var services = new ServiceCollection()

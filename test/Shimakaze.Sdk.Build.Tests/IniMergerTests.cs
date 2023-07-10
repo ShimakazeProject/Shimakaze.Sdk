@@ -14,16 +14,6 @@ public class IniMergerTests
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;
 
-    [TestInitialize]
-    public void Startup()
-    {
-        _buildEngine = new Mock<IBuildEngine>();
-        _errors = new List<BuildErrorEventArgs>();
-        _buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => _errors.Add(e));
-
-        Directory.CreateDirectory(OutputPath);
-    }
-
     [TestMethod]
     public void MergeTest()
     {
@@ -38,5 +28,15 @@ public class IniMergerTests
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
+    }
+
+    [TestInitialize]
+    public void Startup()
+    {
+        _buildEngine = new Mock<IBuildEngine>();
+        _errors = new List<BuildErrorEventArgs>();
+        _buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => _errors.Add(e));
+
+        Directory.CreateDirectory(OutputPath);
     }
 }

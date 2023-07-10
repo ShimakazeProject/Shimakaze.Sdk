@@ -16,15 +16,12 @@ public record struct VXLFile
     /// </summary>
     public Palette Palette;
     /// <summary>
-    /// 
     /// </summary>
     public SectionHeader[] SectionHeaders;
     /// <summary>
-    /// 
     /// </summary>
     public SectionData[] SectionData;
     /// <summary>
-    /// 
     /// </summary>
     public SectionTailer[] SectionTailers;
 }

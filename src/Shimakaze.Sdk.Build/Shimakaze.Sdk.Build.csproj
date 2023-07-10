@@ -4,7 +4,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
     <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
     <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
     <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />

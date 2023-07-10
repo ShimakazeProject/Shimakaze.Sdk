@@ -5,14 +5,21 @@ namespace Shimakaze.Sdk.Mix;
 [TestClass]
 public class MixEntryWriterTest
 {
-    private readonly MixEntry _csf = new(3179499641, 0, 573269);
-    private readonly MixEntry _lxd = new(913179935, 573280, 85);
     private const string Assets = "Assets";
-    private const string MixFile = "test.mix";
     private const string CsfFile = "ra2md.csf";
     private const string LxdFile = "local mix database.dat";
-
+    private const string MixFile = "test.mix";
     private const string OutputPath = "Out";
+    private readonly MixEntry _csf = new(3179499641, 0, 573269);
+    private readonly MixEntry _lxd = new(913179935, 573280, 85);
+
+    [TestMethod]
+    public async Task InitTestAsync()
+    {
+        using MemoryStream ms = new();
+        using MixEntryWriter writer = new(ms);
+        await writer.WriteAsync(_csf);
+    }
 
     [TestInitialize]
     public void Startup()
@@ -33,9 +40,9 @@ public class MixEntryWriterTest
         using MixEntryWriter writer = new(fs);
         writer.Init();
         Assert.AreEqual(4 + 2 + 4, fs.Position);
-        writer.Write(_csf);
+        await writer.WriteAsync(_csf);
         Assert.AreEqual(4 + 2 + 4 + 12, fs.Position);
-        writer.Write(_lxd);
+        await writer.WriteAsync(_lxd);
         Assert.AreEqual(4 + 2 + 4 + 12 + 12, fs.Position);
         var bodyOffset = fs.Position;
 
@@ -64,16 +71,9 @@ public class MixEntryWriterTest
             Assert.AreEqual(_2, _1, $"At Position {fs.Position}");
         }
     }
-    [TestMethod]
-    public void InitTest()
-    {
-        using MemoryStream ms = new();
-        using MixEntryWriter writer = new(ms);
-        writer.Write(_csf);
-    }
 }
 
-file sealed class NonSeekableStream : Stream
+internal sealed class NonSeekableStream : Stream
 {
     public override bool CanRead => throw new NotImplementedException();
 
