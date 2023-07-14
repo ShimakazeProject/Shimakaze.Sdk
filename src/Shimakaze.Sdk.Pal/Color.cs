@@ -18,9 +18,9 @@ public readonly record struct Color
     /// <summary>
     /// 创建颜色
     /// </summary>
-    /// <param name="red">红</param>
-    /// <param name="green">绿</param>
-    /// <param name="blue">蓝</param>
+    /// <param name="red"> 红 </param>
+    /// <param name="green"> 绿 </param>
+    /// <param name="blue"> 蓝 </param>
     public Color(byte red, byte green, byte blue) : this()
     {
         Red = red;
@@ -47,32 +47,29 @@ public readonly record struct Color
     public readonly byte Blue;
 
     /// <summary>
-    /// R8 => R5
+    /// R8 =&gt; R5
     /// </summary>
-    /// <returns>R5</returns>
+    /// <returns> R5 </returns>
     public readonly byte GetR5() => unchecked((byte)((Red & 0b00111110) << 2));
     /// <summary>
-    /// G8 => G6
+    /// G8 =&gt; G6
     /// </summary>
-    /// <returns>G6</returns>
+    /// <returns> G6 </returns>
     public readonly byte GetG6() => unchecked((byte)(Green << 2));
     /// <summary>
-    /// B8 => B5
+    /// B8 =&gt; B5
     /// </summary>
-    /// <returns>B5</returns>
+    /// <returns> B5 </returns>
     public readonly byte GetB5() => unchecked((byte)((Blue & 0b00111110) << 2));
 
     /// <summary>
-    /// RGB888 => RGB565
+    /// RGB888 =&gt; RGB565
     /// </summary>
-    /// <returns>RGB565</returns>
+    /// <returns> RGB565 </returns>
     public readonly ushort GetRGB565()
     {
-        // RRRRRRRR | GGGGGGGG | BBBBBBBB
-        //   >>= 1  |          |   >>= 1
-        // #RRRRRRR |   <<= 2  | #BBBBBBB
-        //   <<= 3  |          |   <<= 3
-        // RRRRR### | GGGGGG## | BBBBB###
+        // RRRRRRRR | GGGGGGGG | BBBBBBBB >>= 1 | | >>= 1 #RRRRRRR | <<= 2 | #BBBBBBB <<= 3 | | <<=
+        // 3 RRRRR### | GGGGGG## | BBBBB###
         int value = 0;
         // ######## ######## ######## ########
         value |= GetR5();
@@ -90,6 +87,6 @@ public readonly record struct Color
         return unchecked((ushort)value);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override readonly string ToString() => $"#{Red:X2}{Green:X2}{Blue:X2}";
 }

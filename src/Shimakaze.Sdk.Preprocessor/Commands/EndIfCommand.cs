@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
@@ -10,24 +8,18 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 [PreprocessorCommand("endif")]
 public sealed class EndIfCommand : PreprocessorCommand
 {
-    private readonly ILogger<EndIfCommand>? _logger;
-    private readonly IConditionParser _conditionParser;
-
-    /// <inheritdoc/>
-    public EndIfCommand(IPreprocessorVariables preprocessor, IConditionParser conditionParser, ILogger<EndIfCommand>? logger = null) : base(preprocessor)
+    /// <inheritdoc />
+    public EndIfCommand(IPreprocessorVariables preprocessor) : base(preprocessor)
     {
-        _conditionParser = conditionParser;
-        _logger = logger;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
     {
-        var conditionStack = variable.ConditionStack;
+        var conditionStack = _variable.ConditionStack;
+        _ = conditionStack.Pop();
 
-        var lastStatus = conditionStack.Pop();
-
-        variable.WriteOutput = true;
+        _variable.WriteOutput = true;
 
         return Task.CompletedTask;
     }

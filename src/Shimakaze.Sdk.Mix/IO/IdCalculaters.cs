@@ -16,8 +16,8 @@ public static class IdCalculaters
     /// <summary>
     /// Tiberian Sun Id Calc
     /// </summary>
-    /// <param name="name">File Name</param>
-    /// <returns>Id</returns>
+    /// <param name="name"> File Name </param>
+    /// <returns> Id </returns>
     public static uint TSIdCalculater(string name)
     {
         name = name.ToUpper();
@@ -33,34 +33,10 @@ public static class IdCalculaters
         return BitConverter.ToUInt32(Crc32.Hash(Encoding.ASCII.GetBytes(name)), 0);
     }
 
-    // /// <summary>
-    // /// Id Calc for RA/TD
-    // /// </summary>
-    // /// <markup>
-    // /// This method are used by RedAlert and Tiberian Down.
-    // /// </markup>
-    // /// <param name="name">File Name</param>
-    // /// <returns>Id</returns>
-    // [Obsolete("It's NOT pass the test!")]
-    // public static uint OldIdCalculater(string name)
-    // {
-    //     name = name.ToUpper();
-    //     int i = 0;
-    //     uint id = 0;
-    //     int l = name.Length;
-    //     while (i < l)
-    //     {
-    //         uint a = 0;
-    //         for (int j = 0; j < 4; j++)
-    //         {
-    //             a >>= 8;
-    //             if (i < l)
-    //                 a += ((uint)name[i]) << 24;
-    //             i++;
-    //         }
-    //         id = (id << 1 | id >> 31) + a;
-    //     }
-    //     return id;
-    // }
-
+    // /// <summary> /// Id Calc for RA/TD /// </summary> /// <markup> /// This method are used by
+    // RedAlert and Tiberian Down. /// </markup> /// <param name="name">File Name</param> ///
+    // <returns>Id</returns> [Obsolete("It's NOT pass the test!")] public static uint
+    // OldIdCalculater(string name) { name = name.ToUpper(); int i = 0; uint id = 0; int l =
+    // name.Length; while (i < l) { uint a = 0; for (int j = 0; j < 4; j++) { a >>= 8; if (i < l) a
+    // += ((uint)name[i]) << 24; i++; } id = (id << 1 | id >> 31) + a; } return id; }
 }

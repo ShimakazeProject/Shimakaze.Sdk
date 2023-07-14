@@ -10,7 +10,7 @@ public class CsfDataXmlSerializer : IXmlSerializer<CsfData>
     private readonly CsfValueListXmlSerializer _csfValueListXmlSerializer = new();
     private readonly CsfValueXmlSerializer _csfValueXmlSerializer = new();
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public CsfData Deserialize(XmlReader reader)
     {
         CsfData label = new();
@@ -29,7 +29,7 @@ public class CsfDataXmlSerializer : IXmlSerializer<CsfData>
         return label;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Serialize(XmlWriter writer, CsfData value)
     {
         // <Label name="label_name">

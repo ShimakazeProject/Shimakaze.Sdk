@@ -9,7 +9,7 @@ public class CsfDataListXmlSerializer : IXmlSerializer<IList<CsfData>>
 {
     private readonly CsfDataXmlSerializer _csfDataXmlSerializer = new();
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public IList<CsfData> Deserialize(XmlReader reader)
     {
         List<CsfData> data = new();
@@ -21,15 +21,14 @@ public class CsfDataListXmlSerializer : IXmlSerializer<IList<CsfData>>
                     data.Add(_csfDataXmlSerializer.Deserialize(reader));
                     break;
 
-                    // case XmlNodeType.EndElement when reader.Name is "Resources":
-                    //     goto outer;
+                    // case XmlNodeType.EndElement when reader.Name is "Resources": goto outer;
             }
         }
         // outer:
         return data;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Serialize(XmlWriter writer, IList<CsfData> value)
     {
         foreach (var item in value)

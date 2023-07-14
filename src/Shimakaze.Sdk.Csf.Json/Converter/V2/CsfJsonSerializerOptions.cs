@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace Shimakaze.Sdk.Csf.Json.Converter.V2;
 
-/// <inheritdoc cref="JsonSerializerOptions"/>
+/// <inheritdoc cref="JsonSerializerOptions" />
 public static class CsfJsonSerializerOptions
 {
-    /// <inheritdoc cref="JsonSerializerOptions.Converters"/>
+    /// <inheritdoc cref="JsonSerializerOptions.Converters" />
     public static IList<JsonConverter> Converters => new List<JsonConverter>()
     {
         new V1.CsfLanguageJsonConverter(),

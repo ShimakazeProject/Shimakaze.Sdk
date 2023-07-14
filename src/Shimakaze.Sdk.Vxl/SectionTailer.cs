@@ -9,7 +9,6 @@ namespace Shimakaze.Sdk.Vxl;
 [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 3 * sizeof(int) + 19 * sizeof(float) + 4 * sizeof(byte))]
 public record struct SectionTailer
 {
-
     /// <summary>
     /// Offset from the end of headers to the SectionData.spanStart array
     /// </summary>

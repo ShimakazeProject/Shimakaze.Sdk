@@ -27,10 +27,10 @@ public class CsfDocumentConverter : IYamlTypeConverter
         }
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public bool Accepts(Type type) => typeof(CsfDocument).IsAssignableFrom(type);
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type)
     {
         if (parser.Current is not MappingStart mappingStart)
@@ -100,7 +100,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
         return doc;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void WriteYaml(IEmitter emitter, object? value, Type type)
     {
         if (value is not CsfDocument doc)

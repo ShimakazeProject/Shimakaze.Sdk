@@ -2,7 +2,6 @@
 
 namespace Shimakaze.Sdk.Hva;
 /// <summary>
-/// 
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Pack = 1)]
 public record struct HvaHeader

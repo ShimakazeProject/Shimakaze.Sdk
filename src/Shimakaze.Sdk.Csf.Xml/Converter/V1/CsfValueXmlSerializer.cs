@@ -7,7 +7,7 @@ namespace Shimakaze.Sdk.Csf.Xml.Converter.V1;
 /// </summary>
 public class CsfValueXmlSerializer : IXmlSerializer<CsfValue>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public CsfValue Deserialize(XmlReader reader)
     {
         string? extra = null;
@@ -31,7 +31,7 @@ public class CsfValueXmlSerializer : IXmlSerializer<CsfValue>
         return new CsfValue(value, extra);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Serialize(XmlWriter writer, CsfValue value)
     {
         if (value.HasExtra)

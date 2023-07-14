@@ -1,41 +1,36 @@
 using Shimakaze.Sdk.Csf;
 
-
 namespace Shimakaze.Sdk.IO.Csf;
 
 /// <summary>
 /// Csf 读取器
 /// </summary>
-public sealed class CsfReader : IReader<CsfDocument>, IDisposable, IAsyncDisposable
+public sealed class CsfReader : AsyncReader<CsfDocument>, IDisposable, IAsyncDisposable
 {
-    private readonly bool _leaveOpen;
-
-    /// <summary>
-    /// 基础流
-    /// </summary>
-    public Stream BaseStream { get; }
-
     /// <summary>
     /// 构造 Csf 读取器
     /// </summary>
-    /// <param name="baseStream">基础流</param>
-    /// <param name="leaveOpen">退出时是否保持流打开</param>
-    public CsfReader(Stream baseStream, bool leaveOpen = false)
+    /// <param name="stream"> 基础流 </param>
+    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
+    public CsfReader(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
     {
-        BaseStream = baseStream;
-        _leaveOpen = leaveOpen;
     }
 
-    /// <inheritdoc/>
-    public CsfDocument Read()
+    /// <inheritdoc />
+    public override async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
         CsfDocument csf = new();
         BaseStream.Read(out csf.Metadata);
         CsfThrowHelper.IsCsfFile(csf.Metadata.Identifier);
         csf.Data = new CsfData[csf.Metadata.LabelCount];
 
+        await Task.Yield();
+
         for (int i = 0; i < csf.Metadata.LabelCount; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            progress?.Report((float)i / csf.Data.Length);
+
             BaseStream.Read(out csf.Data[i].Identifier);
             CsfThrowHelper.IsLabel(csf.Data[i].Identifier, () => new object[] { i, BaseStream.Position });
             BaseStream.Read(out csf.Data[i].StringCount);
@@ -45,9 +40,10 @@ public sealed class CsfReader : IReader<CsfDocument>, IDisposable, IAsyncDisposa
             csf.Data[i].Values = new CsfValue[csf.Data[i].StringCount];
             for (int j = 0; j < csf.Data[i].StringCount; j++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 BaseStream.Read(out csf.Data[i].Values[j].Identifier);
                 CsfThrowHelper.IsStringOrExtraString(csf.Data[i].Values[j].Identifier, () => new object[] { i, j, BaseStream.Position });
-
 
                 BaseStream.Read(out csf.Data[i].Values[j].ValueLength);
                 BaseStream.Read(out csf.Data[i].Values[j].Value, csf.Data[i].Values[j].ValueLength, true);
@@ -67,19 +63,5 @@ public sealed class CsfReader : IReader<CsfDocument>, IDisposable, IAsyncDisposa
         }
 
         return csf;
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        if (!_leaveOpen)
-            BaseStream.Dispose();
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask DisposeAsync()
-    {
-        if (!_leaveOpen)
-            await BaseStream.DisposeAsync();
     }
 }

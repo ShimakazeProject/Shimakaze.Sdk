@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 /// </summary>
 public sealed class CsfMetadataJsonConverter : JsonConverter<CsfMetadata>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override CsfMetadata Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
@@ -37,7 +37,7 @@ public sealed class CsfMetadataJsonConverter : JsonConverter<CsfMetadata>
         return metadata;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, CsfMetadata value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();

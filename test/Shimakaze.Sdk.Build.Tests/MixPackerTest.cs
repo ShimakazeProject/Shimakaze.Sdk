@@ -1,4 +1,3 @@
-
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -11,8 +10,8 @@ public class MixPackerTest
 {
     private const string Assets = "Assets";
     private const string InputFile = "ra2md.csf";
-    private const string OutputPath = "Out";
     private const string OutputFile = "MixPackerTest.mix";
+    private const string OutputPath = "Out";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;
 

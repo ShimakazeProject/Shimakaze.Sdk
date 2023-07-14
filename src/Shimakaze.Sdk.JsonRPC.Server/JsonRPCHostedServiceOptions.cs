@@ -10,5 +10,5 @@ public sealed class JsonRPCHostedServiceOptions
     /// <summary>
     /// JsonRpcMessageHandler
     /// </summary>
-    public IJsonRpcMessageHandler? JsonRpcMessageHandler { get; set; }
+    public required IJsonRpcMessageHandler JsonRpcMessageHandler { get; set; }
 }

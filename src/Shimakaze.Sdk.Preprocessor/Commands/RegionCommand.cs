@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
 
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
@@ -10,15 +8,13 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 [PreprocessorCommand("region")]
 public sealed class RegionCommand : PreprocessorCommand
 {
-    private readonly ILogger<RegionCommand>? _logger;
 
-    /// <inheritdoc/>
-    public RegionCommand(IPreprocessorVariables variable, ILogger<RegionCommand>? logger = null) : base(variable)
+    /// <inheritdoc />
+    public RegionCommand(IPreprocessorVariables variable) : base(variable)
     {
-        _logger = logger;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
 
     public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
     {

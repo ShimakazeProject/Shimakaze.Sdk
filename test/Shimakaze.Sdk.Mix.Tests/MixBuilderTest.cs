@@ -6,9 +6,8 @@ namespace Shimakaze.Sdk.Mix;
 public class MixBuilderTest
 {
     private const string Assets = "Assets";
-    private const string MixFile = "MixBuilderTest.mix";
     private const string CsfFile = "ra2md.csf";
-
+    private const string MixFile = "MixBuilderTest.mix";
     private const string OutputPath = "Out";
 
     [TestInitialize]

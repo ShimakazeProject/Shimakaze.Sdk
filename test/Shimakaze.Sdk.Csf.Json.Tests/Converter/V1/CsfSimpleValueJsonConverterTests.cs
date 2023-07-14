@@ -7,14 +7,6 @@ public class CsfSimpleValueJsonConverterTests
 {
     private JsonSerializerOptions? _options;
 
-    [TestInitialize]
-    public void Startup()
-    {
-        _options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
-            _options.Converters.Add(item);
-    }
-
     [TestMethod]
     public void ReadTest()
     {
@@ -26,5 +18,13 @@ public class CsfSimpleValueJsonConverterTests
             reader.Read();
             converter.Read(ref reader, typeof(string), _options!);
         });
+    }
+
+    [TestInitialize]
+    public void Startup()
+    {
+        _options ??= new();
+        foreach (var item in CsfJsonSerializerOptions.Converters)
+            _options.Converters.Add(item);
     }
 }

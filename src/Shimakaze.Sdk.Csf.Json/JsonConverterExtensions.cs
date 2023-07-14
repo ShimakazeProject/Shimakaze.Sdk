@@ -1,8 +1,10 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Shimakaze.Sdk.Csf.Json;
 
+[ExcludeFromCodeCoverage]
 internal static class JsonConverterExtensions
 {
     public static TJsonConverter Get<TJsonConverter>(this JsonSerializerOptions options)

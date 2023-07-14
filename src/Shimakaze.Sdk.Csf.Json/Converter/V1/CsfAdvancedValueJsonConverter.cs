@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V1;
 /// </summary>
 public sealed class CsfAdvancedValueJsonConverter : JsonConverter<CsfValue>
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override CsfValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
@@ -40,7 +40,7 @@ public sealed class CsfAdvancedValueJsonConverter : JsonConverter<CsfValue>
         };
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, CsfValue value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();

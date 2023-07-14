@@ -14,10 +14,6 @@ public class MixBuilder
     /// 将要被打包的文件
     /// </summary>
     protected readonly List<FileInfo> _files = new();
-    /// <summary>
-    /// ID计算器
-    /// </summary>
-    public required IdCalculater IdCalculater { get; init; }
 
     /// <summary>
     /// 已被添加到构建器的文件的个数
@@ -25,10 +21,15 @@ public class MixBuilder
     public int FileCount => _files.Count;
 
     /// <summary>
+    /// ID计算器
+    /// </summary>
+    public required IdCalculater IdCalculater { get; init; }
+
+    /// <summary>
     /// 添加一个文件到构建器
     /// </summary>
-    /// <param name="file">文件</param>
-    /// <returns>构建器</returns>
+    /// <param name="file"> 文件 </param>
+    /// <returns> 构建器 </returns>
     public MixBuilder AddFile(FileInfo file)
     {
         _files.Add(file);
@@ -36,20 +37,9 @@ public class MixBuilder
     }
 
     /// <summary>
-    /// 从构建器移除一个文件
-    /// </summary>
-    /// <param name="file">文件</param>
-    /// <returns>构建器</returns>
-    public MixBuilder RemoveFile(FileInfo file)
-    {
-        _files.Remove(file);
-        return this;
-    }
-
-    /// <summary>
     /// 构建MIX文件到流
     /// </summary>
-    /// <param name="stream">流</param>
+    /// <param name="stream"> 流 </param>
     public virtual async Task BuildAsync(Stream stream)
     {
         // 创建Entry写入器
@@ -71,6 +61,17 @@ public class MixBuilder
             await using var fs = file.OpenRead();
             await fs.CopyToAsync(stream).ConfigureAwait(false);
         }
+    }
+
+    /// <summary>
+    /// 从构建器移除一个文件
+    /// </summary>
+    /// <param name="file"> 文件 </param>
+    /// <returns> 构建器 </returns>
+    public MixBuilder RemoveFile(FileInfo file)
+    {
+        _files.Remove(file);
+        return this;
     }
 
     private MixEntry[] GetEntries(ref int position)

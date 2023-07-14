@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using YamlDotNet.Core;
+﻿using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
@@ -29,10 +27,10 @@ public class CsfDataConverter : IYamlTypeConverter
         }
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public bool Accepts(Type type) => typeof(CsfData).IsAssignableFrom(type);
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type)
     {
         if (parser.Accept<Scalar>(out var label))
@@ -65,7 +63,7 @@ public class CsfDataConverter : IYamlTypeConverter
         throw new FormatException("Not Supported", new YamlException(start, end, $"Unknown Token {parser.Current}"));
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void WriteYaml(IEmitter emitter, object? value, Type type)
     {
         if (value is not CsfData data)

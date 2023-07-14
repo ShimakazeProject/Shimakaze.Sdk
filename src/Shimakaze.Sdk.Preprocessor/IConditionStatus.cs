@@ -9,10 +9,12 @@ public interface IConditionStatus
     /// 条件
     /// </summary>
     string Condition { get; set; }
+
     /// <summary>
     /// 是否匹配
     /// </summary>
     bool IsMatched { get; set; }
+
     /// <summary>
     /// 标记
     /// </summary>

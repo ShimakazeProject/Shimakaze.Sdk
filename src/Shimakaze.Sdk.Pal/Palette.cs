@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Runtime.InteropServices;
-
-namespace Shimakaze.Sdk.Pal;
+﻿namespace Shimakaze.Sdk.Pal;
 
 /// <summary>
 /// 色板
@@ -20,8 +17,8 @@ public readonly record struct Palette
     /// <summary>
     /// 颜色
     /// </summary>
-    /// <param name="index">索引</param>
-    /// <returns>颜色</returns>
+    /// <param name="index"> 索引 </param>
+    /// <returns> 颜色 </returns>
     public Color this[int index]
     {
         get => Colors[index];

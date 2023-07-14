@@ -7,8 +7,4 @@
   <ItemGroup>
     <PackageReference Include="System.IO.Hashing" Version="7.0.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
-  </ItemGroup>
 </Project>

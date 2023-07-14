@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Shimakaze.Sdk.Csf.Yaml;
 
 /// <summary>
 /// YamlConstants.
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal class YamlConstants
 {
     /// <summary>
@@ -33,13 +36,13 @@ internal class YamlConstants
         public const string BASEURL = "https://shimakazeproject.github.io/Schemas";
 
         /// <summary>
-        /// V1.
-        /// </summary>
-        public const string V1 = $"{BASEURL}/yaml/csf/v1.yaml";
-
-        /// <summary>
         /// Metadata.
         /// </summary>
         public const string Metadata = $"{BASEURL}/yaml/csf/metadata.yaml";
+
+        /// <summary>
+        /// V1.
+        /// </summary>
+        public const string V1 = $"{BASEURL}/yaml/csf/v1.yaml";
     }
 }

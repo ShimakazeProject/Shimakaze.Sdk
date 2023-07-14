@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Shimakaze.Sdk.Csf;
 
@@ -9,7 +8,7 @@ namespace Shimakaze.Sdk.Csf;
 public record struct CsfValue
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfValue"/> class.
+    /// Initializes a new instance of the <see cref="CsfValue" /> class.
     /// </summary>
     public CsfValue()
       : this(string.Empty)
@@ -17,9 +16,9 @@ public record struct CsfValue
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfValue"/> class.
+    /// Initializes a new instance of the <see cref="CsfValue" /> class.
     /// </summary>
-    /// <param name="value">value.</param>
+    /// <param name="value"> value. </param>
     public CsfValue(string value)
     {
         Identifier = CsfConstants.StrFlagRaw;
@@ -28,10 +27,10 @@ public record struct CsfValue
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfValue"/> class.
+    /// Initializes a new instance of the <see cref="CsfValue" /> class.
     /// </summary>
-    /// <param name="value">value.</param>
-    /// <param name="extraValue">extraValue.</param>
+    /// <param name="value"> value. </param>
+    /// <param name="extraValue"> extraValue. </param>
     public CsfValue(string value, string? extraValue)
       : this(value)
     {

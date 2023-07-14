@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Shimakaze.Sdk.Csf.Json;
 
+[ExcludeFromCodeCoverage]
 internal static class Utf8JsonWriterExtensions
 {
     public static void WriteProperty<TJsonConverter, T>(this Utf8JsonWriter writer, string propertyName, T value, JsonSerializerOptions options)

@@ -13,12 +13,6 @@ namespace Shimakaze.Sdk.Build;
 public sealed class MixPacker : MSTask
 {
     /// <summary>
-    /// 将要被处理的文件
-    /// </summary>
-    [Required]
-    public required ITaskItem[] SourceFiles { get; set; }
-
-    /// <summary>
     /// 生成的文件
     /// </summary>
     [Required]
@@ -30,8 +24,13 @@ public sealed class MixPacker : MSTask
     [Output]
     public ITaskItem? OutputFile { get; set; }
 
+    /// <summary>
+    /// 将要被处理的文件
+    /// </summary>
+    [Required]
+    public required ITaskItem[] SourceFiles { get; set; }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override bool Execute()
     {
         Log.LogMessage("Packing Mix...");

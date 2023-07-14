@@ -21,9 +21,13 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(MSBuildProjectNameWithoutTests)' != 'Shimakaze.Sdk.Common' ">
+    <Using Include="Shimakaze.Sdk.Common" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
-    <Using Condition=" '$(AllowUnsafeBlocks)' == 'True' " Include="Shimakaze.Sdk.IO.Extensions" />
   </ItemGroup>
 
 </Project>

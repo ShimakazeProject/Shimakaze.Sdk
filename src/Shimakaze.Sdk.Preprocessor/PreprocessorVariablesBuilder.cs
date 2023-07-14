@@ -1,5 +1,3 @@
-using Shimakaze.Sdk.Preprocessor;
-
 namespace Shimakaze.Sdk.Preprocessor;
 
 /// <summary>
@@ -8,11 +6,9 @@ namespace Shimakaze.Sdk.Preprocessor;
 internal sealed class PreprocessorVariablesBuilder : IPreprocessorVariablesBuilder
 {
     private readonly IPreprocessorVariables _variables = new PreprocessorVariables();
-    private readonly IServiceProvider _service;
 
-    public PreprocessorVariablesBuilder(IServiceProvider service)
+    public PreprocessorVariablesBuilder()
     {
-        _service = service;
     }
 
     public IPreprocessorVariablesBuilder AddDefine(string define)

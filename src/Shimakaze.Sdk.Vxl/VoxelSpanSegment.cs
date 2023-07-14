@@ -20,8 +20,7 @@ public record struct VoxelSpanSegment
     public Voxel[] Voxels;
 
     /// <summary>
-    /// Always equal to <see cref="NumVoxels"/>
+    /// Always equal to <see cref="NumVoxels" />
     /// </summary>
     public byte NumVoxels2;
-
 }

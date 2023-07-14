@@ -1,21 +1,24 @@
-﻿using System.CodeDom.Compiler;
-using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Shimakaze.Sdk.IO.Mix;
 
 /// <summary>
 /// Entry Table已结束
 /// </summary>
-[Serializable, CompilerGenerated]
+[Serializable, ExcludeFromCodeCoverage]
 public class EndOfEntryTableException : Exception
 {
-    /// <inheritdoc/>
-    public EndOfEntryTableException() { }
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    public EndOfEntryTableException()
+    { }
+
+    /// <inheritdoc />
     public EndOfEntryTableException(string message) : base(message) { }
-    /// <inheritdoc/>
+
+    /// <inheritdoc />
     public EndOfEntryTableException(string message, Exception inner) : base(message, inner) { }
-    /// <inheritdoc/>
+
+    /// <inheritdoc />
     protected EndOfEntryTableException(
       System.Runtime.Serialization.SerializationInfo info,
       System.Runtime.Serialization.StreamingContext context) : base(info, context) { }

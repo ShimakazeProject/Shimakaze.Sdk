@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Shimakaze.Sdk.Vxl;
 
@@ -22,13 +21,11 @@ public record struct SectionHeader
     public uint Number;
 
     /// <summary>
-    /// 
     /// </summary>
     [FieldOffset(16 + sizeof(int))]
     public uint Unknown;
 
     /// <summary>
-    /// 
     /// </summary>
     [FieldOffset(16 + sizeof(int) * 2)]
     public uint Unknown2;
