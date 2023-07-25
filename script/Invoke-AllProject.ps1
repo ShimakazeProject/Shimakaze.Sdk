@@ -14,6 +14,7 @@ function Invoke-AllProject {
 
   begin {
     $ProjectRoot = Join-Path $PSScriptRoot '..'
+    $AppRoot = Join-Path $ProjectRoot 'app'
     $SrcRoot = Join-Path $ProjectRoot 'src'
     $TestRoot = Join-Path $ProjectRoot 'test'
 
@@ -21,7 +22,7 @@ function Invoke-AllProject {
   }
 
   process {
-    $result = Get-ChildItem $SrcRoot `
+    $result = Get-ChildItem $SrcRoot, $AppRoot `
     | Where-Object {
       $PSItem -is [System.IO.DirectoryInfo]
     } `
