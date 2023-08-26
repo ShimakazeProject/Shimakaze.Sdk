@@ -12,7 +12,7 @@ namespace Shimakaze.Sdk.Build;
 /// <summary>
 /// Ini 预处理器
 /// </summary>
-public sealed class IniPreprocessor : MSTask
+public sealed class TaskIniPreprocessor : MSTask
 {
     private const string Metadata_Destination = "Destination";
 

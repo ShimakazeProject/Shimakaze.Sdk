@@ -10,7 +10,7 @@ namespace Shimakaze.Sdk.Build;
 /// <summary>
 /// Ini 合并器
 /// </summary>
-public sealed class IniMerger : MSTask
+public sealed class TaskIniMerger : MSTask
 {
     /// <summary>
     /// Destination

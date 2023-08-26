@@ -6,7 +6,7 @@ using Moq;
 namespace Shimakaze.Sdk.Build.Tests;
 
 [TestClass]
-public class CsfMergerTests
+public class TaskCsfMergerTest
 {
     private const string Assets = "Assets";
     private const string InputFile = "ra2md.csf";
@@ -19,7 +19,7 @@ public class CsfMergerTests
     {
         TaskItem item = new(Path.Combine(Assets, InputFile));
 
-        CsfMerger task = new()
+        TaskCsfMerger task = new()
         {
             SourceFiles = new[] { item },
             DestinationFile = Path.Combine(OutputPath, InputFile),

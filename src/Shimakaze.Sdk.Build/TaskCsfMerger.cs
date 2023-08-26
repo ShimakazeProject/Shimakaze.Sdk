@@ -1,17 +1,19 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Shimakaze.Sdk.IO.Mix;
+using Shimakaze.Sdk.IO.Csf;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 
 namespace Shimakaze.Sdk.Build;
 
 /// <summary>
-/// Mix Packer Task
+/// Csf 合并器
 /// </summary>
-public sealed class MixPacker : MSTask
+public sealed class TaskCsfMerger : MSTask
 {
+    private const string Metadata_Pack = "Pack";
+
     /// <summary>
     /// 生成的文件
     /// </summary>
@@ -33,20 +35,23 @@ public sealed class MixPacker : MSTask
     /// <inheritdoc />
     public override bool Execute()
     {
-        Log.LogMessage("Packing Mix...");
+        Log.LogMessage("Merging Csf...");
         if (!DestinationFile.CreateParentDirectory(Log))
             return false;
 
-        var builder = new MixBuilder() { IdCalculater = IdCalculaters.TSIdCalculater };
+        CsfMerger merger = new();
         OutputFile = new TaskItem(DestinationFile);
         foreach (var file in SourceFiles)
         {
-            Log.LogMessage(MessageImportance.Low, $"Add \"{file.ItemSpec}\" into mix.");
-            builder.AddFile(new(file.ItemSpec));
+            using Stream stream = File.OpenRead(file.ItemSpec);
+            using CsfReader reader = new(stream);
+            merger.UnionWith(reader.ReadAsync().Result.Data);
+            file.CopyMetadataTo(OutputFile);
         }
 
-        using var output = File.Create(DestinationFile);
-        builder.BuildAsync(output).Wait();
+        OutputFile.SetMetadata(Metadata_Pack, true.ToString());
+        using Stream output = File.Create(DestinationFile);
+        merger.BuildAndWriteToAsync(output).Wait();
 
         return true;
     }

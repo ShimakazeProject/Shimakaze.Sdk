@@ -6,11 +6,11 @@ using Moq;
 namespace Shimakaze.Sdk.Build.Tests;
 
 [TestClass]
-public class IniPreprocessorTest
+public class TaskMixGenneratorTest
 {
     private const string Assets = "Assets";
-    private const string Defines = "DEFINED;TEST";
-    private const string InputFile = "conditionTest.ini;defineTest.ini";
+    private const string InputFile = "ra2md.csf";
+    private const string OutputFile = "MixPackerTest.mix";
     private const string OutputPath = "Out";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;
@@ -28,16 +28,12 @@ public class IniPreprocessorTest
     [TestMethod]
     public void Test()
     {
-        IniPreprocessor task = new()
+        TaskItem item = new(Path.Combine(Assets, InputFile));
+
+        TaskMixGennerator task = new()
         {
-            SourceFiles = InputFile.Split(';').Select(i =>
-            {
-                var path = Path.GetFullPath(Path.Combine(Assets, i));
-                TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
-                item.SetMetadata("Destination", Path.GetFullPath(Path.Combine(OutputPath, i)));
-                return item;
-            }).ToArray(),
-            Defines = Defines,
+            SourceFiles = new[] { item },
+            DestinationFile = Path.Combine(OutputPath, OutputFile),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
