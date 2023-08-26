@@ -45,7 +45,7 @@ public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
             writer.WriteEndArray();
             writer.WriteEndObject();
         }
-        else if (value[0].HasExtra)
+        else if (value[0].ExtraValue is null)
         {
             writer.WriteValue<CsfSimpleValueJsonConverter, string>(value[0].Value, options);
         }

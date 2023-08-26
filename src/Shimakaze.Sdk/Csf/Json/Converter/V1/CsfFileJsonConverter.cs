@@ -49,6 +49,7 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
     {
         writer.WriteStartObject();
         writer.WriteString("$schema", JsonConstants.SchemaUrls.V1);
+        writer.WriteNumber("protocol", 1);
         writer.WriteProperty<CsfMetadataJsonConverter, CsfMetadata>("head", value.Metadata, options);
 
         writer.WriteStartArray("data");

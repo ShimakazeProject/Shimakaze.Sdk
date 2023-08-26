@@ -53,6 +53,7 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
     {
         writer.WriteStartObject();
         writer.WriteString("$schema", JsonConstants.SchemaUrls.V2);
+        writer.WriteNumber("protocol", 2);
         writer.WriteNumber("version", value.Metadata.Version);
         writer.WriteProperty<V1.CsfLanguageJsonConverter, int>("language", value.Metadata.Language, options);
 
