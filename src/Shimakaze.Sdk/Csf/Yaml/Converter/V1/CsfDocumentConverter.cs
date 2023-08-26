@@ -97,6 +97,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
         metadata.StringCount = doc.Data.Sum(i => i.StringCount);
         doc.Metadata = metadata;
         doc.Data = datas.ToArray();
+        doc.ReCount();
         return doc;
     }
 

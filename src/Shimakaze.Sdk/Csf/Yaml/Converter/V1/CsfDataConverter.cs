@@ -50,6 +50,7 @@ public class CsfDataConverter : IYamlTypeConverter
             }
 
             data.Values = values.ToArray();
+            data.ReCount();
             return data;
         }
 
