@@ -14,7 +14,10 @@ namespace Shimakaze.Sdk.Build;
 /// </summary>
 public sealed class TaskIniPreprocessor : MSTask
 {
-    private const string Metadata_Destination = "Destination";
+    /// <summary>
+    /// 生成的中间文件的路径
+    /// </summary>
+    public const string Metadata_Intermediate = "Intermediate";
 
     /// <summary>
     /// 符号
@@ -48,7 +51,7 @@ public sealed class TaskIniPreprocessor : MSTask
 
         foreach (var file in SourceFiles)
         {
-            var dest = file.GetMetadata(Metadata_Destination);
+            var dest = file.GetMetadata(Metadata_Intermediate);
             if (!dest.CreateParentDirectory(Log))
                 return false;
 
@@ -59,7 +62,7 @@ public sealed class TaskIniPreprocessor : MSTask
 
             TaskItem item = new(dest);
             file.CopyMetadataTo(item);
-            item.RemoveMetadata(Metadata_Destination);
+            item.RemoveMetadata(Metadata_Intermediate);
             provider.GetRequiredService<IList<ITaskItem>>().Add(item);
 
             task.Wait();

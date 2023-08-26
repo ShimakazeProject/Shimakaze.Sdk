@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="PreMixGenerator" BeforeTargets="MixGenerator">
+    <ItemGroup>
+      <MixAssetsFile Include="@(None -> WithMetadataValue('Pack', 'True'))" TargetPack="%(TargetPack)" />
+
+      <MixAssetsFile Include="@(IniFile -> WithMetadataValue('Pack', 'True'))" TargetPack="%(TargetPack)" />
+      <MixAssetsFile Include="@(IntermediateIniFile -> WithMetadataValue('Pack', 'True'))" TargetPack="%(TargetPack)" />
+      <MixAssetsFile Include="@(FinalIniFile -> WithMetadataValue('Pack', 'True'))" TargetPack="%(TargetPack)" />
+
+      <MixAssetsFile Include="@(CsfFile -> WithMetadataValue('Pack', 'True'))" TargetPack="%(TargetPack)" />
+      <MixAssetsFile Include="@(IntermediateCsfFile -> WithMetadataValue('Pack', 'True'))" TargetPack="%(TargetPack)" />
+      <MixAssetsFile Include="@(FinalCsfFile -> WithMetadataValue('Pack', 'True'))" TargetPack="%(TargetPack)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="MixGenerator" Inputs="@(MixAssetsFile)" Outputs="$(OutputPath)\%(TargetPack)">
+    <TaskMixGenerator SourceFiles="@(MixAssetsFile)" DestinationFile="$(OutputPath)\%(TargetPack)">
+      <Output TaskParameter="OutputFile" ItemName="FinalMixFile" />
+    </TaskMixGenerator>
+  </Target>
+
+  <Target Name="PostMixGenerator" AfterTargets="MixGenerator">
+    <ItemGroup Condition=" '@(FinalMixFile)' == '' ">
+      <FinalMixFile Include="$(OutputPath)\%(MixAssetsFile.TargetPack)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

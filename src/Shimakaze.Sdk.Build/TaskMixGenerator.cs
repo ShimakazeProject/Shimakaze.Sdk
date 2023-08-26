@@ -10,7 +10,7 @@ namespace Shimakaze.Sdk.Build;
 /// <summary>
 /// Mix Packer Task
 /// </summary>
-public sealed class TaskMixGennerator : MSTask
+public sealed class TaskMixGenerator : MSTask
 {
     /// <summary>
     /// 生成的文件
@@ -58,7 +58,8 @@ public sealed class TaskMixGennerator : MSTask
 
         using var output = File.Create(DestinationFile);
         builder.BuildAsync(output).Wait();
+        output.Flush();
 
-        return true;
+        return !Log.HasLoggedErrors;
     }
 }

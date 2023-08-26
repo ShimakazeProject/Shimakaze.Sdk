@@ -18,13 +18,11 @@ public class TaskIniMergerTest
     public void MergeTest()
     {
         TaskItem item = new(Path.Combine(Assets, InputFile));
-        item.SetMetadata(TaskIniMerger.Metadata_Type, "Rule");
-        TaskItem output = new("Rule");
-        output.SetMetadata(TaskIniMerger.Metadata_Destination, Path.Combine(OutputPath, InputFile));
+        
         TaskIniMerger task = new()
         {
             SourceFiles = new[] { item },
-            DestinationFiles = new[] { output },
+            DestinationFile = Path.Combine(OutputPath, InputFile),
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());

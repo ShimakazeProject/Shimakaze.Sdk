@@ -6,7 +6,7 @@ using Moq;
 namespace Shimakaze.Sdk.Build.Tests;
 
 [TestClass]
-public class TaskMixGenneratorTest
+public class TaskMixGeneratorTest
 {
     private const string Assets = "Assets";
     private const string InputFile = "ra2md.csf";
@@ -30,7 +30,7 @@ public class TaskMixGenneratorTest
     {
         TaskItem item = new(Path.Combine(Assets, InputFile));
 
-        TaskMixGennerator task = new()
+        TaskMixGenerator task = new()
         {
             SourceFiles = new[] { item },
             DestinationFile = Path.Combine(OutputPath, OutputFile),

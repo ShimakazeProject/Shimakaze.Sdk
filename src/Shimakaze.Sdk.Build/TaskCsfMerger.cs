@@ -12,7 +12,10 @@ namespace Shimakaze.Sdk.Build;
 /// </summary>
 public sealed class TaskCsfMerger : MSTask
 {
-    private const string Metadata_Pack = "Pack";
+    /// <summary>
+    /// Pack
+    /// </summary>
+    public const string Metadata_Pack = "Pack";
 
     /// <summary>
     /// 生成的文件
@@ -52,7 +55,8 @@ public sealed class TaskCsfMerger : MSTask
         OutputFile.SetMetadata(Metadata_Pack, true.ToString());
         using Stream output = File.Create(DestinationFile);
         merger.BuildAndWriteToAsync(output).Wait();
+        output.Flush();
 
-        return true;
+        return !Log.HasLoggedErrors;
     }
 }

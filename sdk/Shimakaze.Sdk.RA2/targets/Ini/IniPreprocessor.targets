@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="PreIniPreprocessor" BeforeTargets="IniPreprocessor">
+    <ItemGroup>
+      <IniFile
+        Update="@(IniFile)"
+        Intermediate="$(IntermediateOutputPath)\%(RecursiveDir)%(Filename).g.pp%(Extension).ini"
+        Pack="%(Pack)"
+        TargetPack="%(TargetPack)"
+      />
+      <IniFile Remove="@(IniFile -> WithMetadataValue('Ignore', 'True'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IniPreprocessor" Inputs="@(IniFile)" Outputs="%(Intermediate)">
+    <TaskIniPreprocessor SourceFiles="@(IniFile)" Defines="$(Defines)">
+      <Output TaskParameter="OutputFiles" ItemName="IntermediateIniFile" />
+    </TaskIniPreprocessor>
+  </Target>
+
+  <Target Name="PostIniPreprocessor" AfterTargets="IniPreprocessor">
+    <ItemGroup Condition=" '@(IntermediateIniFile)' == '' ">
+      <IntermediateIniFile Include="%(IniFile.Intermediate)" TargetFile="%(IniFile.TargetFile)" Pack="%(IniFile.Pack)" TargetPack="%(IniFile.TargetPack)" />
+    </ItemGroup>
+    <ItemGroup>
+      <IniFile Remove="@(IniFile)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

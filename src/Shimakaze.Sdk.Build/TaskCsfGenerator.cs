@@ -18,9 +18,9 @@ namespace Shimakaze.Sdk.Build;
 public sealed class TaskCsfGenerator : MSTask
 {
     /// <summary>
-    /// Destination
+    /// 生成的中间文件的路径
     /// </summary>
-    public const string Metadata_Destination = "Destination";
+    public const string Metadata_Intermediate = "Intermediate";
 
     /// <summary>
     /// Type
@@ -48,7 +48,7 @@ public sealed class TaskCsfGenerator : MSTask
         List<ITaskItem> items = new(SourceFiles.Length);
         foreach (var file in SourceFiles)
         {
-            var dest = file.GetMetadata(Metadata_Destination);
+            var dest = file.GetMetadata(Metadata_Intermediate);
             var tag = file.GetMetadata(Metadata_Type);
             if (!dest.CreateParentDirectory(Log))
                 return false;
@@ -147,7 +147,7 @@ public sealed class TaskCsfGenerator : MSTask
             provider.GetRequiredService<AsyncWriter<CsfDocument>>().WriteAsync(csf).Wait();
             TaskItem item = new(dest);
             file.CopyMetadataTo(item);
-            item.RemoveMetadata(Metadata_Destination);
+            item.RemoveMetadata(Metadata_Intermediate);
             item.SetMetadata(Metadata_Type, "Csf");
             items.Add(item);
         }

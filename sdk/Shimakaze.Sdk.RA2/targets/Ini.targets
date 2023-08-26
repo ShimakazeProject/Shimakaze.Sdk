@@ -1,59 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!-- 预处理INI -->
-  <Target
-    Name="_Pre_PreprocessingINI" BeforeTargets="_PreprocessingINI">
-    <!-- 准备将要被预处理的INI -->
-    <ItemGroup>
-      <_IniFile
-        Include="@(IniFile)"
-        Destination="$(IntermediateOutputPath)\%(RecursiveDir)%(Filename).g.pp%(Extension)"
-        Merge="True" />
-      <_IniFile Remove="@(IniFile -> WithMetadataValue('SkipPreprocess', 'True'))" />
-      <IniFile Remove="@(_IniFile)" />
-    </ItemGroup>
-  </Target>
-
-  <Target
-    Name="_PreprocessingINI"
-    Inputs="@(_IniFile)"
-    Outputs="%(_IniFile.Destination)"
-    BeforeTargets="_MergeIni"
-  >
-    <IniPreprocessor
-      Defines="$(Defines)"
-      SourceFiles="@(_IniFile)">
-      <Output TaskParameter="OutputFiles" ItemName="IniFile" />
-    </IniPreprocessor>
-  </Target>
-
-  <!-- 合并INI -->
-  <Target
-    Name="_Pre_MergeIni" BeforeTargets="_MergeIni">
-    <!-- 准备将要被合并的INI -->
-    <ItemGroup>
-      <__IniType Include="@(IniFile -> Metadata('Type'))" KeepDuplicates="False"
-        KeepMetadata="False" />
-      <_IniType Include="@(__IniType)" Destination="$(OutputPath)\$(%(Identity)sIniFileName)" />
-      <__IniType Remove="@(__IniType)" />
-    </ItemGroup>
-  </Target>
-
-  <Target
-    Name="_MergeIni"
-    Inputs="@(IniFile -> WithMetadataValue('Merge', 'True'))"
-    Outputs="%(_IniFile.Destination)"
-  >
-    <IniMerger
-      SourceFiles="@(IniFile -> WithMetadataValue('Merge', 'True'))"
-      DestinationFiles="@(_IniType)">
-      <Output TaskParameter="OutputFiles" ItemName="IniFile" />
-    </IniMerger>
-    <ItemGroup>
-      <IniFile Remove="@(IniFile -> WithMetadataValue('Merge', 'True'))" />
-      <_IniType Remove="@(_IniType)" />
-    </ItemGroup>
-  </Target>
+  <Import Project="$(MSBuildThisFileDirectory)Ini\IniPreprocessor.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)Ini\IniMerger.targets" />
 
 </Project>
