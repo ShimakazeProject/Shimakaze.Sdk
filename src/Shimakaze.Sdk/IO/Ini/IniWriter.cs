@@ -48,8 +48,7 @@ public class IniWriter : AsyncWriter<IniDocument>
     {
         if (disposing)
         {
-            if (!_leaveOpen)
-                BaseWriter.Dispose();
+            BaseWriter.Dispose();
         }
 
         base.Dispose(disposing);
@@ -59,8 +58,7 @@ public class IniWriter : AsyncWriter<IniDocument>
     [ExcludeFromCodeCoverage]
     protected override ValueTask DisposeAsyncCore()
     {
-        if (!_leaveOpen)
-            BaseWriter.Dispose();
+        BaseWriter.Dispose();
 
         return base.DisposeAsyncCore();
     }

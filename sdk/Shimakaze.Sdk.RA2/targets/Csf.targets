@@ -1,42 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="_Pre_BuildCsf" BeforeTargets="_BuildCsf">
-    <ItemGroup>
-      <_CsfFile
-        Include="@(CsfFile)"
-        Destination="$(IntermediateOutputPath)\%(RecursiveDir)%(Filename).g%(Extension).csf"
-        Merge="True" />
-      <_CsfFile Remove="@(CsfFile -> WithMetadataValue('SkipBuild', 'True'))" />
-      <CsfFile Remove="@(_CsfFile)" />
-    </ItemGroup>
-  </Target>
+  <Import Project="$(MSBuildThisFileDirectory)Csf\CsfGenerator.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)Csf\CsfMerger.targets" />
 
-  <Target
-    Name="_BuildCsf"
-    Inputs="@(_CsfFile)"
-    Outputs="%(Destination)"
-    BeforeTargets="_MergeCsf">
-    <CsfBuilder SourceFiles="@(_CsfFile)">
-      <Output TaskParameter="OutputFiles" ItemName="CsfFile" />
-    </CsfBuilder>
-    <ItemGroup>
-      <_CsfFile Remove="@(_CsfFile)" />
-    </ItemGroup>
-  </Target>
-
-  <Target
-    Name="_MergeCsf"
-    Inputs="@(CsfFile -> WithMetadataValue('Merge', 'True'))"
-    Outputs="$(OutputPath)\$(CsfFileName)">
-    <CsfMerger
-      SourceFiles="@(CsfFile -> WithMetadataValue('Merge', 'True'))"
-      DestinationFile="$(OutputPath)\$(CsfFileName)">
-      <Output TaskParameter="OutputFile" ItemName="_CsfFile" />
-    </CsfMerger>
-    <ItemGroup>
-      <CsfFile Include="@(_CsfFile)" />
-      <_CsfFile Remove="@(_CsfFile)" />
-    </ItemGroup>
-  </Target>
 </Project>

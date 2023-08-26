@@ -13,36 +13,21 @@ namespace Shimakaze.Sdk.Build;
 public sealed class TaskIniMerger : MSTask
 {
     /// <summary>
-    /// Destination
-    /// </summary>
-    public const string Metadata_Destination = "Destination";
-
-    /// <summary>
-    /// Merge
-    /// </summary>
-    public const string Metadata_Merge = "Merge";
-
-    /// <summary>
     /// Pack
     /// </summary>
     public const string Metadata_Pack = "Pack";
 
     /// <summary>
-    /// Type
-    /// </summary>
-    public const string Metadata_Type = "Type";
-
-    /// <summary>
-    /// 生成的文件路径
+    /// 生成的文件
     /// </summary>
     [Required]
-    public required ITaskItem[] DestinationFiles { get; set; }
+    public required string DestinationFile { get; set; }
 
     /// <summary>
     /// 生成的目标文件
     /// </summary>
     [Output]
-    public ITaskItem[] OutputFiles { get; set; } = Array.Empty<ITaskItem>();
+    public ITaskItem? OutputFile { get; set; }
 
     /// <summary>
     /// 将要被处理的文件
@@ -54,35 +39,23 @@ public sealed class TaskIniMerger : MSTask
     public override bool Execute()
     {
         Log.LogMessage("Merging Ini...");
-        var outputs = DestinationFiles
-            .DistinctBy(i => i.ItemSpec)
-            .ToDictionary(i => i.ItemSpec, i => i.GetMetadata(Metadata_Destination))
-            .AsReadOnly();
+        if (!DestinationFile.CreateParentDirectory(Log))
+            return false;
 
-        IList<ITaskItem> list = new List<ITaskItem>();
-        foreach (var group in SourceFiles.GroupBy(i => i.GetMetadata(Metadata_Type)))
+        IniMerger merger = new();
+        OutputFile = new TaskItem(DestinationFile);
+        foreach (var file in SourceFiles)
         {
-            if (!outputs[group.Key].CreateParentDirectory(Log))
-                continue;
-
-            IO.Ini.IniMerger merger = new();
-            TaskItem item = new(outputs[group.Key]);
-            foreach (var file in group)
-            {
-                using var stream = File.OpenRead(file.ItemSpec);
-                using IniReader deserializer = new(stream);
-                merger.UnionWith(deserializer.ReadAsync().Result);
-                file.CopyMetadataTo(item);
-            }
-
-            item.SetMetadata(Metadata_Pack, true.ToString());
-            item.RemoveMetadata(Metadata_Merge);
-            using Stream output = File.Create(outputs[group.Key]);
-            merger.BuildAndWriteToAsync(output).Wait();
-            list.Add(item);
+            using Stream stream = File.OpenRead(file.ItemSpec);
+            using IniReader reader = new(stream);
+            merger.UnionWith(reader.ReadAsync().Result);
+            file.CopyMetadataTo(OutputFile);
         }
 
-        OutputFiles = list.ToArray();
+        OutputFile.SetMetadata(Metadata_Pack, true.ToString());
+        using Stream output = File.Create(DestinationFile);
+        merger.BuildAndWriteToAsync(output).Wait();
+        output.Flush();
 
         return !Log.HasLoggedErrors;
     }

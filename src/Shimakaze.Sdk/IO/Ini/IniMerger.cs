@@ -55,7 +55,7 @@ public class IniMerger : ISet<IniSection>
     public virtual async Task BuildAndWriteToAsync(Stream stream, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
         await using IniWriter serializer = new(stream, true);
-        await serializer.WriteAsync(new(_cache.Values), progress, cancellationToken);
+        await serializer.WriteAsync(Build(), progress, cancellationToken);
     }
 
     /// <inheritdoc />
