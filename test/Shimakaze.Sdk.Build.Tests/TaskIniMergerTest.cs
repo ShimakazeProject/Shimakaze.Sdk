@@ -6,7 +6,7 @@ using Moq;
 namespace Shimakaze.Sdk.Build.Tests;
 
 [TestClass]
-public class IniMergerTests
+public class TaskIniMergerTest
 {
     private const string Assets = "Assets";
     private const string InputFile = "normal.ini";
@@ -18,10 +18,10 @@ public class IniMergerTests
     public void MergeTest()
     {
         TaskItem item = new(Path.Combine(Assets, InputFile));
-        item.SetMetadata(IniMerger.Metadata_Type, "Rule");
+        item.SetMetadata(TaskIniMerger.Metadata_Type, "Rule");
         TaskItem output = new("Rule");
-        output.SetMetadata(IniMerger.Metadata_Destination, Path.Combine(OutputPath, InputFile));
-        IniMerger task = new()
+        output.SetMetadata(TaskIniMerger.Metadata_Destination, Path.Combine(OutputPath, InputFile));
+        TaskIniMerger task = new()
         {
             SourceFiles = new[] { item },
             DestinationFiles = new[] { output },

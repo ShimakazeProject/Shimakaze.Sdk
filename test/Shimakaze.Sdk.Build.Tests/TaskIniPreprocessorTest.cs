@@ -6,11 +6,11 @@ using Moq;
 namespace Shimakaze.Sdk.Build.Tests;
 
 [TestClass]
-public class MixPackerTest
+public class TaskIniPreprocessorTest
 {
     private const string Assets = "Assets";
-    private const string InputFile = "ra2md.csf";
-    private const string OutputFile = "MixPackerTest.mix";
+    private const string Defines = "DEFINED;TEST";
+    private const string InputFile = "conditionTest.ini;defineTest.ini";
     private const string OutputPath = "Out";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;
@@ -28,12 +28,16 @@ public class MixPackerTest
     [TestMethod]
     public void Test()
     {
-        TaskItem item = new(Path.Combine(Assets, InputFile));
-
-        MixPacker task = new()
+        TaskIniPreprocessor task = new()
         {
-            SourceFiles = new[] { item },
-            DestinationFile = Path.Combine(OutputPath, OutputFile),
+            SourceFiles = InputFile.Split(';').Select(i =>
+            {
+                var path = Path.GetFullPath(Path.Combine(Assets, i));
+                TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
+                item.SetMetadata("Destination", Path.GetFullPath(Path.Combine(OutputPath, i)));
+                return item;
+            }).ToArray(),
+            Defines = Defines,
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());

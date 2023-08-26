@@ -15,7 +15,7 @@ namespace Shimakaze.Sdk.Build;
 /// <summary>
 /// Csf 构建器
 /// </summary>
-public sealed class CsfBuilder : MSTask
+public sealed class TaskCsfGenerator : MSTask
 {
     /// <summary>
     /// Destination

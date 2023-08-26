@@ -1,24 +1,27 @@
-using Microsoft.Build.Framework;
+﻿using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Shimakaze.Sdk.IO.Csf;
+using Shimakaze.Sdk.IO.Mix;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 
 namespace Shimakaze.Sdk.Build;
 
 /// <summary>
-/// Csf 合并器
+/// Mix Packer Task
 /// </summary>
-public sealed class CsfMerger : MSTask
+public sealed class TaskMixGennerator : MSTask
 {
-    private const string Metadata_Pack = "Pack";
-
     /// <summary>
     /// 生成的文件
     /// </summary>
     [Required]
     public required string DestinationFile { get; set; }
+
+    ///// <summary>
+    ///// 是否使用旧的ID计算器
+    ///// </summary>
+    //public bool UsingOldIdCalculater { get; set; }
 
     /// <summary>
     /// 生成的目标文件
@@ -35,23 +38,26 @@ public sealed class CsfMerger : MSTask
     /// <inheritdoc />
     public override bool Execute()
     {
-        Log.LogMessage("Merging Csf...");
+        Log.LogMessage("Generating Mix...");
         if (!DestinationFile.CreateParentDirectory(Log))
             return false;
 
-        IO.Csf.CsfMerger merger = new();
+        var builder = new MixBuilder()
+        {
+            IdCalculater = IdCalculaters.TSIdCalculater
+            //IdCalculater = UsingOldIdCalculater
+            //? IdCalculaters.OldIdCalculater
+            //: IdCalculaters.TSIdCalculater
+        };
         OutputFile = new TaskItem(DestinationFile);
         foreach (var file in SourceFiles)
         {
-            using Stream stream = File.OpenRead(file.ItemSpec);
-            using CsfReader reader = new(stream);
-            merger.UnionWith(reader.ReadAsync().Result.Data);
-            file.CopyMetadataTo(OutputFile);
+            Log.LogMessage(MessageImportance.Low, $"Add \"{file.ItemSpec}\" into mix.");
+            builder.AddFile(new(file.ItemSpec));
         }
 
-        OutputFile.SetMetadata(Metadata_Pack, true.ToString());
-        using Stream output = File.Create(DestinationFile);
-        merger.BuildAndWriteToAsync(output).Wait();
+        using var output = File.Create(DestinationFile);
+        builder.BuildAsync(output).Wait();
 
         return true;
     }
