@@ -34,7 +34,7 @@ public class TaskIniPreprocessorTest
             {
                 var path = Path.GetFullPath(Path.Combine(Assets, i));
                 TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
-                item.SetMetadata("Destination", Path.GetFullPath(Path.Combine(OutputPath, i)));
+                item.SetMetadata(TaskIniPreprocessor.Metadata_Intermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
                 return item;
             }).ToArray(),
             Defines = Defines,
