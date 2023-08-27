@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.5.0" PrivateAssets="all" ExcludeAssets="Runtime" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
+  
   <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
     <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Using Include="Shimakaze.Sdk.Common" />
+  </ItemGroup>
+
 </Project>

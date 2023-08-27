@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="$(ShimakazeSdkPath)\targets\Ini.targets" />
+  <Import Project="$(ShimakazeSdkPath)\Sdk\tasks.props" />
+
   <Import Project="$(ShimakazeSdkPath)\targets\Csf.targets" />
+  <Import Project="$(ShimakazeSdkPath)\targets\Ini.targets" />
   <Import Project="$(ShimakazeSdkPath)\targets\Mix.targets" />
 
   <Target Name="CoreCompile">
-    <CallTarget Targets="_PreprocessingINI;_MergeIni" />
-    <CallTarget Targets="_BuildCsf;_MergeCsf" />
+    <CallTarget Targets="IniPreprocessor" />
+    <CallTarget Targets="CsfGenerator" />
   </Target>
 
-  <Target Name="Build" BeforeTargets="Pack">
+  <Target Name="CoreMerger">
+    <CallTarget Targets="IniMerger" />
+    <CallTarget Targets="CsfMerger" />
+  </Target>
+
+  <Target Name="Build">
     <CallTarget Targets="CoreCompile" />
+    <CallTarget Targets="CoreMerger" />
   </Target>
 
-  <Target Name="Pack">
-    <CallTarget Targets="PackMix" />
+  <Target Name="Pack" AfterTargets="Build">
+    <CallTarget Targets="MixGenerator" />
   </Target>
 
   <Target Name="Clean">
     <RemoveDir Directories="$(OutputPath);$(IntermediateOutputPath)" />
+  </Target>
+  
+  <Target Name="ReBuild">
+    <CallTarget Targets="Clean" />
+    <CallTarget Targets="Build" />
+  </Target>
+
+  <Target Name="Publish">
+    <CallTarget Targets="Pack" />
+  </Target>
+
+  <Target Name="VSTest">
+    <CallTarget Targets="Pack" />
   </Target>
 
 </Project>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="PreIniMerger" BeforeTargets="IniMerger">
+    <ItemGroup>
+      <IntermediateIniFile Update="@(IntermediateIniFile)" Pack="%(Pack)" TargetPack="%(TargetPack)" />
+      <IntermediateIniFile Remove="@(IntermediateIniFile -> WithMetadataValue('Ignore', 'True'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IniMerger" Inputs="@(IntermediateIniFile)" Outputs="$(OutputPath)\%(TargetFile)">
+    <TaskIniMerger SourceFiles="@(IntermediateIniFile)" DestinationFile="$(OutputPath)\%(TargetFile)">
+      <Output TaskParameter="OutputFile" ItemName="FinalIniFile" />
+    </TaskIniMerger>
+  </Target>
+
+  <Target Name="PostIniMerger" AfterTargets="IniMerger">
+    <ItemGroup Condition=" '@(FinalIniFile)' == '' ">
+      <FinalIniFile Include="$(OutputPath)\%(IntermediateIniFile.TargetFile)" Pack="%(IntermediateIniFile.Pack)" TargetPack="%(IntermediateIniFile.TargetPack)" />
+    </ItemGroup>
+    <ItemGroup>
+      <IntermediateIniFile Remove="@(IntermediateIniFile)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

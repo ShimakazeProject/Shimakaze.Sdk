@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.TaskCsfGenerator" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.TaskCsfMerger" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.TaskIniMerger" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.TaskIniPreprocessor" />
+  <UsingTask AssemblyFile="$(ShimakazeSdkPath)\lib\Shimakaze.Sdk.Build.dll" TaskName="Shimakaze.Sdk.Build.TaskMixGenerator" />
+
+</Project>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="PreCsfGenerator" BeforeTargets="CsfGenerator">
+    <ItemGroup>
+      <CsfFile
+        Update="@(CsfFile)"
+        Intermediate="$(IntermediateOutputPath)\%(RecursiveDir)%(Filename).g%(Extension).csf"
+        Pack="%(Pack)"
+        TargetPack="%(TargetPack)"
+      />
+      <CsfFile Remove="@(CsfFile -> WithMetadataValue('Ignore', 'True'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CsfGenerator" Inputs="@(CsfFile)" Outputs="%(Intermediate)">
+    <TaskCsfGenerator SourceFiles="@(CsfFile)">
+      <Output TaskParameter="OutputFiles" ItemName="IntermediateCsfFile" />
+    </TaskCsfGenerator>
+  </Target>
+
+  <Target Name="PostCsfGenerator" AfterTargets="CsfGenerator">
+    <ItemGroup Condition=" '@(IntermediateCsfFile)' == '' ">
+      <IntermediateCsfFile Include="%(CsfFile.Intermediate)" TargetFile="%(CsfFile.TargetFile)" Pack="%(CsfFile.Pack)" TargetPack="%(CsfFile.TargetPack)" />
+    </ItemGroup>
+    <ItemGroup>
+      <CsfFile Remove="@(CsfFile)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
