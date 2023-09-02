@@ -1,23 +1,34 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 using Microsoft.Extensions.Logging;
+
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
 namespace Shimakaze.Sdk.Preprocessor.Commands;
 
 /// <summary>
-/// #region _________
+/// Region Commands: region endregion
 /// </summary>
-[PreprocessorCommand("region")]
-public sealed class RegionCommand : PreprocessorCommand
+[ExcludeFromCodeCoverage]
+public sealed class RegionCommand : ICommandSet
 {
+    private readonly Logger<RegionCommand>? _logger;
 
-    /// <inheritdoc />
-    public RegionCommand(IPreprocessorVariables variable) : base(variable)
-    {
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="logger"></param>
+    public RegionCommand(Logger<RegionCommand>? logger = null) => _logger = logger;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// #region
+    /// </summary>
+    [Command]
+    public void Region() => _logger?.LogDebug("Region");
 
-    public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+    /// <summary>
+    /// #endregion
+    /// </summary>
+    [Command]
+    public void Endregion() => _logger?.LogDebug("Endregion");
 }

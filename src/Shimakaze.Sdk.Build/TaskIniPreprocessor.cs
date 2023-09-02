@@ -1,8 +1,10 @@
-﻿using Microsoft.Build.Framework;
+﻿using System.Collections.Immutable;
+
+using Microsoft.Build.Framework;
 using Microsoft.Extensions.DependencyInjection;
 
-using Shimakaze.Sdk.Preprocessor;
-using Shimakaze.Sdk.Preprocessor.Extensions;
+using Shimakaze.Sdk.Preprocessor.Commands;
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 using TaskItem = Microsoft.Build.Utilities.TaskItem;
@@ -41,13 +43,19 @@ public sealed class TaskIniPreprocessor : MSTask
     public override bool Execute()
     {
         var services = new ServiceCollection()
-            .AddPreprocessor(i => i.AddDefines(Defines.Split(';').Select(i => i.Trim())))
-            .AddRegionCommands()
-            .AddConditionCommands()
-            .AddDefineCommands()
-            .AddSingleton<IList<ITaskItem>>(new List<ITaskItem>(SourceFiles.Length));
+            .AddEngine((options, services) =>
+            {
+                options.Defines = new(Defines.Split(';').Select(i => i.Trim()));
+                options.Commands = new[]{
+                    services.AddCommands<ConditionalCommand>(),
+                    services.AddCommands<DefineCommand>(),
+                    services.AddCommands<RegionCommand>(),
+                }.SelectMany(i => i).ToImmutableArray();
+            });
 
         using var provider = services.BuildServiceProvider();
+
+        List<ITaskItem> outputs = new(SourceFiles.Length);
 
         foreach (var file in SourceFiles)
         {
@@ -57,18 +65,16 @@ public sealed class TaskIniPreprocessor : MSTask
 
             using var source = File.OpenText(file.ItemSpec);
             using var target = File.CreateText(dest);
-            var task = provider.GetRequiredService<IPreprocessor>()
-                .ExecuteAsync(source, target, file.ItemSpec);
+            provider.GetRequiredService<Engine>()
+                .Execute(source, target, file.ItemSpec);
 
             TaskItem item = new(dest);
             file.CopyMetadataTo(item);
             item.RemoveMetadata(Metadata_Intermediate);
-            provider.GetRequiredService<IList<ITaskItem>>().Add(item);
-
-            task.Wait();
+            outputs.Add(item);
         }
 
-        OutputFiles = provider.GetRequiredService<IList<ITaskItem>>().ToArray();
+        OutputFiles = outputs.ToArray();
 
         return !Log.HasLoggedErrors;
     }
