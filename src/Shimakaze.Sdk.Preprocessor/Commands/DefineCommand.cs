@@ -1,29 +1,48 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+
+using Shimakaze.Sdk.Preprocessor.Kernel;
 
 namespace Shimakaze.Sdk.Preprocessor.Commands;
-
 /// <summary>
-/// #define _________
+/// Define Commands: define undef
 /// </summary>
-[PreprocessorCommand("define")]
-public sealed class DefineCommand : PreprocessorCommand
+public sealed class DefineCommand : ICommandSet
 {
-    /// <inheritdoc />
-    public DefineCommand(IPreprocessorVariables variable) : base(variable)
+    private readonly Engine _engine;
+    private readonly Logger<DefineCommand>? _logger;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="engine"></param>
+    /// <param name="logger"></param>
+    public DefineCommand(Engine engine, Logger<DefineCommand>? logger = null)
     {
+        _engine = engine;
+        _logger = logger;
     }
 
-    /// <inheritdoc />
-
-    public override Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
+    /// <summary>
+    /// #define identifier
+    /// </summary>
+    /// <param name="identifier"></param>
+    [Command]
+    public void Define(string identifier)
     {
-        if (args.Length is not 1)
-            throw new ArgumentException("Invalid arguments");
+        var defines = _engine.GetOrNew("Defines", () => new HashSet<string>());
+        defines.Add(identifier);
+        _logger?.LogDebug("Define {identifier}", identifier);
+    }
 
-        string identifier = args[0];
-
-        _variable.Defines.Add(identifier);
-
-        return Task.CompletedTask;
+    /// <summary>
+    /// #undef identifier
+    /// </summary>
+    /// <param name="identifier"></param>
+    [Command]
+    public void Undef(string identifier)
+    {
+        var defines = _engine.GetOrNew("Defines", () => new HashSet<string>());
+        defines.Remove(identifier);
+        _logger?.LogDebug("Undefine {identifier}", identifier);
     }
 }
