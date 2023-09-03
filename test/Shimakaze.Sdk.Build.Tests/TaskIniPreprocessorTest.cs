@@ -10,7 +10,8 @@ public class TaskIniPreprocessorTest
 {
     private const string Assets = "Assets";
     private const string Defines = "DEFINED;TEST";
-    private const string InputFile = "conditionTest.ini;defineTest.ini";
+    private const string InputFile = "conditionTest.ini;defineTest.ini;typeTest.ini";
+    private const string Input2File = "errorTest.ini";
     private const string OutputPath = "Out";
     private Mock<IBuildEngine>? _buildEngine;
     private List<BuildErrorEventArgs>? _errors;
@@ -41,5 +42,23 @@ public class TaskIniPreprocessorTest
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
+    }
+
+    [TestMethod]
+    public void ErrorTest()
+    {
+        TaskIniPreprocessor task = new()
+        {
+            SourceFiles = Input2File.Split(';').Select(i =>
+            {
+                var path = Path.GetFullPath(Path.Combine(Assets, i));
+                TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
+                item.SetMetadata(TaskIniPreprocessor.Metadata_Intermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
+                return item;
+            }).ToArray(),
+            Defines = Defines,
+            BuildEngine = _buildEngine?.Object,
+        };
+        Assert.IsFalse(task.Execute());
     }
 }
