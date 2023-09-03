@@ -7,7 +7,7 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 /// <summary>
 /// Condition Commands if elif else endif
 /// </summary>
-public sealed class ConditionalCommand : ICommandSet
+public sealed class ConditionalCommand
 {
     private readonly Engine _engine;
     private readonly Logger<ConditionalCommand>? _logger;

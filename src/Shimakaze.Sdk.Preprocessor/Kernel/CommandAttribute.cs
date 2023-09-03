@@ -5,14 +5,13 @@ namespace Shimakaze.Sdk.Preprocessor.Kernel;
 /// <summary>
 /// 预处理器指令
 /// </summary>
-[ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
 public sealed class CommandAttribute : Attribute
 {
     /// <summary>
     /// 使用完全小写的方法名作为预处理器指令名
     /// </summary>
-    public CommandAttribute() => Name = string.Empty;
+    public CommandAttribute() : this(string.Empty) { }
     /// <summary>
     /// 使用自定义正则作为预处理器指令名
     /// </summary>

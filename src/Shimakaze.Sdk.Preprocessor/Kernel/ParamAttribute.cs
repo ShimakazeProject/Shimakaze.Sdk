@@ -5,7 +5,6 @@ namespace Shimakaze.Sdk.Preprocessor.Kernel;
 /// <summary>
 /// 预处理器指令参数
 /// </summary>
-[ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
 public sealed class ParamAttribute : Attribute
 {

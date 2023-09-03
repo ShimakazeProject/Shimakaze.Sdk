@@ -6,7 +6,7 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 /// <summary>
 /// Define Commands: define undef
 /// </summary>
-public sealed class DefineCommand : ICommandSet
+public sealed class DefineCommand
 {
     private readonly Engine _engine;
     private readonly Logger<DefineCommand>? _logger;

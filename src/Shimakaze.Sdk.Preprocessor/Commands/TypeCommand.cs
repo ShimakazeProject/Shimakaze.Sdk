@@ -9,8 +9,7 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 /// <summary>
 /// Region Commands: region endregion
 /// </summary>
-[ExcludeFromCodeCoverage]
-public sealed class TypeCommand : ICommandSet
+public sealed class TypeCommand
 {
     private readonly Engine _engine;
     private readonly Logger<TypeCommand>? _logger;

@@ -10,7 +10,7 @@ namespace Shimakaze.Sdk.Preprocessor.Commands;
 /// Region Commands: region endregion
 /// </summary>
 [ExcludeFromCodeCoverage]
-public sealed class RegionCommand : ICommandSet
+public sealed class RegionCommand
 {
     private readonly Logger<RegionCommand>? _logger;
 
