@@ -1,3 +1,5 @@
+﻿using System.Collections.Immutable;
+
 using StreamJsonRpc;
 
 namespace Shimakaze.Sdk.JsonRPC.Server;
@@ -5,10 +7,14 @@ namespace Shimakaze.Sdk.JsonRPC.Server;
 /// <summary>
 /// Options for JsonRPCHostedService
 /// </summary>
-public sealed class JsonRPCHostedServiceOptions
+public sealed record class JsonRPCHostedServiceOptions
 {
     /// <summary>
-    /// JsonRpcMessageHandler
+    /// Targets
     /// </summary>
-    public required IJsonRpcMessageHandler JsonRpcMessageHandler { get; set; }
+    public ImmutableArray<Target> Targets { get; set; }
+    /// <summary>
+    /// JsonRPC
+    /// </summary>
+    public JsonRpc JsonRpc { get; set; } = default!;
 }

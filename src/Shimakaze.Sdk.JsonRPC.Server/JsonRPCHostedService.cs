@@ -1,7 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System.Collections.Immutable;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -9,61 +7,47 @@ using StreamJsonRpc;
 
 namespace Shimakaze.Sdk.JsonRPC.Server;
 
-internal sealed class JsonRPCHostedService : IHostedService, IDisposable
+/// <summary>
+/// JsonRPCHostedService
+/// </summary>
+public sealed class JsonRPCHostedService : IHostedService
 {
     private readonly JsonRpc _jsonRpc;
-    private readonly ILogger<JsonRPCHostedService> _logger;
-    private readonly JsonRPCHostedServiceOptions _options;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IServiceCollection _services;
+    private readonly ImmutableArray<Target> _methods;
+    private readonly IServiceProvider _provider;
+    private readonly ILogger<JsonRPCHostedService>? _logger;
 
-    public JsonRPCHostedService(
-        IServiceCollection services,
-        IServiceProvider serviceProvider)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="options"></param>
+    /// <param name="serviceProvider"></param>
+    /// <param name="logger"></param>
+    public JsonRPCHostedService(JsonRPCHostedServiceOptions options, IServiceProvider serviceProvider, ILogger<JsonRPCHostedService>? logger = null)
     {
-        _services = services;
-        _serviceProvider = serviceProvider;
-        _logger = serviceProvider.GetRequiredService<ILogger<JsonRPCHostedService>>();
-        _options = serviceProvider.GetRequiredService<JsonRPCHostedServiceOptions>();
-        _jsonRpc = new(_options.JsonRpcMessageHandler);
-    }
-    [ExcludeFromCodeCoverage]
-    public void Dispose()
-    {
-        _jsonRpc.Dispose();
+        _jsonRpc = options.JsonRpc;
+        _methods = options.Targets;
+        _provider = serviceProvider;
+        _logger = logger;
     }
 
+    /// <inheritdoc/>
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        int count = 0;
-        foreach (var target in _services
-            .Select(i => (
-                Metadata: i.ImplementationType?.GetCustomAttribute<HandlerAttribute>(),
-                i.ImplementationType))
-            .Where(i => i is
-            {
-                Metadata: not null,
-                ImplementationType:
-                {
-                    IsInterface: false,
-                    IsAbstract: false
-                }
-            })
-            .SelectMany(i => i.ImplementationType!.GetTargets(i.Metadata?.Route, _serviceProvider.GetRequiredService(i.ImplementationType!))))
+        foreach (var method in _methods)
         {
-            var isEvent = target.Method.ReturnType == typeof(void);
-            _logger.LogDebug("Find {type}: {path}", isEvent ? "Event" : "Method", target.Path);
-            _jsonRpc.AddLocalRpcMethod(target.Path, target.Method, target.Object);
-            count++;
+            var isEvent = method.Method.ReturnType == typeof(void);
+            _logger?.LogDebug("Find {type}: {path}", isEvent ? "Event" : "Method", method.Route);
+            _jsonRpc.AddLocalRpcMethod(method.Route, method.Method, _provider.GetService(method.Type));
         }
-        _logger.LogInformation("Loaded {count} JsonRPC Methods/Events.", count);
-        _jsonRpc.StartListening();
-        return Task.CompletedTask;
+
+        return Task.Run(_jsonRpc.StartListening, cancellationToken);
     }
 
+    /// <inheritdoc/>
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("See you next time!");
+        _logger?.LogInformation("See you next time!");
         return Task.CompletedTask;
     }
 }

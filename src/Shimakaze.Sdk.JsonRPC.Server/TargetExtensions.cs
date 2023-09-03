@@ -1,8 +1,10 @@
+﻿using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Text;
 
 using Microsoft.Extensions.DependencyInjection;
+using System.Data;
 
 namespace Shimakaze.Sdk.JsonRPC.Server;
 
@@ -17,7 +19,7 @@ public static partial class TargetExtensions
     /// <param name="services"> </param>
     /// <param name="optionsBuilder"> </param>
     /// <returns> </returns>
-    public static IServiceCollection AddJsonRpcHandlers(this IServiceCollection services, Action<JsonRPCHostedServiceOptions> optionsBuilder)
+    public static IServiceCollection AddJsonRpcService(this IServiceCollection services, Action<JsonRPCHostedServiceOptions, IServiceCollection> optionsBuilder)
     {
         foreach (var t in AppDomain
             .CurrentDomain
@@ -29,40 +31,90 @@ public static partial class TargetExtensions
         return services
             .AddSingleton(provider =>
             {
-                JsonRPCHostedServiceOptions options;
-                optionsBuilder(options = new() { JsonRpcMessageHandler = default! });
-                return options.JsonRpcMessageHandler is null ? throw new NullReferenceException() : options;
+                JsonRPCHostedServiceOptions options = new();
+                optionsBuilder(options, services);
+                return options;
             })
-            .AddHostedService<JsonRPCHostedService>(provider => new(services, provider));
+            .AddHostedService<JsonRPCHostedService>();
     }
 
-    internal static IEnumerable<Target> GetTargets(this Type type, string? route, object? o)
+    /// <summary>
+    /// 添加整个应用域范围内的所有RpcHandler
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IEnumerable<Target> AddAllRpcHandlers(this IServiceCollection services)
     {
-        return type
-            .GetMethods()
-            .Select(m => (metadata: m.GetCustomAttribute<MethodAttribute>(), m))
-            .Where(i => i.metadata is not null)
-            .Select(i => new Target(type.GetFullPath(route, i.metadata?.Route, i.m), i.m, o));
+        return AppDomain
+            .CurrentDomain
+            .GetAssemblies()
+            .SelectMany(i => i.ExportedTypes)
+            .Select(i => (Type: i, Metadata: i.GetCustomAttribute<HandlerAttribute>()))
+            .Where(i => i.Metadata is not null)
+            .SelectMany(i => services.AddRpcHandler(i.Type, i.Metadata?.Route ?? TrimController(i.Type.Name)));
     }
 
-    private static string GetFullPath(this Type type, string? route, string? method, MethodInfo m)
+    /// <summary>
+    /// 添加一个RpcHandler
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="type"></param>
+    /// <param name="route"></param>
+    /// <returns></returns>
+    public static IEnumerable<Target> AddRpcHandler(this IServiceCollection services, Type type, string? route)
     {
-        route ??= HandlerRegex().Replace(type.Name, string.Empty);
-        method ??= m.Name;
-        if (method.StartsWith('/'))
-            return method;
+        services.AddTransient(type);
 
-        StringBuilder sb = new();
-        if (!route.StartsWith('/'))
-            sb.Append('/');
-        sb.Append(route);
-        if (!route.EndsWith('/'))
-            sb.Append('/');
-
-        sb.Append(method);
-        return sb.ToString();
+        return GetRpcMethods(type, route);
     }
 
-    [GeneratedRegex("Handlers?|Controllers?")]
+    /// <summary>
+    /// 添加一个RpcHandler
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="services"></param>
+    /// <param name="route"></param>
+    /// <returns></returns>
+    public static IEnumerable<Target> AddRpcHandler<T>(this IServiceCollection services, string? route) where T : class => services.AddRpcHandler(typeof(T), route);
+
+    [GeneratedRegex("Handlers?$|Controllers?$")]
     private static partial Regex HandlerRegex();
+
+    private static string Combine(string? s1, string? s2)
+    {
+        if (s1 is null && s2 is null)
+            throw new ArgumentException("Must be set s1 or s2 ", nameof(s1));
+
+        s1 ??= string.Empty;
+        s2 ??= string.Empty;
+
+        string result;
+        if (s1.EndsWith('/') && s2.StartsWith('/'))
+            result = s1[..^1] + s2;
+        else if (!s1.EndsWith('/') && !s2.StartsWith('/'))
+            result = s1 + '/' + s2;
+        else
+            result = s1 + s2;
+
+        if (!result.StartsWith('/'))
+            result = '/' + result;
+
+        return result;
+    }
+
+    private static string TrimController(string path) => HandlerRegex().Replace(path, string.Empty);
+    private static string TrimAsyncTail(string path)
+    {
+        if (path.EndsWith("Async"))
+            return path[..^5];
+
+        return path;
+    }
+
+    private static IEnumerable<Target> GetRpcMethods(Type type, string? route) => type
+            .GetMethods()
+            .Select(i => (Metadata: i.GetCustomAttribute<MethodAttribute>(), Method: i))
+            .Where(i => i.Metadata is not null)
+            .Select(i => new Target(Combine(route, i.Metadata!.Route ?? TrimAsyncTail(i.Method.Name)), i.Method, type));
+
 }
