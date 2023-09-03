@@ -3,6 +3,8 @@
   <ItemGroup>
     <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdkTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\conditionTest.ini" Link="Assets\conditionTest.ini" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdkTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\defineTest.ini" Link="Assets\defineTest.ini" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdkTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\errorTest.ini" Link="Assets\errorTest.ini" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdkTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\typeTest.ini" Link="Assets\typeTest.ini" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdkTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.csf" Link="Assets\ra2md.csf" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdkTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.xml" Link="Assets\ra2md.v1.csf.xml" />
     <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdkTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.yaml" Link="Assets\ra2md.v1.csf.yaml" />

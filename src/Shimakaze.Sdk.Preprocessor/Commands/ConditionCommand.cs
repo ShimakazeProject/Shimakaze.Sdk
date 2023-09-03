@@ -28,8 +28,11 @@ public sealed class ConditionalCommand : ICommandSet
     /// </summary>
     /// <param name="condition"></param>
     [Command]
-    public void If([Param(@".*")]string condition)
+    public void If([Param(@".*")] string condition)
     {
+        if (string.IsNullOrWhiteSpace(condition))
+            throw new ArgumentNullException(nameof(condition));
+
         var conditionStack = _engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
         var conditionParser = _engine.GetOrNew("ConditionParser", () => new ConditionParser(_engine));
 
@@ -45,8 +48,11 @@ public sealed class ConditionalCommand : ICommandSet
     /// </summary>
     /// <param name="condition"></param>
     [Command]
-    public void Elif([Param(@".*")]string condition)
+    public void Elif([Param(@".*")] string condition)
     {
+        if (string.IsNullOrWhiteSpace(condition))
+            throw new ArgumentNullException(nameof(condition));
+
         var conditionStack = _engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
         var conditionParser = _engine.GetOrNew("ConditionParser", () => new ConditionParser(_engine));
 

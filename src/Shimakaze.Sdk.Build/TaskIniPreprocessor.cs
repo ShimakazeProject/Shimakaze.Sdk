@@ -2,6 +2,7 @@
 
 using Microsoft.Build.Framework;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using Shimakaze.Sdk.Preprocessor.Commands;
 using Shimakaze.Sdk.Preprocessor.Kernel;
@@ -43,6 +44,7 @@ public sealed class TaskIniPreprocessor : MSTask
     public override bool Execute()
     {
         var services = new ServiceCollection()
+            .AddLogging(builder => builder.AddSimpleConsole())
             .AddEngine((options, services) =>
             {
                 options.Defines = new(Defines.Split(';').Select(i => i.Trim()));
@@ -50,6 +52,7 @@ public sealed class TaskIniPreprocessor : MSTask
                     services.AddCommands<ConditionalCommand>(),
                     services.AddCommands<DefineCommand>(),
                     services.AddCommands<RegionCommand>(),
+                    services.AddCommands<TypeCommand>(),
                 }.SelectMany(i => i).ToImmutableArray();
             });
 
@@ -59,19 +62,26 @@ public sealed class TaskIniPreprocessor : MSTask
 
         foreach (var file in SourceFiles)
         {
-            var dest = file.GetMetadata(Metadata_Intermediate);
-            if (!dest.CreateParentDirectory(Log))
-                return false;
+            try
+            {
+                var dest = file.GetMetadata(Metadata_Intermediate);
+                if (!dest.CreateParentDirectory(Log))
+                    return false;
 
-            using var source = File.OpenText(file.ItemSpec);
-            using var target = File.CreateText(dest);
-            provider.GetRequiredService<Engine>()
-                .Execute(source, target, file.ItemSpec);
+                using var source = File.OpenText(file.ItemSpec);
+                using var target = File.CreateText(dest);
+                provider.GetRequiredService<Engine>()
+                    .Execute(source, target, file.ItemSpec);
 
-            TaskItem item = new(dest);
-            file.CopyMetadataTo(item);
-            item.RemoveMetadata(Metadata_Intermediate);
-            outputs.Add(item);
+                TaskItem item = new(dest);
+                file.CopyMetadataTo(item);
+                item.RemoveMetadata(Metadata_Intermediate);
+                outputs.Add(item);
+            }
+            catch (Exception ex)
+            {
+                Log.LogErrorFromException(ex);
+            }
         }
 
         OutputFiles = outputs.ToArray();

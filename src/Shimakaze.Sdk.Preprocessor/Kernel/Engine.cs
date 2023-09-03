@@ -36,6 +36,16 @@ public sealed class Engine
     public bool CanWritable { get; set; }
 
     /// <summary>
+    /// 正在写入的文件的路径
+    /// </summary>
+    public string? FilePath { get; set; }
+
+    /// <summary>
+    /// 写入器
+    /// </summary>
+    public TextWriter Writer { get; set; } = default!;
+
+    /// <summary>
     /// 预处理器引擎
     /// </summary>
     /// <param name="provider"></param>
@@ -69,15 +79,27 @@ public sealed class Engine
         return result;
     }
 
-    private void ParseLine(string line, long lineNumber, string? filePath = default)
+    private void ParseLine(string line, long lineNumber)
     {
         int index = line.IndexOf('#');
 
-        var cmd = _commands.FirstOrDefault(i => i.CanExecute(line.Trim()))
-            ?? throw new NotSupportedException($"""
+        var argc = line
+            .Split(' ')
+            .Where(i => !string.IsNullOrWhiteSpace(i))
+            .Count() - 1;
+        var cmd = _commands
+            .Where(i => i.Parameters.Length >= argc)
+            .OrderBy(i => i.Parameters.Length)
+            .FirstOrDefault(i => i.CanExecute(line.Trim()));
+        if (cmd is null)
+        {
+            _logger?.LogError("Unknown Preprocessor Command {line}", line);
+            throw new NotSupportedException($"""
             Unknown Preprocessor Command {line.Trim()}
-                at {filePath}:{lineNumber},{index}
+                at {FilePath}:{lineNumber},{index}
             """);
+        }
+
 
         try
         {
@@ -87,7 +109,7 @@ public sealed class Engine
         {
             throw new InvalidOperationException($"""
                 {ex.Message}
-                    at {filePath}:{lineNumber},{index}.
+                    at {FilePath}:{lineNumber},{index}.
                 """, ex);
         }
     }
@@ -104,6 +126,8 @@ public sealed class Engine
         TextWriter output,
         string? filePath = default)
     {
+        Writer = output;
+        FilePath = filePath;
 
         long lineNumber = 0;
         while (input.Peek() is not -1)
@@ -113,13 +137,13 @@ public sealed class Engine
 
             if (!string.IsNullOrWhiteSpace(line) && line.TrimStart().StartsWith('#'))
             {
-                ParseLine(line, lineNumber, filePath);
+                ParseLine(line, lineNumber);
                 continue;
             }
 
             if (CanWritable)
-                output.WriteLine(line);
+                Writer.WriteLine(line);
         }
-        output.Flush();
+        Writer.Flush();
     }
 }

@@ -34,8 +34,9 @@ public sealed class Command
     {
         Type = type;
         Name = string.IsNullOrEmpty(name) ? method.Name.ToLowerInvariant() : name;
-        if (Name.EndsWith("Async"))
-            Name = Name[..^5];
+        // Not Support Async Method
+        // if (Name.EndsWith("Async"))
+        //     Name = Name[..^5];
         Method = method;
         Parameters = parameters;
         Regex = new(@$"^#{Name}\s*{string.Join(@"\s*", parameters.Select(i => $"({i.Match})"))}$");
