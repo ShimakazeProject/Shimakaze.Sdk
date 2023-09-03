@@ -4,7 +4,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
   </ItemGroup>
 
   <ItemGroup>
