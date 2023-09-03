@@ -38,7 +38,12 @@ public sealed class Engine
     /// <summary>
     /// 正在写入的文件的路径
     /// </summary>
-    public string? FilePath { get; set; }
+    public string? FilePath { get; private set; }
+
+    /// <summary>
+    /// 当前文件的行号
+    /// </summary>
+    public long Line { get; private set; }
 
     /// <summary>
     /// 写入器
@@ -83,6 +88,8 @@ public sealed class Engine
     {
         int index = line.IndexOf('#');
 
+        line = line.Trim();
+
         var argc = line
             .Split(' ')
             .Where(i => !string.IsNullOrWhiteSpace(i))
@@ -90,16 +97,8 @@ public sealed class Engine
         var cmd = _commands
             .Where(i => i.Parameters.Length >= argc)
             .OrderBy(i => i.Parameters.Length)
-            .FirstOrDefault(i => i.CanExecute(line.Trim()));
-        if (cmd is null)
-        {
-            _logger?.LogError("Unknown Preprocessor Command {line}", line);
-            throw new NotSupportedException($"""
-            Unknown Preprocessor Command {line.Trim()}
-                at {FilePath}:{lineNumber},{index}
-            """);
-        }
-
+            .FirstOrDefault(i => i.CanExecute(line))
+            ?? this.ThrowNotSupport<Command>($"Unknown preprocessor command: {line}", index);
 
         try
         {
@@ -107,10 +106,7 @@ public sealed class Engine
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"""
-                {ex.Message}
-                    at {FilePath}:{lineNumber},{index}.
-                """, ex);
+            this.Throw(ex, index);
         }
     }
 
@@ -128,16 +124,16 @@ public sealed class Engine
     {
         Writer = output;
         FilePath = filePath;
+        Line = 0;
 
-        long lineNumber = 0;
         while (input.Peek() is not -1)
         {
             string? line = input.ReadLine();
-            lineNumber++;
+            Line++;
 
             if (!string.IsNullOrWhiteSpace(line) && line.TrimStart().StartsWith('#'))
             {
-                ParseLine(line, lineNumber);
+                ParseLine(line, Line);
                 continue;
             }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -29,23 +28,16 @@ public static class PreprocessorExtensions
         });
 
     /// <summary>
-    /// 反射当前应用域内所有程序集的预处理器指令集
+    /// 添加一个预处理器指令集
     /// </summary>
     /// <param name="services"></param>
+    /// <param name="type"></param>
     /// <returns></returns>
-    [ExcludeFromCodeCoverage]
-    public static IEnumerable<Command> AddAllCommands(this IServiceCollection services)
+    public static IEnumerable<Command> AddCommands(this IServiceCollection services, Type type)
     {
-        var types = AppDomain
-            .CurrentDomain
-            .GetAssemblies()
-            .SelectMany(i => i.GetExportedTypes())
-            .Where(i => !i.IsInterface && !i.IsAbstract && i.IsAssignableTo(typeof(ICommandSet)) && i != typeof(ICommandSet));
+        services.AddTransient(type);
 
-        foreach (var type in types)
-            services.AddTransient(typeof(ICommandSet), type);
-
-        return types.SelectMany(GetCommands);
+        return GetCommands(type);
     }
 
     /// <summary>
@@ -54,13 +46,7 @@ public static class PreprocessorExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IEnumerable<Command> AddCommands<T>(this IServiceCollection services)
-        where T : class
-    {
-        services.AddTransient(typeof(T));
-
-        return GetCommands(typeof(T));
-    }
+    public static IEnumerable<Command> AddCommands<T>(this IServiceCollection services) where T : class => services.AddCommands(typeof(T));
 
     /// <summary>
     /// 添加引擎
