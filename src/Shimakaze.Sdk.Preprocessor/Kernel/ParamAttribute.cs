@@ -14,7 +14,7 @@ public sealed class ParamAttribute : Attribute
     /// </summary>
     /// <param name="pattern"></param>
     public ParamAttribute([StringSyntax("Regex")] string pattern = @"\w*") => Regex = pattern;
-    
+
     [StringSyntax("Regex")]
     internal string Regex { get; init; }
 }
