@@ -18,7 +18,7 @@ public sealed class JsonRPCHostedService : IHostedService
     private readonly ILogger<JsonRPCHostedService>? _logger;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="options"></param>
     /// <param name="serviceProvider"></param>
@@ -37,7 +37,7 @@ public sealed class JsonRPCHostedService : IHostedService
         foreach (var method in _methods)
         {
             var isEvent = method.Method.ReturnType == typeof(void);
-            _logger?.LogDebug("Find {type}: {path}", isEvent ? "Event" : "Method", method.Route);
+            _logger?.LogInformation("Find {type}: {path}", isEvent ? "Event" : "Method", method.Route);
             _jsonRpc.AddLocalRpcMethod(method.Route, method.Method, _provider.GetService(method.Type));
         }
 
