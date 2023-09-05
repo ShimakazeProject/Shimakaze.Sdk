@@ -3,13 +3,20 @@ using System.Text;
 
 namespace Shimakaze.Sdk.Map.Trigger;
 
-public sealed record class ActionData(
+/// <summary>
+/// 触发的行为
+/// </summary>
+/// <param name="Count"></param>
+/// <param name="Items"></param>
+public sealed record class TriggerAction(
     int Count,
-    IList<ActionDataItem> Items
-) : IList<ActionDataItem>
+    IList<TriggerActionItem> Items
+) : IList<TriggerActionItem>
 {
-    public ActionDataItem this[int index] { get => Items[index]; set => Items[index] = value; }
+    /// <inheritdoc/>
+    public TriggerActionItem this[int index] { get => Items[index]; set => Items[index] = value; }
 
+    /// <inheritdoc/>
     public bool IsReadOnly => Items.IsReadOnly;
 
     private bool PrintMembers(StringBuilder builder)
@@ -24,12 +31,13 @@ public sealed record class ActionData(
         builder.Append(']');
         return true;
     }
-    public static ActionData Parse(string str)
+
+    internal static TriggerAction Parse(string str)
     {
         var tmp = str.Split(',');
-        ActionData data = new(
+        TriggerAction data = new(
             int.Parse(tmp[0]),
-            new List<ActionDataItem>()
+            new List<TriggerActionItem>()
         );
         for (int i = 1; i < tmp.Length;)
         {
@@ -46,46 +54,55 @@ public sealed record class ActionData(
         return data;
     }
 
-    public void Add(ActionDataItem item)
+    /// <inheritdoc/>
+    public void Add(TriggerActionItem item)
     {
         Items.Add(item);
     }
 
+    /// <inheritdoc/>
     public void Clear()
     {
         Items.Clear();
     }
 
-    public bool Contains(ActionDataItem item)
+    /// <inheritdoc/>
+    public bool Contains(TriggerActionItem item)
     {
         return Items.Contains(item);
     }
 
-    public void CopyTo(ActionDataItem[] array, int arrayIndex)
+    /// <inheritdoc/>
+    public void CopyTo(TriggerActionItem[] array, int arrayIndex)
     {
         Items.CopyTo(array, arrayIndex);
     }
 
-    public IEnumerator<ActionDataItem> GetEnumerator()
+    /// <inheritdoc/>
+    public IEnumerator<TriggerActionItem> GetEnumerator()
     {
         return Items.GetEnumerator();
     }
 
-    public int IndexOf(ActionDataItem item)
+    /// <inheritdoc/>
+    public int IndexOf(TriggerActionItem item)
     {
         return Items.IndexOf(item);
     }
 
-    public void Insert(int index, ActionDataItem item)
+    /// <inheritdoc/>
+    public void Insert(int index, TriggerActionItem item)
     {
         Items.Insert(index, item);
     }
 
-    public bool Remove(ActionDataItem item)
+    /// <inheritdoc/>
+    public bool Remove(TriggerActionItem item)
     {
         return Items.Remove(item);
     }
 
+    /// <inheritdoc/>
     public void RemoveAt(int index)
     {
         Items.RemoveAt(index);

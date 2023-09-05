@@ -1,6 +1,17 @@
 ﻿namespace Shimakaze.Sdk.Map.Trigger;
 
-public sealed record class TriggerData(
+/// <summary>
+/// 触发器
+/// </summary>
+/// <param name="House"></param>
+/// <param name="LinkedTrigger"></param>
+/// <param name="Name"></param>
+/// <param name="Disable"></param>
+/// <param name="Easy"></param>
+/// <param name="Normal"></param>
+/// <param name="Hard"></param>
+/// <param name="Persistence"></param>
+public sealed record class Trigger(
     string House,
     string LinkedTrigger,
     string Name,
@@ -11,7 +22,7 @@ public sealed record class TriggerData(
     TriggerPersistence Persistence
 )
 {
-    public static TriggerData Parse(string str)
+    internal static Trigger Parse(string str)
     {
         var tmp = str.Split(',');
         return new(

@@ -5,26 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <SlnGenSolutionItem Remove="Action.cs" />
-    <SlnGenSolutionItem Remove="ActionData.cs" />
-    <SlnGenSolutionItem Remove="ActionDataItem.cs" />
-    <SlnGenSolutionItem Remove="Context.cs" />
-    <SlnGenSolutionItem Remove="EventData.cs" />
-    <SlnGenSolutionItem Remove="EventDataItem.cs" />
-    <SlnGenSolutionItem Remove="FileHandler.cs" />
-    <SlnGenSolutionItem Remove="TagData.cs" />
-    <SlnGenSolutionItem Remove="TagPersistence.cs" />
-    <SlnGenSolutionItem Remove="TagsAndTriggers.cs" />
-    <SlnGenSolutionItem Remove="TriggerData.cs" />
-    <SlnGenSolutionItem Remove="TriggerObjectData.cs" />
-    <SlnGenSolutionItem Remove="TriggerPersistence.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
     <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.JsonRPC.Server\Shimakaze.Sdk.JsonRPC.Server.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
   </ItemGroup>

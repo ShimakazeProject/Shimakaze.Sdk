@@ -3,13 +3,20 @@ using System.Text;
 
 namespace Shimakaze.Sdk.Map.Trigger;
 
-public sealed record class EventData(
+/// <summary>
+/// 触发的事件
+/// </summary>
+/// <param name="Count"></param>
+/// <param name="Items"></param>
+public sealed record class TriggerEvent(
     int Count,
-    IList<EventDataItem> Items
-) : IList<EventDataItem>
+    IList<TriggerEventItem> Items
+) : IList<TriggerEventItem>
 {
-    public EventDataItem this[int index] { get => Items[index]; set => Items[index] = value; }
+    /// <inheritdoc/>
+    public TriggerEventItem this[int index] { get => Items[index]; set => Items[index] = value; }
 
+    /// <inheritdoc/>
     public bool IsReadOnly => Items.IsReadOnly;
 
     private bool PrintMembers(StringBuilder builder)
@@ -25,12 +32,12 @@ public sealed record class EventData(
         return true;
     }
 
-    public static EventData Parse(string str)
+    internal static TriggerEvent Parse(string str)
     {
         var tmp = str.Split(',');
-        EventData data = new(
+        TriggerEvent data = new(
             int.Parse(tmp[0]),
-            new List<EventDataItem>()
+            new List<TriggerEventItem>()
         );
         for (int i = 1; i < tmp.Length;)
         {
@@ -45,46 +52,55 @@ public sealed record class EventData(
         return data;
     }
 
-    public void Add(EventDataItem item)
+    /// <inheritdoc/>
+    public void Add(TriggerEventItem item)
     {
         Items.Add(item);
     }
 
+    /// <inheritdoc/>
     public void Clear()
     {
         Items.Clear();
     }
 
-    public bool Contains(EventDataItem item)
+    /// <inheritdoc/>
+    public bool Contains(TriggerEventItem item)
     {
         return Items.Contains(item);
     }
 
-    public void CopyTo(EventDataItem[] array, int arrayIndex)
+    /// <inheritdoc/>
+    public void CopyTo(TriggerEventItem[] array, int arrayIndex)
     {
         Items.CopyTo(array, arrayIndex);
     }
 
-    public IEnumerator<EventDataItem> GetEnumerator()
+    /// <inheritdoc/>
+    public IEnumerator<TriggerEventItem> GetEnumerator()
     {
         return Items.GetEnumerator();
     }
 
-    public int IndexOf(EventDataItem item)
+    /// <inheritdoc/>
+    public int IndexOf(TriggerEventItem item)
     {
         return Items.IndexOf(item);
     }
 
-    public void Insert(int index, EventDataItem item)
+    /// <inheritdoc/>
+    public void Insert(int index, TriggerEventItem item)
     {
         Items.Insert(index, item);
     }
 
-    public bool Remove(EventDataItem item)
+    /// <inheritdoc/>
+    public bool Remove(TriggerEventItem item)
     {
         return Items.Remove(item);
     }
 
+    /// <inheritdoc/>
     public void RemoveAt(int index)
     {
         Items.RemoveAt(index);
