@@ -1,4 +1,5 @@
-﻿namespace Shimakaze.Sdk.Map.Trigger;
+﻿
+namespace Shimakaze.Sdk.Map.Trigger;
 
 /// <summary>
 /// 标签数据
@@ -20,4 +21,6 @@ public sealed record class Tag(
             tmp[2]
         );
     }
+
+    internal string ToIniValue() => $"{(int)Persistence},{Name},{TriggerId}";
 }

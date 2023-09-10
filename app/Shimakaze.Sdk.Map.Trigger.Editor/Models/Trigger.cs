@@ -36,4 +36,5 @@ public sealed record class Trigger(
             (TriggerPersistence)int.Parse(tmp[7])
         );
     }
+    internal string ToIniValue() => $"{House},{LinkedTrigger},{Name},{(Disable ? 1 : 0)},{(Easy ? 1 : 0)},{(Normal ? 1 : 0)},{(Hard ? 1 : 0)},{(int)Persistence}";
 }

@@ -12,4 +12,8 @@ public sealed record class TriggerEventItem(
     int Parameter1,
     int Parameter2,
     string? Parameter3 = default
-);
+){
+    internal string ToIniValue() => Parameter3 is null
+        ? $"{Event},{Parameter1},{Parameter2}"
+        : $"{Event},{Parameter1},{Parameter2},{Parameter3}";
+}

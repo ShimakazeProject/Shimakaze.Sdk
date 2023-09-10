@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Text;
 
+using Microsoft.Extensions.Primitives;
+
 namespace Shimakaze.Sdk.Map.Trigger;
 
 /// <summary>
@@ -53,6 +55,12 @@ public sealed record class TriggerAction(
         }
         return data;
     }
+
+    internal string ToIniValue() => new StringBuilder()
+        .Append(Count)
+        .Append(',')
+        .Append(string.Join(',', Items.Select(x => x.ToIniValue())))
+        .ToString();
 
     /// <inheritdoc/>
     public void Add(TriggerActionItem item)
