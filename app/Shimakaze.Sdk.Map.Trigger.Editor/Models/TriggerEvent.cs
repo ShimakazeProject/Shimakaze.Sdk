@@ -52,6 +52,12 @@ public sealed record class TriggerEvent(
         return data;
     }
 
+    internal string ToIniValue() => new StringBuilder()
+        .Append(Count)
+        .Append(',')
+        .Append(string.Join(',', Items.Select(x => x.ToIniValue())))
+        .ToString();
+        
     /// <inheritdoc/>
     public void Add(TriggerEventItem item)
     {

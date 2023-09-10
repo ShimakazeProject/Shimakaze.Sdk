@@ -20,4 +20,7 @@ public sealed record class TriggerActionItem(
     string Parameter5,
     string Parameter6,
     string Parameter7
-);
+)
+{
+    internal string ToIniValue() => $"{Action},{Parameter1},{Parameter2},{Parameter3},{Parameter4},{Parameter5},{Parameter6},{Parameter7}";
+};

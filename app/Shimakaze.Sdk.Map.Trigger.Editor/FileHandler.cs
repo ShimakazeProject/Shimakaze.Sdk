@@ -78,4 +78,40 @@ public sealed class FileHandler
         };
 
     }
+
+    [Method]
+    public async Task SaveToAsync(Guid sessionId, string path)
+    {
+        var ctx = _ctx.Sessions[sessionId];
+        var ini = ctx.Ini;
+        IniSection tags = new() { Name = "Tags" };
+        IniSection triggers = new() { Name = "Triggers" };
+        IniSection events = new() { Name = "Events" };
+        IniSection actions = new() { Name = "Actions" };
+
+        foreach (var item in ctx.Tags)
+            tags[item.Key] = item.Value.ToIniValue();
+        foreach (var item in ctx.Triggers)
+            triggers[item.Key] = item.Value.ToIniValue();
+        foreach (var item in ctx.Events)
+            events[item.Key] = item.Value.ToIniValue();
+        foreach (var item in ctx.Actions)
+            actions[item.Key] = item.Value.ToIniValue();
+
+        ini["Tags"] = tags;
+        ini["Triggers"] = triggers;
+        ini["Events"] = events;
+        ini["Actions"] = actions;
+
+        await using Stream stream = File.Create(path);
+        using IniWriter writer = new(stream);
+        await writer.WriteAsync(ini);
+    }
+
+    [Method]
+    public async Task SaveAsync(Guid sessionId)
+    {
+        var ctx = _ctx.Sessions[sessionId];
+        await SaveToAsync(sessionId, ctx.Path);
+    }
 }
