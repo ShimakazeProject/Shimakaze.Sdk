@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk", "src\Shimakaze.Sdk\Shimakaze.Sdk.csproj", "{C41689B3-0D43-4D15-9CC5-769C0D53D4D4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Build", "src\Shimakaze.Sdk.Build\Shimakaze.Sdk.Build.csproj", "{42A322ED-6D75-4EE3-BD15-BD141A306D25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Preprocessor", "src\Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj", "{F7BB6ADA-BBD9-468C-85A4-77352493A5C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{869D6C42-CCAA-49BD-BFF4-6FF0D0A41C18}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Tests", "test\Shimakaze.Sdk.Tests\Shimakaze.Sdk.Tests.csproj", "{FBC19D3F-265B-492B-A7AD-FC1EE083CA8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Build.Tests", "test\Shimakaze.Sdk.Build.Tests\Shimakaze.Sdk.Build.Tests.csproj", "{2093D899-AB96-41C2-9C26-590CB3C83230}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{170ADFC8-AB68-4353-B896-C4777937B3CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Csf.Converter", "app\Shimakaze.Sdk.Csf.Converter\Shimakaze.Sdk.Csf.Converter.csproj", "{E9737D2B-A5C0-4D99-9510-9C0F0B65F036}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Vpl.Editor", "app\Shimakaze.Sdk.Vpl.Editor\Shimakaze.Sdk.Vpl.Editor.csproj", "{9B288144-A119-4FA3-8723-66EDA3B393E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{3A518E55-12DB-4C16-BC11-33896BC36E05}"
+	ProjectSection(SolutionItems) = preProject
+		build\Common.props = build\Common.props
+		build\CSharp.props = build\CSharp.props
+		build\CSharp.targets = build\CSharp.targets
+		build\CSharpTests.props = build\CSharpTests.props
+		build\CSharpTests.targets = build\CSharpTests.targets
+		build\NugetPackage.props = build\NugetPackage.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C41689B3-0D43-4D15-9CC5-769C0D53D4D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C41689B3-0D43-4D15-9CC5-769C0D53D4D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C41689B3-0D43-4D15-9CC5-769C0D53D4D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C41689B3-0D43-4D15-9CC5-769C0D53D4D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42A322ED-6D75-4EE3-BD15-BD141A306D25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42A322ED-6D75-4EE3-BD15-BD141A306D25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42A322ED-6D75-4EE3-BD15-BD141A306D25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42A322ED-6D75-4EE3-BD15-BD141A306D25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7BB6ADA-BBD9-468C-85A4-77352493A5C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7BB6ADA-BBD9-468C-85A4-77352493A5C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7BB6ADA-BBD9-468C-85A4-77352493A5C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7BB6ADA-BBD9-468C-85A4-77352493A5C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBC19D3F-265B-492B-A7AD-FC1EE083CA8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC19D3F-265B-492B-A7AD-FC1EE083CA8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC19D3F-265B-492B-A7AD-FC1EE083CA8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC19D3F-265B-492B-A7AD-FC1EE083CA8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2093D899-AB96-41C2-9C26-590CB3C83230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2093D899-AB96-41C2-9C26-590CB3C83230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2093D899-AB96-41C2-9C26-590CB3C83230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2093D899-AB96-41C2-9C26-590CB3C83230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9737D2B-A5C0-4D99-9510-9C0F0B65F036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9737D2B-A5C0-4D99-9510-9C0F0B65F036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9737D2B-A5C0-4D99-9510-9C0F0B65F036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9737D2B-A5C0-4D99-9510-9C0F0B65F036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B288144-A119-4FA3-8723-66EDA3B393E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B288144-A119-4FA3-8723-66EDA3B393E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B288144-A119-4FA3-8723-66EDA3B393E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B288144-A119-4FA3-8723-66EDA3B393E9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FBC19D3F-265B-492B-A7AD-FC1EE083CA8B} = {869D6C42-CCAA-49BD-BFF4-6FF0D0A41C18}
+		{2093D899-AB96-41C2-9C26-590CB3C83230} = {869D6C42-CCAA-49BD-BFF4-6FF0D0A41C18}
+		{E9737D2B-A5C0-4D99-9510-9C0F0B65F036} = {170ADFC8-AB68-4353-B896-C4777937B3CA}
+		{9B288144-A119-4FA3-8723-66EDA3B393E9} = {170ADFC8-AB68-4353-B896-C4777937B3CA}
+	EndGlobalSection
+EndGlobal
