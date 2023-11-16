@@ -11,6 +11,4 @@
     <Version>0.0.1-preview.9</Version>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)SolutionGenerator.props" />
-
 </Project>

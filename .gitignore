@@ -476,8 +476,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Visual Studio Solution
-*.sln
-
 # Coverage
 coverage/*
