@@ -18,7 +18,7 @@ public class TaskIniMergerTest
     public void MergeTest()
     {
         TaskItem item = new(Path.Combine(Assets, InputFile));
-        
+
         TaskIniMerger task = new()
         {
             SourceFiles = new[] { item },
