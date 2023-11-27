@@ -6,8 +6,10 @@ namespace Shimakaze.Sdk.Ini.Binder;
 /// IniDocument 绑定器
 /// </summary>
 /// <param name="tokenReader"></param>
-public sealed class IniDocumentBinder(IniTokenReader tokenReader)
+/// <param name="leaveOpen"></param>
+public sealed class IniDocumentBinder(IniTokenReader tokenReader, bool leaveOpen = false) : IDisposable
 {
+    private readonly bool _leaveOpen = leaveOpen;
     private readonly IniTokenReader _tokenReader = tokenReader;
 
     /// <summary>
@@ -51,5 +53,12 @@ public sealed class IniDocumentBinder(IniTokenReader tokenReader)
             }
         }
         return ini;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        if (!_leaveOpen)
+            _tokenReader.Dispose();
     }
 }
