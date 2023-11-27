@@ -17,9 +17,4 @@ public class EndOfEntryTableException : Exception
 
     /// <inheritdoc />
     public EndOfEntryTableException(string message, Exception inner) : base(message, inner) { }
-
-    /// <inheritdoc />
-    protected EndOfEntryTableException(
-      System.Runtime.Serialization.SerializationInfo info,
-      System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }
