@@ -8,8 +8,14 @@ namespace Shimakaze.Sdk.Ini.Parser;
 /// </summary>
 /// <param name="textReader"></param>
 /// <param name="ignore"></param>
-public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = IniTokenIgnoreLevel.NonValue) : IEnumerable<IniToken>
+/// <param name="leaveOpen"></param>
+public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = IniTokenIgnoreLevel.NonValue, bool leaveOpen = false) : IEnumerable<IniToken>, IDisposable
 {
+    /// <summary>
+    /// leave Open
+    /// </summary>
+    protected bool _leaveOpen = leaveOpen;
+
     /// <summary>
     /// 基础流
     /// </summary>
@@ -28,6 +34,7 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
     /// 字符暂存区
     /// </summary>
     protected StringBuilder _buffer = new();
+    private bool _disposedValue;
 
     /// <summary>
     /// 扩展
@@ -161,4 +168,34 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
     public IEnumerator<IniToken> GetEnumerator() => ReadAllInternal().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposedValue)
+            return;
+        
+        _disposedValue = true;
+        if (disposing)
+        {
+            if (!_leaveOpen)
+                BaseReader.Dispose();
+        }
+
+    }
+
+    // ~IniTokenReader()
+    // {
+    //     Dispose(disposing: false);
+    // }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
