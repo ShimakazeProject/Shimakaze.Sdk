@@ -177,7 +177,7 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
     {
         if (_disposedValue)
             return;
-        
+
         _disposedValue = true;
         if (disposing)
         {
