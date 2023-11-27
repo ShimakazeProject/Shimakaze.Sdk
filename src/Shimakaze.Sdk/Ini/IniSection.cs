@@ -6,12 +6,17 @@ namespace Shimakaze.Sdk.Ini;
 /// <summary>
 /// 表示一个INI节
 /// </summary>
-public class IniSection : IDictionary<string, string>
+/// <remarks>
+/// 构造一个INISection
+/// </remarks>
+/// <param name="name">节名</param>
+/// <param name="map">节数据 (键值对字典)</param>
+public class IniSection(string name, Dictionary<string, string> map) : IDictionary<string, string>
 {
     /// <summary>
     /// 内部的INI键值对字典
     /// </summary>
-    protected readonly Dictionary<string, string> _map = new();
+    protected readonly Dictionary<string, string> _map = map;
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
@@ -28,25 +33,27 @@ public class IniSection : IDictionary<string, string>
     /// <summary>
     /// Section节名
     /// </summary>
-    public required string Name { get; set; }
+    public string Name { get; internal set; } = name;
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public ICollection<string> Values => ((IDictionary<string, string>)_map).Values;
 
-    /// <summary>
-    /// 构造一个INISection
-    /// </summary>
-    public IniSection()
-    {
-    }
 
-    /// <inheritdoc cref="IniSection.IniSection()" />
-    /// <param name="map"> 键值对字典 </param>
-    public IniSection(Dictionary<string, string> map) : this()
-    {
-        _map = map;
-    }
+    /// <inheritdoc cref="IniSection(string, Dictionary{string, string})" />
+    public IniSection()
+        : this(string.Empty, [])
+    { }
+
+    /// <inheritdoc cref="IniSection(string, Dictionary{string, string})" />
+    public IniSection(string name)
+        : this(name, [])
+    { }
+
+    /// <inheritdoc cref="IniSection(string, Dictionary{string, string})" />
+    public IniSection(Dictionary<string, string> map)
+        : this(string.Empty, map)
+    { }
 
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
