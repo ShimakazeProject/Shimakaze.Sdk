@@ -11,31 +11,31 @@ namespace Shimakaze.Sdk.Ini;
 /// </remarks>
 /// <param name="name">节名</param>
 /// <param name="map">节数据 (键值对字典)</param>
-public sealed class IniSection(string name, Dictionary<string, string> map) : IDictionary<string, string>
+public class IniSection(string name, Dictionary<string, string> map) : IIniSection, IDictionary<string, string>
 {
     /// <summary>
     /// 内部的INI键值对字典
     /// </summary>
-    private readonly Dictionary<string, string> _data = map;
+    protected readonly Dictionary<string, string> _data = map;
 
     /// <summary>
     /// Section节名
     /// </summary>
-    public string Name { get; internal set; } = name;
+    public virtual string Name { get; internal set; } = name;
 
     /// <inheritdoc/>
-    public ICollection<string> Keys => _data.Keys;
+    public virtual ICollection<string> Keys => _data.Keys;
 
     /// <inheritdoc/>
-    public ICollection<string> Values => _data.Values;
+    public virtual ICollection<string> Values => _data.Values;
 
     /// <inheritdoc/>
-    public int Count => _data.Count;
+    public virtual int Count => _data.Count;
 
     bool ICollection<KeyValuePair<string, string>>.IsReadOnly => ((ICollection<KeyValuePair<string, string>>)_data).IsReadOnly;
 
     /// <inheritdoc/>
-    public string this[string key] { get => _data[key]; set => _data[key] = value; }
+    public virtual string this[string key] { get => _data[key]; set => _data[key] = value; }
 
     /// <inheritdoc cref="IniSection(string, Dictionary{string, string})" />
     public IniSection()
@@ -53,25 +53,22 @@ public sealed class IniSection(string name, Dictionary<string, string> map) : ID
     { }
 
     /// <inheritdoc/>
-    public void Add(string key, string value) => _data.Add(key, value);
+    public virtual void Add(string key, string value) => _data.Add(key, value);
 
     /// <inheritdoc/>
-    public bool ContainsKey(string key) => _data.ContainsKey(key);
+    public virtual bool ContainsKey(string key) => _data.ContainsKey(key);
 
     /// <inheritdoc/>
-    public bool Remove(string key) => _data.Remove(key);
+    public virtual bool Remove(string key) => _data.Remove(key);
 
     /// <inheritdoc/>
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value) => _data.TryGetValue(key, out value);
+    public virtual bool TryGetValue(string key, [MaybeNullWhen(false)] out string value) => _data.TryGetValue(key, out value);
 
     /// <inheritdoc/>
-    public void Clear() => _data.Clear();
+    public virtual void Clear() => _data.Clear();
 
     /// <inheritdoc/>
-    public bool Contains(KeyValuePair<string, string> item) => _data.Contains(item);
-
-    /// <inheritdoc/>
-    public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => _data.GetEnumerator();
+    public virtual IEnumerator<KeyValuePair<string, string>> GetEnumerator() => _data.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => _data.GetEnumerator();
 
@@ -80,4 +77,6 @@ public sealed class IniSection(string name, Dictionary<string, string> map) : ID
     void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => ((ICollection<KeyValuePair<string, string>>)_data).CopyTo(array, arrayIndex);
 
     bool ICollection<KeyValuePair<string, string>>.Remove(KeyValuePair<string, string> item) => ((ICollection<KeyValuePair<string, string>>)_data).Remove(item);
+
+    bool ICollection<KeyValuePair<string, string>>.Contains(KeyValuePair<string, string> item) => _data.Contains(item);
 }
