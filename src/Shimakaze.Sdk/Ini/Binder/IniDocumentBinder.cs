@@ -27,7 +27,7 @@ public sealed class IniDocumentBinder(IniTokenReader tokenReader)
             switch (token.Type)
             {
                 case IniTokenType.Section:
-                    if (!ini.TryGetValue(token.Value, out var section))
+                    if (!ini.TryGetSection(token.Value, out var section))
                         section = ini[token.Value] = new(token.Value);
 
                     current = section;
