@@ -51,26 +51,17 @@ jobs:
       - name: 还原
         shell: pwsh
         run: |-
-          Get-ChildItem sdk `
-          | Where-Object {
-            $PSItem -is [System.IO.DirectoryInfo]
-          } `
-          | ForEach-Object {
-            Write-Output "Restore $($PSItem.Name)"
-            dotnet restore $PSItem.FullName
-          }
+            dotnet restore
+
+      - name: 构建
+        shell: pwsh
+        run: |-
+            dotnet build --configuration Release --no-restore
 
       - name: 打包
         shell: pwsh
         run: |-
-          Get-ChildItem sdk `
-          | Where-Object {
-            $PSItem -is [System.IO.DirectoryInfo]
-          } `
-          | ForEach-Object {
-            Write-Output "Pack $($PSItem.Name)"
-            dotnet pack $PSItem.FullName --configuration Release --no-restore --no-build --include-symbols --include-source
-          }
+            dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
 
       - name: 上传 Nuget 包
         uses: actions/upload-artifact@v3.1.3
