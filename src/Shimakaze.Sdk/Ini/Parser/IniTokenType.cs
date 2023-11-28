@@ -22,6 +22,14 @@ public static class IniTokenType
     /// </summary>
     public const int LF = '\n';
     /// <summary>
+    /// Space
+    /// </summary>
+    public const int SPACE = ' ';
+    /// <summary>
+    /// Tab
+    /// </summary>
+    public const int TAB = '\t';
+    /// <summary>
     /// ;
     /// </summary>
     public const int SEMI = ';';

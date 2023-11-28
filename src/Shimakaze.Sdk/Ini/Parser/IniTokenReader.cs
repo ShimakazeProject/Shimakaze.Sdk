@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Shimakaze.Sdk.Ini.Parser;
@@ -37,11 +38,49 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
     private bool _disposedValue;
 
     /// <summary>
-    /// 扩展
+    /// 将 <see cref="_buffer"/> 内容输出为 <see cref="IniToken"/>
     /// </summary>
-    /// <param name="ch"></param>
+    /// <param name="result"></param>
+    /// <param name="type"></param>
     /// <returns></returns>
-    protected virtual IniToken? Ext(char ch) => default;
+    protected virtual bool FlushBuffer([NotNullWhen(true)] out IniToken? result, int type = IniTokenType.Unknown)
+    {
+        result = default;
+        if (_buffer.Length is 0)
+            return result is not null;
+
+
+        if (_depths.TryPeek(out var depth))
+        {
+            switch (depth.Start)
+            {
+                case '[':
+                    {
+                        // Flush Section
+                        (_, StringBuilder lastBuffer) = _depths.Pop();
+                        result = new IniToken(IniTokenType.Section, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
+                        _buffer = lastBuffer;
+                        break;
+                    }
+                case '=':
+                    {
+                        // Flush Value
+                        (_, StringBuilder lastBuffer) = _depths.Pop();
+                        result = new IniToken(IniTokenType.Value, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
+                        _buffer = lastBuffer;
+                        break;
+                    }
+            }
+        }
+        else
+        {
+            // 不知道是什么东西
+            result = new IniToken(type, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
+            _buffer.Clear();
+        }
+
+        return result is not null;
+    }
 
     private IEnumerable<IniToken> ReadAllInternal()
     {
@@ -54,110 +93,89 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
             {
                 // 行尾匹配
                 case '\r':
-                    // Flush
-                    if (_buffer.Length is not 0)
                     {
-                        if (_depths.TryPeek(out var depth) && depth.Start is '=')
-                        {
-                            (_, StringBuilder lastBuffer) = _depths.Pop();
-                            yield return new IniToken(IniTokenType.Value, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                            _buffer = lastBuffer;
-
-                        }
-                        else
-                        {
-                            yield return new IniToken(IniTokenType.Unknown, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                            _buffer.Clear();
-                        }
+                        // Flush
+                        if (FlushBuffer(out var token))
+                            yield return token;
+                        if (IgnoreLevel < IniTokenIgnoreLevel.White)
+                            yield return new(IniTokenType.CR);
+                        break;
                     }
-                    if (IgnoreLevel < IniTokenIgnoreLevel.White)
-                        yield return new(IniTokenType.CR);
-                    break;
                 case '\n':
-                    // Flush
-                    if (_buffer.Length is not 0)
                     {
-                        if (_depths.TryPeek(out var depth) && depth.Start is '=')
-                        {
-                            (_, StringBuilder lastBuffer) = _depths.Pop();
-                            yield return new IniToken(IniTokenType.Value, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                            _buffer = lastBuffer;
-                        }
-                        else
-                        {
-                            yield return new IniToken(IniTokenType.Unknown, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                            _buffer.Clear();
-                        }
+                        // Flush
+                        if (FlushBuffer(out var token))
+                            yield return token;
+                        if (IgnoreLevel < IniTokenIgnoreLevel.White)
+                            yield return new(IniTokenType.LF);
+                        break;
                     }
-                    if (IgnoreLevel < IniTokenIgnoreLevel.White)
-                        yield return new(IniTokenType.LF);
-                    break;
+                // 空格
+                case ' ':
+                    {
+                        if (_depths.Count is 0 && IgnoreLevel < IniTokenIgnoreLevel.White)
+                            yield return new(IniTokenType.SPACE);
+                        break;
+                    }
+                // 横向制表符
+                case '\t':
+                    {
+                        if (_depths.Count is 0 && IgnoreLevel < IniTokenIgnoreLevel.White)
+                            yield return new(IniTokenType.TAB);
+                        break;
+                    }
                 // 行内注释
                 case ';':
-                    // Flush
-                    if (_buffer.Length is not 0)
                     {
-                        yield return new IniToken(IniTokenType.Unknown, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                        _buffer.Clear();
-                    }
-                    if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
-                        yield return new(IniTokenType.SEMI);
+                        // Flush
+                        if (FlushBuffer(out var token))
+                            yield return token;
+                        if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
+                            yield return new(IniTokenType.SEMI);
 
-                    yield return new IniToken(IniTokenType.Comment, BaseReader.ReadLine() ?? string.Empty, IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                    break;
+                        yield return new IniToken(IniTokenType.Comment, BaseReader.ReadLine() ?? string.Empty, IgnoreLevel is >= IniTokenIgnoreLevel.White);
+                        break;
+                    }
                 // 匹配尾中括号
                 case ']':
-                    // Flush
-                    if (_buffer.Length is not 0)
                     {
-                        if (_depths.TryPeek(out var depth) && depth.Start is '[')
-                        {
-                            (_, StringBuilder lastBuffer) = _depths.Pop();
-                            yield return new IniToken(IniTokenType.Section, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                            _buffer = lastBuffer;
-                        }
-                        else
-                        {
-                            yield return new IniToken(IniTokenType.Unknown, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                            _buffer.Clear();
-                        }
+                        // Flush
+                        if (FlushBuffer(out var token))
+                            yield return token;
+                        if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
+                            yield return new(IniTokenType.END_BRACKET);
+                        break;
                     }
-                    if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
-                        yield return new(IniTokenType.END_BRACKET);
-                    break;
                 // 匹配首中括号
                 case '[':
-                    // Flush
-                    if (_buffer.Length is not 0)
                     {
-                        yield return new IniToken(IniTokenType.Unknown, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                        _buffer.Clear();
-                    }
-                    if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
-                        yield return new(IniTokenType.START_BRACKET);
+                        // Flush
+                        if (FlushBuffer(out var token))
+                            yield return token;
+                        if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
+                            yield return new(IniTokenType.START_BRACKET);
 
-                    _depths.Push((ch, _buffer));
-                    _buffer = new();
-                    break;
+                        _depths.Push((ch, _buffer));
+                        _buffer = new();
+                        break;
+                    }
                 case '=':
-                    // Flush
-                    if (_buffer.Length is not 0)
                     {
-                        yield return new IniToken(IniTokenType.Key, _buffer.ToString(), IgnoreLevel is >= IniTokenIgnoreLevel.White);
-                        _buffer.Clear();
-                    }
-                    if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
-                        yield return new(IniTokenType.EQ);
+                        // Flush
+                        if (FlushBuffer(out var token, IniTokenType.Key))
+                            yield return token;
+                        if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
+                            yield return new(IniTokenType.EQ);
 
-                    _depths.Push((ch, _buffer));
-                    _buffer = new();
-                    break;
+                        _depths.Push((ch, _buffer));
+                        _buffer = new();
+                        break;
+                    }
                 default:
-                    if (Ext(ch) is IniToken token)
-                        yield return token;
-                    else
+                    {
                         _buffer.Append(ch);
-                    break;
+                        break;
+                    }
             }
         }
         if (IgnoreLevel < IniTokenIgnoreLevel.White && BaseReader.Peek() is -1)
