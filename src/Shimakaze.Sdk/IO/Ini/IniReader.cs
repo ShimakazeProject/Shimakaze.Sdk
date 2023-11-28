@@ -1,18 +1,20 @@
-using System.Diagnostics.CodeAnalysis;
-
 using Shimakaze.Sdk.Ini;
+using Shimakaze.Sdk.Ini.Binder;
+using Shimakaze.Sdk.Ini.Parser;
 
 namespace Shimakaze.Sdk.IO.Ini;
 
 /// <summary>
 /// Ini反序列化器
 /// </summary>
-public class IniReader : AsyncReader<IniDocument>
+public sealed class IniReader : AsyncReader<IniDocument>
 {
     /// <summary>
     /// 基础读取器
     /// </summary>
-    public TextReader BaseReader { get; }
+    private TextReader BaseReader { get; }
+    private readonly IniTokenReader _tokenReader;
+    private readonly IniDocumentBinder _binder;
 
     /// <summary>
     /// 构造 Ini反序列化器
@@ -21,51 +23,30 @@ public class IniReader : AsyncReader<IniDocument>
     /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
     public IniReader(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
     {
-        BaseReader = new StreamReader(stream, leaveOpen);
+        BaseReader = new StreamReader(stream, leaveOpen: leaveOpen);
+        _tokenReader = new(BaseReader, leaveOpen: leaveOpen);
+        _binder = new(_tokenReader, leaveOpen: leaveOpen);
     }
 
-    /// <inheritdoc />
-    public override async Task<IniDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
-    {
-        IniDocument doc = new();
-        IniSection current = doc.Default;
-        string? line;
-        while ((line = await BaseReader.ReadLineAsync(cancellationToken)) is not null)
-        {
-            line = line.Split(';', '#').First().Trim();
-
-            cancellationToken.ThrowIfCancellationRequested();
-            if (string.IsNullOrEmpty(line))
-                continue;
-
-            cancellationToken.ThrowIfCancellationRequested();
-            if (line.StartsWith('[') && line.EndsWith(']'))
-            {
-                current = new()
-                {
-                    Name = line[1..^1]
-                };
-                doc.Add(current);
-
-                continue;
-            }
-
-            cancellationToken.ThrowIfCancellationRequested();
-            var index = line.IndexOf('=');
-            if (index is -1)
-                current.Add(line, string.Empty);
-            else
-                current.Add(line[..index].TrimEnd(), line[(index + 1)..].TrimStart());
-        }
-        return doc;
-    }
+    /// <summary>
+    /// 读取一个 INI 文档
+    /// </summary>
+    /// <returns></returns>
+    public IniDocument Read() => _binder.Bind();
 
     /// <inheritdoc />
-    [ExcludeFromCodeCoverage]
+    public override Task<IniDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+        => Task.Run(Read, cancellationToken);
+
+    /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            if (!_leaveOpen)
+                _binder.Dispose();
+            if (!_leaveOpen)
+                _tokenReader.Dispose();
             if (!_leaveOpen)
                 BaseReader.Dispose();
         }
@@ -74,9 +55,12 @@ public class IniReader : AsyncReader<IniDocument>
     }
 
     /// <inheritdoc />
-    [ExcludeFromCodeCoverage]
     protected override ValueTask DisposeAsyncCore()
     {
+        if (!_leaveOpen)
+            _binder.Dispose();
+        if (!_leaveOpen)
+            _tokenReader.Dispose();
         if (!_leaveOpen)
             BaseReader.Dispose();
 

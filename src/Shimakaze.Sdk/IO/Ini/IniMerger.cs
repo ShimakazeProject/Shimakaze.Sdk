@@ -13,7 +13,7 @@ public class IniMerger : ISet<IniSection>
     /// <summary>
     /// 内部的词典
     /// </summary>
-    protected readonly Dictionary<string, IniSection> _cache = new();
+    protected readonly Dictionary<string, IniSection> _cache = [];
 
     /// <inheritdoc />
     public virtual int Count => _cache.Count;
