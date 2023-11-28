@@ -27,8 +27,8 @@ public sealed class AresIniSection(string name, string? @base, Dictionary<string
     /// <inheritdoc/>
     public override ICollection<string> Keys
         => Base is not null
-        ? Base
-            .Concat(_data)
+        ? _data
+            .Concat(Base)
             .DistinctBy(i => i.Key)
             .Select(i => i.Key)
             .ToList()
@@ -37,8 +37,8 @@ public sealed class AresIniSection(string name, string? @base, Dictionary<string
     /// <inheritdoc/>
     public override ICollection<string> Values
         => Base is not null
-        ? Base
-            .Concat(_data)
+        ? _data
+            .Concat(Base)
             .DistinctBy(i => i.Key)
             .Select(i => i.Value)
             .ToList()
@@ -47,8 +47,8 @@ public sealed class AresIniSection(string name, string? @base, Dictionary<string
     /// <inheritdoc/>
     public override int Count
         => Base is not null
-        ? Base
-            .Concat(_data)
+        ? _data
+            .Concat(Base)
             .DistinctBy(i => i.Key)
             .Count()
         : base.Count;
@@ -110,8 +110,8 @@ public sealed class AresIniSection(string name, string? @base, Dictionary<string
     /// <inheritdoc/>
     public override IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         => Base is not null
-        ? Base
-            .Concat(_data)
+        ? _data
+            .Concat(Base)
             .DistinctBy(i => i.Key)
             .GetEnumerator()
         : base.GetEnumerator();
