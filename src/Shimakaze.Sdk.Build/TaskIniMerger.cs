@@ -1,6 +1,9 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Shimakaze.Sdk.Ini;
+using Shimakaze.Sdk.Ini.Binder;
+using Shimakaze.Sdk.Ini.Parser;
 using Shimakaze.Sdk.IO.Ini;
 
 using MSTask = Microsoft.Build.Utilities.Task;
@@ -42,19 +45,21 @@ public sealed class TaskIniMerger : MSTask
         if (!DestinationFile.CreateParentDirectory(Log))
             return false;
 
-        IniMerger merger = new();
+        IniDocument ini = [];
         OutputFile = new TaskItem(DestinationFile);
         foreach (var file in SourceFiles)
         {
-            using Stream stream = File.OpenRead(file.ItemSpec);
-            using IniReader reader = new(stream);
-            merger.UnionWith(reader.ReadAsync().Result);
+            using var sr = File.OpenText(file.ItemSpec);
+            using IniTokenReader reader = new(sr);
+            using IniDocumentBinder binder = new(reader);
+            ini = binder.Bind(ini);
             file.CopyMetadataTo(OutputFile);
         }
 
         OutputFile.SetMetadata(Metadata_Pack, true.ToString());
         using Stream output = File.Create(DestinationFile);
-        merger.BuildAndWriteToAsync(output).Wait();
+        using IniWriter writer = new(output);
+        writer.Write(ini);
         output.Flush();
 
         return !Log.HasLoggedErrors;

@@ -32,15 +32,11 @@ public sealed class IniReader : AsyncReader<IniDocument>
     /// 读取一个 INI 文档
     /// </summary>
     /// <returns></returns>
-    public IniDocument Read()
-    {
-        IniDocument ini = [];
-        _binder.Bind(ini);
-        return ini;
-    }
+    public IniDocument Read() => _binder.Bind();
 
     /// <inheritdoc />
-    public override Task<IniDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default) => Task.Run(Read, cancellationToken);
+    public override Task<IniDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+        => Task.Run(Read, cancellationToken);
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
@@ -61,6 +57,10 @@ public sealed class IniReader : AsyncReader<IniDocument>
     /// <inheritdoc />
     protected override ValueTask DisposeAsyncCore()
     {
+        if (!_leaveOpen)
+            _binder.Dispose();
+        if (!_leaveOpen)
+            _tokenReader.Dispose();
         if (!_leaveOpen)
             BaseReader.Dispose();
 

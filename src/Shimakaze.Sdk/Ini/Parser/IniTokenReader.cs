@@ -84,6 +84,7 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
 
     private IEnumerable<IniToken> ReadAllInternal()
     {
+        IniToken? token;
         while (BaseReader.Peek() is not -1)
         {
             char ch = (char)BaseReader.Read();
@@ -95,8 +96,8 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                 case '\r':
                     {
                         // Flush
-                        if (FlushBuffer(out var token))
-                            yield return token;
+                        if (FlushBuffer(out token))
+                            yield return token.Value;
                         if (IgnoreLevel < IniTokenIgnoreLevel.White)
                             yield return new(IniTokenType.CR);
                         break;
@@ -104,8 +105,8 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                 case '\n':
                     {
                         // Flush
-                        if (FlushBuffer(out var token))
-                            yield return token;
+                        if (FlushBuffer(out token))
+                            yield return token.Value;
                         if (IgnoreLevel < IniTokenIgnoreLevel.White)
                             yield return new(IniTokenType.LF);
                         break;
@@ -128,8 +129,8 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                 case ';':
                     {
                         // Flush
-                        if (FlushBuffer(out var token))
-                            yield return token;
+                        if (FlushBuffer(out token))
+                            yield return token.Value;
                         if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
                             yield return new(IniTokenType.SEMI);
 
@@ -140,8 +141,8 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                 case ']':
                     {
                         // Flush
-                        if (FlushBuffer(out var token))
-                            yield return token;
+                        if (FlushBuffer(out token))
+                            yield return token.Value;
                         if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
                             yield return new(IniTokenType.END_BRACKET);
                         break;
@@ -150,8 +151,8 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                 case '[':
                     {
                         // Flush
-                        if (FlushBuffer(out var token))
-                            yield return token;
+                        if (FlushBuffer(out token))
+                            yield return token.Value;
                         if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
                             yield return new(IniTokenType.START_BRACKET);
 
@@ -162,8 +163,8 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                 case '=':
                     {
                         // Flush
-                        if (FlushBuffer(out var token, IniTokenType.Key))
-                            yield return token;
+                        if (FlushBuffer(out token, IniTokenType.Key))
+                            yield return token.Value;
                         if (IgnoreLevel < IniTokenIgnoreLevel.NonValue)
                             yield return new(IniTokenType.EQ);
 
@@ -178,8 +179,8 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                     }
             }
         }
-        if (FlushBuffer(out var token_))
-            yield return token_;
+        if (FlushBuffer(out token))
+            yield return token.Value;
         if (IgnoreLevel < IniTokenIgnoreLevel.White)
             yield return new(IniTokenType.EOF);
     }

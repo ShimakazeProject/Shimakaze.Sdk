@@ -5,7 +5,7 @@ namespace Shimakaze.Sdk.Ini.Parser;
 /// </summary>
 /// <param name="Type"><see cref="IniTokenType"/></param>
 /// <param name="Value"></param>
-public record class IniToken(int Type, string? Value = default)
+public record struct IniToken(int Type, string? Value = default)
 {
     /// <inheritdoc cref="IniToken(int, string?)"/>
     /// <param name="type"><see cref="IniTokenType"/></param>
