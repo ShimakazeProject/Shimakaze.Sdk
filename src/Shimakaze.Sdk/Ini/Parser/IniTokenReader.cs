@@ -178,7 +178,9 @@ public class IniTokenReader(TextReader textReader, IniTokenIgnoreLevel ignore = 
                     }
             }
         }
-        if (IgnoreLevel < IniTokenIgnoreLevel.White && BaseReader.Peek() is -1)
+        if (FlushBuffer(out var token_))
+            yield return token_;
+        if (IgnoreLevel < IniTokenIgnoreLevel.White)
             yield return new(IniTokenType.EOF);
     }
 
