@@ -64,6 +64,21 @@ public class IniTokenWriter(TextWriter textWriter, bool leaveOpen = false) : IDi
     }
 
     /// <summary>
+    /// 写入Token 后写入换行符
+    /// </summary>
+    /// <param name="token"></param>
+    public void WriteLine(in IniToken token)
+    {
+        Write(token);
+        WriteLine();
+    }
+
+    /// <summary>
+    /// 写入换行符
+    /// </summary>
+    public void WriteLine() => BaseWriter.WriteLine();
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="disposing"></param>
