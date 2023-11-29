@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+
+  <PropertyGroup>
+    <ShimakazeSdk_RootFolder>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</ShimakazeSdk_RootFolder>
+    <ShimakazeSdk_ApplicationFolder>$([MSBuild]::NormalizeDirectory('$(ShimakazeSdk_RootFolder)', 'app'))</ShimakazeSdk_ApplicationFolder>
+    <ShimakazeSdk_LibraryFolder>$([MSBuild]::NormalizeDirectory('$(ShimakazeSdk_RootFolder)', 'lib'))</ShimakazeSdk_LibraryFolder>
+    <ShimakazeSdk_UnitTestFolder>$([MSBuild]::NormalizeDirectory('$(ShimakazeSdk_RootFolder)', 'test'))</ShimakazeSdk_UnitTestFolder>
+
+    <ShimakazeSdk_ProjectType Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_ApplicationFolder)')) ">Application</ShimakazeSdk_ProjectType>
+    <ShimakazeSdk_ProjectType Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_LibraryFolder)')) ">Library</ShimakazeSdk_ProjectType>
+    <ShimakazeSdk_ProjectType Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_UnitTestFolder)')) ">UnitTest</ShimakazeSdk_ProjectType>
+
+    <Version>0.0.1-preview.10</Version>
+  </PropertyGroup>
+
+  <!-- CSharp Common -->
+  <PropertyGroup Condition=" '$(ShimakazeSdk_ProjectType)' != '' ">
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' != '' ">
+    <PackageReference Include="IDisposableAnalyzers" Version="4.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' != 'UnitTest' ">
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(ShimakazeSdk_ProjectType)' != '' ">
+    <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(MSBuildProjectDirectory)\Assets\logo.png')">$(MSBuildProjectDirectory)\Assets\logo.png</IconPath>
+    <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(ShimakazeSdk_RootFolder)assets\logo.png')">$(ShimakazeSdk_RootFolder)assets\logo.png</IconPath>
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)\ReadMe.md')">$(MSBuildProjectDirectory)\ReadMe.md</ReadmeFile>
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(ShimakazeSdk_RootFolder)ReadMe.md')">$(ShimakazeSdk_RootFolder)ReadMe.md</ReadmeFile>
+
+    <Authors>Shimakaze Project</Authors>
+    <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
+    <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
+    <PackageIcon Condition=" '$(IconPath)' != '' ">logo.png</PackageIcon>
+    <PackageReadmeFile Condition=" '$(ReadmeFile)' != '' ">ReadMe.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageOutputPath>$(ShimakazeSdk_RootFolder)nupkg</PackageOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' != '' ">
+    <None
+      Include="$(IconPath)"
+      Condition=" '$(IconPath)' != '' "
+      Pack="True"
+      PackagePath="\" />
+    <None
+      Include="$(ReadmeFile)"
+      Condition=" '$(ReadmeFile)' != '' "
+      Pack="True"
+      PackagePath="\" />
+  </ItemGroup>
+
+  <!-- CSharp Application Common -->
+  <PropertyGroup Condition=" '$(ShimakazeSdk_ProjectType)' == 'Application' ">
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' == 'Application' ">
+    <ProjectReference Include="$(ShimakazeSdk_LibraryFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
+  </ItemGroup>
+
+  <!-- CSharp UnitTest Common -->
+  <PropertyGroup Condition=" '$(ShimakazeSdk_ProjectType)' == 'UnitTest' ">
+    <RootNamespace>$(MSBuildProjectName.Replace('.Tests', ''))</RootNamespace>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <IsPackable>False</IsPackable>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <CollectCoverage>True</CollectCoverage>
+    <CoverletOutputFormat>lcov</CoverletOutputFormat>
+    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' == 'UnitTest' ">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
+    <PackageReference Include="coverlet.collector" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="ReportGenerator" Version="5.1.19" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' == 'UnitTest' ">
+    <ProjectReference Include="$([MSBuild]::NormalizePath('$(ShimakazeSdk_LibraryFolder)', '$(RootNamespace)', '$(RootNamespace).csproj'))" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' == 'UnitTest' ">
+    <None Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(ShimakazeSdk_ProjectType)' == 'UnitTest' ">
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+</Project>

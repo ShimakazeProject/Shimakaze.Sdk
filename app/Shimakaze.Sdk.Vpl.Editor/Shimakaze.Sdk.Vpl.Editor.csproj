@@ -1,13 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
-  </ItemGroup>
-  
   <ItemGroup>
     <PackageReference Include="Sharprompt" Version="3.0.0-preview2" />
   </ItemGroup>
