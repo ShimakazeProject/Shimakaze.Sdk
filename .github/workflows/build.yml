@@ -8,10 +8,14 @@ on:
       - feat/**
     paths:
       - .github/workflows/build.yml
-      - "build/**/*"
-      - "script/**/*"
+      - global.json
+      - nuget.config
+      - Shimakaze.Sdk.sln
+      - Directory.Build.props
+      - Directory.Build.targets
+      - "app/**/*"
+      - "lib/**/*"
       - "sdk/**/*"
-      - "src/**/*"
       - "test/**/*"
   pull_request:
     branches:
@@ -19,10 +23,14 @@ on:
       - develop
     paths:
       - .github/workflows/build.yml
-      - "build/**/*"
-      - "script/**/*"
+      - global.json
+      - nuget.config
+      - Shimakaze.Sdk.sln
+      - Directory.Build.props
+      - Directory.Build.targets
+      - "app/**/*"
+      - "lib/**/*"
       - "sdk/**/*"
-      - "src/**/*"
       - "test/**/*"
 
 jobs:
@@ -76,7 +84,7 @@ jobs:
         with:
           name: nuget-packages-${{ matrix.os }}
           path: |
-            src/**/bin/Release/*.*nupkg
+            nupkg/*
           retention-days: 3
 
       - name: 收集测试覆盖率

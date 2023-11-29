@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
 
+  <!-- CSharp Common -->
   <!-- Generate BuildStamp -->
-  <Target Name="GenerateBuildStamp" BeforeTargets="GetAssemblyAttributes">
+  <Target Name="GenerateBuildStamp" BeforeTargets="GetAssemblyAttributes" Condition=" '$(ShimakazeSdk_ProjectType)' != '' ">
     <!-- This code fragment follows the MIT license agreement. -->
     <!-- Git Commit Hash -->
     <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true">
@@ -19,6 +20,22 @@
       <AssemblyMetadata Include="Revision" Value="$(__GitRevision)" />
       <AssemblyMetadata Include="Branch" Value="$(__GitBranch)" />
     </ItemGroup>
+  </Target>
+
+  <!-- CSharp UnitTest Common -->
+  <Target Name="GenerateHtmlCoverageReport" AfterTargets="GenerateCoverageResultAfterTest" Condition=" '$(ShimakazeSdk_ProjectType)' == 'UnitTest' ">
+    <ItemGroup>
+      <ReportFiles Include="$(ShimakazeSdk_UnitTestFolder)**\coverage.*.info" />
+    </ItemGroup>
+    <Message Text="@(ReportFiles)" Importance="high" />
+    <ReportGenerator
+      ReportFiles="@(ReportFiles)"
+      TargetDirectory="$(ShimakazeSdk_RootFolder)coverage\html"
+      ReportTypes="html" />
+    <ReportGenerator
+      ReportFiles="@(ReportFiles)"
+      TargetDirectory="$(ShimakazeSdk_RootFolder)coverage"
+      ReportTypes="lcov" />
   </Target>
 
 </Project>

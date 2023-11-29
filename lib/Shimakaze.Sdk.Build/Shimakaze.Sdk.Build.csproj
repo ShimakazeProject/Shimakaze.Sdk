@@ -4,7 +4,6 @@
     <PackageId>Shimakaze.Sdk.RA2</PackageId>
     <Description>Build your RA2 Module Project by MSBuild</Description>
     <PackageTags>MSBuild MSBuildSdk RA2Mod ShimakazeProject</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageType>MSBuildSdk</PackageType>
     <NoWarn>$(NoWarn);NU5128;</NoWarn>
     <SuppressDependenciesWhenPacking>True</SuppressDependenciesWhenPacking>
@@ -23,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
-    <ProjectReference Include="$(ShimakazeSdkSourceFolder)Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_LibraryFolder)Shimakaze.Sdk\Shimakaze.Sdk.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_LibraryFolder)Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
   </ItemGroup>
 
   <ItemGroup>
