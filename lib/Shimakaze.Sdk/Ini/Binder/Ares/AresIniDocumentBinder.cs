@@ -20,7 +20,7 @@ public sealed class AresIniDocumentBinder(AresIniTokenReader tokenReader, bool l
     /// <returns></returns>
     public AresIniDocument Bind(AresIniDocument? ini = default)
     {
-        ini = [];
+        ini ??= [];
         AresIniSection current = ini.Default;
         string? key = default;
         bool isBase = false;

@@ -18,7 +18,7 @@ public sealed class IniDocumentBinder(IniTokenReader tokenReader, bool leaveOpen
     /// <returns></returns>
     public IniDocument Bind(IniDocument? ini = default)
     {
-        ini = [];
+        ini ??= [];
         IniSection current = ini.Default;
         string? key = default;
         foreach (var token in _tokenReader)
