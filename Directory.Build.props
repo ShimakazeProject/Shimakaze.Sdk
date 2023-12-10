@@ -11,7 +11,7 @@
     <ShimakazeSdk_ProjectType Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_LibraryFolder)')) ">Library</ShimakazeSdk_ProjectType>
     <ShimakazeSdk_ProjectType Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_UnitTestFolder)')) ">UnitTest</ShimakazeSdk_ProjectType>
 
-    <Version>0.0.1-preview.11</Version>
+    <Version>0.0.1-preview.12</Version>
   </PropertyGroup>
 
   <!-- CSharp Common -->
