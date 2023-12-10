@@ -9,7 +9,8 @@ namespace Shimakaze.Sdk.Ini.Binder.Ares;
 /// </summary>
 /// <param name="tokenReader"></param>
 /// <param name="leaveOpen"></param>
-public sealed class AresIniDocumentBinder(AresIniTokenReader tokenReader, bool leaveOpen = false) : IDisposable
+/// <param name="keyComparer"></param>
+public sealed class AresIniDocumentBinder(AresIniTokenReader tokenReader, bool leaveOpen = false, EqualityComparer<string>? keyComparer = default) : IDisposable
 {
     private readonly bool _leaveOpen = leaveOpen;
     private readonly AresIniTokenReader _tokenReader = tokenReader;
@@ -40,7 +41,9 @@ public sealed class AresIniDocumentBinder(AresIniTokenReader tokenReader, bool l
                 // 节
                 case IniTokenType.Section when !isBase && !string.IsNullOrEmpty(token.Value):
                     if (!ini.TryGetSection(token.Value, out var section))
-                        section = ini[token.Value] = new(token.Value);
+                        section = ini[token.Value] = keyComparer is not null
+                            ? new(token.Value, default, new(keyComparer))
+                            : new(token.Value);
 
                     current = section;
                     break;
