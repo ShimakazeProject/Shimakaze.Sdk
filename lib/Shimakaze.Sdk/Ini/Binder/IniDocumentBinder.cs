@@ -7,7 +7,8 @@ namespace Shimakaze.Sdk.Ini.Binder;
 /// </summary>
 /// <param name="tokenReader"></param>
 /// <param name="leaveOpen"></param>
-public sealed class IniDocumentBinder(IniTokenReader tokenReader, bool leaveOpen = false) : IDisposable
+/// <param name="keyComparer"></param>
+public sealed class IniDocumentBinder(IniTokenReader tokenReader, bool leaveOpen = false, EqualityComparer<string>? keyComparer = default) : IDisposable
 {
     private readonly bool _leaveOpen = leaveOpen;
     private readonly IniTokenReader _tokenReader = tokenReader;
@@ -30,7 +31,9 @@ public sealed class IniDocumentBinder(IniTokenReader tokenReader, bool leaveOpen
             {
                 case IniTokenType.Section:
                     if (!ini.TryGetSection(token.Value, out var section))
-                        section = ini[token.Value] = new(token.Value);
+                        section = ini[token.Value] = keyComparer is not null
+                            ? new(token.Value, new(keyComparer))
+                            : new(token.Value);
 
                     current = section;
                     break;

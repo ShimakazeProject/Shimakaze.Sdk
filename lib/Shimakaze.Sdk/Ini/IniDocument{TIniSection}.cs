@@ -39,6 +39,11 @@ public abstract class IniDocument<TIniSection> : IIniDocument<TIniSection>, ICol
     /// <inheritdoc/>
     public ICollection<TIniSection> Sections => _data.Values;
 
+    /// <summary>
+    /// 键比较器
+    /// </summary>
+    protected readonly IEqualityComparer<string>? _defaultSectionKeyComparer;
+
     /// <inheritdoc/>
     public TIniSection this[string key]
     {
@@ -55,6 +60,17 @@ public abstract class IniDocument<TIniSection> : IIniDocument<TIniSection>, ICol
     /// <inheritdoc cref="IniDocument{TIniSection}.IniDocument(IEnumerable{TIniSection})"/>
     protected IniDocument()
     {
+    }
+
+    /// <summary>
+    /// 构造一个INI文档
+    /// </summary>
+    /// <param name="sectionNameComparer">节名比较器</param>
+    /// <param name="defaultSectionKeyComparer">默认节的键比较器</param>
+    protected IniDocument(IEqualityComparer<string> sectionNameComparer, IEqualityComparer<string>? defaultSectionKeyComparer = default)
+    {
+        _data = new(sectionNameComparer);
+        _defaultSectionKeyComparer = defaultSectionKeyComparer;
     }
 
     /// <inheritdoc/>
