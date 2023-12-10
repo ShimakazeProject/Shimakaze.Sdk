@@ -79,13 +79,33 @@ jobs:
         shell: pwsh
         run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
 
-      - name: 上传 Nuget 包
+      - name: 生成校验和
+        shell: pwsh
+        env:
+          matrix_os : ${{ matrix.os  }}
+        run: |
+          Write-Output "### Build Success :rocket: $env:matrix_os" >> $env:GITHUB_STEP_SUMMARY
+          Write-Output "|File|SHA256|" >> $env:GITHUB_STEP_SUMMARY
+          Write-Output "|:-|:-:|" >> $env:GITHUB_STEP_SUMMARY
+          Get-ChildItem nupkg | ForEach-Object {
+            Write-Output "|$($PSItem.Name)|$((Get-FileHash $PSItem -Algorithm SHA256).Hash)|" >> $env:GITHUB_STEP_SUMMARY
+          }
+
+      - name: 收集 Nuget 包
         uses: actions/upload-artifact@v3.1.3
         with:
           name: nuget-packages-${{ matrix.os }}
           path: |
             nupkg/*
           retention-days: 3
+
+      - name: 推送 Nuget 包
+        shell: pwsh
+        if: matrix.os == 'windows-latest' && github.repository == 'ShimakazeProject/Shimakaze.Sdk' && github.event_name == 'event_name' && github.ref_type == 'branch' && github.ref_name == 'master'
+        env:
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+        run: |
+          dotnet nuget push nupkg/*.nupkg -s nuget.org -k $env:NUGET_TOKEN --skip-duplicate
 
       - name: 收集测试覆盖率
         uses: coverallsapp/github-action@v2
