@@ -106,7 +106,9 @@ jobs:
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
         run: |
-          dotnet nuget push nupkg/*.nupkg -s nuget -k $env:NUGET_TOKEN --skip-duplicate
+          Set-Location nupkg
+          dotnet nuget push *.nupkg -s nuget -k $env:NUGET_TOKEN --skip-duplicate
+          Set-Location ..
 
       - name: 收集测试覆盖率
         uses: coverallsapp/github-action@v2
