@@ -59,7 +59,7 @@ jobs:
             nuget-cache
 
       - name: 配置 .Net 环境
-        uses: actions/setup-dotnet@v3.2.0
+        uses: actions/setup-dotnet@v4.0.0
         with:
           global-json-file: ./global.json
 
