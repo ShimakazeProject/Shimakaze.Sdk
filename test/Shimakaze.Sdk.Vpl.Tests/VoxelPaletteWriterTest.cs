@@ -1,6 +1,5 @@
+using System.Globalization;
 using System.Security.Cryptography;
-
-using Shimakaze.Sdk.Vpl;
 
 namespace Shimakaze.Sdk.Vpl.Tests;
 
@@ -11,7 +10,7 @@ public sealed class VoxelPaletteWriterTest
     private const string InputFile = "voxels.vpl";
     private const string OutputFile = "voxels.vpl";
     private const string OutputPath = "Out";
-    private VoxelPalette _vpl;
+    private VoxelPalette _vpl = default!;
 
     [TestInitialize]
     public async Task StartupAsync()
@@ -31,9 +30,9 @@ public sealed class VoxelPaletteWriterTest
         using (VoxelPaletteWriter writer = new(stream))
             await writer.WriteAsync(_vpl);
 
-        var a = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
-        var b = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
+        var a = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
+        var b = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
 
-        Assert.AreEqual(a, b, true);
+        Assert.AreEqual(a, b, true, CultureInfo.InvariantCulture);
     }
 }

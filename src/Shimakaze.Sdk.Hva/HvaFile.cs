@@ -15,16 +15,22 @@ namespace Shimakaze.Sdk.Hva;
 ///
 /// The HVA format is very simple, just note that the matrices are stored in section-fastest order.
 /// </remarks>
-public record struct HvaFile
+public record class HvaFile
 {
+    internal HvaHeader InternalHeader;
+
     /// <summary>
     /// </summary>
-    public HvaHeader Header;
+    public HvaHeader Header
+    {
+        get => InternalHeader;
+        set => InternalHeader = value;
+    }
     /// <summary>
     /// The names of all the sections (null-terminated)
     /// </summary>
-    public Int128[] SectionNames;
+    public Int128[] SectionNames { get; set; } = [];
     /// <summary>
     /// </summary>
-    public HvaFrame[] Frames;
+    public HvaFrame[] Frames { get; set; } = [];
 }

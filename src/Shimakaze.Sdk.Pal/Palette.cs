@@ -3,7 +3,7 @@
 /// <summary>
 /// 色板
 /// </summary>
-public readonly record struct Palette
+public record class Palette
 {
     /// <summary>
     /// 颜色数量
@@ -23,12 +23,5 @@ public readonly record struct Palette
     {
         get => Colors[index];
         set => Colors[index] = value;
-    }
-
-    /// <summary>
-    /// 色板
-    /// </summary>
-    public Palette()
-    {
     }
 }

@@ -20,7 +20,7 @@ public record class VXLFile
     /// <summary>
     /// 文件色板
     /// </summary>
-    public Palette Palette { get; set; }
+    public Palette Palette { get; set; } = new();
     /// <summary>
     /// </summary>
     public SectionHeader[] SectionHeaders { get; set; } = [];

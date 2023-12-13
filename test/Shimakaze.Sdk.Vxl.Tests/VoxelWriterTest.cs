@@ -1,6 +1,5 @@
+using System.Globalization;
 using System.Security.Cryptography;
-
-using Shimakaze.Sdk.Vxl;
 
 namespace Shimakaze.Sdk.Vxl.Tests;
 
@@ -11,7 +10,7 @@ public sealed class VoxelWriterTest
     private const string InputFile = "jeep.vxl";
     private const string OutputFile = "jeep.vxl";
     private const string OutputPath = "Out";
-    private VXLFile _vxl;
+    private VXLFile _vxl = default!;
 
     [TestInitialize]
     public async Task StartupAsync()
@@ -31,9 +30,9 @@ public sealed class VoxelWriterTest
         using (VoxelWriter writer = new(stream))
             await writer.WriteAsync(_vxl);
 
-        var a = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
-        var b = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
+        var a = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
+        var b = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
 
-        Assert.AreEqual(a, b, true);
+        Assert.AreEqual(a, b, true, CultureInfo.InvariantCulture);
     }
 }

@@ -20,7 +20,7 @@ public record class VoxelPalette
     /// <summary>
     /// VPL色板
     /// </summary>
-    public Palette Palette { get; set; }
+    public Palette Palette { get; set; } = new();
 
     /// <summary>
     /// VPL节
