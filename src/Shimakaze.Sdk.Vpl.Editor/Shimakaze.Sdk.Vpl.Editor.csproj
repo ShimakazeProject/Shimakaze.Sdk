@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Sharprompt" Version="2.4.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Shimakaze.Sdk.RA2</PackageId>
+    <Description>Build your RA2 Module Project by MSBuild</Description>
+    <PackageTags>MSBuild MSBuildSdk RA2Mod ShimakazeProject</PackageTags>
+    <PackageType>MSBuildSdk</PackageType>
+    <NoWarn>$(NoWarn);NU5128;</NoWarn>
+    <SuppressDependenciesWhenPacking>True</SuppressDependenciesWhenPacking>
+    <TargetsForTfmSpecificBuildOutput>PackAllDependencies</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Sdk\**" Pack="True" PackagePath="Sdk" />
+    <None Include="targets\**" Pack="True" PackagePath="targets" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.8.3" PrivateAssets="all" ExcludeAssets="Runtime" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini.Abstractions\Shimakaze.Sdk.Ini.Abstractions.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini.Ares\Shimakaze.Sdk.Ini.Ares.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
+  </ItemGroup>
+
+  <Target Name="PackAllDependencies">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(MSBuildThisFileDirectory)$(OutputPath)*" Exclude="$(MSBuildThisFileDirectory)$(OutputPath)$(AssemblyName).*" />
+    </ItemGroup>
+  </Target>
+
+</Project>
