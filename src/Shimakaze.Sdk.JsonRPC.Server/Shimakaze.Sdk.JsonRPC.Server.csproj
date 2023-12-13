@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="StreamJsonRpc" Version="2.17.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
+  </ItemGroup>
+</Project>

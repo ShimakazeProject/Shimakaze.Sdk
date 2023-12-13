@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Shimakaze.Sdk</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
+  </ItemGroup>
+
+</Project>

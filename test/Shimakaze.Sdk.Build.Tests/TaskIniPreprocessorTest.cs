@@ -20,7 +20,7 @@ public class TaskIniPreprocessorTest
     public void Startup()
     {
         _buildEngine = new Mock<IBuildEngine>();
-        _errors = new List<BuildErrorEventArgs>();
+        _errors = [];
         _buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => _errors.Add(e));
 
         Directory.CreateDirectory(OutputPath);
@@ -35,7 +35,7 @@ public class TaskIniPreprocessorTest
             {
                 var path = Path.GetFullPath(Path.Combine(Assets, i));
                 TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
-                item.SetMetadata(TaskIniPreprocessor.Metadata_Intermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
+                item.SetMetadata(TaskIniPreprocessor.MetadataIntermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
                 return item;
             }).ToArray(),
             Defines = Defines,
@@ -53,7 +53,7 @@ public class TaskIniPreprocessorTest
             {
                 var path = Path.GetFullPath(Path.Combine(Assets, i));
                 TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
-                item.SetMetadata(TaskIniPreprocessor.Metadata_Intermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
+                item.SetMetadata(TaskIniPreprocessor.MetadataIntermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
                 return item;
             }).ToArray(),
             Defines = Defines,

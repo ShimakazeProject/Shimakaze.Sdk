@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Tests\Assets\ra2md.csf" Link="Assets\ra2md.csf" />
+  </ItemGroup>
+</Project>
