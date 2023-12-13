@@ -25,6 +25,7 @@ public sealed class HvaReader(Stream stream, bool leaveOpen = false) : AsyncRead
         for (int i = 0; i < hva.Frames.Length; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            hva.Frames[i] ??= new();
             progress?.Report(1f / 3 + 2f / 3 * ((float)i / hva.Frames.Length));
 
             hva.Frames[i].Matrices = new HvaMatrix[hva.Header.NumSections];
