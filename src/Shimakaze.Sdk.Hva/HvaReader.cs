@@ -3,22 +3,15 @@ namespace Shimakaze.Sdk.Hva;
 /// <summary>
 /// HvaReader
 /// </summary>
-public sealed class HvaReader : AsyncReader<HvaFile>, IDisposable, IAsyncDisposable
+public sealed class HvaReader(Stream stream, bool leaveOpen = false) : AsyncReader<HvaFile>(stream, leaveOpen), IDisposable, IAsyncDisposable
 {
-    /// <summary>
-    /// HvaReader
-    /// </summary>
-
-    public HvaReader(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-    }
 
     /// <inheritdoc />
     public override async Task<HvaFile> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
         HvaFile hva = new();
 
-        BaseStream.Read(out hva.Header);
+        BaseStream.Read(out hva.InternalHeader);
 
         hva.SectionNames = new Int128[hva.Header.NumSections];
         BaseStream.Read(hva.SectionNames);

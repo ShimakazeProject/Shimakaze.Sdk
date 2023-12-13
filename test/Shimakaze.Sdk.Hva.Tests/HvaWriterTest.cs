@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 
 namespace Shimakaze.Sdk.Hva.Tests;
@@ -9,7 +10,7 @@ public sealed class HvaWriterTest
     private const string InputFile = "jeep.hva";
     private const string OutputFile = "jeep.hva";
     private const string OutputPath = "Out";
-    private HvaFile _hva;
+    private HvaFile _hva = default!;
 
     [TestInitialize]
     public async Task StartupAsync()
@@ -29,9 +30,9 @@ public sealed class HvaWriterTest
         using (HvaWriter writer = new(stream))
             await writer.WriteAsync(_hva);
 
-        var a = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
-        var b = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
+        var a = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
+        var b = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
 
-        Assert.AreEqual(a, b, true);
+        Assert.AreEqual(a, b, true, CultureInfo.InvariantCulture);
     }
 }

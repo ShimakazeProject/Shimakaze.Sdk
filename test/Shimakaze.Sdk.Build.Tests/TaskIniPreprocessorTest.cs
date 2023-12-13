@@ -20,7 +20,7 @@ public class TaskIniPreprocessorTest
     public void Startup()
     {
         _buildEngine = new Mock<IBuildEngine>();
-        _errors = new List<BuildErrorEventArgs>();
+        _errors = [];
         _buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => _errors.Add(e));
 
         Directory.CreateDirectory(OutputPath);

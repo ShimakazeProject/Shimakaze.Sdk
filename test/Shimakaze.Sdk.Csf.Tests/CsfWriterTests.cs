@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 
 using Shimakaze.Sdk.Csf;
@@ -12,7 +13,7 @@ public class CsfWriterTests
 
     private const string OutputFile = "WriteTest.csf";
     private const string OutputPath = "Out";
-    private CsfDocument _csf;
+    private CsfDocument _csf = default!;
 
     [TestInitialize]
     public async Task StartupAsync()
@@ -30,9 +31,9 @@ public class CsfWriterTests
         using (CsfWriter writer = new(stream))
             await writer.WriteAsync(_csf);
 
-        var a = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
-        var b = BitConverter.ToString(MD5.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
+        var a = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
+        var b = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
 
-        Assert.AreEqual(a, b, true);
+        Assert.AreEqual(a, b, true, CultureInfo.InvariantCulture);
     }
 }
