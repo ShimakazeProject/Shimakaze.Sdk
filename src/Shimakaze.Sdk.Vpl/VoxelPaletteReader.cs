@@ -9,18 +9,25 @@ namespace Shimakaze.Sdk.Vpl;
 /// <remarks>
 /// VoxelPaletteReader
 /// </remarks>
-public sealed class VoxelPaletteReader(Stream stream, bool leaveOpen = false) : AsyncReader<VoxelPalette>(stream, leaveOpen), IDisposable, IAsyncDisposable
+public sealed class VoxelPaletteReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
-    public override async Task<VoxelPalette> ReadAsync(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    public VoxelPalette Read(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         VoxelPalette vpl = new();
 
-        BaseStream.Read(out vpl.InternalHeader);
+        _disposable.Resource.Read(out vpl.InternalHeader);
 
-        await using (PaletteReader reader = new(BaseStream, true))
-            vpl.Palette = await reader.ReadAsync(cancellationToken);
+        using (PaletteReader reader = new(_disposable.Resource, true))
+            vpl.Palette = reader.Read();
 
         vpl.Sections = new VoxelPaletteSection[vpl.Header.SectionCount];
         for (int i = 0; i < vpl.Sections.Length; i++)
@@ -32,7 +39,7 @@ public sealed class VoxelPaletteReader(Stream stream, bool leaveOpen = false) : 
             unsafe
             {
                 fixed (byte* p = vpl.Sections[i].Data)
-                    BaseStream.Read(new Span<byte>(p, 256));
+                    _disposable.Resource.Read(new Span<byte>(p, 256));
             }
         }
 

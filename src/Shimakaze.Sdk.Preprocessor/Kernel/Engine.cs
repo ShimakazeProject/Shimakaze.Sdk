@@ -67,7 +67,7 @@ public sealed class Engine
             ["Defines"] = options.Defines
         };
         if (_logger is not null)
-            LogDefine(_logger, StringShim.Join(options.Defines,';'), default!);
+            LogDefine(_logger, options.Defines.Join(';'), default!);
     }
 
     /// <summary>

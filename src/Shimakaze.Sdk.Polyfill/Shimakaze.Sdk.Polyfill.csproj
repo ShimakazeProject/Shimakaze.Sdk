@@ -33,6 +33,11 @@
                       Condition="$(TargetFramework) == 'netstandard2.0' or
                                  $(TargetFramework) == 'netcoreapp2.0' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework'" />
+    <PackageReference Include="System.Text.Json"
+                      Version="8.0.0"
+                      Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework' or
+                                 $(TargetFramework.StartsWith('netcoreapp2'))"  />
     <PackageReference Include="System.Threading.Tasks.Extensions"
                       Version="4.5.4"
                       Condition="$(TargetFramework) == 'netstandard2.0' or

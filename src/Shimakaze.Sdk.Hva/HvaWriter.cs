@@ -3,20 +3,21 @@ namespace Shimakaze.Sdk.Hva;
 /// <summary>
 /// HvaWriter
 /// </summary>
-public sealed class HvaWriter : AsyncWriter<HvaFile>, IDisposable, IAsyncDisposable
+public sealed class HvaWriter(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
-    /// <summary>
-    /// HvaWriter
-    /// </summary>
-    public HvaWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-    }
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
-    public override async Task WriteAsync(HvaFile value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+    public async Task WriteAsync(HvaFile value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
-        BaseStream.Write(value.Header);
-        BaseStream.Write(value.SectionNames);
+        _disposable.Resource.Write(value.Header);
+        _disposable.Resource.Write(value.SectionNames);
 
         cancellationToken.ThrowIfCancellationRequested();
         progress?.Report(1f / 3);
@@ -29,7 +30,7 @@ public sealed class HvaWriter : AsyncWriter<HvaFile>, IDisposable, IAsyncDisposa
             progress?.Report(1f / 3 + 2f / 3 * ((float)i / value.Frames.Length));
 
             HvaFrame item = value.Frames[i];
-            BaseStream.Write(item.Matrices);
+            _disposable.Resource.Write(item.Matrices);
         }
     }
 }

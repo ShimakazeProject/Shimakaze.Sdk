@@ -11,7 +11,7 @@ public record struct VXLHeader
     /// 文件头标识 总是 "Voxel Animation\0"
     /// </summary>
     [FieldOffset(0)]
-    public Int128 FileType;
+    public SectionName FileType;
     /// <summary>
     /// </summary>
     [FieldOffset(16)]

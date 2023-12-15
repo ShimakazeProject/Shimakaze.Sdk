@@ -1,4 +1,6 @@
-﻿namespace Shimakaze.Sdk.Ini.Tests;
+﻿using System.Text;
+
+namespace Shimakaze.Sdk.Ini.Tests;
 
 [TestClass()]
 public class IniTokenWriterTests
@@ -7,7 +9,7 @@ public class IniTokenWriterTests
     public void WriteTest()
     {
         using MemoryStream ms = new();
-        using StreamWriter sw = new(ms, leaveOpen: true);
+        using StreamWriter sw = new(ms, Encoding.UTF8, 1024, leaveOpen: true);
         using IniTokenWriter writer = new(sw);
         writer.Write(IniTokenTools.BeginBracket);
         writer.Write(IniTokenTools.Value("Section"));

@@ -1,10 +1,15 @@
-﻿namespace Shimakaze.Sdk.Mix;
+﻿using System.IO;
+using System;
+
+namespace Shimakaze.Sdk.Mix;
 
 /// <summary>
 /// Mix Entry 读取器
 /// </summary>
-public sealed class MixEntryWriter : AsyncWriter<MixEntry>, IDisposable, IAsyncDisposable
+public sealed class MixEntryWriter(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
+    private readonly DisposableObject<Stream> _disposable = new(stream.CanSeek(), leaveOpen);
+
     /// <summary>
     /// 当前文件个数
     /// </summary>
@@ -23,23 +28,12 @@ public sealed class MixEntryWriter : AsyncWriter<MixEntry>, IDisposable, IAsyncD
     private long _start;
 
     /// <summary>
-    /// 构造 Mix Entry 读取器
-    /// </summary>
-    /// <param name="stream"> 基础流 </param>
-    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-    public MixEntryWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-        if (!stream.CanSeek)
-            throw new NotSupportedException("The Stream cannot support Seek.");
-    }
-
-    /// <summary>
     /// 初始化
     /// </summary>
     public void Init()
     {
-        _start = BaseStream.Position;
-        BaseStream.Seek(4 + 2 + 4, SeekOrigin.Current);
+        _start = _disposable.Resource.Position;
+        _disposable.Resource.Seek(4 + 2 + 4, SeekOrigin.Current);
 
         _inited = true;
     }
@@ -50,17 +44,10 @@ public sealed class MixEntryWriter : AsyncWriter<MixEntry>, IDisposable, IAsyncD
         if (!_inited)
             Init();
 
-        BaseStream.Write(value);
+        _disposable.Resource.Write(value);
 
         _size = Math.Max(_size, value.Offset + value.Size);
         _count++;
-    }
-
-    /// <inheritdoc />
-    public override async Task WriteAsync(MixEntry value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
-    {
-        await Task.Yield();
-        Write(value);
     }
 
     /// <summary>
@@ -68,10 +55,10 @@ public sealed class MixEntryWriter : AsyncWriter<MixEntry>, IDisposable, IAsyncD
     /// </summary>
     public void WriteMetadata()
     {
-        long current = BaseStream.Position;
-        BaseStream.Seek(_start, SeekOrigin.Begin);
+        long current = _disposable.Resource.Position;
+        _disposable.Resource.Seek(_start, SeekOrigin.Begin);
         WriteMetadataDirect((int)MixTag.NONE, new(_count, _size));
-        BaseStream.Seek(current, SeekOrigin.Begin);
+        _disposable.Resource.Seek(current, SeekOrigin.Begin);
     }
 
     /// <summary>
@@ -81,7 +68,14 @@ public sealed class MixEntryWriter : AsyncWriter<MixEntry>, IDisposable, IAsyncD
     /// <param name="metadata"> 元数据 </param>
     internal void WriteMetadataDirect(int flag, MixMetadata metadata)
     {
-        BaseStream.Write(BitConverter.GetBytes(flag));
-        BaseStream.Write(metadata);
+        _disposable.Resource.Write(BitConverter.GetBytes(flag));
+        _disposable.Resource.Write(metadata);
     }
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+
 }

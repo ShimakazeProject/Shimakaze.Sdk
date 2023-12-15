@@ -3,25 +3,22 @@
 /// <summary>
 /// PaletteWriter
 /// </summary>
-public sealed class PaletteWriter : AsyncWriter<Palette>, IDisposable, IAsyncDisposable
+public sealed class PaletteWriter(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
-    /// <summary>
-    /// PaletteWriter
-    /// </summary>
-    public PaletteWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-    }
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+
+    /// <summary>
+    /// 写入调色板
+    /// </summary>
+    /// <param name="value"></param>
     public void Write(in Palette value)
     {
-        BaseStream.Write(value.Colors);
-    }
-
-    /// <inheritdoc />
-    public override async Task WriteAsync(Palette value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
-    {
-        await Task.Yield();
-        Write(value);
+        _disposable.Resource.Write(value.Colors);
     }
 }
