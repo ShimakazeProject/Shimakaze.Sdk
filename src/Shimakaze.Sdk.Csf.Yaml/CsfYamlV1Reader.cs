@@ -7,23 +7,32 @@ namespace Shimakaze.Sdk.Csf.Yaml;
 /// <summary>
 /// CSF YAML Deserializer.
 /// </summary>
-/// <remarks>
-/// 构造器
-/// </remarks>
 /// <param name="reader"> 基础流 </param>
+/// <param name="builder"></param>
 /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-public sealed class CsfYamlV1Reader(TextReader reader, bool leaveOpen = false) : AsyncTextReader<CsfDocument>(reader, leaveOpen), ICsfReader
+public sealed class CsfYamlV1Reader(TextReader reader, Func<DeserializerBuilder, DeserializerBuilder>? builder = null, bool leaveOpen = false) : ICsfReader, IDisposable, IAsyncDisposable
 {
+    private readonly DisposableObject<TextReader> _disposable = new(reader, leaveOpen);
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+
+
     /// <inheritdoc />
-    public override async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+    public async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
 
-        return new DeserializerBuilder()
+        builder ??= i => i;
+
+        return builder(new())
             .WithTypeConverter(CsfValueConverter.Instance)
             .WithTypeConverter(CsfDataConverter.Instance)
             .WithTypeConverter(CsfDocumentConverter.Instance)
             .Build()
-            .Deserialize<CsfDocument>(BaseReader);
+            .Deserialize<CsfDocument>(_disposable);
     }
 }
