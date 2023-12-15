@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Pal.Tests;
+namespace Shimakaze.Sdk.Graphic.Pal.Tests;
 
 [TestClass]
 public sealed class PalReaderTest

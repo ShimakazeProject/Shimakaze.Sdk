@@ -1,4 +1,4 @@
-﻿using Shimakaze.Sdk.Pal;
+﻿using Shimakaze.Sdk.Graphic.Pal;
 
 namespace Shimakaze.Sdk.Vxl;
 
@@ -22,7 +22,7 @@ public sealed class VoxelWriter(Stream stream, bool leaveOpen = false) : IDispos
     /// <inheritdoc />
     public void Write(VoxelFile value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
-        uint limbDataOffset = 34 + Palette.ColorCount * 3 + value.Header.NumSections * 28;
+        uint limbDataOffset = 34 + Palette.DefaultColorCount * 3 + value.Header.NumSections * 28;
 
         stream.Write(value.Header);
 

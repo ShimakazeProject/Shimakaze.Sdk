@@ -1,9 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 
-using Shimakaze.Sdk.Pal;
-
-namespace Shimakaze.Sdk.Pal.Tests;
+namespace Shimakaze.Sdk.Graphic.Pal.Tests;
 
 [TestClass]
 public sealed class PalWriterTest
