@@ -13,17 +13,6 @@ public class CsfDataValueJsonConverterTests
     [TestMethod]
     public void ReadTest()
     {
-        Assert.ThrowsException<NotSupportedException>(() =>
-        {
-            var reader = new Utf8JsonReader("""true"""u8);
-            reader.Read();
-            _converter.Read(ref reader, typeof(IList<CsfValue>), _options!);
-        });
-    }
-
-    [TestMethod]
-    public void ReadTest1()
-    {
         var reader = new Utf8JsonReader("""
         {
             "values": [

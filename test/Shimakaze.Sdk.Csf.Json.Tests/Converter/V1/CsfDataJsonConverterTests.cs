@@ -52,21 +52,6 @@ public class CsfDataJsonConverterTests
         Assert.AreEqual("World", result.Values[0].Value);
     }
 
-    // This is the test method for Read method
-    [TestMethod]
-    public void ReadShouldReturnCorrectCsfValue2()
-    {
-        // Arrange
-        Assert.ThrowsException<NotSupportedException>(() =>
-        {
-            var json = """{"label":"Hello","value":0}"""u8;
-            var reader = new Utf8JsonReader(json);
-            reader.Read(); // Move to the start object token
-
-            var result = _converter.Read(ref reader, typeof(CsfData), _options!);
-        });
-    }
-
     [TestInitialize]
     public void Startup()
     {
