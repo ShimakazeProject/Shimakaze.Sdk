@@ -12,19 +12,28 @@ public class CsfSetTests
     private const string OutputFile = "MergeTest.csf";
     private const string OutputPath = "Out";
 
+    private CsfDocument _csf = default!;
+
+    [TestInitialize]
+    public async Task Initialize()
+    {
+        Directory.CreateDirectory(OutputPath);
+        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using CsfReader reader = new(stream);
+        _csf = await reader.ReadAsync();
+    }
+
     [TestMethod]
     public async Task BuildAndWriteToTestAsync()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
         using Stream output = File.Create(Path.Combine(OutputPath, OutputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
 
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        await merger.BuildAndWriteToAsync(output, csf.Metadata.Language, csf.Metadata.Version, csf.Metadata.Unknown);
+        await merger.BuildAndWriteToAsync(output, _csf.Metadata.Language, _csf.Metadata.Version, _csf.Metadata.Unknown);
         output.Flush();
         stream.Seek(0, SeekOrigin.Begin);
         output.Seek(0, SeekOrigin.Begin);
@@ -34,84 +43,64 @@ public class CsfSetTests
     }
 
     [TestMethod]
-    public async Task BuildTestAsync()
+    public void BuildTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        CsfDocument newcsf = merger.Build(csf.Metadata.Language, csf.Metadata.Version, csf.Metadata.Unknown);
-        Assert.AreEqual(csf.Metadata, newcsf.Metadata);
-        Assert.IsTrue(newcsf.Data.SequenceEqual(csf.Data));
+        CsfDocument newcsf = merger.Build(_csf.Metadata.Language, _csf.Metadata.Version, _csf.Metadata.Unknown);
+        Assert.AreEqual(_csf.Metadata, newcsf.Metadata);
+        Assert.IsTrue(newcsf.Data.SequenceEqual(_csf.Data));
     }
 
     [TestMethod]
-    public async Task ContainsTestAsync()
+    public void ContainsTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        Assert.IsTrue(merger.Contains(csf.Data.First()));
+        Assert.IsTrue(merger.Contains(_csf.Data.First()));
     }
 
     [TestMethod]
-    public async Task CopyToTestAsync()
+    public void CopyToTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        CsfData[] arr = new CsfData[csf.Data.Length];
+        CsfData[] arr = new CsfData[_csf.Data.Length];
         merger.CopyTo(arr, 0);
         Assert.IsTrue(merger.SetEquals(arr));
 
-        arr = new CsfData[csf.Data.Length + 3];
+        arr = new CsfData[_csf.Data.Length + 3];
         merger.CopyTo(arr, 3);
         Assert.IsTrue(merger.SetEquals(arr.Skip(3)));
 
-        arr = new CsfData[csf.Data.Length + 6];
+        arr = new CsfData[_csf.Data.Length + 6];
         merger.CopyTo(arr, 3);
-        Assert.IsTrue(merger.SetEquals(arr.Skip(3).Take(csf.Data.Length)));
+        Assert.IsTrue(merger.SetEquals(arr.Skip(3).Take(_csf.Data.Length)));
     }
 
     [TestMethod]
-    public async Task ExceptWithTestAsync()
+    public void ExceptWithTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        merger.ExceptWith(csf.Data.Take(3));
-        Assert.IsTrue(merger.SetEquals(csf.Data.Skip(3)));
+        merger.ExceptWith(_csf.Data.Take(3));
+        Assert.IsTrue(merger.SetEquals(_csf.Data.Skip(3)));
     }
 
     [TestMethod]
-    public async Task GetEnumeratorTestAsync()
+    public void GetEnumeratorTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
         using IEnumerator<CsfData> enumerator = merger.GetEnumerator();
         Assert.IsNotNull(enumerator);
@@ -120,129 +109,96 @@ public class CsfSetTests
     }
 
     [TestMethod]
-    public async Task IntersectWithTestAsync()
+    public void IntersectWithTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        merger.IntersectWith(csf.Data.Take(3));
-        Assert.IsTrue(merger.SetEquals(csf.Data.Take(3)));
+        merger.IntersectWith(_csf.Data.Take(3));
+        Assert.IsTrue(merger.SetEquals(_csf.Data.Take(3)));
     }
 
     [TestMethod]
-    public async Task OverlapsTestAsync()
+    public void OverlapsTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        Assert.IsTrue(merger.Overlaps(csf.Data));
-        Assert.IsTrue(merger.Overlaps(csf.Data.Skip(1)));
+        Assert.IsTrue(merger.Overlaps(_csf.Data));
+        Assert.IsTrue(merger.Overlaps(_csf.Data.Skip(1)));
 
-        merger.Remove(csf.Data.Last());
-        Assert.IsTrue(merger.Overlaps(csf.Data));
-        Assert.IsTrue(merger.Overlaps(csf.Data.Skip(1)));
+        merger.Remove(_csf.Data.Last());
+        Assert.IsTrue(merger.Overlaps(_csf.Data));
+        Assert.IsTrue(merger.Overlaps(_csf.Data.Skip(1)));
     }
 
     [TestMethod]
-    public async Task RemoveTestAsync()
+    public void RemoveTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        merger.Remove(csf.Data.First());
-        Assert.IsFalse(merger.SetEquals(csf.Data));
-        Assert.IsTrue(merger.SetEquals(csf.Data.Skip(1)));
+        merger.Remove(_csf.Data.First());
+        Assert.IsFalse(merger.SetEquals(_csf.Data));
+        Assert.IsTrue(merger.SetEquals(_csf.Data.Skip(1)));
     }
 
     [TestMethod]
-    public async Task SetEqualsTestAsync()
+    public void SetEqualsTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        Assert.IsTrue(merger.SetEquals(csf.Data));
-        Assert.IsFalse(merger.SetEquals(csf.Data.Skip(1)));
+        Assert.IsTrue(merger.SetEquals(_csf.Data));
+        Assert.IsFalse(merger.SetEquals(_csf.Data.Skip(1)));
     }
 
-    [TestInitialize]
-    public void Startup()
+
+    [TestMethod]
+    public void SubsetTest()
     {
-        Directory.CreateDirectory(OutputPath);
+        CsfSet merger = [];
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
+
+        Assert.IsTrue(merger.IsSubsetOf(_csf.Data));
+        Assert.IsTrue(merger.IsSupersetOf(_csf.Data));
+
+        Assert.IsFalse(merger.IsProperSubsetOf(_csf.Data));
+        Assert.IsFalse(merger.IsProperSupersetOf(_csf.Data));
+
+        merger.Remove(_csf.Data.First());
+        Assert.IsTrue(merger.IsProperSubsetOf(_csf.Data));
+        Assert.IsTrue(merger.IsProperSupersetOf(_csf.Data.Skip(1).Take(3)));
     }
 
     [TestMethod]
-    public async Task SubsetTestAsync()
+    public void SymmetricExceptWithTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        merger.UnionWith(_csf.Data);
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        Assert.IsTrue(merger.IsSubsetOf(csf.Data));
-        Assert.IsTrue(merger.IsSupersetOf(csf.Data));
-
-        Assert.IsFalse(merger.IsProperSubsetOf(csf.Data));
-        Assert.IsFalse(merger.IsProperSupersetOf(csf.Data));
-
-        merger.Remove(csf.Data.First());
-        Assert.IsTrue(merger.IsProperSubsetOf(csf.Data));
-        Assert.IsTrue(merger.IsProperSupersetOf(csf.Data.Skip(1).Take(3)));
-    }
-
-    [TestMethod]
-    public async Task SymmetricExceptWithTestAsync()
-    {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
-        CsfSet merger = [];
-        merger.UnionWith(csf.Data);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
-
-        merger.Remove(csf.Data.Last());
-        merger.SymmetricExceptWith(csf.Data.Skip(1));
+        merger.Remove(_csf.Data.Last());
+        merger.SymmetricExceptWith(_csf.Data.Skip(1));
         Assert.IsTrue(merger.SetEquals(new[]
         {
-            csf.Data.Last(),
-            csf.Data.First(),
+            _csf.Data.Last(),
+            _csf.Data.First(),
         }));
     }
 
     [TestMethod]
-    public async Task UnionWithTestAsync()
+    public void UnionWithTest()
     {
-        using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        CsfDocument csf = await reader.ReadAsync();
-
         CsfSet merger = [];
-        merger.UnionWith(csf.Data);
+        merger.UnionWith(_csf.Data);
         Assert.AreNotEqual(0, merger.Count);
-        Assert.IsTrue(csf.Data.SequenceEqual(merger));
+        Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
         merger.Clear();
         Assert.AreEqual(0, merger.Count);
