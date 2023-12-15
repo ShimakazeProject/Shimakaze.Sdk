@@ -30,4 +30,6 @@ internal sealed class DisposableObject<TDisposable>(TDisposable disposable, bool
                 disposable.Dispose();
         }
     }
+
+    public static implicit operator TDisposable(DisposableObject<TDisposable> disposableObject) => disposableObject.Resource;
 }

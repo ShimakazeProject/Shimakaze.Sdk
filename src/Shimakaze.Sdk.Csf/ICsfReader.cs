@@ -8,7 +8,7 @@ public interface ICsfReader
     /// <summary>
     /// 从流中读取CSF
     /// </summary>
-    /// <param name="progress"></param>
+    /// <param name="progress">进度回报</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default);

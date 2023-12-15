@@ -8,17 +8,25 @@ namespace Shimakaze.Sdk.Csf;
 /// </remarks>
 /// <param name="stream"> 基础流 </param>
 /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-public sealed class CsfReader(Stream stream, bool leaveOpen = false) : AsyncReader<CsfDocument>(stream, leaveOpen), ICsfReader
+public sealed class CsfReader(Stream stream, bool leaveOpen = false) : ICsfReader, IDisposable, IAsyncDisposable
 {
-    /// <inheritdoc />
-    public override async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
-    {
-        CsfDocument csf = new();
-        BaseStream.Read(out csf.InternalMetadata);
-        CsfThrowHelper.IsCsfFile(csf.Metadata.Identifier);
-        csf.Data = new CsfData[csf.Metadata.LabelCount];
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+
+    /// <inheritdoc/>
+    public async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+    {
         await Task.Yield();
+
+        CsfDocument csf = new();
+        _disposable.Resource.Read(out csf.InternalMetadata);
+        CsfAsserts.IsCsfFile(csf.Metadata.Identifier);
+        csf.Data = new CsfData[csf.Metadata.LabelCount];
 
         for (int i = 0; i < csf.Metadata.LabelCount; i++)
         {
@@ -26,22 +34,22 @@ public sealed class CsfReader(Stream stream, bool leaveOpen = false) : AsyncRead
             csf.Data[i] ??= new();
             progress?.Report((float)i / csf.Data.Length);
 
-            BaseStream.Read(out csf.Data[i].InternalIdentifier);
-            CsfThrowHelper.IsLabel(csf.Data[i].Identifier, () => new object[] { i, BaseStream.Position });
-            BaseStream.Read(out csf.Data[i].InternalStringCount);
-            BaseStream.Read(out csf.Data[i].InternalLabelNameLength);
-            BaseStream.Read(out csf.Data[i].InternalLabelName, csf.Data[i].LabelNameLength);
+            _disposable.Resource.Read(out csf.Data[i].InternalIdentifier);
+            CsfAsserts.IsLabel(csf.Data[i].Identifier, () => new object[] { i, _disposable.Resource.Position });
+            _disposable.Resource.Read(out csf.Data[i].InternalStringCount);
+            _disposable.Resource.Read(out csf.Data[i].InternalLabelNameLength);
+            _disposable.Resource.Read(out csf.Data[i].InternalLabelName, csf.Data[i].LabelNameLength);
 
             csf.Data[i].Values = new CsfValue[csf.Data[i].StringCount];
             for (int j = 0; j < csf.Data[i].StringCount; j++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                BaseStream.Read(out csf.Data[i].Values[j].InternalIdentifier);
-                CsfThrowHelper.IsStringOrExtraString(csf.Data[i].Values[j].Identifier, () => new object[] { i, j, BaseStream.Position });
+                _disposable.Resource.Read(out csf.Data[i].Values[j].InternalIdentifier);
+                CsfAsserts.IsStringOrExtraString(csf.Data[i].Values[j].Identifier, () => new object[] { i, j, _disposable.Resource.Position });
 
-                BaseStream.Read(out csf.Data[i].Values[j].InternalValueLength);
-                BaseStream.Read(out csf.Data[i].Values[j].InternalValue, csf.Data[i].Values[j].ValueLength, true);
+                _disposable.Resource.Read(out csf.Data[i].Values[j].InternalValueLength);
+                _disposable.Resource.Read(out csf.Data[i].Values[j].InternalValue, csf.Data[i].Values[j].ValueLength, true);
                 unsafe
                 {
                     fixed (char* ptr = csf.Data[i].Values[j].Value)
@@ -50,9 +58,9 @@ public sealed class CsfReader(Stream stream, bool leaveOpen = false) : AsyncRead
 
                 if (csf.Data[i].Values[j].HasExtra)
                 {
-                    BaseStream.Read(out int length);
+                    _disposable.Resource.Read(out int length);
                     csf.Data[i].Values[j].ExtraValueLength = length;
-                    BaseStream.Read(out csf.Data[i].Values[j].InternalExtraValue, length);
+                    _disposable.Resource.Read(out csf.Data[i].Values[j].InternalExtraValue, length);
                 }
             }
         }
