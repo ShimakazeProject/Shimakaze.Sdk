@@ -14,9 +14,9 @@ public class CsfJsonV2WriterTests
     [TestMethod]
     public async Task DeserializeAsyncTest()
     {
-        await using Stream input = File.OpenRead(Path.Combine(Assets, InputFile2));
-        await using Stream output1 = File.Create(Path.Combine(OutputPath, OutputTestCsfFile));
-        await using Stream output2 = File.Create(Path.Combine(OutputPath, OutputTestJsonFile));
+        using Stream input = File.OpenRead(Path.Combine(Assets, InputFile2));
+        using Stream output1 = File.Create(Path.Combine(OutputPath, OutputTestCsfFile));
+        using Stream output2 = File.Create(Path.Combine(OutputPath, OutputTestJsonFile));
         await using CsfJsonV2Reader deserializer = new(input);
         await using CsfWriter writer = new(output1);
         await using CsfJsonV2Writer serializer2 = new(output2);

@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD2_0
+﻿#if NETSTANDARD2_0 || NETFRAMEWORK
 
 namespace System.Collections.Generic;
 
@@ -6,7 +6,7 @@ public static class DictionaryExtensions
 {
     public static bool TryAdd<TKey, TValue>(this Dictionary<TKey, TValue> @this, TKey key, TValue value)
     {
-        if (@this.ContainsKey(key))
+        if (!@this.ContainsKey(key))
         {
             @this[key] = value;
             return true;

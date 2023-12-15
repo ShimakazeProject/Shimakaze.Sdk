@@ -1,4 +1,7 @@
-﻿namespace Shimakaze.Sdk.Mix;
+﻿using System.IO;
+using System;
+
+namespace Shimakaze.Sdk.Mix;
 
 /// <summary>
 /// Mix Entry 读取器
@@ -8,7 +11,7 @@
 /// </remarks>
 /// <param name="stream"> 基础流 </param>
 /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : AsyncReader<MixEntry>(stream, leaveOpen), IDisposable, IAsyncDisposable
+public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
     private bool _inited;
 
@@ -34,15 +37,15 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : Asyn
     public void Init()
     {
         // 标识符
-        BaseStream.Read(out MixTag flag);
+        _disposable.Resource.Read(out MixTag flag);
         if ((flag & MixTag.ENCRYPTED) is not 0)
             throw new NotImplementedException("This Mix File is Encrypted.");
 
-        BaseStream.Read(out MixMetadata info);
+        _disposable.Resource.Read(out MixMetadata info);
 
         Count = info.Files;
         BodySize = info.Size;
-        BodyOffset = BaseStream.Position + 12 * Count;
+        BodyOffset = _disposable.Resource.Position + 12 * Count;
 
         _inited = true;
     }
@@ -57,17 +60,18 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : Asyn
         if (!_inited)
             Init();
 
-        if (BaseStream.Position >= BodyOffset)
+        if (_disposable.Resource.Position >= BodyOffset)
             throw new EndOfEntryTableException();
 
-        BaseStream.Read(out MixEntry entry);
+        _disposable.Resource.Read(out MixEntry entry);
         return entry;
     }
 
-    /// <inheritdoc />
-    public override async Task<MixEntry> ReadAsync(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
-    {
-        await Task.Yield();
-        return Read();
-    }
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 }

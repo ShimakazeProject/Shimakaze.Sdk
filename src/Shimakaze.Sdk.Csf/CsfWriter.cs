@@ -3,49 +3,46 @@
 /// <summary>
 /// Csf 写入器
 /// </summary>
-public sealed class CsfWriter : AsyncWriter<CsfDocument>, ICsfWriter
+/// <param name="stream"> 基础流 </param>
+/// <param name="leaveOpen"> 退出时是否保持流打开 </param>
+public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : ICsfWriter, IDisposable, IAsyncDisposable
 {
-    /// <summary>
-    /// 构造 Csf 写入器
-    /// </summary>
-    /// <param name="stream"> 基础流 </param>
-    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-    /// <exception cref="NotSupportedException"> 当流不支持Seek时抛出 </exception>
-    public CsfWriter(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-        if (!stream.CanSeek)
-            throw new NotSupportedException("The Stream cannot support Seek.");
-    }
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
-    public override async Task WriteAsync(CsfDocument value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+    public async Task WriteAsync(CsfDocument value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
-        BaseStream.Write(value.Metadata);
-
         await Task.Yield();
+        _disposable.Resource.Write(value.Metadata);
 
         for (int i = 0; i < value.Data.Length; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
             progress?.Report((float)i / value.Data.Length);
 
-            BaseStream.Write(value.Data[i].Identifier);
-            BaseStream.Write(value.Data[i].StringCount);
-            BaseStream.Write(value.Data[i].LabelNameLength);
-            BaseStream.Write(value.Data[i].LabelName, value.Data[i].LabelNameLength);
+            _disposable.Resource.Write(value.Data[i].Identifier);
+            _disposable.Resource.Write(value.Data[i].StringCount);
+            _disposable.Resource.Write(value.Data[i].LabelNameLength);
+            _disposable.Resource.Write(value.Data[i].LabelName, value.Data[i].LabelNameLength);
 
             for (int j = 0; j < value.Data[i].Values.Length; j++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                BaseStream.Write(value.Data[i].Values[j].Identifier);
-                BaseStream.Write(value.Data[i].Values[j].ValueLength);
+                _disposable.Resource.Write(value.Data[i].Values[j].Identifier);
+                _disposable.Resource.Write(value.Data[i].Values[j].ValueLength);
                 unsafe
                 {
                     fixed (char* ptr = value.Data[i].Values[j].Value)
                         CsfConstants.CodingValue((byte*)ptr, value.Data[i].Values[j].ValueLength * sizeof(char));
                 }
-                BaseStream.Write(value.Data[i].Values[j].Value, value.Data[i].Values[j].ValueLength, true);
+                _disposable.Resource.Write(value.Data[i].Values[j].Value, value.Data[i].Values[j].ValueLength, true);
 
                 if (value.Data[i].Values[j] is
                     {
@@ -53,8 +50,8 @@ public sealed class CsfWriter : AsyncWriter<CsfDocument>, ICsfWriter
                         ExtraValue: not null
                     } e)
                 {
-                    BaseStream.Write(e.ExtraValueLength.Value);
-                    BaseStream.Write(e.ExtraValue, e.ExtraValueLength.Value);
+                    _disposable.Resource.Write(e.ExtraValueLength.Value);
+                    _disposable.Resource.Write(e.ExtraValue, e.ExtraValueLength.Value);
                 }
             }
         }

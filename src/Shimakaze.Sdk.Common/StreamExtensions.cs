@@ -3,8 +3,18 @@
 /// <summary>
 /// 流实用工具
 /// </summary>
-public static unsafe class StreamExtensions
+internal static unsafe class StreamExtensions
 {
+    /// <summary>
+    /// 断言流可以Seek
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static Stream CanSeek(this Stream stream)
+    {
+        StreamAsserts.CanSeek(stream);
+        return stream;
+    }
 
     /// <summary>
     /// 读取结构体

@@ -31,9 +31,23 @@ public class CsfWriterTests
         using (CsfWriter writer = new(stream))
             await writer.WriteAsync(_csf);
 
-        var a = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
-        var b = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
+        Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
+    }
 
-        Assert.AreEqual(a, b, true, CultureInfo.InvariantCulture);
+    private void Compare(string path1, string path2)
+    {
+        Span<byte> buffer1 = stackalloc byte[8];
+        Span<byte> buffer2 = stackalloc byte[8];
+
+        using Stream fs1 = File.OpenRead(path1);
+        using Stream fs2 = File.OpenRead(path2);
+        Assert.AreEqual(fs1.Length, fs2.Length);
+
+        while (fs1.Position < fs1.Length)
+        {
+            fs1.Read(buffer1);
+            fs2.Read(buffer2);
+            Assert.IsTrue(buffer1.SequenceEqual(buffer2), $"At Position: {fs1.Position}, BufferSize£º {buffer1.Length}");
+        }
     }
 }

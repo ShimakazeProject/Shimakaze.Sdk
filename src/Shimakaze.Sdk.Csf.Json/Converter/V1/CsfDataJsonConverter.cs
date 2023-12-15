@@ -11,39 +11,39 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
     /// <inheritdoc />
     public override CsfData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
+        CsfJsonAsserts.IsToken(JsonTokenType.StartObject, reader.TokenType);
         string label = string.Empty;
         CsfValue? value = null;
         List<CsfValue>? values = null;
         string? extra = null;
 
-        while (reader.Read().ThrowWhenNull())
+        while (reader.Read())
         {
             if (reader.TokenType is JsonTokenType.EndObject)
                 break;
             switch (reader.GetString()?.ToLowerInvariant())
             {
                 case "label":
-                    label = reader.ReadString().ThrowWhenNull();
+                    label = reader.ReadString();
                     break;
 
                 case "value":
-                    (values is null).ThrowWhenFalse("Unknown Type");
+                    CsfJsonAsserts.PropertyIsNull(values, nameof(value));
                     value = ReadValue(ref reader, options);
                     break;
 
                 case "extra":
-                    (values is null).ThrowWhenFalse("Unknown Type");
-                    extra = reader.ReadString();
+                    CsfJsonAsserts.PropertyIsNull(values, nameof(extra));
+                    extra = reader.ReadStringOrNull();
                     break;
 
                 case "values":
-                    (value is null).ThrowWhenFalse("Unknown Type");
+                    CsfJsonAsserts.PropertyIsNull(value);
                     values = ReadValues(ref reader, options);
                     break;
 
                 default:
-                    reader.Read().ThrowWhenNull();
+                    reader.Read();
                     break;
             }
         }
@@ -57,16 +57,16 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
         }
         else
         {
-            value.ThrowWhenNull();
+            CsfJsonAsserts.PropertyIsNotNull(value);
 
             return new(label)
             {
-                Values = new CsfValue[] {string.IsNullOrEmpty(extra) switch
-                    {
-                        true => value.Value,
-                        false => new CsfValue(value.Value.Value, extra)
-                    }
+                Values = [string.IsNullOrEmpty(extra) switch
+                {
+                    true => value.Value,
+                    false => new CsfValue(value.Value.Value, extra)
                 }
+                ]
             };
         }
     }
@@ -99,34 +99,28 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
 
     internal static CsfValue ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
-        reader.Read().ThrowWhenFalse();
+        CsfJsonAsserts.IsNotEndOfStream(reader.Read());
         return reader.TokenType switch
         {
-            JsonTokenType.String or JsonTokenType.StartArray => new(reader
-                                .Get<CsfSimpleValueJsonConverter, string>(options)
-                                .ThrowWhenNull()),
-            JsonTokenType.StartObject => reader
-                                .Get<CsfAdvancedValueJsonConverter, CsfValue>(options)
-                                .ThrowWhenNull(),
-            JsonTokenType.Null => new(),
-            _ => reader.TokenType.ThrowNotSupportToken<CsfValue>(),
+            JsonTokenType.String or JsonTokenType.StartArray =>
+                new(reader.GetNotNull<CsfSimpleValueJsonConverter, string>(options)),
+            JsonTokenType.StartObject =>
+                reader.GetNotNull<CsfAdvancedValueJsonConverter, CsfValue>(options),
+            _ => new()
         };
+
     }
 
     internal static List<CsfValue> ReadValues(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
-        reader.Read().ThrowWhenFalse();
-        reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartArray);
+        CsfJsonAsserts.IsNotEndOfStream(reader.Read());
+        CsfJsonAsserts.IsToken(JsonTokenType.StartArray, reader.TokenType);
         List<CsfValue> values = [];
-        while (reader.Read().ThrowWhenNull())
+        while (reader.Read())
         {
             if (reader.TokenType is JsonTokenType.EndArray)
                 break;
-            values.Add(
-                reader
-                    .Get<CsfValueJsonConverter, CsfValue>(options)
-                    .ThrowWhenNull()
-            );
+            values.Add(reader.GetNotNull<CsfValueJsonConverter, CsfValue>(options));
         }
         return values;
     }

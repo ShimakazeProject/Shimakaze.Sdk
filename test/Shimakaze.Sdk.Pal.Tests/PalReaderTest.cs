@@ -7,12 +7,12 @@ public sealed class PalReaderTest
     private const string InputFile = "unittem.pal";
 
     [TestMethod]
-    public async Task ReadTestAsync()
+    public void ReadTest()
     {
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         using PaletteReader reader = new(stream);
 
-        var res = await reader.ReadAsync();
+        var res = reader.Read();
     }
 }

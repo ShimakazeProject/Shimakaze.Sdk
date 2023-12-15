@@ -29,7 +29,7 @@ public record class HvaFile
     /// <summary>
     /// The names of all the sections (null-terminated)
     /// </summary>
-    public Int128[] SectionNames { get; set; } = [];
+    public HvaSectionName[] SectionNames { get; set; } = [];
     /// <summary>
     /// </summary>
     public HvaFrame[] Frames { get; set; } = [];

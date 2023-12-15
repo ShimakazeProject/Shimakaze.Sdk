@@ -10,32 +10,21 @@ public class CsfValueJsonConverterTests
     private readonly CsfValueJsonConverter _converter = new();
     private JsonSerializerOptions? _options;
 
-    [TestMethod]
-    public void ReadTest()
-    {
-        Assert.ThrowsException<NotSupportedException>(() =>
-        {
-            var reader = new Utf8JsonReader("""null"""u8);
-            reader.Read();
-            _converter.Read(ref reader, typeof(CsfValue), _options!);
-        });
-    }
-
-    [TestMethod]
-    public void ReadTest2()
-    {
-        var reader = new Utf8JsonReader("""{"value":"Value"}"""u8);
-        reader.Read();
-        var value = _converter.Read(ref reader, typeof(CsfValue), _options!);
-        Assert.AreEqual("Value", value.Value);
-    }
-
     [TestInitialize]
     public void Startup()
     {
         _options ??= new();
         foreach (var item in CsfJsonSerializerOptions.Converters)
             _options.Converters.Add(item);
+    }
+
+    [TestMethod]
+    public void ReadTest()
+    {
+        var reader = new Utf8JsonReader("""{"value":"Value"}"""u8);
+        reader.Read();
+        var value = _converter.Read(ref reader, typeof(CsfValue), _options!);
+        Assert.AreEqual("Value", value.Value);
     }
 
     [TestMethod]

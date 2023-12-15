@@ -97,7 +97,7 @@ switch (Path.GetExtension(input).ToLowerInvariant())
         break;
     default:
         {
-            var tmp = Prompt.Select(
+            string tmp = Prompt.Select(
                 "请选择当前文件的格式",
                 supportFormats,
                 textSelector: supportFormatNames);
@@ -141,6 +141,6 @@ services.AddSingleton<ICsfWriter>(selected switch
     "Csf" => new CsfWriter(ofs),
     _ => throw new NotSupportedException()
 });
-await using var provider = services.BuildServiceProvider();
-var csf = await provider.GetRequiredService<ICsfReader>().ReadAsync();
+await using ServiceProvider provider = services.BuildServiceProvider();
+CsfDocument csf = await provider.GetRequiredService<ICsfReader>().ReadAsync();
 await provider.GetRequiredService<ICsfWriter>().WriteAsync(csf);

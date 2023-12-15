@@ -2,9 +2,14 @@
 
   <PropertyGroup>
     <RootNamespace>Shimakaze.Sdk</RootNamespace>
-    <PolyPublic>true</PolyPublic>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Shimakaze_Projects Include="$(ShimakazeSdk_SourceFolder)**\*.csproj" />
+    <Shimakaze_ProjectNames Include="@(Shimakaze_Projects -> Metadata('Filename'))" />
+    <InternalsVisibleTo Include="@(Shimakaze_ProjectNames)" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces"
@@ -24,10 +29,15 @@
                                  $(TargetFrameworkIdentifier) == '.NETFramework' or
                                  $(TargetFramework.StartsWith('netcoreapp2'))" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe"
-                      Version="6.0.0" 
+                      Version="6.0.0"
                       Condition="$(TargetFramework) == 'netstandard2.0' or
                                  $(TargetFramework) == 'netcoreapp2.0' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework'" />
+    <PackageReference Include="System.Text.Json"
+                      Version="8.0.0"
+                      Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework' or
+                                 $(TargetFramework.StartsWith('netcoreapp2'))"  />
     <PackageReference Include="System.Threading.Tasks.Extensions"
                       Version="4.5.4"
                       Condition="$(TargetFramework) == 'netstandard2.0' or

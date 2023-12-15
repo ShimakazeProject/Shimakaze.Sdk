@@ -7,28 +7,19 @@ namespace Shimakaze.Sdk.Csf.Json;
 /// <summary>
 /// CsfJsonV1Writer.
 /// </summary>
-public sealed class CsfJsonV1Writer : AsyncWriter<CsfDocument>, ICsfWriter
+public sealed class CsfJsonV1Writer(Stream stream, JsonSerializerOptions? options = null, bool leaveOpen = false) : ICsfWriter, IDisposable, IAsyncDisposable
 {
-    private readonly JsonSerializerOptions _options;
+    private readonly JsonSerializerOptions _options = options.Init(CsfJsonSerializerOptions.Converters);
 
-    /// <summary>
-    /// 构造器
-    /// </summary>
-    /// <param name="stream"> 基础流 </param>
-    /// <param name="options"> </param>
-    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-    public CsfJsonV1Writer(Stream stream, JsonSerializerOptions? options = null, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-        options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
-            options.Converters.Add(item);
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
-        _options = options;
-    }
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
-    public override async Task WriteAsync(CsfDocument value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
-    {
-        await JsonSerializer.SerializeAsync(BaseStream, value, _options, cancellationToken);
-    }
+    public async Task WriteAsync(CsfDocument value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+        => await JsonSerializer.SerializeAsync(_disposable, value, _options, cancellationToken);
 }

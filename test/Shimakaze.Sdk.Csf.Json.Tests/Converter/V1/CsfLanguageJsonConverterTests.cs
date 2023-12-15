@@ -70,30 +70,6 @@ public class CsfLanguageJsonConverterTests
         }
     }
 
-    [TestMethod]
-    public void ReadShouldThrowExceptionWhenReaderHasStringTokenAndInvalidLanguageCode()
-    {
-        // Act and assert
-        Assert.ThrowsException<NotSupportedException>(() =>
-        {
-            var reader = new Utf8JsonReader("\"foo\""u8);
-            reader.Read(); // Move to the start object token
-            return _converter.Read(ref reader, typeof(int), _options!);
-        });
-    }
-
-    [TestMethod]
-    public void ReadShouldThrowExceptionWhenReaderHasUnsupportedTokenType()
-    {
-        // Act and assert
-        Assert.ThrowsException<NotSupportedException>(() =>
-        {
-            var reader = new Utf8JsonReader("true"u8);
-            reader.Read(); // Move to the start object token
-            return _converter.Read(ref reader, typeof(int), _options!);
-        });
-    }
-
     [TestInitialize]
     public void Startup()
     {

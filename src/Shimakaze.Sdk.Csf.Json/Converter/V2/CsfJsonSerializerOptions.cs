@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -7,7 +8,7 @@ namespace Shimakaze.Sdk.Csf.Json.Converter.V2;
 public static class CsfJsonSerializerOptions
 {
     /// <inheritdoc cref="JsonSerializerOptions.Converters" />
-    public static IList<JsonConverter> Converters => new List<JsonConverter>()
+    public static FrozenSet<JsonConverter> Converters => new JsonConverter[]
     {
         new V1.CsfLanguageJsonConverter(),
         new V1.CsfSimpleValueJsonConverter(),
@@ -15,5 +16,5 @@ public static class CsfJsonSerializerOptions
         new V1.CsfValueJsonConverter(),
         new CsfDataValueJsonConverter(),
         new CsfFileJsonConverter()
-    };
+    }.ToFrozenSet();
 }

@@ -8,20 +8,28 @@ namespace Shimakaze.Sdk.Vxl;
 /// <remarks>
 /// PaletteReader
 /// </remarks>
-public sealed class VoxelWriter(Stream stream, bool leaveOpen = false) : AsyncWriter<VXLFile>(stream, leaveOpen), IDisposable, IAsyncDisposable
+public sealed class VoxelWriter(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+
 
     /// <inheritdoc />
-    public override async Task WriteAsync(VXLFile value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    public void Write(VoxelFile value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         uint limbDataOffset = 34 + Palette.ColorCount * 3 + value.Header.NumSections * 28;
 
-        BaseStream.Write(value.Header);
+        stream.Write(value.Header);
 
-        await using (PaletteWriter writer = new(BaseStream, true))
-            await writer.WriteAsync(value.Palette, cancellationToken);
+        using (PaletteWriter writer = new(stream, true))
+            writer.Write(value.Palette);
 
-        BaseStream.Write(value.SectionHeaders);
+        stream.Write(value.SectionHeaders);
 
         for (int i = 0; i < value.SectionData.Length; i++)
         {
@@ -29,28 +37,28 @@ public sealed class VoxelWriter(Stream stream, bool leaveOpen = false) : AsyncWr
             progress?.Report((float)i / value.SectionData.Length);
 
             long data = limbDataOffset + value.SectionTailers[i].SpanDataOffset;
-            BaseStream.Write(value.SectionData[i].SpanStart);
-            BaseStream.Write(value.SectionData[i].SpanEnd);
+            stream.Write(value.SectionData[i].SpanStart);
+            stream.Write(value.SectionData[i].SpanEnd);
 
             for (int j = 0; j < value.SectionData[i].Voxel.Length; j++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                BaseStream.Seek(data + value.SectionData[i].SpanStart[j], SeekOrigin.Begin);
+                stream.Seek(data + value.SectionData[i].SpanStart[j], SeekOrigin.Begin);
                 foreach (var span in value.SectionData[i].Voxel[j].Sections)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    BaseStream.WriteByte(span.SkipCount);
-                    BaseStream.WriteByte(span.NumVoxels);
+                    stream.WriteByte(span.SkipCount);
+                    stream.WriteByte(span.NumVoxels);
 
-                    BaseStream.Write(span.Voxels);
+                    stream.Write(span.Voxels);
 
-                    BaseStream.WriteByte(span.NumVoxels2);
+                    stream.WriteByte(span.NumVoxels2);
                 }
             }
         }
 
-        BaseStream.Write(value.SectionTailers);
+        stream.Write(value.SectionTailers);
     }
 }

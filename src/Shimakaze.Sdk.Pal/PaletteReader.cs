@@ -3,27 +3,21 @@
 /// <summary>
 /// PaletteReader
 /// </summary>
-public sealed class PaletteReader : AsyncReader<Palette>, IDisposable, IAsyncDisposable
+public sealed class PaletteReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
-    /// <summary>
-    /// PaletteReader
-    /// </summary>
-    public PaletteReader(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-    }
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
+
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
     public Palette Read()
     {
         Palette palette = new();
-        BaseStream.Read(palette.Colors);
+        _disposable.Resource.Read(palette.Colors);
         return palette;
-    }
-
-    /// <inheritdoc />
-    public override async Task<Palette> ReadAsync(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
-    {
-        await Task.Yield();
-        return Read();
     }
 }
