@@ -23,11 +23,11 @@ internal static unsafe class StreamExtensions
     /// <param name="stream"> 流 </param>
     /// <param name="destination"> 目标结构体 </param>
     /// <exception cref="OverflowException"> </exception>
-    public static void Read<T>(this Stream stream, out T destination)
+    public static int Read<T>(this Stream stream, out T destination)
             where T : unmanaged
     {
         fixed (T* ptr = &destination)
-            stream.Read(new Span<byte>(ptr, sizeof(T)));
+            return stream.Read(new Span<byte>(ptr, sizeof(T)));
     }
 
     /// <summary>
@@ -37,11 +37,11 @@ internal static unsafe class StreamExtensions
     /// <param name="stream"> 流 </param>
     /// <param name="destination"> 目标数组 </param>
     /// <exception cref="OverflowException"> </exception>
-    public static void Read<T>(this Stream stream, in T[] destination)
+    public static int Read<T>(this Stream stream, in T[] destination)
         where T : unmanaged
     {
         fixed (T* ptr = destination)
-            stream.Read(new Span<byte>(ptr, destination.Length * sizeof(T)));
+            return stream.Read(new Span<byte>(ptr, destination.Length * sizeof(T)));
     }
 
     /// <summary>
@@ -51,20 +51,22 @@ internal static unsafe class StreamExtensions
     /// <param name="value"> 读出来的字符串 </param>
     /// <param name="length"> 要读取的长度 </param>
     /// <param name="isUnicode"> 是否是wchar </param>
-    public static void Read(this Stream stream, out string value, int length, bool isUnicode = false)
+    public static int Read(this Stream stream, out string value, int length, bool isUnicode = false)
     {
+        int result;
         if (isUnicode)
         {
             char* buffer = stackalloc char[length];
-            stream.Read(new Span<byte>(buffer, length * sizeof(char)));
+            result = stream.Read(new Span<byte>(buffer, length * sizeof(char)));
             value = new(buffer, 0, length);
         }
         else
         {
             sbyte* buffer = stackalloc sbyte[length];
-            stream.Read(new Span<byte>(buffer, length));
+            result = stream.Read(new Span<byte>(buffer, length));
             value = new(buffer, 0, length);
         }
+        return result;
     }
 
     /// <summary>
