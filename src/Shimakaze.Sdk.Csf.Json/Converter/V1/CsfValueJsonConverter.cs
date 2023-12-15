@@ -15,12 +15,11 @@ public sealed class CsfValueJsonConverter : JsonConverter<CsfValue>
         {
             JsonTokenType.String or JsonTokenType.StartArray => new CsfValue(
                 reader
-                    .Get<CsfSimpleValueJsonConverter, string>(options)
-                    .ThrowWhenNull()
+                    .GetNotNull<CsfSimpleValueJsonConverter, string>(options)
             ),
             JsonTokenType.StartObject => reader
                     .Get<CsfAdvancedValueJsonConverter, CsfValue>(options),
-            _ => reader.TokenType.ThrowNotSupportToken<CsfValue>()
+            _ => new()
         };
     }
 

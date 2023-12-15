@@ -11,20 +11,18 @@ public sealed class CsfAdvancedValueJsonConverter : JsonConverter<CsfValue>
     /// <inheritdoc />
     public override CsfValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
+        CsfJsonAsserts.IsToken(JsonTokenType.StartObject, reader.TokenType);
         string value = string.Empty;
         string? extra = null;
 
-        while (reader.Read().ThrowWhenNull())
+        while (reader.Read())
         {
             if (reader.TokenType is JsonTokenType.EndObject)
                 break;
             switch (reader.GetString()?.ToLowerInvariant())
             {
                 case "value":
-                    value = reader
-                        .Read<CsfSimpleValueJsonConverter, string>(options)
-                        .ThrowWhenNull();
+                    value = reader.Read<CsfSimpleValueJsonConverter, string>(options);
                     break;
 
                 case "extra":

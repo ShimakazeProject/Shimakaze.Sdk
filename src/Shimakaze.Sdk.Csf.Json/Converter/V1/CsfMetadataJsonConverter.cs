@@ -11,10 +11,10 @@ public sealed class CsfMetadataJsonConverter : JsonConverter<CsfMetadata>
     /// <inheritdoc />
     public override CsfMetadata Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        reader.TokenType.ThrowWhenNotToken(JsonTokenType.StartObject);
+        CsfJsonAsserts.IsToken(JsonTokenType.StartObject, reader.TokenType);
 
         CsfMetadata metadata = new(0, 0);
-        while (reader.Read().ThrowWhenNull())
+        while (reader.Read())
         {
             if (reader.TokenType is JsonTokenType.EndObject)
                 break;
@@ -30,7 +30,7 @@ public sealed class CsfMetadataJsonConverter : JsonConverter<CsfMetadata>
                     break;
 
                 default:
-                    reader.Read().ThrowWhenNull();
+                    reader.Read();
                     break;
             }
         }

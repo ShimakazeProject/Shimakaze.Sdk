@@ -7,38 +7,23 @@ namespace Shimakaze.Sdk.Csf.Json;
 /// <summary>
 /// CsfJsonV2Reader.
 /// </summary>
-public sealed class CsfJsonV2Reader : AsyncReader<CsfDocument>, ICsfReader
+public sealed class CsfJsonV2Reader(Stream stream, JsonSerializerOptions? options = null, bool leaveOpen = false) : ICsfReader, IDisposable, IAsyncDisposable
 {
-    private readonly JsonSerializerOptions _options;
+    private readonly JsonSerializerOptions _options = options.Init(CsfJsonSerializerOptions.Converters);
 
-    /// <summary>
-    /// 构造器
-    /// </summary>
-    /// <param name="stream"> 基础流 </param>
-    /// <param name="options"> </param>
-    /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-    public CsfJsonV2Reader(Stream stream, JsonSerializerOptions? options = null, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-        options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
-            options.Converters.Add(item);
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
-        _options = options;
-    }
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
-    public CsfDocument Deserialize()
+    public async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
-        return JsonSerializer.Deserialize<CsfDocument>(BaseStream, _options) is not CsfDocument csf
-            ? throw ThrowHelper.CastCsfDocumentException
-            : csf;
-    }
-
-    /// <inheritdoc />
-    public override async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
-    {
-        return await JsonSerializer.DeserializeAsync<CsfDocument>(BaseStream, _options, cancellationToken) is not CsfDocument csf
-            ? throw ThrowHelper.CastCsfDocumentException
-            : csf;
+        CsfDocument? csf = await JsonSerializer.DeserializeAsync<CsfDocument>(_disposable, _options, cancellationToken);
+        CsfJsonAsserts.IsNotNull(csf);
+        return csf;
     }
 }
