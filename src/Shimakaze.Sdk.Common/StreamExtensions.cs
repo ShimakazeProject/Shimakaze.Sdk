@@ -3,7 +3,7 @@
 /// <summary>
 /// 流实用工具
 /// </summary>
-public static unsafe class StreamExtensions
+internal static unsafe class StreamExtensions
 {
 
     /// <summary>
