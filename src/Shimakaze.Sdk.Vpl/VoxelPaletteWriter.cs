@@ -8,15 +8,23 @@ namespace Shimakaze.Sdk.Vpl;
 /// <remarks>
 /// VoxelPaletteWriter
 /// </remarks>
-public sealed class VoxelPaletteWriter(Stream stream, bool leaveOpen = false) : AsyncWriter<VoxelPalette>(stream, leaveOpen), IDisposable, IAsyncDisposable
+public sealed class VoxelPaletteWriter(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
-    /// <inheritdoc />
-    public override async Task WriteAsync(VoxelPalette value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
-    {
-        BaseStream.Write(value.Header);
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
-        await using (PaletteWriter writer = new(BaseStream, true))
-            await writer.WriteAsync(value.Palette, cancellationToken);
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+
+    /// <inheritdoc />
+    public void Write(VoxelPalette value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    {
+        _disposable.Resource.Write(value.Header);
+
+        using (PaletteWriter writer = new(_disposable, true))
+            writer.Write(value.Palette);
 
         for (int i = 0; i < value.Sections.Length; i++)
         {
@@ -26,7 +34,7 @@ public sealed class VoxelPaletteWriter(Stream stream, bool leaveOpen = false) : 
             unsafe
             {
                 fixed (byte* ptr = value.Sections[i].Data)
-                    BaseStream.Write(new Span<byte>(ptr, 256));
+                    _disposable.Resource.Write(new Span<byte>(ptr, 256));
             }
         }
     }

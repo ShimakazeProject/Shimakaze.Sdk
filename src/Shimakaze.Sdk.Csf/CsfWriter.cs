@@ -5,10 +5,9 @@
 /// </summary>
 /// <param name="stream"> 基础流 </param>
 /// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-/// <exception cref="NotSupportedException"> 当流不支持Seek时抛出 </exception>
 public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : ICsfWriter, IDisposable, IAsyncDisposable
 {
-    private readonly DisposableObject<Stream> _disposable = new(stream.CanSeek(), leaveOpen);
+    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
     /// <inheritdoc/>
     public void Dispose() => _disposable.Dispose();

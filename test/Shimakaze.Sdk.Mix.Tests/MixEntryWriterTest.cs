@@ -13,11 +13,11 @@ public class MixEntryWriterTest
     private readonly MixEntry _lxd = new(913179935, 573280, 85);
 
     [TestMethod]
-    public async Task InitTestAsync()
+    public void InitTest()
     {
         using MemoryStream ms = new();
         using MixEntryWriter writer = new(ms);
-        await writer.WriteAsync(_csf);
+        writer.Write(_csf);
     }
 
     [TestInitialize]
@@ -35,24 +35,24 @@ public class MixEntryWriterTest
             using MixEntryWriter tmp = new(stream);
         });
 
-        await using Stream fs = File.Create(Path.Combine(OutputPath, MixFile));
+        using Stream fs = File.Create(Path.Combine(OutputPath, MixFile));
         using MixEntryWriter writer = new(fs);
         writer.Init();
         Assert.AreEqual(4 + 2 + 4, fs.Position);
-        await writer.WriteAsync(_csf);
+        writer.Write(_csf);
         Assert.AreEqual(4 + 2 + 4 + 12, fs.Position);
-        await writer.WriteAsync(_lxd);
+        writer.Write(_lxd);
         Assert.AreEqual(4 + 2 + 4 + 12 + 12, fs.Position);
         var bodyOffset = fs.Position;
 
-        await using var ra2mdfs = File.OpenRead(Path.Combine(Assets, CsfFile));
+        using var ra2mdfs = File.OpenRead(Path.Combine(Assets, CsfFile));
         fs.Seek(bodyOffset, SeekOrigin.Begin);
         fs.Seek(_csf.Offset, SeekOrigin.Current);
         Assert.AreEqual(bodyOffset + _csf.Offset, fs.Position);
         await ra2mdfs.CopyToAsync(fs);
         Assert.AreEqual(bodyOffset + _csf.Offset + _csf.Size, fs.Position);
 
-        await using var lxdfs = File.OpenRead(Path.Combine(Assets, LxdFile));
+        using var lxdfs = File.OpenRead(Path.Combine(Assets, LxdFile));
         fs.Seek(bodyOffset, SeekOrigin.Begin);
         fs.Seek(_lxd.Offset, SeekOrigin.Current);
         Assert.AreEqual(bodyOffset + _lxd.Offset, fs.Position);
@@ -61,7 +61,7 @@ public class MixEntryWriterTest
 
         writer.WriteMetadata();
 
-        await using var mixfs = File.OpenRead(Path.Combine(Assets, MixFile));
+        using var mixfs = File.OpenRead(Path.Combine(Assets, MixFile));
         fs.Seek(0, SeekOrigin.Begin);
         while (mixfs.Position < mixfs.Length)
         {

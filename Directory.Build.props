@@ -13,9 +13,16 @@
     <ShimakazeSdk_IsTest Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_UnitTestFolder)')) ">True</ShimakazeSdk_IsTest>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
+    <TargetFrameworks>netstandard2.0;net48;net8.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(ShimakazeSdk_IsTest)">
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+  </PropertyGroup>
+
   <!-- CSharp -->
   <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -32,8 +39,12 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
 
     <!-- Polyfill -->
-    <NoWarn Condition="$(TargetFramework.StartsWith('netstandard'))">1701;1702;8601;8604;8767</NoWarn>
-    <Nullable Condition="$(TargetFramework.StartsWith('netstandard'))">annotations</Nullable>
+    <NoWarn Condition="$(TargetFramework) == 'netstandard2.0' or
+                       $(TargetFramework) == 'netcoreapp2.0' or
+                       $(TargetFrameworkIdentifier) == '.NETFramework'">1701;1702;8601;8604;8618;8767</NoWarn>
+    <Nullable Condition="$(TargetFramework) == 'netstandard2.0' or
+                         $(TargetFramework) == 'netcoreapp2.0' or
+                         $(TargetFrameworkIdentifier) == '.NETFramework'">annotations</Nullable>
 
     <Authors>Shimakaze Project</Authors>
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
@@ -56,7 +67,7 @@
     <None Include="$(IconPath)" Condition=" '$(IconPath)' != '' " Pack="True" PackagePath="\" />
     <None Include="$(ReadmeFile)" Condition=" '$(ReadmeFile)' != '' " Pack="True" PackagePath="\" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="$(ShimakazeSdk_IsCSharp) AND $(MSBuildProjectName) != 'Shimakaze.Sdk.Common' AND $(MSBuildProjectName) != 'Shimakaze.Sdk.Polyfill'" >
     <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
   </ItemGroup>
@@ -75,7 +86,6 @@
 
   <!-- CSharp UnitTest -->
   <PropertyGroup Condition="$(ShimakazeSdk_IsTest)">
-    <TargetFrameworks>net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
 

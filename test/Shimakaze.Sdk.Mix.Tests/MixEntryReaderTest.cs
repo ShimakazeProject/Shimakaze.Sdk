@@ -10,7 +10,7 @@ public class MixEntryReaderTest
     private const uint Ra2mdCsf = 3179499641;
 
     [TestMethod]
-    public async Task InitTestAsync()
+    public void InitTest()
     {
         using MemoryStream ms = new([
             0,
@@ -39,7 +39,7 @@ public class MixEntryReaderTest
         ]);
         ms.Seek(0, SeekOrigin.Begin);
         using MixEntryReader reader = new(ms);
-        await reader.ReadAsync();
+        reader.Read();
     }
 
     [TestMethod]
@@ -47,7 +47,7 @@ public class MixEntryReaderTest
     {
         await Assert.ThrowsExceptionAsync<NotImplementedException>(async () =>
         {
-            await using MemoryStream ms = new([
+            using MemoryStream ms = new([
                 255,
                 255,
                 255,
@@ -87,9 +87,9 @@ public class MixEntryReaderTest
     }
 
     [TestMethod]
-    public async Task Test()
+    public void Test()
     {
-        await using Stream fs = File.OpenRead(Path.Combine(Assets, InputFile));
+        using Stream fs = File.OpenRead(Path.Combine(Assets, InputFile));
         using MixEntryReader reader = new(fs);
         reader.Init();
         Assert.AreEqual(4 + 2 + 4, fs.Position);
@@ -99,7 +99,7 @@ public class MixEntryReaderTest
         MixEntry csf = default;
         for (int i = 0; i < reader.Count; i++)
         {
-            var entry = await reader.ReadAsync();
+            var entry = reader.Read();
             Console.WriteLine(entry);
             Assert.AreEqual(4 + 2 + 4 + (i + 1) * 12, fs.Position);
 

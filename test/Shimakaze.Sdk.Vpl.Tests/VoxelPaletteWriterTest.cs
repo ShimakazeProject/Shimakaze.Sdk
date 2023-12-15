@@ -13,26 +13,43 @@ public sealed class VoxelPaletteWriterTest
     private VoxelPalette _vpl = default!;
 
     [TestInitialize]
-    public async Task StartupAsync()
+    public void Startup()
     {
         Directory.CreateDirectory(OutputPath);
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         using VoxelPaletteReader reader = new(stream);
 
-        _vpl = await reader.ReadAsync();
+        _vpl = reader.Read();
     }
 
     [TestMethod]
-    public async Task WriteTestAsync()
+    public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
         using (VoxelPaletteWriter writer = new(stream))
-            await writer.WriteAsync(_vpl);
+            writer.Write(_vpl);
 
-        var a = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(Assets, InputFile))));
-        var b = BitConverter.ToString(SHA256.HashData(File.ReadAllBytes(Path.Combine(OutputPath, OutputFile))));
+        Assert.IsTrue(Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile)));
+    }
 
-        Assert.AreEqual(a, b, true, CultureInfo.InvariantCulture);
+    private bool Compare(string path1, string path2)
+    {
+        Span<byte> buffer1 = stackalloc byte[8];
+        Span<byte> buffer2 = stackalloc byte[8];
+
+        using Stream fs1 = File.OpenRead(Path.Combine(Assets, InputFile));
+        using Stream fs2 = File.OpenRead(Path.Combine(OutputPath, OutputFile));
+        if (fs1.Length != fs2.Length)
+            return false;
+
+        while (fs1.Position < fs1.Length)
+        {
+            fs1.Read(buffer1);
+            fs2.Read(buffer2);
+            if (!buffer1.SequenceEqual(buffer2))
+                return false;
+        }
+        return true;
     }
 }

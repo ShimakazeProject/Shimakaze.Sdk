@@ -7,13 +7,13 @@ public sealed class VoxelPaletteReaderTest
     private const string InputFile = "voxels.vpl";
 
     [TestMethod]
-    public async Task ReadTestAsync()
+    public void ReadTest()
     {
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         using VoxelPaletteReader reader = new(stream);
 
-        var res = await reader.ReadAsync();
+        var res = reader.Read();
 
         Assert.AreEqual(16u, res.Header.RemapPlayerColorStart);
         Assert.AreEqual(31u, res.Header.RemapPlayerColorEnd);

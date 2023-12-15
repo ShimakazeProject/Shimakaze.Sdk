@@ -10,7 +10,7 @@ public record struct HvaHeader
     /// Garbage, ignore (seems to be some part of a file path)
     /// </summary>
     [FieldOffset(0)]
-    public Int128 FileName;
+    public HvaSectionName FileName;
 
     /// <summary>
     /// The number of frames the animation has

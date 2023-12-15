@@ -6,28 +6,26 @@ namespace Shimakaze.Sdk.Vxl;
 /// <summary>
 /// VoxelReader
 /// </summary>
-public sealed class VoxelReader : AsyncReader<VXLFile>, IDisposable, IAsyncDisposable
+public sealed class VoxelReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
-    /// <summary>
-    /// PaletteReader
-    /// </summary>
+    private readonly DisposableObject<Stream> _disposable = new(stream.CanSeek(), leaveOpen);
 
-    public VoxelReader(Stream stream, bool leaveOpen = false) : base(stream, leaveOpen)
-    {
-        if (!BaseStream.CanSeek)
-            throw new NotSupportedException("This Stream cannot support Seek");
-    }
+    /// <inheritdoc/>
+    public void Dispose() => _disposable.Dispose();
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
-    public override async Task<VXLFile> ReadAsync(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    public VXLFile Read(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         VXLFile voxel = new();
-        BaseStream.Read(out voxel.InternalHeader);
+        stream.Read(out voxel.InternalHeader);
 
         uint limbDataOffset = 34 + Palette.ColorCount * 3 + voxel.Header.NumSections * 28;
 
-        await using (PaletteReader reader = new(BaseStream, true))
-            voxel.Palette = await reader.ReadAsync(cancellationToken);
+        using (PaletteReader reader = new(stream, true))
+            voxel.Palette = reader.Read();
 
         voxel.SectionHeaders = new SectionHeader[voxel.Header.NumSections];
         for (int i = 0; i < voxel.Header.NumSections; i++)
@@ -35,7 +33,7 @@ public sealed class VoxelReader : AsyncReader<VXLFile>, IDisposable, IAsyncDispo
             cancellationToken.ThrowIfCancellationRequested();
             progress?.Report(1f / 3 * ((float)i / voxel.Header.NumSections));
 
-            BaseStream.Read(out voxel.SectionHeaders[i]);
+            stream.Read(out voxel.SectionHeaders[i]);
         }
 
         voxel.SectionTailers = new SectionTailer[voxel.Header.NumSections];
@@ -44,8 +42,8 @@ public sealed class VoxelReader : AsyncReader<VXLFile>, IDisposable, IAsyncDispo
             cancellationToken.ThrowIfCancellationRequested();
             progress?.Report(1f / 3 * ((float)i / voxel.Header.NumSections + 1));
 
-            BaseStream.Seek(limbDataOffset + voxel.Header.BodySize + i * 92, SeekOrigin.Begin);
-            BaseStream.Read(out voxel.SectionTailers[i]);
+            stream.Seek(limbDataOffset + voxel.Header.BodySize + i * 92, SeekOrigin.Begin);
+            stream.Read(out voxel.SectionTailers[i]);
         }
 
         voxel.SectionData = new SectionData[voxel.Header.NumSections];
@@ -66,11 +64,11 @@ public sealed class VoxelReader : AsyncReader<VXLFile>, IDisposable, IAsyncDispo
                 Voxel = new VoxelSpan[n],
             };
 
-            BaseStream.Seek(start, SeekOrigin.Begin);
-            BaseStream.Read(voxel.SectionData[i].SpanStart);
+            stream.Seek(start, SeekOrigin.Begin);
+            stream.Read(voxel.SectionData[i].SpanStart);
 
-            BaseStream.Seek(end, SeekOrigin.Begin);
-            BaseStream.Read(voxel.SectionData[i].SpanEnd);
+            stream.Seek(end, SeekOrigin.Begin);
+            stream.Read(voxel.SectionData[i].SpanEnd);
 
             for (int j = 0; j < n; j++)
             {
@@ -81,18 +79,18 @@ public sealed class VoxelReader : AsyncReader<VXLFile>, IDisposable, IAsyncDispo
                     continue;
 
                 List<VoxelSpanSegment> sections = [];
-                BaseStream.Seek(data + voxel.SectionData[i].SpanStart[j], SeekOrigin.Begin);
+                stream.Seek(data + voxel.SectionData[i].SpanStart[j], SeekOrigin.Begin);
                 for (byte z = 0; z < voxel.SectionTailers[i].Size.Z;)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
                     VoxelSpanSegment voxelSpanSegment = new()
                     {
-                        SkipCount = (byte)BaseStream.ReadByte()
+                        SkipCount = (byte)stream.ReadByte()
                     };
                     z += voxelSpanSegment.SkipCount;
 
-                    voxelSpanSegment.NumVoxels = (byte)BaseStream.ReadByte();
+                    voxelSpanSegment.NumVoxels = (byte)stream.ReadByte();
                     z += voxelSpanSegment.NumVoxels;
 
                     // if (z + voxelSpanSegment.NumVoxels > voxel.SectionTailers[i].Size.Z) throw
@@ -100,9 +98,9 @@ public sealed class VoxelReader : AsyncReader<VXLFile>, IDisposable, IAsyncDispo
 
                     voxelSpanSegment.Voxels = new Voxel[voxelSpanSegment.NumVoxels];
                     if (voxelSpanSegment.NumVoxels is > 0)
-                        BaseStream.Read(voxelSpanSegment.Voxels);
+                        stream.Read(voxelSpanSegment.Voxels);
 
-                    voxelSpanSegment.NumVoxels2 = (byte)BaseStream.ReadByte();
+                    voxelSpanSegment.NumVoxels2 = (byte)stream.ReadByte();
                     if (voxelSpanSegment.NumVoxels != voxelSpanSegment.NumVoxels2)
                         throw new FormatException("NumVoxels are not equal than NumVoxels2");
 

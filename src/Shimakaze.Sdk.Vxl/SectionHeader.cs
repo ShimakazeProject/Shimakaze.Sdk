@@ -12,7 +12,7 @@ public record struct SectionHeader
     /// Limb 的名字
     /// </summary>
     [FieldOffset(0)]
-    public Int128 Name;
+    public SectionName Name;
 
     /// <summary>
     /// Number
