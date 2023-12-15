@@ -17,9 +17,9 @@ public sealed class VoxelReader(Stream stream, bool leaveOpen = false) : IDispos
     public ValueTask DisposeAsync() => _disposable.DisposeAsync();
 
     /// <inheritdoc />
-    public VXLFile Read(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    public VoxelFile Read(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
-        VXLFile voxel = new();
+        VoxelFile voxel = new();
         stream.Read(out voxel.InternalHeader);
 
         uint limbDataOffset = 34 + Palette.ColorCount * 3 + voxel.Header.NumSections * 28;
