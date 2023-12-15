@@ -56,6 +56,10 @@
     <None Include="$(IconPath)" Condition=" '$(IconPath)' != '' " Pack="True" PackagePath="\" />
     <None Include="$(ReadmeFile)" Condition=" '$(ReadmeFile)' != '' " Pack="True" PackagePath="\" />
   </ItemGroup>
+  
+  <ItemGroup Condition="$(ShimakazeSdk_IsCSharp) AND $(MSBuildProjectName) != 'Shimakaze.Sdk.Common' AND $(MSBuildProjectName) != 'Shimakaze.Sdk.Polyfill'" >
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
+  </ItemGroup>
 
   <ItemGroup Condition="$(ShimakazeSdk_IsCSharp)">
     <PackageReference Include="IDisposableAnalyzers" Version="4.0.7">
