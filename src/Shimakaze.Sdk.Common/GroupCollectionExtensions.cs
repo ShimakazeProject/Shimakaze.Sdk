@@ -3,9 +3,9 @@
 namespace Shimakaze.Sdk;
 
 /// <summary>
-/// 垫片
+/// GroupCollection 实用工具
 /// </summary>
-public static class GroupCollectionShim
+internal static class GroupCollectionExtensions
 {
     /// <summary>
     /// 
@@ -14,7 +14,7 @@ public static class GroupCollectionShim
     /// <returns></returns>
     public static IEnumerable<Group> GetValues(this GroupCollection group)
     {
-#if NETSTANDARD
+#if NETSTANDARD || NETFRAMEWORK
         return group.Cast<Group>();
 #else
         return group.Values; 
