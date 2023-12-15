@@ -37,19 +37,19 @@ public record struct SectionTailer
     /// The default transformation matrix for the section
     /// </summary>
     [FieldOffset(3 * sizeof(int) + 1 * sizeof(float) + 0 * sizeof(byte))]
-    public (Vector3 X, Vector3 Y, Vector3 Z, Vector3 W) Transform;
+    public Transform Transform;
 
     /// <summary>
     /// The bounding box of the section
     /// </summary>
     [FieldOffset(3 * sizeof(int) + 13 * sizeof(float) + 0 * sizeof(byte))]
-    public (Vector3 Min, Vector3 Max) Bounds;
+    public Bounds Bounds;
 
     /// <summary>
     /// The dimensions of the voxel object
     /// </summary>
     [FieldOffset(3 * sizeof(int) + (16 + 3) * sizeof(float) + 0 * sizeof(byte))]
-    public (byte X, byte Y, byte Z) Size;
+    public VoxelSize Size;
 
     /// <summary>
     /// The type of normals (4 == Red Alert 2 normals)

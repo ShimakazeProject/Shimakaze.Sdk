@@ -20,7 +20,7 @@ public sealed class VoxelWriter(Stream stream, bool leaveOpen = false) : IDispos
 
 
     /// <inheritdoc />
-    public void Write(VXLFile value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    public void Write(VoxelFile value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         uint limbDataOffset = 34 + Palette.ColorCount * 3 + value.Header.NumSections * 28;
 

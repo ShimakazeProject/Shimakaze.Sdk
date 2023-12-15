@@ -5,14 +5,14 @@ namespace Shimakaze.Sdk.Vxl;
 /// <summary>
 /// VXL 文件
 /// </summary>
-public record class VXLFile
+public record class VoxelFile
 {
-    internal VXLHeader InternalHeader;
+    internal VoxelHeader InternalHeader;
 
     /// <summary>
     /// 文件头
     /// </summary>
-    public VXLHeader Header
+    public VoxelHeader Header
     {
         get => InternalHeader;
         set => InternalHeader = value;

@@ -5,7 +5,7 @@ namespace Shimakaze.Sdk.Vxl;
 /// VXL 头
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 16 + sizeof(int) * 4 + sizeof(short))]
-public record struct VXLHeader
+public record struct VoxelHeader
 {
     /// <summary>
     /// 文件头标识 总是 "Voxel Animation\0"

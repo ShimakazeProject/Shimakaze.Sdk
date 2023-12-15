@@ -7,7 +7,7 @@ public sealed class VoxelWriterTest
     private const string InputFile = "jeep.vxl";
     private const string OutputFile = "jeep.vxl";
     private const string OutputPath = "Out";
-    private VXLFile _vxl = default!;
+    private VoxelFile _vxl = default!;
 
     [TestInitialize]
     public void Startup()
@@ -18,6 +18,19 @@ public sealed class VoxelWriterTest
         using VoxelReader reader = new(stream);
 
         _vxl = reader.Read();
+    }
+
+    [TestMethod]
+    public unsafe void SizeOfTest()
+    {
+        Assert.AreEqual(6, sizeof(Bounds));
+        Assert.AreEqual(28, sizeof(SectionHeader));
+        Assert.AreEqual(16, sizeof(SectionName));
+        Assert.AreEqual(92, sizeof(SectionTailer));
+        Assert.AreEqual(48, sizeof(Transform));
+        Assert.AreEqual(2, sizeof(Voxel));
+        Assert.AreEqual(3, sizeof(VoxelSize));
+        Assert.AreEqual(34, sizeof(VoxelHeader));
     }
 
     [TestMethod]
