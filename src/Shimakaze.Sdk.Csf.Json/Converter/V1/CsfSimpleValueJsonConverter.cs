@@ -15,8 +15,8 @@ public sealed class CsfSimpleValueJsonConverter : JsonConverter<string>
         return reader.TokenType switch
         {
             JsonTokenType.StartArray => ReadStringArray(ref reader),
-            JsonTokenType.String => reader.GetString()!,
-            _ => reader.TokenType.ThrowNotSupportToken<string>()
+            JsonTokenType.String => reader.GetString(),
+            _ => string.Empty,
         };
     }
 
@@ -43,7 +43,7 @@ public sealed class CsfSimpleValueJsonConverter : JsonConverter<string>
     private static string ReadStringArray(ref Utf8JsonReader reader)
     {
         StringBuilder sb = new();
-        while (reader.Read().ThrowWhenNull())
+        while (reader.Read())
         {
             if (reader.TokenType is JsonTokenType.EndArray)
                 break;

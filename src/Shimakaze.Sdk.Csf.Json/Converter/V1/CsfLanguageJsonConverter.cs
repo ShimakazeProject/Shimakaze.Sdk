@@ -26,9 +26,9 @@ public sealed class CsfLanguageJsonConverter : JsonConverter<int>
                 "Jabberwockie" => 7,
                 "kr" => 8,
                 "zh" => 9,
-                _ => reader.GetString().ThrowNotSupportValue<string?, int>()
+                _ => 0
             },
-            _ => reader.TokenType.ThrowNotSupportToken<int>()
+            _ => 0
         };
     }
 
