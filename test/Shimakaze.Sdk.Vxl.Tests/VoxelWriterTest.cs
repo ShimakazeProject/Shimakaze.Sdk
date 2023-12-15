@@ -23,7 +23,7 @@ public sealed class VoxelWriterTest
     [TestMethod]
     public unsafe void SizeOfTest()
     {
-        Assert.AreEqual(6, sizeof(Bounds));
+        Assert.AreEqual(24, sizeof(Bounds));
         Assert.AreEqual(28, sizeof(SectionHeader));
         Assert.AreEqual(16, sizeof(SectionName));
         Assert.AreEqual(92, sizeof(SectionTailer));
