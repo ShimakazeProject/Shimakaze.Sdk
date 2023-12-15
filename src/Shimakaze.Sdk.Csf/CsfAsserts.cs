@@ -1,11 +1,13 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 
 namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
 /// CsfThrowHelper.
 /// </summary>
-internal static class CsfThrowHelper
+[StackTraceHidden]
+internal static class CsfAsserts
 {
     /// <summary>
     /// IsCsfFile.
