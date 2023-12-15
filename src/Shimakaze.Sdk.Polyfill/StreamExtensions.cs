@@ -1,10 +1,8 @@
-﻿#if NETSTANDARD2_0
+﻿#if NETSTANDARD2_0 || NETFRAMEWORK
 namespace System.IO;
 
 public static class StreamExtensions
 {
-    public static async ValueTask DisposeAsync(this Stream stream) => await Task.Run(stream.Dispose);
-
     public static int Read(this Stream stream, Span<byte> buffer)
     {
         var tmp = buffer.ToArray();

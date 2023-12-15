@@ -1,6 +1,6 @@
-﻿#if NETSTANDARD
+﻿#if NETSTANDARD || NETFRAMEWORK
 namespace System.Runtime.InteropServices;
-public static class CollectionsMarshal
+internal static class CollectionsMarshal
 {
     public static Span<T> AsSpan<T>(List<T>? list) => new([.. list]);
 }

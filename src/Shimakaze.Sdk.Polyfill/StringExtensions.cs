@@ -1,6 +1,6 @@
-﻿namespace Shimakaze.Sdk;
+﻿#if NETSTANDARD2_0 || NETFRAMEWORK
+namespace System;
 
-#if NETSTANDARD2_0
 public static class StringExtensions
 {
     public static string[] Split(this string value, string split)
