@@ -1,5 +1,4 @@
-﻿using Shimakaze.Sdk;
-using Shimakaze.Sdk.Pal;
+﻿using Shimakaze.Sdk.Graphic.Pal;
 
 namespace Shimakaze.Sdk.Vxl;
 
@@ -22,7 +21,7 @@ public sealed class VoxelReader(Stream stream, bool leaveOpen = false) : IDispos
         VoxelFile voxel = new();
         stream.Read(out voxel.InternalHeader);
 
-        uint limbDataOffset = 34 + Palette.ColorCount * 3 + voxel.Header.NumSections * 28;
+        uint limbDataOffset = 34 + Palette.DefaultColorCount * 3 + voxel.Header.NumSections * 28;
 
         using (PaletteReader reader = new(stream, true))
             voxel.Palette = reader.Read();

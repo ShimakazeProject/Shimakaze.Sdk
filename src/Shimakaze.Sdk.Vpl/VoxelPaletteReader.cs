@@ -1,5 +1,5 @@
 ﻿using Shimakaze.Sdk;
-using Shimakaze.Sdk.Pal;
+using Shimakaze.Sdk.Graphic.Pal;
 
 namespace Shimakaze.Sdk.Vpl;
 
