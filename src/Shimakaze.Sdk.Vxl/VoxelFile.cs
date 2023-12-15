@@ -1,4 +1,4 @@
-﻿using Shimakaze.Sdk.Pal;
+﻿using Shimakaze.Sdk.Graphic.Pal;
 
 namespace Shimakaze.Sdk.Vxl;
 

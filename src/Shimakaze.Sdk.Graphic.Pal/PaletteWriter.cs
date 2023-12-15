@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Pal;
+﻿namespace Shimakaze.Sdk.Graphic.Pal;
 
 /// <summary>
 /// PaletteWriter

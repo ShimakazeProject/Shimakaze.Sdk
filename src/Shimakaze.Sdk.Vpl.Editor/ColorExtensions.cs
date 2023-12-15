@@ -1,4 +1,4 @@
-﻿using Shimakaze.Sdk.Pal;
+﻿using Shimakaze.Sdk.Graphic.Pixel;
 
 namespace Shimakaze.Sdk.Vpl.Editor;
 
@@ -13,14 +13,14 @@ public static class ColorExtensions
     /// <param name="color"> 颜色 </param>
     /// <param name="isBackground"> 是否是背景色 </param>
     /// <returns> </returns>
-    public static string GetANSIString(this in Color color, bool isBackground = false) => $"\x1B[{(isBackground ? 4 : 3)}8;2;{color.GetR5()};{color.GetG6()};{color.GetB5()}m";
+    public static string GetANSIString(this in Rgb24 color, bool isBackground = false) => $"\x1B[{(isBackground ? 4 : 3)}8;2;{color.Red};{color.Green};{color.Blue}m";
 
     /// <summary>
     /// 反转颜色
     /// </summary>
     /// <param name="color"> 颜色 </param>
     /// <returns> 被反转后的颜色 </returns>
-    public static Color GetReverse(this in Color color) => new(
+    public static Rgb24 GetReverse(this in Rgb24 color) => new(
         (byte)~color.Red,
         (byte)~color.Green,
         (byte)~color.Blue

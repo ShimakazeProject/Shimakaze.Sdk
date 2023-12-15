@@ -1,6 +1,6 @@
 ﻿using Sharprompt;
 
-using Shimakaze.Sdk.Pal;
+using Shimakaze.Sdk.Graphic.Pal;
 using Shimakaze.Sdk.Vpl;
 using Shimakaze.Sdk.Vpl.Editor;
 
