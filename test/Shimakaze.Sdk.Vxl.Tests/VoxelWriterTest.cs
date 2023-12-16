@@ -56,7 +56,8 @@ public sealed class VoxelWriterTest
         {
             fs1.Read(buffer1);
             fs2.Read(buffer2);
-            Assert.IsTrue(buffer1.SequenceEqual(buffer2), $"At Position: {fs1.Position}, BufferSize£º {buffer1.Length}");
+            Assert.IsTrue(buffer1.SequenceEqual(buffer2),
+                $"At Position: {fs1.Position}, BufferSize£º {buffer1.Length}, Should be {BitConverter.ToString(buffer1.ToArray())}, but {BitConverter.ToString(buffer2.ToArray())}");
         }
     }
 }

@@ -26,7 +26,7 @@ public sealed class VoxelWriter(Stream stream, bool leaveOpen = false) : IDispos
 
         stream.Write(value.Header);
 
-        using (PaletteWriter writer = new(stream, true))
+        using (PaletteWriter writer = new(stream, true, leaveOpen: true))
             writer.Write(value.Palette);
 
         stream.Write(value.SectionHeaders);

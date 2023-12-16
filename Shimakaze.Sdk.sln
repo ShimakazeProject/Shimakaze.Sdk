@@ -127,6 +127,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Graphic.Pal.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Graphic.Pcx", "src\Shimakaze.Sdk.Graphic.Pcx\Shimakaze.Sdk.Graphic.Pcx.csproj", "{C5692EB7-4840-4123-9610-90F6DC3B23A9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Graphic.Shp", "src\Shimakaze.Sdk.Graphic.Shp\Shimakaze.Sdk.Graphic.Shp.csproj", "{ACBFFC74-5450-4F53-9F34-B2EC851E4B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -273,6 +275,10 @@ Global
 		{C5692EB7-4840-4123-9610-90F6DC3B23A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5692EB7-4840-4123-9610-90F6DC3B23A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5692EB7-4840-4123-9610-90F6DC3B23A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACBFFC74-5450-4F53-9F34-B2EC851E4B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACBFFC74-5450-4F53-9F34-B2EC851E4B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACBFFC74-5450-4F53-9F34-B2EC851E4B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACBFFC74-5450-4F53-9F34-B2EC851E4B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -324,6 +330,7 @@ Global
 		{E599701A-2291-4372-A60C-B6D7916D2ECF} = {035F1DE8-8EF6-4994-B837-4087652C0FE7}
 		{8EA03294-7421-4F58-B97A-BB23BF511D70} = {283D07A8-9D54-4377-A3A3-9D59D40819C7}
 		{C5692EB7-4840-4123-9610-90F6DC3B23A9} = {035F1DE8-8EF6-4994-B837-4087652C0FE7}
+		{ACBFFC74-5450-4F53-9F34-B2EC851E4B2C} = {035F1DE8-8EF6-4994-B837-4087652C0FE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C5FF25D-B54D-4920-A61E-180CCE63A876}
