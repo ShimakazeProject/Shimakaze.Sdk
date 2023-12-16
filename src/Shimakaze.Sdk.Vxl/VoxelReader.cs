@@ -23,7 +23,7 @@ public sealed class VoxelReader(Stream stream, bool leaveOpen = false) : IDispos
 
         uint limbDataOffset = 34 + Palette.DefaultColorCount * 3 + voxel.Header.NumSections * 28;
 
-        using (PaletteReader reader = new(stream, leaveOpen: true))
+        using (PaletteReader reader = new(stream, skipPostprocess: true, leaveOpen: true))
             voxel.Palette = reader.Read();
 
         voxel.SectionHeaders = new SectionHeader[voxel.Header.NumSections];
