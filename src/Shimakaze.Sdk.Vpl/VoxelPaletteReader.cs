@@ -13,7 +13,7 @@ namespace Shimakaze.Sdk.Vpl;
 /// 设置为<see langword="true"/>则跳过左移处理。
 /// </param>
 /// <param name="leaveOpen"></param>
-public sealed class VoxelPaletteReader(Stream stream, bool skipPostprocess = false, bool leaveOpen = false) : IDisposable, IAsyncDisposable
+public sealed class VoxelPaletteReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
     private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
@@ -30,7 +30,7 @@ public sealed class VoxelPaletteReader(Stream stream, bool skipPostprocess = fal
 
         _disposable.Resource.Read(out vpl.InternalHeader);
 
-        using (PaletteReader reader = new(_disposable.Resource, Palette.DefaultColorCount, skipPostprocess, true))
+        using (PaletteReader reader = new(stream, skipPostprocess: true, leaveOpen: true))
             vpl.Palette = reader.Read();
 
         vpl.Sections = new VoxelPaletteSection[vpl.Header.SectionCount];
