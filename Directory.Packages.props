@@ -5,9 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.7" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(ShimakazeSdk_IsTest)">
+    <GlobalPackageReference Include="coverlet.msbuild" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
-    <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
-    <PackageVersion Include="IDisposableAnalyzers" Version="4.0.7" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.8.3" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.8.3" />
