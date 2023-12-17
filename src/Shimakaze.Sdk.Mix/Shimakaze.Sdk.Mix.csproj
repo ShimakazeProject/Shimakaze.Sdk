@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
+    <PackageReference Include="System.IO.Hashing" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />

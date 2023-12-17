@@ -8,8 +8,8 @@
     <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Yaml.Tests\Assets\ra2md.v1.csf.yaml" Link="Assets\ra2md.v1.csf.yaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.8.3" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.8.3" />
-    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="Microsoft.Build.Framework" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" />
+    <PackageReference Include="Moq" />
   </ItemGroup>
 </Project>
