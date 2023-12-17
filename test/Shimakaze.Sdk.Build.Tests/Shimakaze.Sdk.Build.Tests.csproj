@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+  </PropertyGroup>
   <ItemGroup>
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\conditionTest.ini" Link="Assets\conditionTest.ini" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\defineTest.ini" Link="Assets\defineTest.ini" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\errorTest.ini" Link="Assets\errorTest.ini" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Preprocessor.Tests\Assets\typeTest.ini" Link="Assets\typeTest.ini" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.csf" Link="Assets\ra2md.csf" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.xml" Link="Assets\ra2md.v1.csf.xml" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.yaml" Link="Assets\ra2md.v1.csf.yaml" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.v1.csf.json" Link="Assets\ra2md.v1.csf.json" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Tests\Assets\ra2md.v2.csf.json" Link="Assets\ra2md.v2.csf.json" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Tests\Assets\test.mix" Link="Assets\test.mix" />
-    <None CopyToOutputDirectory="PreserveNewest" Include="$(ShimakazeSdk_UnitTestFolder)Shimakaze.Sdk.Tests\Assets\normal.ini" Link="Assets\normal.ini" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Json.Tests\Assets\ra2md.v1.csf.json" Link="Assets\ra2md.v1.csf.json" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Json.Tests\Assets\ra2md.v2.csf.json" Link="Assets\ra2md.v2.csf.json" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Tests\Assets\ra2md.csf" Link="Assets\ra2md.csf" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Xml.Tests\Assets\ra2md.v1.csf.xml" Link="Assets\ra2md.v1.csf.xml" />
+    <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Yaml.Tests\Assets\ra2md.v1.csf.yaml" Link="Assets\ra2md.v1.csf.yaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.5.0" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.5.0" />
-    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="Microsoft.Build.Framework" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" />
+    <PackageReference Include="Moq" />
   </ItemGroup>
 </Project>

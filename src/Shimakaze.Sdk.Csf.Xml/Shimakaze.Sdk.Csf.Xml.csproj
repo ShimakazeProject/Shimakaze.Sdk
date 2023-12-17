@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+  </ItemGroup>
+</Project>

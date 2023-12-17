@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Shimakaze.Sdk</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Shimakaze_Projects Include="$(ShimakazeSdk_SourceFolder)**\*.csproj" />
+    <Shimakaze_ProjectNames Include="@(Shimakaze_Projects -> Metadata('Filename'))" />
+    <InternalsVisibleTo Include="@(Shimakaze_ProjectNames)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
+  </ItemGroup>
+
+</Project>

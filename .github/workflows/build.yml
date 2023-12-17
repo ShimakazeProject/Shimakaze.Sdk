@@ -32,6 +32,7 @@ on:
       - "lib/**/*"
       - "sdk/**/*"
       - "test/**/*"
+  merge_group:
 
 jobs:
   build-dotnet:
@@ -50,18 +51,11 @@ jobs:
         with:
           lfs: true
 
-      - name: 配置 Nuget 缓存
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: nuget-cache
-          restore-keys: |
-            nuget-cache
-
       - name: 配置 .Net 环境
-        uses: actions/setup-dotnet@v3.2.0
+        uses: actions/setup-dotnet@v4.0.0
         with:
           global-json-file: ./global.json
+          cache: true
 
       - name: 还原
         shell: pwsh

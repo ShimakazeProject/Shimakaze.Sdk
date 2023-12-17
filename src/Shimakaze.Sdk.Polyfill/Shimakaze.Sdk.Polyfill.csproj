@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Shimakaze.Sdk</RootNamespace>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Shimakaze_Projects Include="$(ShimakazeSdk_SourceFolder)**\*.csproj" />
+    <Shimakaze_ProjectNames Include="@(Shimakaze_Projects -> Metadata('Filename'))" />
+    <InternalsVisibleTo Include="@(Shimakaze_ProjectNames)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces"
+                      Condition="$(TargetFramework) == 'netstandard2.0' or
+                                 $(TargetFramework) == 'netcoreapp2.0' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework'"/>
+    <PackageReference Include="Polyfill" />
+    <PackageReference Include="System.Collections.Immutable"
+                      Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework' or
+                                 $(TargetFramework.StartsWith('netcoreapp2'))" />
+    <PackageReference Include="System.Memory"
+                      Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework' or
+                                 $(TargetFramework.StartsWith('netcoreapp2'))" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe"
+                      Condition="$(TargetFramework) == 'netstandard2.0' or
+                                 $(TargetFramework) == 'netcoreapp2.0' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework'" />
+    <PackageReference Include="System.Text.Json"
+                      Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework' or
+                                 $(TargetFramework.StartsWith('netcoreapp2'))"  />
+    <PackageReference Include="System.Threading.Tasks.Extensions"
+                      Condition="$(TargetFramework) == 'netstandard2.0' or
+                                 $(TargetFramework) == 'netcoreapp2.0' or
+                                 $(TargetFrameworkIdentifier) == '.NETFramework'" />
+    <PackageReference Include="System.ValueTuple"
+                      Condition="$(TargetFramework.StartsWith('net46'))" />
+  </ItemGroup>
+
+</Project>

@@ -21,8 +21,8 @@ public class TaskCsfGeneratorTest
     public void JsonV1Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputJsonV1File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Intermediate, Path.Combine(OutputPath, InputJsonV1File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Type, "JsonV1");
+        item.SetMetadata(TaskCsfGenerator.MetadataIntermediate, Path.Combine(OutputPath, InputJsonV1File));
+        item.SetMetadata(TaskCsfGenerator.MetadataType, "JsonV1");
 
         TaskCsfGenerator task = new()
         {
@@ -36,8 +36,8 @@ public class TaskCsfGeneratorTest
     public void JsonV2Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputJsonV2File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Intermediate, Path.Combine(OutputPath, InputJsonV2File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Type, "JsonV2");
+        item.SetMetadata(TaskCsfGenerator.MetadataIntermediate, Path.Combine(OutputPath, InputJsonV2File));
+        item.SetMetadata(TaskCsfGenerator.MetadataType, "JsonV2");
 
         TaskCsfGenerator task = new()
         {
@@ -51,7 +51,7 @@ public class TaskCsfGeneratorTest
     public void Startup()
     {
         _buildEngine = new Mock<IBuildEngine>();
-        _errors = new List<BuildErrorEventArgs>();
+        _errors = [];
         _buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => _errors.Add(e));
 
         Directory.CreateDirectory(OutputPath);
@@ -61,8 +61,8 @@ public class TaskCsfGeneratorTest
     public void UnknownTest()
     {
         TaskItem item = new(Path.Combine(Assets, InputXmlV1File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Intermediate, Path.Combine(OutputPath, "Unknown"));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Type, "Unknown");
+        item.SetMetadata(TaskCsfGenerator.MetadataIntermediate, Path.Combine(OutputPath, "Unknown"));
+        item.SetMetadata(TaskCsfGenerator.MetadataType, "Unknown");
 
         TaskCsfGenerator task = new()
         {
@@ -76,8 +76,8 @@ public class TaskCsfGeneratorTest
     public void XmlV1Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputXmlV1File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Intermediate, Path.Combine(OutputPath, InputXmlV1File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Type, "XmlV1");
+        item.SetMetadata(TaskCsfGenerator.MetadataIntermediate, Path.Combine(OutputPath, InputXmlV1File));
+        item.SetMetadata(TaskCsfGenerator.MetadataType, "XmlV1");
 
         TaskCsfGenerator task = new()
         {
@@ -91,8 +91,8 @@ public class TaskCsfGeneratorTest
     public void YamlV1Test()
     {
         TaskItem item = new(Path.Combine(Assets, InputYamlV1File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Intermediate, Path.Combine(OutputPath, InputYamlV1File));
-        item.SetMetadata(TaskCsfGenerator.Metadata_Type, "YamlV1");
+        item.SetMetadata(TaskCsfGenerator.MetadataIntermediate, Path.Combine(OutputPath, InputYamlV1File));
+        item.SetMetadata(TaskCsfGenerator.MetadataType, "YamlV1");
 
         TaskCsfGenerator task = new()
         {

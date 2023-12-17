@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+  </ItemGroup>
+</Project>
