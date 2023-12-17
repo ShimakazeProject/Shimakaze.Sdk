@@ -5,7 +5,7 @@
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Sharprompt" Version="2.4.5" />
+    <PackageReference Include="Sharprompt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
