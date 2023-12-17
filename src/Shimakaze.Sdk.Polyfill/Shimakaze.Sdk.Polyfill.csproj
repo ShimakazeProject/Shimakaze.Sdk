@@ -13,38 +13,31 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces"
-                      Version="8.0.0"
                       Condition="$(TargetFramework) == 'netstandard2.0' or
                                  $(TargetFramework) == 'netcoreapp2.0' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework'"/>
-    <PackageReference Include="Polyfill" Version="1.34.0" />
+    <PackageReference Include="Polyfill" />
     <PackageReference Include="System.Collections.Immutable"
-                      Version="8.0.0"
                       Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework' or
                                  $(TargetFramework.StartsWith('netcoreapp2'))" />
     <PackageReference Include="System.Memory"
-                      Version="4.5.5"
                       Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework' or
                                  $(TargetFramework.StartsWith('netcoreapp2'))" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe"
-                      Version="6.0.0"
                       Condition="$(TargetFramework) == 'netstandard2.0' or
                                  $(TargetFramework) == 'netcoreapp2.0' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework'" />
     <PackageReference Include="System.Text.Json"
-                      Version="8.0.0"
                       Condition="$(TargetFrameworkIdentifier) == '.NETStandard' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework' or
                                  $(TargetFramework.StartsWith('netcoreapp2'))"  />
     <PackageReference Include="System.Threading.Tasks.Extensions"
-                      Version="4.5.4"
                       Condition="$(TargetFramework) == 'netstandard2.0' or
                                  $(TargetFramework) == 'netcoreapp2.0' or
                                  $(TargetFrameworkIdentifier) == '.NETFramework'" />
     <PackageReference Include="System.ValueTuple"
-                      Version="4.5.0"
                       Condition="$(TargetFramework.StartsWith('net46'))" />
   </ItemGroup>
 
