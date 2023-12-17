@@ -32,6 +32,7 @@ on:
       - "lib/**/*"
       - "sdk/**/*"
       - "test/**/*"
+  merge_group:
 
 jobs:
   build-dotnet:
