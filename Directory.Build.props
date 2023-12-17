@@ -72,13 +72,6 @@
     <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(ShimakazeSdk_IsCSharp)">
-    <PackageReference Include="IDisposableAnalyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
   <!-- CSharp Not UnitTest -->
   <ItemGroup Condition="!$(ShimakazeSdk_IsTest)">
     <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
@@ -102,10 +95,6 @@
     <PackageReference Include="MSTest.TestAdapter" />
     <PackageReference Include="MSTest.TestFramework" />
     <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="coverlet.msbuild">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="ReportGenerator" />
   </ItemGroup>
 
