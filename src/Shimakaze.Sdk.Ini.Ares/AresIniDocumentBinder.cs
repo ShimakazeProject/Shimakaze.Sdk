@@ -47,7 +47,7 @@ public sealed class AresIniDocumentBinder(
                     sb.Append(token.Value);
                     break;
 
-                case '=' when !isSection:
+                case '=' when !isComment && !isSection:
                     key = GetString(options.Trim);
                     if (key.Trim() == "+")
                     {
@@ -58,13 +58,17 @@ public sealed class AresIniDocumentBinder(
                     }
                     break;
 
-                case '+' when !isSection:
+                case '+' when !isComment && !isSection:
                     sb.Append('+');
                     break;
 
-                case ':' when !isSection:
+                case ':' when !isComment && !isSection && key is null:
                     Flush(options.Trim);
                     isBaseSection = true;
+                    break;
+
+                case ':' when !isComment && key is not null:
+                    sb.Append(':');
                     break;
 
                 case ';':
