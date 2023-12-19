@@ -3,7 +3,7 @@
 /// <summary>
 /// Csf 读取器
 /// </summary>
-public interface ICsfReader
+public interface ICsfReader : IDisposable, IAsyncDisposable
 {
     /// <summary>
     /// 从流中读取CSF
