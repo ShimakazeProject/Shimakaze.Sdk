@@ -3,7 +3,7 @@
 /// <summary>
 /// Csf 写入器
 /// </summary>
-public interface ICsfWriter
+public interface ICsfWriter : IDisposable, IAsyncDisposable
 {
     /// <summary>
     /// 写入到流中
