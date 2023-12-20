@@ -1,33 +1,21 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using Shimakaze.Sdk.Graphic;
 using Shimakaze.Sdk.Graphic.Pal;
+using Shimakaze.Sdk.Graphic.Pcx;
+using Shimakaze.Sdk.Graphic.Pixel;
 
 namespace Shimakaze.Sdk.Pcx;
 
 /// <summary>
 /// PCX 解码器
 /// </summary>
-/// <param name="stream"></param>
-/// <param name="leaveOpen"></param>
-public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposable
+public sealed class PcxDecoder() : IDecoder
 {
     private bool _decodedHeader;
     private PcxHeader _header;
     private int _sizeOfBody;
     private int _3TimesSizeOfBody;
-
-    /// <summary>
-    /// Pcx头数据
-    /// </summary>
-    public ref PcxHeader Header
-    {
-        get
-        {
-            if (!_decodedHeader)
-                DecodeHeader();
-            return ref _header;
-        }
-    }
 
     /// <summary>
     /// 色板
@@ -47,16 +35,14 @@ public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposa
     /// </summary>
     public int BitsPerPixel { get; private set; }
 
-    /// <summary>
-    /// 从流中解码图片
-    /// </summary>
-    /// <returns>Bgr24内容</returns>
-    /// <exception cref="NotSupportedException"></exception>
-    /// <exception cref="NotImplementedException"></exception>
-    public void Decode(Stream output)
+    /// <inheritdoc/>
+    public IImage Decode(Stream input)
     {
-        DecodeHeader();
+        DecodeHeader(input);
         PcxAsserts.IsPCX(_header);
+
+        PcxImageFrame frame = new(Width, Height);
+        PcxImage image = new(frame);
 
         switch (BitsPerPixel)
         {
@@ -76,18 +62,18 @@ public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposa
             case 8:
                 {
                     // 读取主体
-                    var indexes = DeRLE(_sizeOfBody);
+                    var indexes = DeRLE(input, _sizeOfBody);
                     // 读调色板
-                    DecodePalette();
+                    DecodePalette(input);
                     // 输出
                     for (int i = 0; i < _sizeOfBody; i++)
-                        output.Write(Palette[indexes[i]]);
+                        frame.Pixels[i] = Palette[indexes[i]];
                     break;
                 }
             // 24位色
             case 24:
                 {
-                    byte[] source = DeRLE(_3TimesSizeOfBody);
+                    byte[] source = DeRLE(input, _3TimesSizeOfBody);
 
                     // 缓存
                     int _3TimesWidth = Width * 3;
@@ -97,17 +83,22 @@ public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposa
                     int a = _header.BytesPerPlaneLine * 3;
                     unsafe
                     {
+                        fixed (Rgb24* pt = frame.Pixels)
                         fixed (byte* ps = source)
                         {
+                            byte* p = (byte*)pt;
                             for (int y = 0; y < Height; y++)
                             {
                                 int sy = y * _3TimesWidth;
                                 for (int x = 0; x < Width; x++)
                                 {
                                     int si = sy + x;
-                                    output.WriteByte(ps[si + r]);
-                                    output.WriteByte(ps[si + g]);
-                                    output.WriteByte(ps[si + b]);
+                                    *p = ps[si + r];
+                                    p++;
+                                    *p = ps[si + g];
+                                    p++;
+                                    *p = ps[si + b];
+                                    p++;
                                 }
                             }
                         }
@@ -117,9 +108,11 @@ public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposa
             default:
                 throw new FormatException($"Unknown BitsPerPixel: {BitsPerPixel}");
         }
+
+        return image;
     }
 
-    private unsafe void DecodeHeader()
+    private unsafe void DecodeHeader(in Stream stream)
     {
         int size;
         fixed (PcxHeader* p = &_header)
@@ -137,8 +130,9 @@ public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposa
     /// <summary>
     /// 解码RLE
     /// </summary>
+    /// <param name="stream"></param>
     /// <param name="length">应该读出多少字节</param>
-    private byte[] DeRLE(in int length)
+    private static byte[] DeRLE(in Stream stream, in int length)
     {
         byte[] data = new byte[length];
         for (int p = 0; p < length;)
@@ -174,7 +168,7 @@ public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposa
     /// <exception cref="FormatException"></exception>
     /// <exception cref="EndOfStreamException"></exception>
     [MemberNotNull(nameof(Palette))]
-    private unsafe void DecodePalette()
+    private unsafe void DecodePalette(in Stream stream)
     {
         if (BitsPerPixel is 8)
         {
@@ -189,13 +183,6 @@ public sealed class PcxDecoder(Stream stream, bool leaveOpen = false) : IDisposa
             fixed (void* ps = _header.Palette)
                 Buffer.MemoryCopy(ps, pt, 3 * 16, 3 * 16);
         }
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        if (!leaveOpen)
-            stream.Dispose();
     }
 
 }

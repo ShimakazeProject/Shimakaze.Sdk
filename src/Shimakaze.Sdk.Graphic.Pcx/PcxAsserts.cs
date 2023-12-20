@@ -14,7 +14,7 @@ internal static class PcxAsserts
                 Version: 5,
                 Encoding: 1,
                 BitsPerPlane: 1 or 2 or 4 or 8 or 24,
-                PaletteInfo: 1 or 2,
+                //PaletteInfo: 1 or 2,
             })
             throw new NotSupportedException("Not Supported");
     }
