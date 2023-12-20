@@ -20,11 +20,13 @@ public sealed class ShapeDecoder(Palette palette) : IDecoder
         DecodeHeader(input);
 
         byte[] buffer = [];
-        ShapeImageFrame[]? frames = new ShapeImageFrame[_shapeFileHeader.NumImages];
+        ShapeImageFrame[] frames = new ShapeImageFrame[_shapeFileHeader.NumImages];
         for (int i = 0; i < _shapeFrameHeaders.Length; i++)
         {
             using MemoryStream indexStream = new();
             ref ShapeFrameHeader frameHeader = ref _shapeFrameHeaders[i];
+            frames[i] ??= new(frameHeader.Width, frameHeader.Height);
+
             if (frameHeader.CompressionType is ShapeFrameCompressionType.UnCompression)
             {
                 int length = frameHeader.BodyLength;
