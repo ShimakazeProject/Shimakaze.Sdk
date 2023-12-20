@@ -1,5 +1,5 @@
 ﻿namespace Shimakaze.Sdk.Graphic.Shp;
-internal class ShapeImage(ShapeImageFrame[] frames) : IImage
+internal sealed class ShapeImage(ShapeImageFrame[] frames) : IImage
 {
     public IImageFrame this[int index] => frames[index];
 

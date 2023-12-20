@@ -15,4 +15,14 @@ public interface IImageFrame
     /// <exception cref="NotSupportedException">不受支持的像素格式</exception>
     void WriteTo<TPixel>(Stream stream)
         where TPixel : unmanaged, IPixel;
+
+    /// <summary>
+    /// 图像宽度
+    /// </summary>
+    int Width { get; }
+
+    /// <summary>
+    /// 图像高度
+    /// </summary>
+    int Height { get; }
 }

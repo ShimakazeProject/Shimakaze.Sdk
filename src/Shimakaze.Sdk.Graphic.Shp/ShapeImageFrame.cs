@@ -2,9 +2,13 @@
 
 namespace Shimakaze.Sdk.Graphic.Shp;
 
-internal sealed class ShapeImageFrame(int size) : IImageFrame
+internal sealed class ShapeImageFrame(int width, int height) : IImageFrame
 {
-    internal Rgb24[] Pixels { get; } = new Rgb24[size];
+    public int Width { get; } = width;
+
+    public int Height { get; } = height;
+
+    internal Rgb24[] Pixels { get; } = new Rgb24[width * height];
 
     public void WriteTo<TPixel>(Stream stream) where TPixel : unmanaged, IPixel
     {
