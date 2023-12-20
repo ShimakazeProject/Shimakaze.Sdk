@@ -1,8 +1,8 @@
 ﻿using Shimakaze.Sdk.Graphic.Pixel;
 
-namespace Shimakaze.Sdk.Graphic.Shp;
+namespace Shimakaze.Sdk.Graphic.Pcx;
 
-internal sealed class ShapeImageFrame(int width, int height) : IImageFrame
+internal sealed class PcxImageFrame(int width, int height) : IImageFrame
 {
     public int Width { get; } = width;
 
