@@ -10,4 +10,9 @@ internal static class StreamAsserts
         if(!stream.CanSeek)
             throw new NotSupportedException("The Stream cannot support Seek.");
     }
+    internal static void EndOfStream(int i)
+    {
+        if(i is -1)
+            throw new EndOfStreamException("流过早结束");
+    }
 }

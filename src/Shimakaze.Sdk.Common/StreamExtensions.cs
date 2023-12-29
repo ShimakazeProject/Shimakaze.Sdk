@@ -121,4 +121,17 @@ internal static unsafe class StreamExtensions
             stream.Write(new Span<byte>(ptr, length));
         }
     }
+
+    /// <summary>
+    /// 读取一个字节
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    /// <exception cref="EndOfStreamException">流已结束</exception>
+    public static byte ReadAsByte(this Stream stream)
+    {
+        int b = stream.ReadByte();
+        StreamAsserts.EndOfStream(b);
+        return (byte)b;
+    }
 }
