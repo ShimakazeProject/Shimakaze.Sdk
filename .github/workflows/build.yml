@@ -15,8 +15,7 @@ on:
       - Shimakaze.Sdk.sln
       - Directory.Build.props
       - Directory.Build.targets
-      - "app/**/*"
-      - "lib/**/*"
+      - "src/**/*"
       - "sdk/**/*"
       - "test/**/*"
   pull_request:
@@ -30,8 +29,7 @@ on:
       - Shimakaze.Sdk.sln
       - Directory.Build.props
       - Directory.Build.targets
-      - "app/**/*"
-      - "lib/**/*"
+      - "src/**/*"
       - "sdk/**/*"
       - "test/**/*"
   merge_group:
