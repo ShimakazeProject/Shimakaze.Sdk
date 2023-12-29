@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Shimakaze.Sdk.Pcx;
+namespace Shimakaze.Sdk.Graphic.Pcx;
 
 [StackTraceHidden]
 internal static class PcxAsserts

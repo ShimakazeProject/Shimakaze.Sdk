@@ -9,13 +9,13 @@ namespace Shimakaze.Sdk.Graphic.Shp;
 /// SHP 解码器
 /// </summary>
 /// <param name="palette">调色板</param>
-public sealed class ShapeDecoder(Palette palette) : IDecoder
+public sealed class ShapeDecoder(Palette palette) : Decoder<ShapeImage>
 {
     private ShapeFileHeader _shapeFileHeader;
     private ShapeFrameHeader[]? _shapeFrameHeaders;
 
     /// <inheritdoc/>
-    public unsafe IImage Decode(Stream input)
+    public override unsafe ShapeImage Decode(Stream input)
     {
         DecodeHeader(input);
 
@@ -25,9 +25,9 @@ public sealed class ShapeDecoder(Palette palette) : IDecoder
         {
             using MemoryStream indexStream = new();
             ref ShapeFrameHeader frameHeader = ref _shapeFrameHeaders[i];
-            frames[i] ??= new(frameHeader.Width, frameHeader.Height);
+            frames[i] ??= new(frameHeader, frameHeader.Width, frameHeader.Height);
 
-            if (frameHeader.CompressionType.HasFlag(ShapeFrameCompressionType.Scanline))
+            if (frameHeader.CompressionType.HasFlag(ShapeFrameCompressionType.ScanlineRLE))
             {
                 for (int y = 0; y < frameHeader.Height; y++)
                 {
@@ -76,7 +76,7 @@ public sealed class ShapeDecoder(Palette palette) : IDecoder
             }
         }
 
-        return new ShapeImage(frames);
+        return new ShapeImage(_shapeFileHeader, frames);
     }
 
     [MemberNotNull(nameof(_shapeFrameHeaders))]

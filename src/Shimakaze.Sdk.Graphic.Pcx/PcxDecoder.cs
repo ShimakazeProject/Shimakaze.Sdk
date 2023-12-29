@@ -1,50 +1,28 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Shimakaze.Sdk.Graphic;
+﻿using Shimakaze.Sdk;
 using Shimakaze.Sdk.Graphic.Pal;
-using Shimakaze.Sdk.Graphic.Pcx;
 using Shimakaze.Sdk.Graphic.Pixel;
 
-namespace Shimakaze.Sdk.Pcx;
+namespace Shimakaze.Sdk.Graphic.Pcx;
 
 /// <summary>
 /// PCX 解码器
 /// </summary>
-public sealed class PcxDecoder() : IDecoder
+public sealed class PcxDecoder() : Decoder<PcxImage>
 {
     private bool _decodedHeader;
     private PcxHeader _header;
     private int _sizeOfBody;
     private int _3TimesSizeOfBody;
 
-    /// <summary>
-    /// 色板
-    /// </summary>
-    public Palette? Palette { get; private set; }
-
-    /// <summary>
-    /// 图像宽度
-    /// </summary>
-    public int Width { get; private set; }
-    /// <summary>
-    /// 图像高度
-    /// </summary>
-    public int Height { get; private set; }
-    /// <summary>
-    /// 位每像素（颜色深度/颜色位数）
-    /// </summary>
-    public int BitsPerPixel { get; private set; }
-
     /// <inheritdoc/>
-    public IImage Decode(Stream input)
+    public override PcxImage Decode(Stream input)
     {
         DecodeHeader(input);
         PcxAsserts.IsPCX(_header);
 
-        PcxImageFrame frame = new(Width, Height);
-        PcxImage image = new(frame);
+        PcxImage image = new(_header);
 
-        switch (BitsPerPixel)
+        switch (image.BitsPerPixel)
         {
             // 2色
             case 1:
@@ -64,10 +42,10 @@ public sealed class PcxDecoder() : IDecoder
                     // 读取主体
                     var indexes = DeRLE(input, _sizeOfBody);
                     // 读调色板
-                    DecodePalette(input);
+                    DecodePalette(input, image);
                     // 输出
                     for (int i = 0; i < _sizeOfBody; i++)
-                        frame.Pixels[i] = Palette[indexes[i]];
+                        image.Pixels[i] = image.Palette![indexes[i]];
                     break;
                 }
             // 24位色
@@ -76,21 +54,21 @@ public sealed class PcxDecoder() : IDecoder
                     byte[] source = DeRLE(input, _3TimesSizeOfBody);
 
                     // 缓存
-                    int _3TimesWidth = Width * 3;
+                    int _3TimesWidth = image.Width * 3;
                     int r = _header.BytesPerPlaneLine * 0;
                     int g = _header.BytesPerPlaneLine * 1;
                     int b = _header.BytesPerPlaneLine * 2;
                     int a = _header.BytesPerPlaneLine * 3;
                     unsafe
                     {
-                        fixed (Rgb24* pt = frame.Pixels)
+                        fixed (Rgb24* pt = image.Pixels)
                         fixed (byte* ps = source)
                         {
                             byte* p = (byte*)pt;
-                            for (int y = 0; y < Height; y++)
+                            for (int y = 0; y < image.Height; y++)
                             {
                                 int sy = y * _3TimesWidth;
-                                for (int x = 0; x < Width; x++)
+                                for (int x = 0; x < image.Width; x++)
                                 {
                                     int si = sy + x;
                                     *p = ps[si + r];
@@ -106,7 +84,7 @@ public sealed class PcxDecoder() : IDecoder
                     break;
                 }
             default:
-                throw new FormatException($"Unknown BitsPerPixel: {BitsPerPixel}");
+                throw new FormatException($"Unknown BitsPerPixel: {image.BitsPerPixel}");
         }
 
         return image;
@@ -119,10 +97,8 @@ public sealed class PcxDecoder() : IDecoder
             size = stream.Read(new Span<byte>(p, sizeof(PcxHeader)));
         if (size != sizeof(PcxHeader))
             throw new EndOfStreamException();
-        Width = _header.WindowXMax - _header.WindowXMin + 1;
-        Height = _header.WindowYMax - _header.WindowYMin + 1;
-        BitsPerPixel = _header.ColorPlanes * _header.BitsPerPlane;
-        _sizeOfBody = _header.BytesPerPlaneLine * Height;
+
+        _sizeOfBody = _header.BytesPerPlaneLine * (_header.WindowYMax - _header.WindowYMin + 1);
         _3TimesSizeOfBody = _sizeOfBody * 3;
         _decodedHeader = true;
     }
@@ -167,19 +143,18 @@ public sealed class PcxDecoder() : IDecoder
     /// <returns></returns>
     /// <exception cref="FormatException"></exception>
     /// <exception cref="EndOfStreamException"></exception>
-    [MemberNotNull(nameof(Palette))]
-    private unsafe void DecodePalette(in Stream stream)
+    private unsafe void DecodePalette(in Stream stream, in PcxImage image)
     {
-        if (BitsPerPixel is 8)
+        if (image.BitsPerPixel is 8)
         {
             PcxAsserts.IsPalette(stream.ReadByte());
-            Palette = new();
-            PcxAsserts.IsNotEndOfStream(stream.Read(Palette.Colors), Palette.DefaultColorCount * 3);
+            image.Palette = new();
+            PcxAsserts.IsNotEndOfStream(stream.Read(image.Palette.Colors), Palette.DefaultColorCount * 3);
         }
         else
         {
-            Palette = new(16);
-            fixed (void* pt = Palette.Colors)
+            image.Palette = new(16);
+            fixed (void* pt = image.Palette.Colors)
             fixed (void* ps = _header.Palette)
                 Buffer.MemoryCopy(ps, pt, 3 * 16, 3 * 16);
         }

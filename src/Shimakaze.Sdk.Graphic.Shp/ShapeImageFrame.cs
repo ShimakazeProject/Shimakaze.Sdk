@@ -2,14 +2,31 @@
 
 namespace Shimakaze.Sdk.Graphic.Shp;
 
-internal sealed class ShapeImageFrame(int width, int height) : IImageFrame
+/// <summary>
+/// Shape 帧
+/// </summary>
+/// <param name="metadata">帧元数据</param>
+/// <param name="width">帧宽度</param>
+/// <param name="height">帧高度</param>
+public sealed class ShapeImageFrame(ShapeFrameHeader metadata, int width, int height) : IImageFrame
 {
+    /// <summary>
+    /// SHP帧元数据
+    /// </summary>
+    public ShapeFrameHeader Metadata { get; } = metadata;
+
+    /// <inheritdoc/>
     public int Width { get; } = width;
 
+    /// <inheritdoc/>
     public int Height { get; } = height;
 
-    internal Rgb24[] Pixels { get; } = new Rgb24[width * height];
+    /// <summary>
+    /// 直接获取像素数据
+    /// </summary>
+    public Rgb24[] Pixels { get; } = new Rgb24[width * height];
 
+    /// <inheritdoc/>
     public void WriteTo<TPixel>(Stream stream) where TPixel : unmanaged, IPixel
     {
         if (typeof(TPixel) == typeof(Rgb24))
