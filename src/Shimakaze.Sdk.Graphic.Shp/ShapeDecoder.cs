@@ -9,13 +9,13 @@ namespace Shimakaze.Sdk.Graphic.Shp;
 /// SHP 解码器
 /// </summary>
 /// <param name="palette">调色板</param>
-public sealed class ShapeDecoder(Palette palette) : IDecoder
+public sealed class ShapeDecoder(Palette palette) : Decoder<ShapeImage>
 {
     private ShapeFileHeader _shapeFileHeader;
     private ShapeFrameHeader[]? _shapeFrameHeaders;
 
     /// <inheritdoc/>
-    public unsafe IImage Decode(Stream input)
+    public override unsafe ShapeImage Decode(Stream input)
     {
         DecodeHeader(input);
 
@@ -25,9 +25,35 @@ public sealed class ShapeDecoder(Palette palette) : IDecoder
         {
             using MemoryStream indexStream = new();
             ref ShapeFrameHeader frameHeader = ref _shapeFrameHeaders[i];
-            frames[i] ??= new(frameHeader.Width, frameHeader.Height);
+            frames[i] ??= new(frameHeader, frameHeader.Width, frameHeader.Height);
 
-            if (frameHeader.CompressionType is ShapeFrameCompressionType.UnCompression)
+            if (frameHeader.CompressionType.HasFlag(ShapeFrameCompressionType.ScanlineRLE))
+            {
+                for (int y = 0; y < frameHeader.Height; y++)
+                {
+                    input.Read(out ushort length);
+                    length -= sizeof(ushort);
+                    if (buffer.Length < length)
+                        buffer = new byte[length];
+
+                    for (int j = 0; j < length; j++)
+                    {
+                        byte b = input.ReadAsByte();
+                        if (b is 0)
+                        {
+                            byte count = input.ReadAsByte();
+                            j++;
+                            for (int k = 0; k < count; k++)
+                                indexStream.WriteByte(0);
+                        }
+                        else
+                        {
+                            indexStream.WriteByte(b);
+                        }
+                    }
+                }
+            }
+            else
             {
                 int length = frameHeader.BodyLength;
                 if (buffer.Length < length)
@@ -35,27 +61,7 @@ public sealed class ShapeDecoder(Palette palette) : IDecoder
                 input.Read(buffer.AsSpan(0, length));
                 indexStream.Write(buffer.AsSpan(0, length));
             }
-            else if (frameHeader.CompressionType is ShapeFrameCompressionType.Scanline)
-            {
-                for (int y = 0; y < frameHeader.Height; y++)
-                {
-                    input.Read(out ushort length);
-                    length -= sizeof(ushort);
-                    if (length != frameHeader.Width)
-                    {
-                        length = frameHeader.Width;
-                    }
-                    if (buffer.Length < length)
-                        buffer = new byte[length];
-                    input.Read(buffer.AsSpan(0, length));
-                    indexStream.Write(buffer.AsSpan(0, length));
-                }
-            }
-            else
-            {
-                // TODO: ShapeFrameCompressionType.ScanlineRLE
-                throw new NotSupportedException();
-            }
+
             if (indexStream.Length != frameHeader.BodyLength)
                 Console.WriteLine(indexStream.Length);
             indexStream.Seek(0, SeekOrigin.Begin);
@@ -70,7 +76,7 @@ public sealed class ShapeDecoder(Palette palette) : IDecoder
             }
         }
 
-        return new ShapeImage(frames);
+        return new ShapeImage(_shapeFileHeader, frames);
     }
 
     [MemberNotNull(nameof(_shapeFrameHeaders))]
