@@ -18,3 +18,9 @@ Command & Conquer™ 商标版权由 Electronic Arts Inc 所有。
 
 本项目遵循 MIT License 开放源代码。
 
+## 鸣谢
+感谢这些很棒的人对`Shimakaze.Sdk`项目提供的帮助
+
+|||
+|:-:|:-:|
+|@thomassneddon|提供解析SHP格式的指导意见
