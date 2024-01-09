@@ -15,6 +15,7 @@ on:
       - Shimakaze.Sdk.sln
       - Directory.Build.props
       - Directory.Build.targets
+      - Directory.Packages.props
       - "src/**/*"
       - "sdk/**/*"
       - "test/**/*"
@@ -29,6 +30,7 @@ on:
       - Shimakaze.Sdk.sln
       - Directory.Build.props
       - Directory.Build.targets
+      - Directory.Packages.props
       - "src/**/*"
       - "sdk/**/*"
       - "test/**/*"
