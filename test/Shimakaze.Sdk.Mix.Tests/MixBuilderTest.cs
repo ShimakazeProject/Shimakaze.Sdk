@@ -20,15 +20,15 @@ public class MixBuilderTest
     {
         using var fs = File.Create(Path.Combine(OutputPath, MixFile));
         FileInfo fileInfo = new(Path.Combine(Assets, CsfFile));
-        MixBuilder builder = new() { IdCalculater = IdCalculaters.TSIdCalculater };
-        builder.AddFile(fileInfo);
-        Assert.AreEqual(1, builder.FileCount);
+        MixBuilder builder = new(IdCalculaters.TSIdCalculater);
+        builder.Files.Add(fileInfo);
+        Assert.AreEqual(1, builder.Files.Count);
 
-        builder.RemoveFile(fileInfo);
-        Assert.AreEqual(0, builder.FileCount);
+        builder.Files.Remove(fileInfo);
+        Assert.AreEqual(0, builder.Files.Count);
 
-        builder.AddFile(fileInfo);
-        Assert.AreEqual(1, builder.FileCount);
+        builder.Files.Add(fileInfo);
+        Assert.AreEqual(1, builder.Files.Count);
 
         await builder.BuildAsync(fs).ConfigureAwait(false);
 
