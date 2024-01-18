@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="DotMake.CommandLine" Version="1.6.8" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.8.3" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.8.3" />
@@ -32,6 +33,7 @@
     <PackageVersion Include="Polyfill" Version="2.0.1" />
     <PackageVersion Include="ReportGenerator" Version="5.2.0" />
     <PackageVersion Include="Sharprompt" Version="2.4.5" />
+    <PackageVersion Include="ShellProgressBar" Version="5.2.0" />
     <PackageVersion Include="StreamJsonRpc" Version="2.17.8" />
     <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
     <PackageVersion Include="System.IO.Hashing" Version="8.0.0" />

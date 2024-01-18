@@ -67,6 +67,22 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDis
         return entry;
     }
 
+    /// <summary>
+    /// 读取所有的Entry
+    /// </summary>
+    /// <returns></returns>
+    public MixEntry[] ReadAll()
+    {
+        if (!_inited)
+            Init();
+
+        MixEntry[]  entries = new MixEntry[Count];
+        for (int i = 0; i < Count; i++)
+            _disposable.Resource.Read(out entries[i]);
+
+        return entries;
+    }
+
     private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
     /// <inheritdoc/>
