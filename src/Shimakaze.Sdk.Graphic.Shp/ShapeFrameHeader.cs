@@ -38,6 +38,9 @@ public record struct ShapeFrameHeader
     /// <inheritdoc cref="Padding1"/>
     public ushort Padding2;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public uint Color;
 
     /// <inheritdoc cref="ShapeFileHeader.Reserved"/>
@@ -47,6 +50,9 @@ public record struct ShapeFrameHeader
     /// </summary>
     public uint Offset;
 
+    /// <summary>
+    /// 主体长度
+    /// </summary>
     public readonly int BodyLength => Width * Height;
 
 }

@@ -45,11 +45,13 @@
     <!-- Polyfill -->
     <NoWarn Condition="$(TargetFramework) == 'netstandard2.0' or
                        $(TargetFramework) == 'netcoreapp2.0' or
+                       $(TargetFramework) == 'net48' or
                        $(TargetFrameworkIdentifier) == '.NETFramework'">1701;1702;8601;8604;8618;8767</NoWarn>
     <Nullable Condition="$(TargetFramework) == 'netstandard2.0' or
                          $(TargetFramework) == 'netcoreapp2.0' or
+                         $(TargetFramework) == 'net48' or
                          $(TargetFrameworkIdentifier) == '.NETFramework'">annotations</Nullable>
-
+    
     <Authors>Shimakaze Project</Authors>
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
     <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
