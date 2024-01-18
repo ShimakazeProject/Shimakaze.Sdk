@@ -18,6 +18,6 @@ public class IdCalculatersTest
     [TestMethod]
     public void TDIdCalculaterTest()
     {
-        Assert.AreEqual(Constants.LXD_TD_ID, IdCalculaters.TDdCalculater(LxdFile));
+        Assert.AreEqual(Constants.LXD_TD_ID, IdCalculaters.TDIdCalculater(LxdFile));
     }
 }
