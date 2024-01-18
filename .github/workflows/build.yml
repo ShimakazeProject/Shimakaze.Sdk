@@ -108,6 +108,7 @@ jobs:
 
       - name: 收集测试覆盖率
         uses: coverallsapp/github-action@v2
+        continue-on-error: true
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
@@ -121,6 +122,7 @@ jobs:
     steps:
       - name: 上传测试覆盖率
         uses: coverallsapp/github-action@v2
+        continue-on-error: true
         with:
           parallel-finished: true
           carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest"
