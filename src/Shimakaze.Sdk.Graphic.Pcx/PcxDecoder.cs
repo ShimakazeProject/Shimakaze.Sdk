@@ -9,7 +9,6 @@ namespace Shimakaze.Sdk.Graphic.Pcx;
 /// </summary>
 public sealed class PcxDecoder() : Decoder<PcxImage>
 {
-    private bool _decodedHeader;
     private PcxHeader _header;
     private int _sizeOfBody;
     private int _3TimesSizeOfBody;
@@ -100,7 +99,6 @@ public sealed class PcxDecoder() : Decoder<PcxImage>
 
         _sizeOfBody = _header.BytesPerPlaneLine * (_header.WindowYMax - _header.WindowYMin + 1);
         _3TimesSizeOfBody = _sizeOfBody * 3;
-        _decodedHeader = true;
     }
 
     /// <summary>

@@ -7,11 +7,6 @@ namespace Shimakaze.Sdk.Vpl;
 /// 体素文件调色板读取器
 /// </summary>
 /// <param name="stream">基础流</param>
-/// <param name="skipPostprocess">
-/// 跳过后处理 <br/>
-/// pal文件中保存的颜色需要左移两位才能变成正常展示使用的颜色。<br/>
-/// 设置为<see langword="true"/>则跳过左移处理。
-/// </param>
 /// <param name="leaveOpen"></param>
 public sealed class VoxelPaletteReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
 {
