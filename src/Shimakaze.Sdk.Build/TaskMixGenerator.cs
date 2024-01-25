@@ -18,10 +18,20 @@ public sealed class TaskMixGenerator : MSTask
     [Required]
     public required string DestinationFile { get; set; }
 
-    ///// <summary>
-    ///// 是否使用旧的ID计算器
-    ///// </summary>
-    //public bool UsingOldIdCalculater { get; set; }
+    /// <summary>
+    /// 是否使用旧的ID计算器
+    /// </summary>
+    [Obsolete("Use IsTD")]
+    public bool UsingOldIdCalculater
+    {
+        get => IsTD;
+        set => IsTD = value;
+    }
+
+    /// <summary>
+    /// 使用适用于 Red Alert 或 Tiberian Down 的游戏引擎的ID计算器
+    /// </summary>
+    public bool IsTD { get; set; }
 
     /// <summary>
     /// 生成的目标文件
@@ -42,18 +52,15 @@ public sealed class TaskMixGenerator : MSTask
         if (!DestinationFile.CreateParentDirectory(Log))
             return false;
 
-        var builder = new MixBuilder()
-        {
-            IdCalculater = IdCalculaters.TSIdCalculater
-            //IdCalculater = UsingOldIdCalculater
-            //? IdCalculaters.OldIdCalculater
-            //: IdCalculaters.TSIdCalculater
-        };
+        MixBuilder builder = new(IsTD
+            ? IdCalculaters.TDIdCalculater
+            : IdCalculaters.TSIdCalculater);
+
         OutputFile = new TaskItem(DestinationFile);
         foreach (var file in SourceFiles)
         {
             Log.LogMessage(MessageImportance.Low, $"Add \"{file.ItemSpec}\" into mix.");
-            builder.AddFile(new(file.ItemSpec));
+            builder.Files.Add(new(file.ItemSpec));
         }
 
         using var output = File.Create(DestinationFile);

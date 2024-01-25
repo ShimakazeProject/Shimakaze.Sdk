@@ -33,6 +33,10 @@ public static class IdCalculaters
         return BitConverter.ToUInt32(Crc32.Hash(Encoding.ASCII.GetBytes(name)), 0);
     }
 
+    /// <inheritdoc cref="TDIdCalculater"/>
+    [Obsolete("Use TDIdCalculater")]
+    public static uint TDdCalculater(string name) => TDIdCalculater(name);
+
     /// <summary> 
     /// Id Calc for RA/TD 
     /// </summary> 
@@ -41,7 +45,7 @@ public static class IdCalculaters
     /// </markup> 
     /// <param name="name">File Name</param> 
     ///  <returns>Id</returns>
-    public static uint TDdCalculater(string name)
+    public static uint TDIdCalculater(string name)
     {
         name = name.ToUpperInvariant();
         int i = 0;

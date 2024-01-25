@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotMake.CommandLine" />
+    <PackageReference Include="ShellProgressBar" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
+  </ItemGroup>
+
+</Project>
