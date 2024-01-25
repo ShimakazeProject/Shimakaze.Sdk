@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net8.0": {
+      "IDisposableAnalyzers": {
+        "type": "Direct",
+        "requested": "[4.0.7, )",
+        "resolved": "4.0.7",
+        "contentHash": "Xrn/VABG/JhulJOmHOeOAY4/qafbEyRj3Z6gMeSABT1XCqMe8HnqOvid8gEVJt47VUZ6eD7XpTFLZ1KLyTZgdw=="
+      },
+      "Microsoft.Extensions.DependencyInjection": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "V8S3bsm50ig6JSyrbcJJ8bW2b9QLGouz+G1miK3UTaOWmMtFwNNNzUf4AleyDWUmTrWMLNnFSLEQtxmxgNQnNQ==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        }
+      },
+      "Sharprompt": {
+        "type": "Direct",
+        "requested": "[2.4.5, )",
+        "resolved": "2.4.5",
+        "contentHash": "hRYlerWsQGbm+okcxGrHzlm0n7wwVR2si1faSqt4IaO8iZcOKwW/MrBZgLiGRd2TVzFYGv22OuBoR2AatSlJbQ==",
+        "dependencies": {
+          "System.ComponentModel.Annotations": "5.0.0"
+        }
+      },
+      "System.ComponentModel.Annotations": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
+      },
+      "shimakaze.sdk.common": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+        }
+      },
+      "shimakaze.sdk.csf": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+        }
+      },
+      "shimakaze.sdk.csf.json": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+        }
+      },
+      "shimakaze.sdk.csf.xml": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+        }
+      },
+      "shimakaze.sdk.csf.yaml": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
+          "YamlDotNet": "[13.7.1, )"
+        }
+      },
+      "shimakaze.sdk.polyfill": {
+        "type": "Project",
+        "dependencies": {
+          "Polyfill": "[2.1.0, )"
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg=="
+      },
+      "Polyfill": {
+        "type": "CentralTransitive",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "aYKDgyTwkvl0ncBpjlC/Z4IzVMbIMMcQETbc+uppA5iKwIDR495DHDhTxa5FbJH+GiZ1ujMevjLs6kOuq3AhWg=="
+      },
+      "YamlDotNet": {
+        "type": "CentralTransitive",
+        "requested": "[13.7.1, )",
+        "resolved": "13.7.1",
+        "contentHash": "X4m1PnFcJwvAj1sCDMntg/eZcX96CJLrWMiYnq41KqhFVZPuw63ZTSxIGqgdCwHWHvCAyTxheELC/VDf1HsU2A=="
+      }
+    }
+  }
+}
