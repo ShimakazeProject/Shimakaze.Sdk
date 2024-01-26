@@ -19,6 +19,8 @@ on:
       - "src/**/*"
       - "sdk/**/*"
       - "test/**/*"
+    tags: 
+      - v**
   pull_request:
     branches:
       - master
@@ -62,7 +64,7 @@ jobs:
 
       - name: 还原
         shell: pwsh
-        run: dotnet restore
+        run: dotnet restore --locked-mode
 
       - name: 构建
         shell: pwsh
@@ -98,8 +100,7 @@ jobs:
 
       - name: 推送 Nuget 包
         shell: pwsh
-        continue-on-error: true
-        if: matrix.os == 'windows-latest' && github.repository == 'ShimakazeProject/Shimakaze.Sdk' && github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == 'master'
+        if: matrix.os == 'windows-latest' && github.repository == 'ShimakazeProject/Shimakaze.Sdk' && github.event_name == 'push' && github.ref_type == 'tag'
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
         run: |
