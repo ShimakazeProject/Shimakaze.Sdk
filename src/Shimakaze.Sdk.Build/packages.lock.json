@@ -281,7 +281,7 @@
         "dependencies": {
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
           "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
-          "YamlDotNet": "[13.7.1, )"
+          "YamlDotNet": "[15.1.0, )"
         }
       },
       "shimakaze.sdk.ini": {
@@ -448,9 +448,9 @@
       },
       "YamlDotNet": {
         "type": "CentralTransitive",
-        "requested": "[13.7.1, )",
-        "resolved": "13.7.1",
-        "contentHash": "X4m1PnFcJwvAj1sCDMntg/eZcX96CJLrWMiYnq41KqhFVZPuw63ZTSxIGqgdCwHWHvCAyTxheELC/VDf1HsU2A=="
+        "requested": "[15.1.0, )",
+        "resolved": "15.1.0",
+        "contentHash": "fXrqmKkzBtXeJiHEsZOPEWkonHweiwk/l0Hqhz4yMIZPh57kZy03Xbj2/e8HV1QIkTw7yeBe9bbphuE3YiI4vQ=="
       }
     },
     ".NETStandard,Version=v2.0": {
@@ -815,7 +815,7 @@
         "dependencies": {
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
           "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
-          "YamlDotNet": "[13.7.1, )"
+          "YamlDotNet": "[15.1.0, )"
         }
       },
       "shimakaze.sdk.ini": {
@@ -977,9 +977,9 @@
       },
       "YamlDotNet": {
         "type": "CentralTransitive",
-        "requested": "[13.7.1, )",
-        "resolved": "13.7.1",
-        "contentHash": "X4m1PnFcJwvAj1sCDMntg/eZcX96CJLrWMiYnq41KqhFVZPuw63ZTSxIGqgdCwHWHvCAyTxheELC/VDf1HsU2A=="
+        "requested": "[15.1.0, )",
+        "resolved": "15.1.0",
+        "contentHash": "fXrqmKkzBtXeJiHEsZOPEWkonHweiwk/l0Hqhz4yMIZPh57kZy03Xbj2/e8HV1QIkTw7yeBe9bbphuE3YiI4vQ=="
       }
     },
     "net8.0": {
@@ -1244,7 +1244,7 @@
         "dependencies": {
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
           "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
-          "YamlDotNet": "[13.7.1, )"
+          "YamlDotNet": "[15.1.0, )"
         }
       },
       "shimakaze.sdk.ini": {
@@ -1340,9 +1340,9 @@
       },
       "YamlDotNet": {
         "type": "CentralTransitive",
-        "requested": "[13.7.1, )",
-        "resolved": "13.7.1",
-        "contentHash": "X4m1PnFcJwvAj1sCDMntg/eZcX96CJLrWMiYnq41KqhFVZPuw63ZTSxIGqgdCwHWHvCAyTxheELC/VDf1HsU2A=="
+        "requested": "[15.1.0, )",
+        "resolved": "15.1.0",
+        "contentHash": "fXrqmKkzBtXeJiHEsZOPEWkonHweiwk/l0Hqhz4yMIZPh57kZy03Xbj2/e8HV1QIkTw7yeBe9bbphuE3YiI4vQ=="
       }
     }
   }
