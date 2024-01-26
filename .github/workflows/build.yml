@@ -53,6 +53,7 @@ jobs:
       - name: 签出仓库
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           lfs: true
 
       - name: 配置 .Net 环境
@@ -64,7 +65,7 @@ jobs:
 
       - name: 还原
         shell: pwsh
-        run: dotnet restore --locked-mode
+        run: dotnet restore
 
       - name: 构建
         shell: pwsh
