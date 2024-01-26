@@ -15,10 +15,6 @@
 
   <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
     <TargetFrameworks>netstandard2.0;net48;net8.0</TargetFrameworks>
-    <VersionPrefix>0.1.0</VersionPrefix>
-    <VersionSuffix>alpha.1</VersionSuffix>
-    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
-    <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(ShimakazeSdk_IsTest)">

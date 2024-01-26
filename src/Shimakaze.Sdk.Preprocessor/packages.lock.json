@@ -2,6 +2,12 @@
   "version": 2,
   "dependencies": {
     ".NETFramework,Version=v4.8": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -52,7 +58,7 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.polyfill": {
@@ -141,6 +147,12 @@
       }
     },
     ".NETStandard,Version=v2.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -205,7 +217,7 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.polyfill": {
@@ -287,6 +299,12 @@
       }
     },
     "net8.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -311,7 +329,7 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.polyfill": {

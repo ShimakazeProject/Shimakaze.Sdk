@@ -2,6 +2,12 @@
   "version": 2,
   "dependencies": {
     ".NETFramework,Version=v4.8": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -253,62 +259,62 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.json": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.xml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.yaml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "YamlDotNet": "[15.1.0, )"
         }
       },
       "shimakaze.sdk.ini": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini.Abstractions": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini.Abstractions": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.ares": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
           "System.IO.Hashing": "[8.0.0, )"
         }
       },
@@ -329,8 +335,8 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.0, )",
           "Microsoft.Extensions.Logging.Abstractions": "[8.0.0, )",
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
@@ -454,6 +460,12 @@
       }
     },
     ".NETStandard,Version=v2.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -787,62 +799,62 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.json": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.xml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.yaml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "YamlDotNet": "[15.1.0, )"
         }
       },
       "shimakaze.sdk.ini": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini.Abstractions": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini.Abstractions": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.ares": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
           "System.IO.Hashing": "[8.0.0, )"
         }
       },
@@ -863,8 +875,8 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.0, )",
           "Microsoft.Extensions.Logging.Abstractions": "[8.0.0, )",
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
@@ -983,6 +995,12 @@
       }
     },
     "net8.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -1216,62 +1234,62 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.json": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.xml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.yaml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "YamlDotNet": "[15.1.0, )"
         }
       },
       "shimakaze.sdk.ini": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini.Abstractions": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini.Abstractions": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.ares": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
           "System.IO.Hashing": "[8.0.0, )"
         }
       },
@@ -1286,8 +1304,8 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.0, )",
           "Microsoft.Extensions.Logging.Abstractions": "[8.0.0, )",
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "Microsoft.Build.Framework": {

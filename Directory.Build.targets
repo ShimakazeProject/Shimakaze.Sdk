@@ -1,27 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-  <!-- CSharp Common -->
-  <!-- Generate BuildStamp -->
-  <Target
-    Name="GenerateBuildStamp"
-    BeforeTargets="GetAssemblyAttributes"
-    Condition="$(ShimakazeSdk_IsCSharp)">
-    <!-- Git Commit Hash -->
-    <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="__GitRevision" />
-    </Exec>
-
-    <!-- Git Branch -->
-    <Exec Command="git rev-parse --symbolic-full-name --abbrev-ref HEAD" ConsoleToMsBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="__GitBranch" />
-    </Exec>
-
-    <ItemGroup>
-      <AssemblyMetadata Include="BuildTime" Value="$([System.DateTime]::Now.ToString('O'))" />
-      <AssemblyMetadata Include="Revision" Value="$(__GitRevision)" />
-      <AssemblyMetadata Include="Branch" Value="$(__GitBranch)" />
-    </ItemGroup>
-  </Target>
 
   <!-- CSharp UnitTest Common -->
   <Target

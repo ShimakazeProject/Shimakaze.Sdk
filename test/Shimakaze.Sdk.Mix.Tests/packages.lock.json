@@ -14,6 +14,12 @@
         "resolved": "6.0.0",
         "contentHash": "cUKI50VSVBqDQDFIdBnjN0Jk5JYhjtD0geP2BZZv71/ZrKORJXcLRswFsojI+cHdV+rFUL2XDJEpuhK3x1YqLA=="
       },
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -75,13 +81,13 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
           "System.IO.Hashing": "[8.0.0, )"
         }
       },
@@ -193,6 +199,12 @@
         "resolved": "6.0.0",
         "contentHash": "cUKI50VSVBqDQDFIdBnjN0Jk5JYhjtD0geP2BZZv71/ZrKORJXcLRswFsojI+cHdV+rFUL2XDJEpuhK3x1YqLA=="
       },
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -276,13 +288,13 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
           "System.IO.Hashing": "[8.0.0, )"
         }
       },
@@ -367,6 +379,12 @@
         "resolved": "6.0.0",
         "contentHash": "cUKI50VSVBqDQDFIdBnjN0Jk5JYhjtD0geP2BZZv71/ZrKORJXcLRswFsojI+cHdV+rFUL2XDJEpuhK3x1YqLA=="
       },
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[5.12.0, )",
+        "resolved": "5.12.0",
+        "contentHash": "dJuigXycpJNOiLT9or7mkHSkGFHgGW3/p6cNNYEKZBa7Hhp1FdX/cvqYWWYhRLpfoZOedeA7aRbYiOB3vW/dvA=="
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -442,13 +460,13 @@
       "shimakaze.sdk.common": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Polyfill": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
           "System.IO.Hashing": "[8.0.0, )"
         }
       },
