@@ -89,7 +89,7 @@ jobs:
           }
 
       - name: 收集 Nuget 包
-        uses: actions/upload-artifact@v4.2.0
+        uses: actions/upload-artifact@v4.3.0
         with:
           name: nuget-packages-${{ matrix.os }}
           path: |
