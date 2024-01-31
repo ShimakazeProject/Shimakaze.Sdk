@@ -7,6 +7,10 @@
 public enum ShapeFrameCompressionType : byte
 {
     /// <summary>
+    /// None
+    /// </summary>
+    None = 0,
+    /// <summary>
     /// RLE压缩
     /// </summary>
     /// <remarks>
