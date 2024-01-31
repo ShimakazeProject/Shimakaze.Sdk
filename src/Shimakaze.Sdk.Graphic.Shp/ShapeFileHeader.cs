@@ -9,6 +9,11 @@ namespace Shimakaze.Sdk.Graphic.Shp;
 public record struct ShapeFileHeader
 {
     /// <summary>
+    /// sizeof(ShapeFileHeader)
+    /// </summary>
+    public const int Size = 4 * sizeof(ushort);
+
+    /// <summary>
     /// 保留 总是 <see langword="0"/>
     /// </summary>
     public ushort Reserved;
