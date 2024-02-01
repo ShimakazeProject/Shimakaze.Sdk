@@ -11,6 +11,10 @@ public enum ShapeFrameCompressionType : byte
     /// </summary>
     None = 0,
     /// <summary>
+    /// 存在 Scanline 结构
+    /// </summary>
+    Scanline = 2,
+    /// <summary>
     /// RLE压缩
     /// </summary>
     /// <remarks>
@@ -20,5 +24,5 @@ public enum ShapeFrameCompressionType : byte
     /// 巧妙的使用这种方式压缩了大量的数据。<br/>
     /// 00 ## 其中##表示有多少个0。
     /// </remarks>
-    ScanlineRLE = 2,
+    ScanlineRLE = 3,
 }
