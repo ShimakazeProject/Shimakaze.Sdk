@@ -61,6 +61,10 @@ jobs:
           cache-dependency-path: ./**/packages.lock.json
           cache: true
 
+      - name: 还原本地工具
+        shell: pwsh
+        run: dotnet tool restore
+
       - name: 还原
         shell: pwsh
         run: dotnet restore
