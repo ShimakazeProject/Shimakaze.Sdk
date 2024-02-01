@@ -34,12 +34,6 @@
           "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
         }
       },
-      "shimakaze.sdk.graphic": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
-        }
-      },
       "shimakaze.sdk.polyfill": {
         "type": "Project",
         "dependencies": {
@@ -172,12 +166,6 @@
           "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
         }
       },
-      "shimakaze.sdk.graphic": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
-        }
-      },
       "shimakaze.sdk.polyfill": {
         "type": "Project",
         "dependencies": {
@@ -267,12 +255,6 @@
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
-        }
-      },
-      "shimakaze.sdk.graphic": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
       "shimakaze.sdk.polyfill": {

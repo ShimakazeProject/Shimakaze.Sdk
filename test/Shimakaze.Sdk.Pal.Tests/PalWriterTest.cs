@@ -1,7 +1,9 @@
 using System.Globalization;
 using System.Security.Cryptography;
 
-namespace Shimakaze.Sdk.Graphic.Pal.Tests;
+using Shimakaze.Sdk;
+
+namespace Shimakaze.Sdk.Pal.Tests;
 
 [TestClass]
 public sealed class PalWriterTest
@@ -18,17 +20,14 @@ public sealed class PalWriterTest
         Directory.CreateDirectory(OutputPath);
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        using PaletteReader reader = new(stream);
-
-        _pal = reader.Read();
+        _pal = PaletteReader.Read(stream);
     }
 
     [TestMethod]
     public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
-        using (PaletteWriter writer = new(stream))
-            writer.Write(_pal);
+            PaletteWriter.Write(_pal, stream);
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }
