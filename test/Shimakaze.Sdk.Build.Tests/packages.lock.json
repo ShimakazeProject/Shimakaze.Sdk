@@ -14,6 +14,15 @@
         "resolved": "6.0.0",
         "contentHash": "cUKI50VSVBqDQDFIdBnjN0Jk5JYhjtD0geP2BZZv71/ZrKORJXcLRswFsojI+cHdV+rFUL2XDJEpuhK3x1YqLA=="
       },
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[6.0.0-beta.5, )",
+        "resolved": "6.0.0-beta.5",
+        "contentHash": "E2zNmfxCz1S1HAYWFXwOz5A+yIVFSpaKehVAj5t45z5Zgck84hzu9THAOzzLFVGwBOnesKV7YXiSdNVZ8mZFRg==",
+        "dependencies": {
+          "System.Text.Json": "8.0.1"
+        }
+      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.7, )",
@@ -316,55 +325,55 @@
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.json": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.xml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf.yaml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "YamlDotNet": "[15.1.0, )"
         }
       },
       "shimakaze.sdk.ini": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini.Abstractions": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini.Abstractions": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.abstractions": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.ini.ares": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
           "System.IO.Hashing": "[8.0.0, )"
         }
       },
@@ -373,7 +382,7 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.0, )",
           "Microsoft.Extensions.Logging.Abstractions": "[8.0.0, )",
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )"
         }
       },
       "Shimakaze.Sdk.RA2": {
@@ -381,16 +390,16 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "[8.0.0, )",
           "Microsoft.Extensions.Logging.Console": "[8.0.0, )",
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf.Json": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf.Xml": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Csf.Yaml": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini.Abstractions": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Ini.Ares": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Mix": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Preprocessor": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf.Yaml": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini.Abstractions": "[1.0.0, )",
+          "Shimakaze.Sdk.Ini.Ares": "[1.0.0, )",
+          "Shimakaze.Sdk.Mix": "[1.0.0, )",
+          "Shimakaze.Sdk.Preprocessor": "[1.0.0, )"
         }
       },
       "Microsoft.Extensions.DependencyInjection": {
@@ -446,8 +455,8 @@
       "System.Text.Json": {
         "type": "CentralTransitive",
         "requested": "[8.0.0, )",
-        "resolved": "8.0.0",
-        "contentHash": "OdrZO2WjkiEG6ajEFRABTRCi/wuXQPxeV6g8xvUJqdxMvvuCCEk86zPla8UiIQJz3durtUEbNyY/3lIhS0yZvQ==",
+        "resolved": "8.0.1",
+        "contentHash": "7AWk2za1hSEJBppe/Lg+uDcam2TrDqwIKa9XcPssSwyjC2xa39EKEGul3CO5RWNF+hMuZG4zlBDrvhBdDTg4lg==",
         "dependencies": {
           "System.Text.Encodings.Web": "8.0.0"
         }
