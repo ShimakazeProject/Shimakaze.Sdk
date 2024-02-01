@@ -2,11 +2,11 @@
 
 using Sharprompt;
 
-using Shimakaze.Sdk.Graphic.Pal;
+using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Vpl.Editor;
 
-internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Func<VplEditor, Task> saver)
+internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor> saver)
 {
     public readonly VoxelPalette Vpl = vpl;
     private const int SIZE_OF_CELL = 3;
@@ -17,7 +17,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Func<VplEditor, T
     private (int X, int Y) _editing;
     private bool _isEditing;
 
-    public async Task RunAsync()
+    public void Run()
     {
         PrintColor();
         while (true)
@@ -121,7 +121,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Func<VplEditor, T
 
                 case ConsoleKey.S:
                     Console.SetCursorPosition(0, Y_OFFSET + 16);
-                    await saver(this);
+                    saver(this);
                     PrintColor();
                     break;
             }
