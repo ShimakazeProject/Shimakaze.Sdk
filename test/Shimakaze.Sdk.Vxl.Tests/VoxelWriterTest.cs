@@ -15,9 +15,7 @@ public sealed class VoxelWriterTest
         Directory.CreateDirectory(OutputPath);
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        using VoxelReader reader = new(stream);
-
-        _vxl = reader.Read();
+        _vxl = VoxelReader.Read(stream);
     }
 
     [TestMethod]
@@ -37,8 +35,7 @@ public sealed class VoxelWriterTest
     public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
-        using (VoxelWriter writer = new(stream))
-            writer.Write(_vxl);
+            VoxelWriter.Write(_vxl, stream);
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }
