@@ -40,11 +40,10 @@
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
-      "shimakaze.sdk.graphic.pal": {
+      "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Graphic": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
       "shimakaze.sdk.polyfill": {
@@ -185,11 +184,10 @@
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
-      "shimakaze.sdk.graphic.pal": {
+      "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Graphic": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
       "shimakaze.sdk.polyfill": {
@@ -289,11 +287,10 @@
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
-      "shimakaze.sdk.graphic.pal": {
+      "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Graphic": "[0.1.0-alpha.1, )"
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
       "shimakaze.sdk.polyfill": {

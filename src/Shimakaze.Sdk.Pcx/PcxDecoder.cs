@@ -1,20 +1,26 @@
 ﻿using Shimakaze.Sdk;
-using Shimakaze.Sdk.Graphic.Pal;
-using Shimakaze.Sdk.Graphic.Pixel;
+using Shimakaze.Sdk.Pal;
 
-namespace Shimakaze.Sdk.Graphic.Pcx;
+namespace Shimakaze.Sdk.Pcx;
 
 /// <summary>
 /// PCX 解码器
 /// </summary>
-public sealed class PcxDecoder() : Decoder<PcxImage>
+public sealed class PcxDecoder()
 {
     private PcxHeader _header;
     private int _sizeOfBody;
     private int _3TimesSizeOfBody;
 
-    /// <inheritdoc/>
-    public override PcxImage Decode(Stream input)
+    /// <summary>
+    /// 解码图片
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    /// <exception cref="InvalidDataException"></exception>
+    /// <exception cref="FormatException"></exception>
+    public PcxImage Decode(Stream input)
     {
         DecodeHeader(input);
         PcxAsserts.IsPCX(_header);
@@ -42,9 +48,17 @@ public sealed class PcxDecoder() : Decoder<PcxImage>
                     var indexes = DeRLE(input, _sizeOfBody);
                     // 读调色板
                     DecodePalette(input, image);
+                    if (image.Palette is null)
+                        throw new InvalidDataException();
+
                     // 输出
-                    for (int i = 0; i < _sizeOfBody; i++)
-                        image.Pixels[i] = image.Palette![indexes[i]];
+                    unsafe
+                    {
+                        for (int i = 0; i < _sizeOfBody; i++)
+                        {
+                            image.Pixels[i] = image.Palette[indexes[i]];
+                        }
+                    }
                     break;
                 }
             // 24位色
@@ -60,7 +74,7 @@ public sealed class PcxDecoder() : Decoder<PcxImage>
                     int a = _header.BytesPerPlaneLine * 3;
                     unsafe
                     {
-                        fixed (Rgb24* pt = image.Pixels)
+                        fixed (PaletteColor* pt = image.Pixels)
                         fixed (byte* ps = source)
                         {
                             byte* p = (byte*)pt;
