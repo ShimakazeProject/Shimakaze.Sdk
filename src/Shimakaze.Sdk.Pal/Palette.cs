@@ -1,6 +1,4 @@
-﻿using Shimakaze.Sdk.Graphic.Pixel;
-
-namespace Shimakaze.Sdk.Graphic.Pal;
+﻿namespace Shimakaze.Sdk.Pal;
 
 /// <summary>
 /// 色板
@@ -22,7 +20,7 @@ public record class Palette
     /// <summary>
     /// 创建具有指定长度的色板
     /// </summary>
-    public Palette(int size) : this(new Rgb24[size])
+    public Palette(int size) : this(new PaletteColor[size])
     {
     }
 
@@ -30,7 +28,7 @@ public record class Palette
     /// 从颜色数组中创建色板
     /// </summary>
     /// <param name="colors"></param>
-    public Palette(Rgb24[] colors)
+    public Palette(PaletteColor[] colors)
     {
         Colors = colors;
     }
@@ -39,14 +37,19 @@ public record class Palette
     /// <summary>
     /// 颜色
     /// </summary>
-    public Rgb24[] Colors { get; }
+    public PaletteColor[] Colors { get; }
+
+    /// <summary>
+    /// 调色板的颜色数量
+    /// </summary>
+    public int Count => Colors.Length;
 
     /// <summary>
     /// 颜色
     /// </summary>
     /// <param name="index"> 索引 </param>
     /// <returns> 颜色 </returns>
-    public Rgb24 this[int index]
+    public PaletteColor this[int index]
     {
         get => Colors[index];
         set => Colors[index] = value;

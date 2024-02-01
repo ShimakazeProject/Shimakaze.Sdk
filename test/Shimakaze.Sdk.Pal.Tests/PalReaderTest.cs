@@ -1,4 +1,6 @@
-namespace Shimakaze.Sdk.Graphic.Pal.Tests;
+using Shimakaze.Sdk;
+
+namespace Shimakaze.Sdk.Pal.Tests;
 
 [TestClass]
 public sealed class PalReaderTest
@@ -11,8 +13,6 @@ public sealed class PalReaderTest
     {
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        using PaletteReader reader = new(stream);
-
-        var res = reader.Read();
+        var res = PaletteReader.Read(stream);
     }
 }
