@@ -30,11 +30,14 @@ public static class ShapeReader
 
     private static ShapeImageFrame ReadFrame(in Stream input, in ShapeFrameHeader frameHeader, ref byte[] buffer)
     {
-
         using MemoryStream indexStream = new();
-        if (frameHeader.CompressionType.HasFlag(ShapeFrameCompressionType.ScanlineRLE))
+        if (frameHeader.CompressionType.HasFlag(ShapeFrameCompressionType.Scanline))
         {
-            ReadRLE(input, indexStream, frameHeader, ref buffer);
+            // TODO: 行为可能不一致
+            for (int y = 0; y < frameHeader.Height; y++)
+            {
+                ReadRLE(input, indexStream, ref buffer);
+            }
         }
         else
         {
@@ -45,34 +48,32 @@ public static class ShapeReader
 
         indexStream.Seek(0, SeekOrigin.Begin);
 
-        return new(frameHeader, frameHeader.Width, frameHeader.Height, indexStream.ToArray());
+        return new(frameHeader, indexStream.ToArray());
     }
 
-    private static void ReadRLE(in Stream input, in Stream output, in ShapeFrameHeader frameHeader, ref byte[] buffer)
+    private static void ReadRLE(in Stream input, in Stream output, ref byte[] buffer)
     {
-        for (int y = 0; y < frameHeader.Height; y++)
-        {
-            input.Read(out ushort length);
-            length -= sizeof(ushort);
-            if (buffer.Length < length)
-                buffer = new byte[length];
+        input.Read(out ushort length);
+        length -= sizeof(ushort);
+        if (buffer.Length < length)
+            buffer = new byte[length];
 
-            for (int j = 0; j < length; j++)
+        for (int j = 0; j < length; j++)
+        {
+            byte b = input.ReadAsByte();
+            if (b is 0)
             {
-                byte b = input.ReadAsByte();
-                if (b is 0)
-                {
-                    byte count = input.ReadAsByte();
-                    j++;
-                    for (int k = 0; k < count; k++)
-                        output.WriteByte(0);
-                }
-                else
-                {
-                    output.WriteByte(b);
-                }
+                byte count = input.ReadAsByte();
+                j++;
+                for (int k = 0; k < count; k++)
+                    output.WriteByte(0);
+            }
+            else
+            {
+                output.WriteByte(b);
             }
         }
+
     }
 
     private static void ReadDirect(in Stream input, in Stream output, in ShapeFrameHeader frameHeader, ref byte[] buffer)
