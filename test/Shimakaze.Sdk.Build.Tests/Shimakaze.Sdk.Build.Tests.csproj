@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net48;net8.0</TargetFrameworks>
-  </PropertyGroup>
   <ItemGroup>
     <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Json.Tests\Assets\ra2md.v1.csf.json" Link="Assets\ra2md.v1.csf.json" />
     <None CopyToOutputDirectory="PreserveNewest" Include="..\Shimakaze.Sdk.Csf.Json.Tests\Assets\ra2md.v2.csf.json" Link="Assets\ra2md.v2.csf.json" />

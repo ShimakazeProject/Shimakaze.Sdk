@@ -14,15 +14,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
-    <TargetFrameworks>netstandard2.0;net48;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <VersionPrefix>0.1.0</VersionPrefix>
     <VersionSuffix>alpha.1</VersionSuffix>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
     <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(ShimakazeSdk_IsTest)">
-    <TargetFrameworks>net48;net6.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- CSharp -->
@@ -41,16 +37,6 @@
 
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
-
-    <!-- Polyfill -->
-    <NoWarn Condition="$(TargetFramework) == 'netstandard2.0' or
-                       $(TargetFramework) == 'netcoreapp2.0' or
-                       $(TargetFramework) == 'net48' or
-                       $(TargetFrameworkIdentifier) == '.NETFramework'">1701;1702;8601;8604;8618;8767</NoWarn>
-    <Nullable Condition="$(TargetFramework) == 'netstandard2.0' or
-                         $(TargetFramework) == 'netcoreapp2.0' or
-                         $(TargetFramework) == 'net48' or
-                         $(TargetFrameworkIdentifier) == '.NETFramework'">annotations</Nullable>
     
     <Authors>Shimakaze Project</Authors>
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>

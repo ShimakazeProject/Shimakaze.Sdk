@@ -75,12 +75,8 @@ public static partial class TargetExtensions
     /// <returns></returns>
     public static IEnumerable<Target> AddRpcHandler<T>(this IServiceCollection services, string? route) where T : class => services.AddRpcHandler(typeof(T), route);
 
-#if NET7_0_OR_GREATER
     [GeneratedRegex("Handlers?$|Controllers?$")]
     private static partial Regex HandlerRegex();
-#else
-    private static Regex HandlerRegex() => new("Handlers?$|Controllers?$");
-#endif
 
     private static string Combine(string? s1, string? s2)
     {

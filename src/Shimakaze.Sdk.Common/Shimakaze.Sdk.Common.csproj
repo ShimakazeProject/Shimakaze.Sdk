@@ -6,12 +6,8 @@
 
   <ItemGroup>
     <Shimakaze_Projects Include="$(ShimakazeSdk_SourceFolder)**\*.csproj" />
-    <Shimakaze_ProjectNames Include="@(Shimakaze_Projects -> Metadata('Filename'))" />
+    <Shimakaze_ProjectNames Include="@(Shimakaze_Projects -&gt; Metadata('Filename'))" />
     <InternalsVisibleTo Include="@(Shimakaze_ProjectNames)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
   </ItemGroup>
 
 </Project>

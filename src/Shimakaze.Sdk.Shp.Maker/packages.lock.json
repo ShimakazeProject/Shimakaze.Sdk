@@ -43,10 +43,7 @@
         "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
       },
       "shimakaze.sdk.common": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
-        }
+        "type": "Project"
       },
       "shimakaze.sdk.pal": {
         "type": "Project",
@@ -54,23 +51,11 @@
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
       },
-      "shimakaze.sdk.polyfill": {
-        "type": "Project",
-        "dependencies": {
-          "Polyfill": "[2.1.0, )"
-        }
-      },
       "shimakaze.sdk.shp": {
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
         }
-      },
-      "Polyfill": {
-        "type": "CentralTransitive",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "aYKDgyTwkvl0ncBpjlC/Z4IzVMbIMMcQETbc+uppA5iKwIDR495DHDhTxa5FbJH+GiZ1ujMevjLs6kOuq3AhWg=="
       }
     }
   }
