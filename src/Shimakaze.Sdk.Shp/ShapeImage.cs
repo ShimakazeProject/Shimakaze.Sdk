@@ -1,11 +1,11 @@
-﻿namespace Shimakaze.Sdk.Graphic.Shp;
+﻿namespace Shimakaze.Sdk.Shp;
 
 /// <summary>
 /// SHP图像
 /// </summary>
 /// <param name="metadata">图像元数据</param>
 /// <param name="frames">图像帧</param>
-public sealed class ShapeImage(ShapeFileHeader metadata, ShapeImageFrame[] frames) : IImage
+public sealed class ShapeImage(ShapeFileHeader metadata, ShapeImageFrame[] frames)
 {
     /// <summary>
     /// SHP文件元数据
@@ -28,10 +28,4 @@ public sealed class ShapeImage(ShapeFileHeader metadata, ShapeImageFrame[] frame
     /// 第一个帧
     /// </summary>
     public ShapeImageFrame RootFrame => frames[0];
-
-    IImageFrame[] IImage.Frames => Frames;
-
-    IImageFrame IImage.RootFrame => RootFrame;
-
-    IImageFrame IImage.this[int index] => this[index];
 }
