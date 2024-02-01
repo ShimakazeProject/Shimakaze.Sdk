@@ -75,7 +75,7 @@ jobs:
 
       - name: 测试
         shell: pwsh
-        run: dotnet coverage collect dotnet test --configuration Release --no-build
+        run: dotnet coverage collect -f cobertura dotnet test --configuration Release --no-build
 
       - name: 打包
         shell: pwsh
@@ -118,7 +118,7 @@ jobs:
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
-          file: ./output.coverage
+          file: ./output.cobertura.xml
 
   coverage-upload:
     needs: build-dotnet
