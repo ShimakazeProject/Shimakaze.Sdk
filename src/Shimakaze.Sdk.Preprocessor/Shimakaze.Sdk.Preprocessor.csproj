@@ -5,7 +5,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
     <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
   </ItemGroup>
 </Project>
