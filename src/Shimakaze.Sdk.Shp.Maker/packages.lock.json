@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net8.0": {
+      "DotMake.CommandLine": {
+        "type": "Direct",
+        "requested": "[1.6.8, )",
+        "resolved": "1.6.8",
+        "contentHash": "5ilqdkFdfq3UkH1y8J/l7T3Miw1O45rdz6ThAfEY48F0JST86VezNXRr11o6dI18UHq6QBLoxmhBNLY20JGenw==",
+        "dependencies": {
+          "System.CommandLine": "2.0.0-beta4.22272.1"
+        }
+      },
+      "IDisposableAnalyzers": {
+        "type": "Direct",
+        "requested": "[4.0.7, )",
+        "resolved": "4.0.7",
+        "contentHash": "Xrn/VABG/JhulJOmHOeOAY4/qafbEyRj3Z6gMeSABT1XCqMe8HnqOvid8gEVJt47VUZ6eD7XpTFLZ1KLyTZgdw=="
+      },
+      "Sharprompt": {
+        "type": "Direct",
+        "requested": "[2.4.5, )",
+        "resolved": "2.4.5",
+        "contentHash": "hRYlerWsQGbm+okcxGrHzlm0n7wwVR2si1faSqt4IaO8iZcOKwW/MrBZgLiGRd2TVzFYGv22OuBoR2AatSlJbQ==",
+        "dependencies": {
+          "System.ComponentModel.Annotations": "5.0.0"
+        }
+      },
+      "SixLabors.ImageSharp": {
+        "type": "Direct",
+        "requested": "[3.1.2, )",
+        "resolved": "3.1.2",
+        "contentHash": "PYdR6GUI+gW6LBaAQKTik0Ai8oLpFAz3a/KrVusxoTg3kf7F3cuIqKMhJGsuQcmDHCF+iD81Pyn4cexyHrb1ZA=="
+      },
+      "System.CommandLine": {
+        "type": "Transitive",
+        "resolved": "2.0.0-beta4.22272.1",
+        "contentHash": "1uqED/q2H0kKoLJ4+hI2iPSBSEdTuhfCYADeJrAqERmiGQ2NNacYKRNEQ+gFbU4glgVyK8rxI+ZOe1onEtr/Pg=="
+      },
+      "System.ComponentModel.Annotations": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
+      },
+      "shimakaze.sdk.common": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
+        }
+      },
+      "shimakaze.sdk.pal": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+        }
+      },
+      "shimakaze.sdk.polyfill": {
+        "type": "Project",
+        "dependencies": {
+          "Polyfill": "[2.1.0, )"
+        }
+      },
+      "shimakaze.sdk.shp": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+        }
+      },
+      "Polyfill": {
+        "type": "CentralTransitive",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "aYKDgyTwkvl0ncBpjlC/Z4IzVMbIMMcQETbc+uppA5iKwIDR495DHDhTxa5FbJH+GiZ1ujMevjLs6kOuq3AhWg=="
+      }
+    }
+  }
+}
