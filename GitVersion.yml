@@ -1,0 +1,11 @@
+assembly-versioning-scheme: MajorMinorPatchTag
+merge-message-formats: {}
+update-build-number: true
+semantic-version-format: Strict
+branches: {}
+ignore:
+  sha: []
+mode: ContinuousDelivery
+increment: None
+source-branches: []
+is-source-branch-for: []

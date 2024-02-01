@@ -13,16 +13,9 @@
     <ShimakazeSdk_IsTest Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_UnitTestFolder)')) ">True</ShimakazeSdk_IsTest>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <VersionPrefix>0.1.0</VersionPrefix>
-    <VersionSuffix>alpha.1</VersionSuffix>
-    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
-    <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
-  </PropertyGroup>
-
   <!-- CSharp -->
   <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
