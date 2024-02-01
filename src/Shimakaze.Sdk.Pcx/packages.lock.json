@@ -34,6 +34,12 @@
           "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
         }
       },
+      "shimakaze.sdk.graphic": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+        }
+      },
       "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
@@ -50,13 +56,6 @@
           "System.Runtime.CompilerServices.Unsafe": "[6.0.0, )",
           "System.Text.Json": "[8.0.0, )",
           "System.Threading.Tasks.Extensions": "[4.5.4, )"
-        }
-      },
-      "shimakaze.sdk.vpl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Pal": "[0.1.0-alpha.1, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
@@ -179,6 +178,12 @@
           "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
         }
       },
+      "shimakaze.sdk.graphic": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+        }
+      },
       "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
@@ -195,13 +200,6 @@
           "System.Runtime.CompilerServices.Unsafe": "[6.0.0, )",
           "System.Text.Json": "[8.0.0, )",
           "System.Threading.Tasks.Extensions": "[4.5.4, )"
-        }
-      },
-      "shimakaze.sdk.vpl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Pal": "[0.1.0-alpha.1, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
@@ -283,6 +281,12 @@
           "Shimakaze.Sdk.Polyfill": "[0.1.0-alpha.1, )"
         }
       },
+      "shimakaze.sdk.graphic": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )"
+        }
+      },
       "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
@@ -293,13 +297,6 @@
         "type": "Project",
         "dependencies": {
           "Polyfill": "[2.1.0, )"
-        }
-      },
-      "shimakaze.sdk.vpl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Common": "[0.1.0-alpha.1, )",
-          "Shimakaze.Sdk.Pal": "[0.1.0-alpha.1, )"
         }
       },
       "Polyfill": {

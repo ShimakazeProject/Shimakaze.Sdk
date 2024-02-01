@@ -1,30 +1,28 @@
-﻿using Shimakaze.Sdk.Graphic.Pal;
+﻿using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Vxl;
 
 /// <summary>
 /// VoxelReader
 /// </summary>
-public sealed class VoxelReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
+public sealed class VoxelReader
 {
-    private readonly DisposableObject<Stream> _disposable = new(stream.CanSeek(), leaveOpen);
-
-    /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
-
-    /// <inheritdoc />
-    public VoxelFile Read(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// VXL读取器
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="progress"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="FormatException"></exception>
+    public static VoxelFile Read(Stream stream, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         VoxelFile voxel = new();
         stream.Read(out voxel.InternalHeader);
 
         uint limbDataOffset = 34 + Palette.DefaultColorCount * 3 + voxel.Header.NumSections * 28;
 
-        using (PaletteReader reader = new(stream, skipPostprocess: true, leaveOpen: true))
-            voxel.Palette = reader.Read();
+        voxel.Palette = PaletteReader.Read(stream, skipPostprocess: true);
 
         voxel.SectionHeaders = new SectionHeader[voxel.Header.NumSections];
         for (int i = 0; i < voxel.Header.NumSections; i++)

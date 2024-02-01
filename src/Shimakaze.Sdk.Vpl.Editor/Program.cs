@@ -1,6 +1,6 @@
 ﻿using Sharprompt;
 
-using Shimakaze.Sdk.Graphic.Pal;
+using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Vpl;
 using Shimakaze.Sdk.Vpl.Editor;
 
@@ -11,19 +11,15 @@ VoxelPalette vpl;
 Palette pal;
 
 using (Stream vplStream = File.OpenRead(vplPath))
-await using (VoxelPaletteReader vplReader = new(vplStream))
-    vpl = vplReader.Read();
+    vpl = VoxelPaletteReader.Read(vplStream);
 
 using (Stream palStream = File.OpenRead(palPath))
-await using (PaletteReader palReader = new(palStream))
-    pal = palReader.Read();
+    pal = PaletteReader.Read(palStream);
 
-VplEditor editor = new(vpl, pal, async (editor) =>
-{
+VplEditor editor = new(vpl, pal, (editor) => {
     string path = Prompt.Input<string>("Where is your new VPL file save to?", vplPath);
     using Stream fs = File.Create(path);
-    await using VoxelPaletteWriter writer = new(fs);
-    writer.Write(editor.Vpl);
+    VoxelPaletteWriter.Write(editor.Vpl, fs);
 });
 
-await editor.RunAsync();
+editor.Run();

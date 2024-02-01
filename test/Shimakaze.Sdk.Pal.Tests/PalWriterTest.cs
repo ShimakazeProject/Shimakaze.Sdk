@@ -1,13 +1,18 @@
-namespace Shimakaze.Sdk.Vxl.Tests;
+using System.Globalization;
+using System.Security.Cryptography;
+
+using Shimakaze.Sdk;
+
+namespace Shimakaze.Sdk.Pal.Tests;
 
 [TestClass]
-public sealed class VoxelWriterTest
+public sealed class PalWriterTest
 {
     private const string Assets = "Assets";
-    private const string InputFile = "jeep.vxl";
-    private const string OutputFile = "jeep.vxl";
+    private const string InputFile = "unittem.pal";
+    private const string OutputFile = "unittem.pal";
     private const string OutputPath = "Out";
-    private VoxelFile _vxl = default!;
+    private Palette _pal = default!;
 
     [TestInitialize]
     public void Startup()
@@ -15,27 +20,14 @@ public sealed class VoxelWriterTest
         Directory.CreateDirectory(OutputPath);
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        _vxl = VoxelReader.Read(stream);
-    }
-
-    [TestMethod]
-    public unsafe void SizeOfTest()
-    {
-        Assert.AreEqual(24, sizeof(Bounds));
-        Assert.AreEqual(28, sizeof(SectionHeader));
-        Assert.AreEqual(16, sizeof(SectionName));
-        Assert.AreEqual(92, sizeof(SectionTailer));
-        Assert.AreEqual(48, sizeof(Transform));
-        Assert.AreEqual(2, sizeof(Voxel));
-        Assert.AreEqual(3, sizeof(VoxelSize));
-        Assert.AreEqual(34, sizeof(VoxelHeader));
+        _pal = PaletteReader.Read(stream);
     }
 
     [TestMethod]
     public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
-            VoxelWriter.Write(_vxl, stream);
+            PaletteWriter.Write(_pal, stream);
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }
