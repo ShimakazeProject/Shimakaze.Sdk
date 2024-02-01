@@ -1,32 +1,27 @@
 ﻿using Shimakaze.Sdk;
-using Shimakaze.Sdk.Graphic.Pal;
+using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Vpl;
 
 /// <summary>
-/// 体素文件调色板读取器
+/// 基础流读取器
 /// </summary>
-/// <param name="stream">基础流</param>
-/// <param name="leaveOpen"></param>
-public sealed class VoxelPaletteReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
+public sealed class VoxelPaletteReader
 {
-    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
-
-    /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
-
-    /// <inheritdoc />
-    public VoxelPalette Read(IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// 体素文件调色板
+    /// </summary>
+    /// <param name="stream">流</param>
+    /// <param name="progress"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public static VoxelPalette Read(Stream stream, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         VoxelPalette vpl = new();
 
-        _disposable.Resource.Read(out vpl.InternalHeader);
+        stream.Read(out vpl.InternalHeader);
 
-        using (PaletteReader reader = new(stream, skipPostprocess: true, leaveOpen: true))
-            vpl.Palette = reader.Read();
+        vpl.Palette = PaletteReader.Read(stream, skipPostprocess: true);
 
         vpl.Sections = new VoxelPaletteSection[vpl.Header.SectionCount];
         for (int i = 0; i < vpl.Sections.Length; i++)
@@ -38,7 +33,7 @@ public sealed class VoxelPaletteReader(Stream stream, bool leaveOpen = false) : 
             unsafe
             {
                 fixed (byte* p = vpl.Sections[i].Data)
-                    _disposable.Resource.Read(new Span<byte>(p, 256));
+                    stream.Read(new Span<byte>(p, 256));
             }
         }
 
