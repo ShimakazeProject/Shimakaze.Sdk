@@ -70,18 +70,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <CollectCoverage>True</CollectCoverage>
-    <CoverletOutputFormat>lcov</CoverletOutputFormat>
-    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
   </PropertyGroup>
-
-  <ItemGroup Condition="$(ShimakazeSdk_IsTest)">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="MSTest.TestAdapter" />
-    <PackageReference Include="MSTest.TestFramework" />
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="ReportGenerator" />
-  </ItemGroup>
 
   <ItemGroup Condition="$(ShimakazeSdk_IsTest)">
     <ProjectReference Include="$([MSBuild]::NormalizePath('$(ShimakazeSdk_SourceFolder)', '$(MSBuildProjectName.Replace('.Tests', ''))', '$(MSBuildProjectName.Replace('.Tests', '')).csproj'))" />
