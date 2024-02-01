@@ -6,7 +6,4 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
     <PackageReference Include="StreamJsonRpc" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
-  </ItemGroup>
 </Project>

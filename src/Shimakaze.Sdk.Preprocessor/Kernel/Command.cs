@@ -50,7 +50,7 @@ public sealed class Command
     internal void Execute(object? obj, string line)
     {
         Match match = Regex.Match(line);
-        var args = match.Groups.GetValues().Skip(1).Select(i => i.Value).ToImmutableArray();
+        var args = match.Groups.Values.Skip(1).Select(i => i.Value).ToImmutableArray();
         object[] parameters = new object[Parameters.Length];
         for (int i = 0; i < Parameters.Length; i++)
         {
