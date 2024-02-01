@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Shimakaze.Sdk.Graphic.Pcx;
+namespace Shimakaze.Sdk.Pcx;
 
 /// <summary>
 /// PCX 文件头

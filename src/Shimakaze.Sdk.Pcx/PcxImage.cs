@@ -1,7 +1,6 @@
-﻿using Shimakaze.Sdk.Graphic.Pal;
-using Shimakaze.Sdk.Graphic.Pixel;
+﻿using Shimakaze.Sdk.Pal;
 
-namespace Shimakaze.Sdk.Graphic.Pcx;
+namespace Shimakaze.Sdk.Pcx;
 
 /// <summary>
 /// 表示一个PCX图像
@@ -9,7 +8,7 @@ namespace Shimakaze.Sdk.Graphic.Pcx;
 /// <remarks>
 /// PCX是单帧图像，只有一个帧
 /// </remarks>
-public sealed class PcxImage : IImage, IImageFrame
+public sealed class PcxImage
 {
     /// <summary>
     /// PCX图像构造器
@@ -21,7 +20,7 @@ public sealed class PcxImage : IImage, IImageFrame
         Width = metadata.WindowXMax - metadata.WindowXMin + 1;
         Height = metadata.WindowYMax - metadata.WindowYMin + 1;
         BitsPerPixel = metadata.ColorPlanes * metadata.BitsPerPlane;
-        Pixels = new Rgb24[Width * Height];
+        Pixels = new PaletteColor[Width * Height];
     }
 
     /// <summary>
@@ -52,37 +51,15 @@ public sealed class PcxImage : IImage, IImageFrame
     /// <summary>
     /// 直接获取像素数据
     /// </summary>
-    public Rgb24[] Pixels { get; }
+    public PaletteColor[] Pixels { get; }
 
-    /// <inheritdoc/>
-    public void WriteTo<TPixel>(Stream stream) where TPixel : unmanaged, IPixel
+    /// <summary>
+    /// 写入RGB24数据到流
+    /// </summary>
+    /// <param name="stream"></param>
+    public void WriteTo(Stream stream)
     {
-        if (typeof(TPixel) == typeof(Rgb24))
-        {
-            foreach (Rgb24 pixel in Pixels)
-                stream.Write(pixel);
-        }
-        else if (typeof(TPixel) == typeof(Rgb565))
-        {
-            foreach (Rgb24 pixel in Pixels)
-            {
-                pixel.ToRgb565(out var target);
-                stream.Write(target);
-            }
-        }
-        else if (typeof(TPixel) == typeof(Rgba32))
-        {
-            foreach (Rgb24 pixel in Pixels)
-            {
-                pixel.ToRgba32(out var target);
-                stream.Write(target);
-            }
-        }
+        foreach (PaletteColor pixel in Pixels)
+            stream.Write(pixel);
     }
-
-    IImageFrame IImage.this[int index] => ((IImage)this).Frames[index];
-
-    IImageFrame[] IImage.Frames => [this];
-
-    IImageFrame IImage.RootFrame => ((IImage)this).Frames[0];
 }
