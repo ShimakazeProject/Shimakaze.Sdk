@@ -30,8 +30,7 @@
     <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini.Ares\Shimakaze.Sdk.Ini.Ares.csproj" />
     <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
     <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
-    <ProjectReference Include="..\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
-    <ProjectReference Include="..\Shimakaze.Sdk.Polyfill\Shimakaze.Sdk.Polyfill.csproj" />
+    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
   </ItemGroup>
 
   <Target Name="PackAllDependencies">

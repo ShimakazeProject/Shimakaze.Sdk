@@ -13,20 +13,9 @@
     <ShimakazeSdk_IsTest Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_UnitTestFolder)')) ">True</ShimakazeSdk_IsTest>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
-    <TargetFrameworks>netstandard2.0;net48;net8.0</TargetFrameworks>
-    <VersionPrefix>0.1.0</VersionPrefix>
-    <VersionSuffix>alpha.1</VersionSuffix>
-    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
-    <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(ShimakazeSdk_IsTest)">
-    <TargetFrameworks>net48;net6.0;net8.0</TargetFrameworks>
-  </PropertyGroup>
-
   <!-- CSharp -->
   <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -41,16 +30,6 @@
 
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
-
-    <!-- Polyfill -->
-    <NoWarn Condition="$(TargetFramework) == 'netstandard2.0' or
-                       $(TargetFramework) == 'netcoreapp2.0' or
-                       $(TargetFramework) == 'net48' or
-                       $(TargetFrameworkIdentifier) == '.NETFramework'">1701;1702;8601;8604;8618;8767</NoWarn>
-    <Nullable Condition="$(TargetFramework) == 'netstandard2.0' or
-                         $(TargetFramework) == 'netcoreapp2.0' or
-                         $(TargetFramework) == 'net48' or
-                         $(TargetFrameworkIdentifier) == '.NETFramework'">annotations</Nullable>
     
     <Authors>Shimakaze Project</Authors>
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
@@ -91,18 +70,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <CollectCoverage>True</CollectCoverage>
-    <CoverletOutputFormat>lcov</CoverletOutputFormat>
-    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
   </PropertyGroup>
-
-  <ItemGroup Condition="$(ShimakazeSdk_IsTest)">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="MSTest.TestAdapter" />
-    <PackageReference Include="MSTest.TestFramework" />
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="ReportGenerator" />
-  </ItemGroup>
 
   <ItemGroup Condition="$(ShimakazeSdk_IsTest)">
     <ProjectReference Include="$([MSBuild]::NormalizePath('$(ShimakazeSdk_SourceFolder)', '$(MSBuildProjectName.Replace('.Tests', ''))', '$(MSBuildProjectName.Replace('.Tests', '')).csproj'))" />

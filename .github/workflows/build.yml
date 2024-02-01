@@ -52,6 +52,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          fetch-depth: 0
 
       - name: 配置 .Net 环境
         uses: actions/setup-dotnet@v4.0.0
@@ -60,17 +61,21 @@ jobs:
           cache-dependency-path: ./**/packages.lock.json
           cache: true
 
+      - name: 还原本地工具
+        shell: pwsh
+        run: dotnet tool restore
+
       - name: 还原
         shell: pwsh
         run: dotnet restore
 
       - name: 构建
         shell: pwsh
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --graph --configuration Release --no-restore
 
       - name: 测试
         shell: pwsh
-        run: dotnet test --configuration Release --no-build
+        run: dotnet coverage collect -f cobertura dotnet test --configuration Release --no-build
 
       - name: 打包
         shell: pwsh
@@ -113,7 +118,7 @@ jobs:
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
-          file: ./coverage/lcov.info
+          file: ./output.cobertura.xml
 
   coverage-upload:
     needs: build-dotnet
