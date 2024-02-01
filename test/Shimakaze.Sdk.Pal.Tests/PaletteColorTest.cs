@@ -19,6 +19,6 @@ public sealed class PaletteColorTest
     [TestInitialize]
     public void Init()
     {
-        _color = new PaletteColor(63, 63, 63);
+        _color = new PaletteColor(63, 63, 63).AsDisplaydColor();
     }
 }
