@@ -2,18 +2,6 @@
   "version": 2,
   "dependencies": {
     "net8.0": {
-      "coverlet.collector": {
-        "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "tW3lsNS+dAEII6YGUX/VMoJjBS1QvsxqJeqLaJXub08y1FSjasFPtQ4UBUsudE9PNrzLjooClMsPtY2cZLdXpQ=="
-      },
-      "coverlet.msbuild": {
-        "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "cUKI50VSVBqDQDFIdBnjN0Jk5JYhjtD0geP2BZZv71/ZrKORJXcLRswFsojI+cHdV+rFUL2XDJEpuhK3x1YqLA=="
-      },
       "GitVersion.MsBuild": {
         "type": "Direct",
         "requested": "[6.0.0-beta.5, )",
@@ -50,12 +38,6 @@
         "requested": "[3.2.0, )",
         "resolved": "3.2.0",
         "contentHash": "jrlSvf3DmE6nqMR194++GdpJfN4evGwDKlCzxC6mowvCj0QVWSPfTltkq9pyXO/ne4gpE8DpPl9dqTg4CNPiUQ=="
-      },
-      "ReportGenerator": {
-        "type": "Direct",
-        "requested": "[5.2.0, )",
-        "resolved": "5.2.0",
-        "contentHash": "RkQL6U6+tp98ukBizie9ihnLVpN+OwUXRbpEzFFoLi2pTz9PqloOJCnhZhB58qPWKD3Bq3dbmfLpB9Um3oGkPQ=="
       },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
