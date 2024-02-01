@@ -44,16 +44,16 @@ internal sealed class RootCommand
     public async Task RunAsync()
     {
         Palette palette;
-        await using (var fs = Palette.OpenRead())
+        await using (var fs = Palette!.OpenRead())
             palette = PaletteReader.Read(fs);
 
         int width = 0;
         int height = 0;
         List<ShapeImageFrame> frames = [];
 
-        foreach (var file in Objects.GetFiles())
+        foreach (var file in Objects!.GetFiles())
         {
-            string colPath = Path.Combine(Colors.FullName, file.Name);
+            string colPath = Path.Combine(Colors!.FullName, file.Name);
             using var obj = await Image.LoadAsync<Rgba32>(file.FullName);
             using var col = await Image.LoadAsync<Rgba32>(colPath);
             width = obj.Width;
@@ -61,13 +61,13 @@ internal sealed class RootCommand
             frames.Add(Quantization(obj, col, palette).TrimAndCompress());
         }
 
-        foreach (var file in Shadows.GetFiles())
+        foreach (var file in Shadows!.GetFiles())
         {
             using var sha = await Image.LoadAsync<Rgba32>(file.FullName);
             frames.Add(Shadow(sha).TrimAndCompress());
         }
 
-        await using (var fs = Output.Create())
+        await using (var fs = Output!.Create())
             ShapeWriter.Write(fs, new(new()
             {
                 Width = (ushort)width,
