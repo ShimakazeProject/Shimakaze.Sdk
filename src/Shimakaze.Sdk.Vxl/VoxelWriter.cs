@@ -1,33 +1,26 @@
-﻿using Shimakaze.Sdk.Graphic.Pal;
+﻿using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Vxl;
 
 /// <summary>
 /// VoxelWriter
 /// </summary>
-/// <remarks>
-/// PaletteReader
-/// </remarks>
-public sealed class VoxelWriter(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
+public sealed class VoxelWriter
 {
-    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
-
-    /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
-
-
-    /// <inheritdoc />
-    public void Write(VoxelFile value, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// VXL写入器
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="stream"></param>
+    /// <param name="progress"></param>
+    /// <param name="cancellationToken"></param>
+    public static void Write(VoxelFile value, Stream stream, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         uint limbDataOffset = 34 + Palette.DefaultColorCount * 3 + value.Header.NumSections * 28;
 
         stream.Write(value.Header);
 
-        using (PaletteWriter writer = new(stream, true, leaveOpen: true))
-            writer.Write(value.Palette);
+        PaletteWriter.Write(value.Palette, stream, skipPreprocess: true);
 
         stream.Write(value.SectionHeaders);
 

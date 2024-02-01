@@ -11,8 +11,6 @@ public sealed class VoxelReaderTest
     {
         using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        using VoxelReader reader = new(stream);
-
-        var res = reader.Read();
+        var res = VoxelReader.Read(stream);
     }
 }
