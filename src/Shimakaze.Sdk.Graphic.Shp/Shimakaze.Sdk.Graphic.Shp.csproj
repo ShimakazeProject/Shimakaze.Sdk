@@ -1,5 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\Shimakaze.Sdk.Graphic.Pal\Shimakaze.Sdk.Graphic.Pal.csproj" />
-  </ItemGroup>
-</Project>

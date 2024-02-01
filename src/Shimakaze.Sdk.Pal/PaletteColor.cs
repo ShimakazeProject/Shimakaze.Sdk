@@ -45,6 +45,17 @@ public readonly record struct PaletteColor
         Blue = blue;
     }
 
+    /// <summary>
+    /// 从RGB565（16位色）数值中创建颜色
+    /// </summary>
+    /// <param name="rgb565"></param>
+    public PaletteColor(ushort rgb565)
+    {
+        Red =  unchecked((byte)((rgb565 & 0b11111000_00000000) >> 11));
+        Green =  unchecked((byte)((rgb565 & 0b00000111_11100000) >> 5));
+        Blue =  unchecked((byte)((rgb565 & 0b00000000_00011111) >> 0));
+    }
+
     /// <inheritdoc />
     public override readonly string ToString() => $"#{Red:X2}{Green:X2}{Blue:X2}";
 }

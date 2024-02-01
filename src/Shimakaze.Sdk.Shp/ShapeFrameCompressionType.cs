@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Graphic.Shp;
+﻿namespace Shimakaze.Sdk.Shp;
 
 /// <summary>
 /// SHP压缩方式
