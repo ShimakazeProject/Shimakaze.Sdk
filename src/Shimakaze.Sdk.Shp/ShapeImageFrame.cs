@@ -232,4 +232,3 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         return Metadata.ToString();
     }
 }
-

@@ -16,7 +16,8 @@ using (Stream vplStream = File.OpenRead(vplPath))
 using (Stream palStream = File.OpenRead(palPath))
     pal = PaletteReader.Read(palStream);
 
-VplEditor editor = new(vpl, pal, (editor) => {
+VplEditor editor = new(vpl, pal, (editor) =>
+{
     string path = Prompt.Input<string>("Where is your new VPL file save to?", vplPath);
     using Stream fs = File.Create(path);
     VoxelPaletteWriter.Write(editor.Vpl, fs);
