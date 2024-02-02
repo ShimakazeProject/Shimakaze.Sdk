@@ -39,16 +39,16 @@ public class CsfDataConverter : IYamlTypeConverter
 
         CsfData data = new(label.Value);
         List<CsfValue> values = [];
-        if (parser.Accept<Scalar>(out _))
-        {
-            ParseValue(parser, values);
-        }
-        else if (parser.TryConsume<SequenceStart>(out _))
+        if (parser.TryConsume<SequenceStart>(out _))
         {
             while (!parser.TryConsume<SequenceEnd>(out _))
             {
                 ParseValue(parser, values);
             }
+        }
+        else
+        {
+            ParseValue(parser, values);
         }
 
         data.Values = [.. values];
