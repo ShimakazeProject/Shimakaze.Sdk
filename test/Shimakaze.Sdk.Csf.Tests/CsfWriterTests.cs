@@ -16,20 +16,18 @@ public class CsfWriterTests
     private CsfDocument _csf = default!;
 
     [TestInitialize]
-    public async Task StartupAsync()
+    public void Startup()
     {
         Directory.CreateDirectory(OutputPath);
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        _csf = await reader.ReadAsync();
+        _csf = CsfReader.Read(stream);
     }
 
     [TestMethod]
-    public async Task WriteTestAsync()
+    public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
-        using (CsfWriter writer = new(stream))
-            await writer.WriteAsync(_csf);
+            CsfWriter.Write(stream, _csf);
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }

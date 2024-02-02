@@ -14,29 +14,24 @@ public class CsfXmlV1WriterTests
     private const string OutputSerializeFile = "SerializeTest.v1.csf.xml";
 
     [TestMethod]
-    public async Task DeserializeTestAsync()
+    public void DeserializeTest()
     {
         using var stream = File.OpenText(Path.Combine(Assets, InputXmlFile));
         using var xmlout = File.CreateText(Path.Combine(OutputPath, OutputDeserializeXmlFile));
         using Stream csfout = File.Create(Path.Combine(OutputPath, OutputDeserializeCsfFile));
-        using CsfXmlV1Reader deserializer = new(stream);
-        using CsfXmlV1Writer xmlSerializer = new(xmlout);
-        using CsfWriter writer = new(csfout);
-        CsfDocument doc = await deserializer.ReadAsync();
+        CsfDocument doc = CsfXmlV1Reader.Read(stream);
         Assert.IsNotNull(doc);
-        await writer.WriteAsync(doc);
-        await xmlSerializer.WriteAsync(doc);
+        CsfWriter.Write(csfout, doc);
+        CsfXmlV1Writer.Write(xmlout, doc);
     }
 
     [TestMethod]
-    public async Task SerializeTest()
+    public void SerializeTest()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputCsfFile));
         using var output = File.CreateText(Path.Combine(OutputPath, OutputSerializeFile));
-        using CsfReader reader = new(stream);
-        using CsfXmlV1Writer serializer = new(output);
-        CsfDocument document = await reader.ReadAsync();
-        await serializer.WriteAsync(document);
+        CsfDocument document = CsfReader.Read(stream);
+        CsfXmlV1Writer.Write(output, document);
     }
 
     [TestInitialize]
