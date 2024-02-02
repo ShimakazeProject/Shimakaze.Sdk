@@ -61,14 +61,7 @@ public class CsfValueConverter : IYamlTypeConverter
             return new CsfValue(map["value"], extra);
         }
 
-        if (parser.Current is null)
-        {
-            throw new FormatException("???");
-        }
-
-        Mark start = parser.Current.Start;
-        Mark end = parser.Current.End;
-        throw new FormatException("Not Supported", new YamlException(start, end, "Unknown Token"));
+        throw new FormatException($"Unknown Format at {parser.Current?.Start} - {parser.Current?.End}");
     }
 
     /// <inheritdoc />

@@ -47,14 +47,13 @@ public sealed class TaskCsfMerger : MSTask
         foreach (var file in SourceFiles)
         {
             using Stream stream = File.OpenRead(file.ItemSpec);
-            using CsfReader reader = new(stream);
-            merger.UnionWith(reader.ReadAsync().Result.Data);
+            merger.UnionWith(CsfReader.Read(stream).Data);
             file.CopyMetadataTo(OutputFile);
         }
 
         OutputFile.SetMetadata(MetadataPack, true.ToString());
         using Stream output = File.Create(DestinationFile);
-        merger.BuildAndWriteToAsync(output).Wait();
+        merger.BuildAndWriteTo(output);
         output.Flush();
 
         return !Log.HasLoggedErrors;

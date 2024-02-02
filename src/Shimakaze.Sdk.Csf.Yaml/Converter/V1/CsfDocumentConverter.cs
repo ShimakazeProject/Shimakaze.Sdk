@@ -14,7 +14,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
     private static readonly WeakReference<CsfDocumentConverter> WeakReference = new(new());
 
     /// <summary>
-    /// Gets csfValueConverter.
+    /// Gets CsfDocumentConverter.
     /// </summary>
     public static CsfDocumentConverter Instance
     {
