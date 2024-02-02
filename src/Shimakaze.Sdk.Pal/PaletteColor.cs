@@ -51,9 +51,9 @@ public readonly record struct PaletteColor
     /// <param name="rgb565"></param>
     public PaletteColor(ushort rgb565)
     {
-        Red =  unchecked((byte)((rgb565 & 0b11111000_00000000) >> 11));
-        Green =  unchecked((byte)((rgb565 & 0b00000111_11100000) >> 5));
-        Blue =  unchecked((byte)((rgb565 & 0b00000000_00011111) >> 0));
+        Red = unchecked((byte)((rgb565 & 0b11111000_00000000) >> 11));
+        Green = unchecked((byte)((rgb565 & 0b00000111_11100000) >> 5));
+        Blue = unchecked((byte)((rgb565 & 0b00000000_00011111) >> 0));
     }
 
     /// <inheritdoc />

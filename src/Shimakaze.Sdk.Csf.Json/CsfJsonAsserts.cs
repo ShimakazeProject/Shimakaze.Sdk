@@ -12,7 +12,7 @@ internal static class CsfJsonAsserts
         if (!b)
             throw new EndOfStreamException();
     }
-    
+
     public static void IsProtocol(int protocol, int value)
     {
         if (value != protocol)

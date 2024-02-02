@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System;
+﻿using System;
+using System.IO;
 
 namespace Shimakaze.Sdk.Mix;
 
@@ -76,7 +76,7 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDis
         if (!_inited)
             Init();
 
-        MixEntry[]  entries = new MixEntry[Count];
+        MixEntry[] entries = new MixEntry[Count];
         for (int i = 0; i < Count; i++)
             _disposable.Resource.Read(out entries[i]);
 
