@@ -7,22 +7,19 @@ namespace Shimakaze.Sdk.Csf.Json;
 /// <summary>
 /// CsfJsonV2Reader.
 /// </summary>
-public sealed class CsfJsonV2Reader(Stream stream, JsonSerializerOptions? options = null, bool leaveOpen = false) : ICsfReader, IDisposable, IAsyncDisposable
+public static class CsfJsonV2Reader
 {
-    private readonly JsonSerializerOptions _options = options.Init(CsfJsonSerializerOptions.Converters);
-
-    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
-
-    /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
-
-    /// <inheritdoc />
-    public async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="options"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public static async Task<CsfDocument> ReadAsync(Stream stream, JsonSerializerOptions? options = default, CancellationToken cancellationToken = default)
     {
-        CsfDocument? csf = await JsonSerializer.DeserializeAsync<CsfDocument>(_disposable, _options, cancellationToken);
+        options.Init(CsfJsonSerializerOptions.Converters);
+        CsfDocument? csf = await JsonSerializer.DeserializeAsync<CsfDocument>(stream, options, cancellationToken);
         CsfJsonAsserts.IsNotNull(csf);
         return csf;
     }

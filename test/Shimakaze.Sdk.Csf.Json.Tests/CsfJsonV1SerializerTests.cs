@@ -1,6 +1,4 @@
-﻿using Shimakaze.Sdk.Csf;
-
-namespace Shimakaze.Sdk.Csf.Json.Tests;
+﻿namespace Shimakaze.Sdk.Csf.Json.Tests;
 
 [TestClass]
 public class CsfJsonV1WriterTests
@@ -17,13 +15,10 @@ public class CsfJsonV1WriterTests
         using Stream input = File.OpenRead(Path.Combine(Assets, InputFile2));
         using Stream output1 = File.Create(Path.Combine(OutputPath, OutputTestCsfFile));
         using Stream output2 = File.Create(Path.Combine(OutputPath, OutputTestJsonFile));
-        await using CsfJsonV1Reader deserializer = new(input);
-        await using CsfWriter writer = new(output1);
-        await using CsfJsonV1Writer serializer2 = new(output2);
-        CsfDocument doc = await deserializer.ReadAsync();
+        CsfDocument doc = await CsfJsonV1Reader.ReadAsync(input);
         Assert.IsNotNull(doc);
-        await writer.WriteAsync(doc);
-        await serializer2.WriteAsync(doc);
+        CsfWriter.Write(output1, doc);
+        await CsfJsonV1Writer.WriteAsync(output2, doc);
     }
 
     [TestInitialize]

@@ -7,19 +7,19 @@ namespace Shimakaze.Sdk.Csf.Json;
 /// <summary>
 /// CsfJsonV1Writer.
 /// </summary>
-public sealed class CsfJsonV1Writer(Stream stream, JsonSerializerOptions? options = null, bool leaveOpen = false) : ICsfWriter, IDisposable, IAsyncDisposable
+public static class CsfJsonV1Writer
 {
-    private readonly JsonSerializerOptions _options = options.Init(CsfJsonSerializerOptions.Converters);
-
-    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
-
-    /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
-
-    /// <inheritdoc />
-    public async Task WriteAsync(CsfDocument value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
-        => await JsonSerializer.SerializeAsync(_disposable, value, _options, cancellationToken);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="value"></param>
+    /// <param name="options"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public static async Task WriteAsync(Stream stream, CsfDocument value, JsonSerializerOptions? options = default, CancellationToken cancellationToken = default)
+    {
+        options.Init(CsfJsonSerializerOptions.Converters);
+        await JsonSerializer.SerializeAsync(stream, value, options, cancellationToken);
+    }
 }

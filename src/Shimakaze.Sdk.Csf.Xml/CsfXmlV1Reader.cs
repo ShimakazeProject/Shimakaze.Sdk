@@ -7,27 +7,19 @@ namespace Shimakaze.Sdk.Csf.Xml;
 /// <summary>
 /// CsfXmlV1Reader.
 /// </summary>
-/// <param name="reader"> 基础流 </param>
-/// <param name="settings"></param>
-/// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-public sealed class CsfXmlV1Reader(TextReader reader, XmlReaderSettings? settings = null, bool leaveOpen = false) : ICsfReader, IDisposable, IAsyncDisposable
+public static class CsfXmlV1Reader
 {
-    private readonly DisposableObject<TextReader> _disposable = new(reader, leaveOpen);
-
-    /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
-
-
-    /// <inheritdoc />
-    public async Task<CsfDocument> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="reader"></param>
+    /// <param name="settings"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public static CsfDocument Read(TextReader reader, XmlReaderSettings? settings = default, CancellationToken cancellationToken = default)
     {
-        await Task.Yield();
-
         CsfDocumentXmlSerializer serializer = new();
-        using XmlReader xmlReader = XmlReader.Create(_disposable, settings);
+        using XmlReader xmlReader = XmlReader.Create(reader, settings);
         return serializer.Deserialize(xmlReader);
     }
 }

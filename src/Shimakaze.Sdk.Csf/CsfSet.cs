@@ -48,11 +48,9 @@ public class CsfSet
     /// <param name="version"> 版本 </param>
     /// <param name="unknown"> 未知 </param>
     /// <param name="progress"> 进度 </param>
-    /// <param name="cancellationToken"> 取消 </param>
-    public virtual async Task BuildAndWriteToAsync(Stream stream, int language = 0, int version = 3, int unknown = 0, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
+    public virtual void BuildAndWriteTo(Stream stream, int language = 0, int version = 3, int unknown = 0, IProgress<float>? progress = default)
     {
-        await using CsfWriter writer = new(stream, true);
-        await writer.WriteAsync(Build(language, version, unknown), progress, cancellationToken);
+        CsfWriter.Write(stream, Build(language, version, unknown), progress);
     }
 
     /// <inheritdoc />

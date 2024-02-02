@@ -14,28 +14,23 @@ public class CsfYamlV1WriterTests
     private const string OutputSerializeFile = "SerializeTest.v1.csf.yml";
 
     [TestMethod]
-    public async Task DeserializeTestAsync()
+    public void DeserializeTest()
     {
         using var stream = File.OpenText(Path.Combine(Assets, InputYmlFile));
         using Stream csfout = File.Create(Path.Combine(OutputPath, OutputDeserializeCsfFile));
         using var ymlout = File.CreateText(Path.Combine(OutputPath, OutputDeserializeYamlFile));
-        using CsfYamlV1Reader deserializer = new(stream);
-        using CsfWriter writer = new(csfout);
-        using CsfYamlV1Writer yamlV1Writer = new(ymlout);
-        CsfDocument doc = await deserializer.ReadAsync();
-        await writer.WriteAsync(doc);
-        await yamlV1Writer.WriteAsync(doc);
+        CsfDocument doc = CsfYamlV1Reader.Read(stream);
+        CsfWriter.Write(csfout, doc);
+        CsfYamlV1Writer.Write(ymlout, doc);
     }
 
     [TestMethod]
-    public async Task SerializeTestAsync()
+    public void SerializeTest()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputCsfFile));
         using var output = File.CreateText(Path.Combine(OutputPath, OutputSerializeFile));
-        using CsfReader reader = new(stream);
-        using CsfYamlV1Writer serializer = new(output);
-        CsfDocument document = await reader.ReadAsync();
-        await serializer.WriteAsync(document);
+        CsfDocument document = CsfReader.Read(stream);
+        CsfYamlV1Writer.Write(output, document);
     }
 
     [TestInitialize]

@@ -15,16 +15,15 @@ public class CsfSetTests
     private CsfDocument _csf = default!;
 
     [TestInitialize]
-    public async Task Initialize()
+    public void Initialize()
     {
         Directory.CreateDirectory(OutputPath);
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        using CsfReader reader = new(stream);
-        _csf = await reader.ReadAsync();
+        _csf = CsfReader.Read(stream);
     }
 
     [TestMethod]
-    public async Task BuildAndWriteToTestAsync()
+    public void BuildAndWriteToTest()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
         using Stream output = File.Create(Path.Combine(OutputPath, OutputFile));
@@ -33,7 +32,7 @@ public class CsfSetTests
         merger.UnionWith(_csf.Data);
         Assert.IsTrue(_csf.Data.SequenceEqual(merger));
 
-        await merger.BuildAndWriteToAsync(output, _csf.Metadata.Language, _csf.Metadata.Version, _csf.Metadata.Unknown);
+        merger.BuildAndWriteTo(output, _csf.Metadata.Language, _csf.Metadata.Version, _csf.Metadata.Unknown);
         output.Flush();
         stream.Seek(0, SeekOrigin.Begin);
         output.Seek(0, SeekOrigin.Begin);

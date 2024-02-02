@@ -33,35 +33,27 @@ public class CsfDataConverter : IYamlTypeConverter
     /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type)
     {
-        if (parser.Accept<Scalar>(out var label))
+        // 检查是不是 CSF 标签
+        if (!parser.TryConsume<Scalar>(out var label))
+            throw new FormatException($"Unknown Format at {parser.Current?.Start} - {parser.Current?.End}");
+
+        CsfData data = new(label.Value);
+        List<CsfValue> values = [];
+        if (parser.TryConsume<SequenceStart>(out _))
         {
-            CsfData data = new(label.Value);
-            List<CsfValue> values = [];
-            if (parser.TryConsume<Scalar>(out _))
+            while (!parser.TryConsume<SequenceEnd>(out _))
             {
                 ParseValue(parser, values);
             }
-            else if (parser.TryConsume<SequenceStart>(out _))
-            {
-                while (!parser.TryConsume<SequenceEnd>(out _))
-                {
-                    ParseValue(parser, values);
-                }
-            }
-
-            data.Values = [.. values];
-            data.ReCount();
-            return data;
         }
-
-        if (parser.Current is null)
+        else
         {
-            throw new FormatException("???");
+            ParseValue(parser, values);
         }
 
-        Mark start = parser.Current.Start;
-        Mark end = parser.Current.End;
-        throw new FormatException("Not Supported", new YamlException(start, end, $"Unknown Token {parser.Current}"));
+        data.Values = [.. values];
+        data.ReCount();
+        return data;
     }
 
     /// <inheritdoc />

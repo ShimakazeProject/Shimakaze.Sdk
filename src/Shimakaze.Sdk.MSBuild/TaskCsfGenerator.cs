@@ -1,6 +1,5 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Microsoft.Extensions.DependencyInjection;
 
 using Shimakaze.Sdk.Csf;
 using Shimakaze.Sdk.Csf.Json;
@@ -8,6 +7,7 @@ using Shimakaze.Sdk.Csf.Xml;
 using Shimakaze.Sdk.Csf.Yaml;
 
 using MSTask = Microsoft.Build.Utilities.Task;
+using Task = System.Threading.Tasks.Task;
 
 namespace Shimakaze.Sdk.Build;
 
@@ -43,7 +43,6 @@ public sealed class TaskCsfGenerator : MSTask
     {
         Log.LogMessage("Generating CSF File...");
 
-        ServiceCollection services = new();
         List<ITaskItem> items = new(SourceFiles.Length);
         foreach (var file in SourceFiles)
         {
@@ -52,11 +51,10 @@ public sealed class TaskCsfGenerator : MSTask
             if (!dest.CreateParentDirectory(Log))
                 return false;
 
-            services.Clear();
             using Stream stream = File.OpenRead(file.ItemSpec);
             using Stream output = File.Create(dest);
-            services.AddSingleton<ICsfWriter>(new CsfWriter(output));
 
+            Task<CsfDocument> reader;
             switch (tag.ToLowerInvariant())
             {
                 case "jsonv1":
@@ -70,24 +68,32 @@ public sealed class TaskCsfGenerator : MSTask
                         0,
                         0,
                         "You shouldn't use the \"CSF Json version 1\". Please port your file to \"version 2\" or use \"Csf Yaml version 1\" to replace that.");
-                    services.AddSingleton<ICsfReader>(new CsfJsonV1Reader(stream));
+                    reader = CsfJsonV1Reader.ReadAsync(stream);
                     break;
 
                 case "json":
                 case "jsonv2":
-                    services.AddSingleton<ICsfReader>(new CsfJsonV2Reader(stream));
+                    reader = CsfJsonV2Reader.ReadAsync(stream);
                     break;
 
                 case "xml":
                 case "xmlv1":
-                    services.AddSingleton<ICsfReader>(new CsfXmlV1Reader(new StreamReader(stream)));
+                    reader = Task.Run(() =>
+                    {
+                        using StreamReader sr = new(stream);
+                        return CsfXmlV1Reader.Read(sr);
+                    });
                     break;
 
                 case "yml":
                 case "yaml":
                 case "ymlv1":
                 case "yamlv1":
-                    services.AddSingleton<ICsfReader>(new CsfYamlV1Reader(new StreamReader(stream)));
+                    reader = Task.Run(() =>
+                    {
+                        using StreamReader sr = new(stream);
+                        return CsfYamlV1Reader.Read(sr);
+                    });
                     break;
 
                 case "csf":
@@ -101,6 +107,7 @@ public sealed class TaskCsfGenerator : MSTask
                         0,
                         0,
                         "You shouldn't use the \"CSF File\" direct in your project. Please port your file to \"version 2\" or use \"Csf Yaml version 1\" to replace that.");
+                    reader = Task.Run(() => CsfReader.Read(stream));
                     break;
 
                 default:
@@ -117,11 +124,10 @@ public sealed class TaskCsfGenerator : MSTask
                         tag);
                     return false;
             }
-            using ServiceProvider provider = services.BuildServiceProvider();
             CsfDocument csf;
             try
             {
-                csf = provider.GetRequiredService<ICsfReader>().ReadAsync().Result;
+                csf = reader.Result;
             }
             catch (Exception e)
             {
@@ -143,7 +149,8 @@ public sealed class TaskCsfGenerator : MSTask
                 }
                 return false;
             }
-            provider.GetRequiredService<ICsfWriter>().WriteAsync(csf).Wait();
+
+            CsfWriter.Write(output, csf);
             TaskItem item = new(dest);
             file.CopyMetadataTo(item);
             item.RemoveMetadata(MetadataIntermediate);

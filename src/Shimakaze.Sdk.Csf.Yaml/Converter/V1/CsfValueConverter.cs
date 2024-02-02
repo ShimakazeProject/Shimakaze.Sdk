@@ -37,38 +37,33 @@ public class CsfValueConverter : IYamlTypeConverter
         {
             return new CsfValue(scalar.Value);
         }
-        else if (parser.TryConsume<MappingStart>(out _))
+        else if (parser.TryConsume<MappingStart>(out var start))
         {
-            Dictionary<string, string> map = [];
-            string? key = null;
-            while (!parser.TryConsume<MappingEnd>(out _))
+            MappingEnd? end;
+            string? value = null;
+            string? extra = null;
+            while (!parser.TryConsume<MappingEnd>(out end))
             {
-                if (parser.TryConsume<Scalar>(out var scalar2))
+                if (parser.TryConsume<Scalar>(out var property) && parser.TryConsume<Scalar>(out var propertyValue))
                 {
-                    if (key is null)
+                    if(property.Value is "value")
                     {
-                        key = scalar2.Value;
+                        value = propertyValue.Value;
                     }
-                    else
+                    else if (property.Value is "extra")
                     {
-                        map[key] = scalar2.Value;
-                        key = null;
+                        extra = propertyValue.Value;
                     }
                 }
             }
 
-            map.TryGetValue("extra", out string? extra);
-            return new CsfValue(map["value"], extra);
+            if (string.IsNullOrEmpty(value))
+                throw new FormatException($"Cannot found Value at {start.Start} - {end?.End}");
+
+            return new CsfValue(value, extra);
         }
 
-        if (parser.Current is null)
-        {
-            throw new FormatException("???");
-        }
-
-        Mark start = parser.Current.Start;
-        Mark end = parser.Current.End;
-        throw new FormatException("Not Supported", new YamlException(start, end, "Unknown Token"));
+        throw new FormatException($"Unknown Format at {parser.Current?.Start} - {parser.Current?.End}");
     }
 
     /// <inheritdoc />

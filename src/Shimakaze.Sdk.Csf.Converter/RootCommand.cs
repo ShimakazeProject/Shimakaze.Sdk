@@ -4,8 +4,6 @@ using System.Text.Json;
 
 using DotMake.CommandLine;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Sharprompt;
 
 using Shimakaze.Sdk.Csf.Json;
@@ -37,6 +35,8 @@ internal sealed class RootCommand
     {
         AllowTrailingCommas = true,
         ReadCommentHandling = JsonCommentHandling.Skip,
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
     public async Task RunAsync()
@@ -45,32 +45,47 @@ internal sealed class RootCommand
         InitOutputFormat();
         InitOutput();
 
-        ServiceCollection services = new();
         await using var ifs = Input.OpenRead();
         await using var ofs = Output.Create();
 
-        services.AddSingleton<ICsfReader>(InputFormat switch
+        Task<CsfDocument> reader = InputFormat switch
         {
-            SupportedFormat.Csf => new CsfReader(ifs),
-            SupportedFormat.Yaml => new CsfYamlV1Reader(new StreamReader(ifs)),
-            SupportedFormat.JsonV2 => new CsfJsonV2Reader(ifs, Options),
-            SupportedFormat.JsonV1 => new CsfJsonV1Reader(ifs, Options),
-            SupportedFormat.Xml => new CsfXmlV1Reader(new StreamReader(ifs)),
+            SupportedFormat.Csf => Task.Run(() => CsfReader.Read(ifs)),
+            SupportedFormat.Yaml => Task.Run(() =>
+            {
+                using StreamReader sr = new(ifs);
+                return CsfYamlV1Reader.Read(sr);
+            }),
+            SupportedFormat.JsonV2 => CsfJsonV2Reader.ReadAsync(ifs, Options),
+            SupportedFormat.JsonV1 => CsfJsonV1Reader.ReadAsync(ifs, Options),
+            SupportedFormat.Xml => Task.Run(() =>
+            {
+                using StreamReader sr = new(ifs);
+                return CsfXmlV1Reader.Read(sr);
+            }),
             _ => throw new NotSupportedException(),
-        });
-        services.AddSingleton<ICsfWriter>(OutputFormat switch
-        {
-            SupportedFormat.Yaml => new CsfYamlV1Writer(new StreamWriter(ofs)),
-            SupportedFormat.JsonV2 => new CsfJsonV2Writer(ofs, new() { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }),
-            SupportedFormat.JsonV1 => new CsfJsonV1Writer(ofs, new() { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }),
-            SupportedFormat.Xml => new CsfXmlV1Writer(new StreamWriter(ofs), new() { Indent = true }),
-            SupportedFormat.Csf => new CsfWriter(ofs),
-            _ => throw new NotSupportedException()
-        });
+        };
 
-        await using ServiceProvider provider = services.BuildServiceProvider();
-        CsfDocument csf = await provider.GetRequiredService<ICsfReader>().ReadAsync();
-        await provider.GetRequiredService<ICsfWriter>().WriteAsync(csf);
+        Func<CsfDocument, Task> writer = OutputFormat switch
+        {
+            SupportedFormat.Yaml => async csf => await Task.Run(async () =>
+            {
+                await using StreamWriter sw = new(ofs);
+                CsfYamlV1Writer.Write(sw, csf);
+            }),
+            SupportedFormat.JsonV2 => async csf => await CsfJsonV2Writer.WriteAsync(ofs, csf, Options),
+            SupportedFormat.JsonV1 => async csf => await CsfJsonV1Writer.WriteAsync(ofs, csf, Options),
+            SupportedFormat.Xml => async csf =>
+            {
+                await using StreamWriter sw = new(ofs);
+                CsfXmlV1Writer.Write(sw, csf, new() { Indent = true });
+            }
+            ,
+            SupportedFormat.Csf => async csf => await Task.Run(() => CsfWriter.Write(ofs, csf)),
+            _ => throw new NotSupportedException()
+        };
+
+        await writer(await reader);
     }
 
     private void InitInputFormat()
