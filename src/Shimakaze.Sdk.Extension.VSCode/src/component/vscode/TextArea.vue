@@ -31,7 +31,7 @@ interface TextFieldInputEvent extends InputEvent {
   target: TextField
 }
 
-const props = defineProps<{
+defineProps<{
   /** Indicates that this component should get focus after the page finishes loading. */
   autofocus?: boolean
   /** Sizes the component horizontally by a number of character columns. Defaults to 20. */
@@ -67,12 +67,10 @@ const onCompositionEnd = (e: TextFieldInputEvent) => {
   onInput(e)
 }
 
-const value = ref(props.value ?? '')
 const onInput = (e: TextFieldInputEvent) => {
   if (isComposing.value) return
 
-  value.value = e.target.value
-  emits('update:value', value.value)
+  emits('update:value', e.target.value)
 }
 
 onMounted(() => provideVSCodeDesignSystem().register(vsCodeTextArea()))

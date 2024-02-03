@@ -28,7 +28,7 @@ interface TextFieldInputEvent extends InputEvent {
   target: TextField
 }
 
-const props = defineProps<{
+defineProps<{
   /** Indicates that this component should get focus after the page finishes loading. */
   autofocus?: boolean
   /** The maximum number of characters a user can enter. */
@@ -42,11 +42,11 @@ const props = defineProps<{
   /** Sets the text field type. */
   type?: string
   /** The value (i.e. content) of the text field. */
-  value?: string
+  value?: string | number
 }>()
 
 const emits = defineEmits<{
-  (e: 'update:value', ev: string): void
+  (e: 'update:value', ev: string | number): void
 }>()
 
 const isComposing = ref(false)
@@ -58,12 +58,10 @@ const onCompositionEnd = (e: TextFieldInputEvent) => {
   onInput(e)
 }
 
-const value = ref(props.value ?? '')
 const onInput = (e: TextFieldInputEvent) => {
   if (isComposing.value) return
 
-  value.value = e.target.value
-  emits('update:value', value.value)
+  emits('update:value', e.target.value)
 }
 
 onMounted(() => provideVSCodeDesignSystem().register(vsCodeTextField()))
