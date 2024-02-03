@@ -3,6 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 
+const enterPoint = ['index', 'shp-viewer', 'shp-viewer-control']
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -30,10 +32,10 @@ export default defineConfig({
       polyfill: false,
     },
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        'shp-viewer': resolve(__dirname, 'shp-viewer.html'),
-      },
+      input: enterPoint.reduce(
+        (a, b) => (a[b] = resolve(__dirname, `${b}.html`)),
+        {},
+      ),
       output: {
         manualChunks: (id, meta) => {
           if (id.includes('pixi.js')) {

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 
 /** 日志通道名 */
-const LogChannelName = 'Shimakaze.Sdk.ShpViewer.ServerStatus'
+const LogChannelName = 'Shimakaze.Sdk.Extension.Server.Status'
 
 let _logChannel: vscode.OutputChannel | undefined = undefined
 export const getLogChannel = () =>

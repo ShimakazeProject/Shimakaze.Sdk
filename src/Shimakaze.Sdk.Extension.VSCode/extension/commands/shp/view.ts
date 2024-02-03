@@ -26,23 +26,21 @@ export const canExecute = async () => {
   if (path.extname(file.fsPath).toLowerCase() !== '.shp')
     throw new Error(vscode.l10n.t('文件不是一个有效的SHP文件'))
 
-  // 根据当前打开的文件找工作区
-  const folder = vscode.workspace.getWorkspaceFolder(file)?.uri
+  // // 根据当前打开的文件找工作区
+  // const folder = vscode.workspace.getWorkspaceFolder(file)?.uri
 
-  // 不在工作区内
-  if (!folder) throw new Error(vscode.l10n.t('找不到活动的工作区'))
+  // // 不在工作区内
+  // if (!folder) throw new Error(vscode.l10n.t('找不到活动的工作区'))
 
   return {
     file,
-    folder,
   }
 }
 
 export const execute = (context: vscode.ExtensionContext) => async () => {
-  const { file, folder } = await canExecute()
-  const cacheFolder = utils.getCacheFolder(folder, 'shp', '.cache')
+  const { file } = await canExecute()
 
-  const viewer = new ShpViewer(context, cacheFolder, file)
+  const viewer = new ShpViewer(context,  file)
   context.subscriptions.push(viewer)
 }
 

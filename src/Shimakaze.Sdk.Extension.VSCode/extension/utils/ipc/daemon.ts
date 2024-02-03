@@ -8,7 +8,7 @@ import * as vscode from 'vscode'
 
 /** .Net 程序集路径 */
 const getAssemblyPath = (extensionPath: string) =>
-  path.join(extensionPath, 'bin', 'Shimakaze.Sdk.ShpViewer.dll')
+  path.join(extensionPath, 'bin', 'Shimakaze.Sdk.Extension.Server.dll')
 
 let _process: cp.ChildProcessWithoutNullStreams | undefined = undefined
 let _connection: ReturnType<typeof jsonrpc.connect> | undefined = undefined
