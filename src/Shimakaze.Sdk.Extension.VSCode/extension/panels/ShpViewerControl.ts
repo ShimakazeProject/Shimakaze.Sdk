@@ -5,7 +5,5 @@ import * as vscode from 'vscode'
  */
 export class ShpViewerControl {
   private context: vscode.ExtensionContext
-  constructor() {
-    
-  }
+  constructor() {}
 }
