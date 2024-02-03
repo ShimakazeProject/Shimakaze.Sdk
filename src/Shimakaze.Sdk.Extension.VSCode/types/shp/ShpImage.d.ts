@@ -8,6 +8,6 @@ declare namespace Types.Shp {
       width: number
     }
     /** 图像的所有的帧 */
-    frames?: ShpFrame[]
+    frames: ShpFrame[]
   }
 }
