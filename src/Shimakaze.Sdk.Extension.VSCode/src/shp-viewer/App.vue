@@ -1,31 +1,5 @@
 <template>
   <div ref="container" />
-  <div>
-    <vscode-button :disable="current === 0" @click="previous">
-      上一帧
-    </vscode-button>
-    <br />
-
-    <vscode-text-field
-      :value="current"
-      @input="
-        (e: any) => {
-          current = Number(e.target.value)
-          renderFrame()
-        }
-      ">
-      当前帧
-    </vscode-text-field>
-    <br />
-
-    <vscode-button
-      appearance="primary"
-      :disable="current === frameCount - 1"
-      @click="next">
-      下一帧
-    </vscode-button>
-    <br />
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -68,15 +42,6 @@ const renderFrame = async () => {
   app.value.stage.addChild(shadowBunny)
   app.value.stage.addChild(bunny)
 }
-const next = () => {
-  current.value++
-  renderFrame()
-}
-const previous = () => {
-  current.value--
-  renderFrame()
-}
-
 onMounted(async () => {
   const palette = await jsonrpc.methods.pal.choice()
   console.log('收到响应', palette)

@@ -1,27 +1,18 @@
+import { getHtml } from '@shimakaze.sdk/extension/utils/html'
 import * as daemon from '@shimakaze.sdk/extension/utils/ipc/daemon'
 import * as jsonrpc from '@shimakaze.sdk/extension/utils/ipc/jsonrpc'
 import * as methods from '@shimakaze.sdk/extension/utils/ipc/methods'
-import * as crypto from 'node:crypto'
 import * as vscode from 'vscode'
-import { getHtml } from '@shimakaze.sdk/extension/utils/html'
-
-const basePath = ['dist', 'shp-viewer']
 
 export class ShpViewer {
   private context: vscode.ExtensionContext
-  private cacheUri: vscode.Uri
   private file: vscode.Uri
   private extensionUri: vscode.Uri
   private panel: vscode.WebviewPanel
   private frontend: ReturnType<typeof jsonrpc.connect>
 
-  constructor(
-    context: vscode.ExtensionContext,
-    cacheUri: vscode.Uri,
-    file: vscode.Uri,
-  ) {
+  constructor(context: vscode.ExtensionContext, file: vscode.Uri) {
     this.context = context
-    this.cacheUri = cacheUri
     this.file = file
     this.extensionUri = this.context.extension.extensionUri
 
@@ -44,37 +35,18 @@ export class ShpViewer {
       {
         enableScripts: true,
         localResourceRoots: [
-          vscode.Uri.joinPath(this.extensionUri, ...basePath),
-          this.cacheUri,
+          vscode.Uri.joinPath(this.extensionUri, 'dist', 'webview'),
         ],
       },
     )
     this.context.subscriptions.push(this.panel)
 
-    const stylesUri = this.buildUri(`index.css`)
-    const scriptUri = this.buildUri(`index.global.js`)
-    const nonce = crypto.randomUUID()
-    const csp =
-      [
-        `default-src ${this.panel.webview.cspSource} data: blob:`,
-        `style-src ${this.panel.webview.cspSource} 'unsafe-inline'`,
-        `script-src ${this.panel.webview.cspSource} blob: 'unsafe-eval' 'nonce-${nonce}'`,
-      ].join('; ') + ';'
-
     this.panel.webview.html = await getHtml({
       enterPoint: 'shp-viewer',
       extensionUri: this.extensionUri,
       cspSource: this.panel.webview.cspSource,
-      dependencies: [
-        'pixi'
-      ]
+      dependencies: ['pixi'],
     })
-    // this.panel.webview.html = html({
-    //   stylesUri: stylesUri,
-    //   scriptUri: scriptUri,
-    //   nonce: nonce,
-    //   csp: csp,
-    // })
 
     this.panel.onDidDispose(this.dispose, undefined, this.context.subscriptions)
   }
@@ -98,12 +70,6 @@ export class ShpViewer {
 
   private async initializeBackEnd() {
     daemon.getServer(this.context)
-  }
-
-  private buildUri(name: `${string}.${'css' | 'js' | 'mjs'}`) {
-    return this.panel.webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, ...basePath, name),
-    )
   }
 
   /** 选择调色板 */

@@ -17,7 +17,7 @@ export const getHtml = async (option: {
   cspSource: string
   dependencies?: string[]
 }) => {
-  if (false && process.env.VITE_DEV_SERVER_URL) {
+  if (process.env.VITE_DEV_SERVER_URL) {
     console.log(
       'VITE_DEV_SERVER_URL:',
       process.env.VITE_DEV_SERVER_URL + option.enterPoint,
