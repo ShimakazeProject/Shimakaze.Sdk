@@ -3,7 +3,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Newtonsoft.Json.Serialization;
+
 using OmniSharp.Extensions.JsonRpc;
+using OmniSharp.Extensions.JsonRpc.Serialization;
 
 using Shimakaze.Sdk.ShpViewer;
 
@@ -13,7 +16,14 @@ builder.Services.AddJsonRpcServer(options =>
 {
     options
         .WithInput(Console.OpenStandardInput())
-        .WithOutput(Console.OpenStandardError());
+        .WithOutput(Console.OpenStandardError())
+        .WithSerializer(new JsonRpcSerializer()
+        {
+            Settings =
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }
+        });
 
     foreach (var handlerType in typeof(Program)
                                         .Assembly
