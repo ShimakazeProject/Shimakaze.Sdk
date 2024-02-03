@@ -1,0 +1,9 @@
+[*]
+end_of_line = auto
+insert_final_newline = true
+max_line_length = 80
+
+[*.{json,yml,js,cjs,mjs,ts,cts,mts,vue,html}]
+charset = utf-8
+indent_style = space
+indent_size = 2
