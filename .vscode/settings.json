@@ -8,5 +8,8 @@
       80,
       120
     ]
+  },
+  "files.associations": {
+    "*.esproj": "xml"
   }
 }
