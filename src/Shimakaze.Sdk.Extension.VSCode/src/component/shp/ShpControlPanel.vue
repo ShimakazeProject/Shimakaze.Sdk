@@ -3,18 +3,35 @@
     <Dropdown id="pal-dropdown">
       <Option value="unittem.pal" />
     </Dropdown>
-    <PlayControl v-model:current.number="current" v-model:is-play="isPlay" />
+    <PlayControl
+      :current="current"
+      :is-play="isPlay"
+      :min="min"
+      :max="max"
+      :step="step"
+      @update:current="$emit('update:current', $event)"
+      @update:is-play="$emit('update:isPlay', $event)" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import PlayControl from '@shimakaze.sdk/webview/component/common/PlayControl.vue'
+import PlayControl, {
+  type PlayControlProps,
+} from '@shimakaze.sdk/webview/component/common/PlayControl.vue'
 import Dropdown from '@shimakaze.sdk/webview/component/vscode/Dropdown.vue'
 import Option from '@shimakaze.sdk/webview/component/vscode/Option.vue'
-import { ref } from 'vue'
 
-const current = ref(0)
-const isPlay = ref(false)
+export interface ShpControlPanelProps extends PlayControlProps {
+  current: number
+  isPlay: boolean
+}
+export interface ShpControlPanelEmits {
+  (e: 'update:current', ev: number): void
+  (e: 'update:isPlay', ev: boolean): void
+}
+
+defineProps<ShpControlPanelProps>()
+defineEmits<ShpControlPanelEmits>()
 </script>
 
 <style lang="scss" scoped>
