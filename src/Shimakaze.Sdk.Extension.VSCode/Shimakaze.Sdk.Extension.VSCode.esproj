@@ -7,6 +7,12 @@
     <StartupCommand>yarn dev</StartupCommand>
   </PropertyGroup>
 
+  <!-- 在非Windows平台上使用的垫片 -->
+  <PropertyGroup Condition="'$(OS)'!='WINDOWS_NT'">
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <TargetFrameworkMoniker>.NETCoreApp,Version=$(TargetFrameworkVersion)</TargetFrameworkMoniker>
+  </PropertyGroup>
+
   <Target Name="Pack">
     <Exec Command="yarn packup -o $(PackageOutputPath)" WorkingDirectory="$(PackageJsonDirectory)"/>
   </Target>
