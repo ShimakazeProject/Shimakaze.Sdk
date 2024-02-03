@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./extension",
+    "baseUrl": "./extension",
+    "module": "NodeNext",
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
+    "paths": {
+      "@shimakaze.sdk/extension/*": ["./*"],
+      "@shimakaze.sdk/extension": ["./index.ts"],
+    }
+  },
+  "include": ["./extension/**/*.ts", "./extension/**/*.d.ts"]
+}

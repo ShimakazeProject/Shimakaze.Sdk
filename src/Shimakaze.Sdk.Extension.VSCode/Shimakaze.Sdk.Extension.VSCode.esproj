@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk">
+  <PropertyGroup>
+    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+    <BuildCommand>yarn build</BuildCommand>
+    <BuildOutputFolder>dist</BuildOutputFolder>
+    <StartupCommand>yarn dev</StartupCommand>
+  </PropertyGroup>
+</Project>

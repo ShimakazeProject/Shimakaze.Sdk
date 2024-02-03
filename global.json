@@ -2,5 +2,8 @@
   "sdk": {
     "rollForward": "feature",
     "version": "8.0.100"
+  },
+  "msbuild-sdks": {
+    "Microsoft.VisualStudio.JavaScript.Sdk": "0.5.438991-alpha"
   }
 }
