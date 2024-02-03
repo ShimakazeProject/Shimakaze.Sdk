@@ -4,9 +4,9 @@
     "net8.0": {
       "DotMake.CommandLine": {
         "type": "Direct",
-        "requested": "[1.6.8, )",
-        "resolved": "1.6.8",
-        "contentHash": "5ilqdkFdfq3UkH1y8J/l7T3Miw1O45rdz6ThAfEY48F0JST86VezNXRr11o6dI18UHq6QBLoxmhBNLY20JGenw==",
+        "requested": "[1.7.2, )",
+        "resolved": "1.7.2",
+        "contentHash": "+1pwN4ubp+txLon52nAqC5lSnVx4hMaSRYjHm14X1nNz1oJucYhebWBZ32NBu6ShlONzcJaTAVqJ2DDUTzle8Q==",
         "dependencies": {
           "System.CommandLine": "2.0.0-beta4.22272.1"
         }
