@@ -54,6 +54,13 @@ jobs:
           lfs: true
           fetch-depth: 0
 
+      - name: 配置 Node.js 环境
+        uses: actions/setup-node@v4.0.1
+        with:
+          cache: yarn
+          cache-dependency-path: ./**/yarn.lock
+          node-version: 21
+      
       - name: 配置 .Net 环境
         uses: actions/setup-dotnet@v4.0.0
         with:
