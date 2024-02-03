@@ -8,8 +8,8 @@
     "moduleResolution": "NodeNext",
     "paths": {
       "@shimakaze.sdk/extension/*": ["./*"],
-      "@shimakaze.sdk/extension": ["./index.ts"],
+      "@shimakaze.sdk/extension": ["./index.ts"]
     }
   },
-  "include": ["./extension/**/*.ts", "./extension/**/*.d.ts"]
+  "include": ["extension/**/*.ts", "extension/**/*.d.ts", "types/**/*.d.ts"]
 }
