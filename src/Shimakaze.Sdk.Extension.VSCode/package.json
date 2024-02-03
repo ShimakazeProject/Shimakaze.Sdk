@@ -1,5 +1,5 @@
 {
-  "name": "shimakaze.sdk.vscode",
+  "name": "shimakaze-sdk-vscode",
   "version": "0.0.0",
   "displayName": "Shimakaze.Sdk for VSCode",
   "description": "适用于 VSCode 的 Shimakaze.Sdk 工具集",
@@ -23,7 +23,9 @@
     "build": "dotnet build --graph ../Shimakaze.Sdk.Extension.Server && vue-tsc --noEmit && vite build",
     "dev": "vite",
     "lint": "prettier --no-editorconfig --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vscode:prepublish": "yarn build",
+    "packup": "vsce pack --no-dependencies"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.4.0",
@@ -42,6 +44,7 @@
     "@types/vscode": "^1.85.0",
     "@types/vscode-webview": "^1.57.5",
     "@vitejs/plugin-vue": "^5.0.3",
+    "@vscode/vsce": "^2.23.0",
     "prettier": "^3.2.4",
     "prettier-plugin-pkg": "^0.18.1",
     "typescript": "^5.3.3",

@@ -1,8 +1,13 @@
 ﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk">
   <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
     <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
     <BuildCommand>yarn build</BuildCommand>
     <BuildOutputFolder>dist</BuildOutputFolder>
     <StartupCommand>yarn dev</StartupCommand>
   </PropertyGroup>
+
+  <Target Name="Pack">
+    <Exec Command="yarn packup" WorkingDirectory="$(PackageJsonDirectory)"/>
+  </Target>
 </Project>

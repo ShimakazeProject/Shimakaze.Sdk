@@ -1,0 +1,19 @@
+# 配置文件
+.editorconfig
+*config.*
+*.esproj
+.*rc.*
+.*ignore
+.git*
+.vscode
+.yarn
+obj
+
+# 锁文件
+packages.lock.json
+*.lock
+
+# 源代码
+extension
+src
+*.html
