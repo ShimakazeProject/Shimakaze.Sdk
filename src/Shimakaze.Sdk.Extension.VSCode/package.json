@@ -28,6 +28,7 @@
     "vscode:prepublish": "yarn build"
   },
   "dependencies": {
+    "@vscode/codicons": "^0.0.35",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "css-select": "^5.1.0",
     "dom-serializer": "^2.0.0",
@@ -47,6 +48,7 @@
     "@vscode/vsce": "^2.23.0",
     "prettier": "^3.2.4",
     "prettier-plugin-pkg": "^0.18.1",
+    "sass": "^1.70.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vue-tsc": "^1.8.27"
