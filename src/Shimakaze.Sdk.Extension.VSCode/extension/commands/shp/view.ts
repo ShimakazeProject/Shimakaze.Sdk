@@ -40,7 +40,7 @@ export const canExecute = async () => {
 export const execute = (context: vscode.ExtensionContext) => async () => {
   const { file } = await canExecute()
 
-  const viewer = new ShpViewer(context,  file)
+  const viewer = new ShpViewer(context, file)
   context.subscriptions.push(viewer)
 }
 

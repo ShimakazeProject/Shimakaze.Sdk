@@ -1,4 +1,5 @@
 .yarn
 .pnp.*
+packages.lock.json
 
 dist/

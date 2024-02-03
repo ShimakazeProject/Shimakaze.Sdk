@@ -23,9 +23,9 @@
     "build": "dotnet build --graph ../Shimakaze.Sdk.Extension.Server && vue-tsc --noEmit && vite build",
     "dev": "vite",
     "lint": "prettier --no-editorconfig --write .",
+    "packup": "vsce pack --no-dependencies",
     "preview": "vite preview",
-    "vscode:prepublish": "yarn build",
-    "packup": "vsce pack --no-dependencies"
+    "vscode:prepublish": "yarn build"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.4.0",
