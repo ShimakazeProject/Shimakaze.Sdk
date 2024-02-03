@@ -20,7 +20,7 @@
   },
   "main": "dist/extension/index.js",
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "dotnet build --graph ../Shimakaze.Sdk.Extension.Server && vue-tsc --noEmit && vite build",
     "dev": "vite",
     "lint": "prettier --no-editorconfig --write .",
     "preview": "vite preview"

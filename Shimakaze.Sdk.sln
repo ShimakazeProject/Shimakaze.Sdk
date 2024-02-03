@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Folder", "_Soluti
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
 		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
 		LICENSE = LICENSE
@@ -137,6 +136,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extension", "Extension", "{246E2C5B-E3C5-408F-BCC2-14C695335EBB}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Shimakaze.Sdk.Extension.VSCode", "src\Shimakaze.Sdk.Extension.VSCode\Shimakaze.Sdk.Extension.VSCode.esproj", "{9A42BE4C-44CE-4750-BC94-104970BD8227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.Extension.Server", "src\Shimakaze.Sdk.Extension.Server\Shimakaze.Sdk.Extension.Server.csproj", "{55A9D665-F768-4108-9658-BE05051EE736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -286,6 +287,10 @@ Global
 		{9A42BE4C-44CE-4750-BC94-104970BD8227}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A42BE4C-44CE-4750-BC94-104970BD8227}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A42BE4C-44CE-4750-BC94-104970BD8227}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{55A9D665-F768-4108-9658-BE05051EE736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55A9D665-F768-4108-9658-BE05051EE736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55A9D665-F768-4108-9658-BE05051EE736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55A9D665-F768-4108-9658-BE05051EE736}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -338,6 +343,7 @@ Global
 		{BA0EA652-839B-42CB-857F-B18CC6C5E926} = {D7622C6A-0847-4DE4-9463-224D0ED2C8FE}
 		{DEB00B1D-9B33-45D2-B5BA-DB6F9F58BF94} = {BA0EA652-839B-42CB-857F-B18CC6C5E926}
 		{9A42BE4C-44CE-4750-BC94-104970BD8227} = {246E2C5B-E3C5-408F-BCC2-14C695335EBB}
+		{55A9D665-F768-4108-9658-BE05051EE736} = {246E2C5B-E3C5-408F-BCC2-14C695335EBB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C5FF25D-B54D-4920-A61E-180CCE63A876}
