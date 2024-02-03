@@ -26,7 +26,7 @@ import {
 import { onMounted } from 'vue'
 
 defineProps<{
-  appearance?: string
+  appearance?: 'primary' | 'secondary' | 'icon'
   ariaLabel?: string
   autofocus?: boolean
   form?: string
