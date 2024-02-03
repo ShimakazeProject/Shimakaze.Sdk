@@ -32,10 +32,10 @@ export default defineConfig({
       polyfill: false,
     },
     rollupOptions: {
-      input: enterPoint.reduce(
-        (a, b) => (a[b] = resolve(__dirname, `${b}.html`)),
-        {},
-      ),
+      input: enterPoint.reduce((a, b) => {
+        a[b] = resolve(__dirname, `${b}.html`)
+        return a
+      }, {}),
       output: {
         manualChunks: (id, meta) => {
           if (id.includes('pixi.js')) {
