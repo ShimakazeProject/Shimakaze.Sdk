@@ -8,6 +8,6 @@
   </PropertyGroup>
 
   <Target Name="Pack">
-    <Exec Command="yarn packup" WorkingDirectory="$(PackageJsonDirectory)"/>
+    <Exec Command="yarn packup -o $(PackageOutputPath)" WorkingDirectory="$(PackageJsonDirectory)"/>
   </Target>
 </Project>
