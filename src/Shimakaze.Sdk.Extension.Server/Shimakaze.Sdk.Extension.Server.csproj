@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!--这个程序不应打包为nuget包-->
+    <IsPackable>false</IsPackable>
+    <OutDir>$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Extension.VSCode\bin\</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="OmniSharp.Extensions.JsonRpc" />
+    <PackageReference Include="SixLabors.ImageSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Shp\Shimakaze.Sdk.Shp.csproj" />
+  </ItemGroup>
+
+</Project>
