@@ -9,7 +9,8 @@ on:
       - patch/**
       - dependabot/**
     paths:
-      - .github/workflows/build.yml
+      - .github/workflows/build.yml      
+      - .config/dotnet-tools.json
       - global.json
       - nuget.config
       - Shimakaze.Sdk.sln
@@ -25,6 +26,7 @@ on:
       - develop
     paths:
       - .github/workflows/build.yml
+      - .config/dotnet-tools.json
       - global.json
       - nuget.config
       - Shimakaze.Sdk.sln
