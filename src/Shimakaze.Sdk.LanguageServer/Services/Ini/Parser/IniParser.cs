@@ -54,7 +54,7 @@ public sealed class IniParser
             new IniKeyTokenProvider(),
             new IniValueTokenProvider(),
         ];
-        return new(providers);
+        return Create(providers);
     }
     /// <summary>
     /// 创建支持 Ares INI 语法的 <see cref="IniParser"/> 实例
@@ -72,7 +72,7 @@ public sealed class IniParser
             new AresIniBaseSectionProvider(),
             new AresIniAddKeyProvider(),
         ];
-        return new(providers);
+        return Create(providers);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public sealed class IniParser
         List<IniSymbol> symbols = [];
 
         List<(int Start, int End)> ranges = [];
-        int lineNum = 0;
+        int lineNum = -1;
         while (reader.Peek() >= 0)
         {
             lineNum++;
@@ -107,7 +107,7 @@ public sealed class IniParser
             int? start = null;
             for (int i = 0; i < line.Length; i++)
             {
-                if(ranges.Any(j => j.Start <= i && i <= j.End) || start.HasValue && char.IsWhiteSpace(line[i]))
+                if (ranges.Any(j => j.Start <= i && i <= j.End) || start.HasValue && char.IsWhiteSpace(line[i]))
                 {
                     if (start.HasValue)
                     {

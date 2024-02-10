@@ -16,6 +16,13 @@ public sealed class AresIniAddKeyProvider : IIniParseProvider
         if (sign is -1)
             return false;
 
+        int comment = line.IndexOf(';');
+        if (comment is -1)
+            comment = line.Length + 1;
+
+        if (sign > comment)
+            return false;
+
         if (sign + 1 >= line.Length)
             return false;
 

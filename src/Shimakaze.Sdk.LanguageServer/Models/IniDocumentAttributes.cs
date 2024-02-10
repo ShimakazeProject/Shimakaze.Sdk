@@ -20,6 +20,6 @@ internal sealed class IniDocumentAttributes : TextDocumentAttributes
 
     public IniType Type { get; set; }
 
-    public List<IniSymbol> Tokens { get; } = [];
+    public List<IniSymbol> Tokens { get; set; } = [];
 
 }
