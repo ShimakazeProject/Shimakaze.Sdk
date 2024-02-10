@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 
 using OmniSharp.Extensions.LanguageServer.Server;
 
+using Shimakaze.Sdk.LanguageServer.Handlers;
+using Shimakaze.Sdk.LanguageServer.Services;
+
 namespace Shimakaze.Sdk.LanguageServer;
 
 [CliCommand(ShortFormAutoGenerate = false, Description = "为 《Command & Conquer: Red Alert 2》 模组开发提供语言服务")]
@@ -69,16 +72,10 @@ internal sealed class Program
     private async Task RunPipeAsync(string pipeName)
     {
         await using NamedPipeServerStream server = new(pipeName);
-        int delay = 1000;
-        Console.WriteLine($"Waiting On Pipe with name {server.GetImpersonationUserName()}");
-        for (int i = 0; i < 3; i++)
-        {
-            await server.WaitForConnectionAsync();
-            await StartAsync(server);
-            await Task.Delay(delay);
-            delay <<= 1;
-            Console.WriteLine($"Retring...");
-        }
+        Console.WriteLine($"Waiting On Pipe with name {pipeName}");
+        await server.WaitForConnectionAsync();
+        Console.WriteLine($"Connected!");
+        await StartAsync(server);
     }
 
     private async Task RunSocketAsync(int port)
@@ -86,16 +83,10 @@ internal sealed class Program
         using Socket socket = new(SocketType.Stream, ProtocolType.Tcp);
         socket.Bind(new IPEndPoint(IPAddress.Any, port));
         socket.Listen();
-        int delay = 1000;
         Console.WriteLine($"Waiting On Port {port}");
-        for (int i = 0; i < 3; i++)
-        {
-            await using NetworkStream stream = new(await socket.AcceptAsync());
-            await StartAsync(stream);
-            await Task.Delay(delay);
-            delay <<= 1;
-            Console.WriteLine($"Retring...");
-        }
+        await using NetworkStream stream = new(await socket.AcceptAsync());
+        Console.WriteLine($"Connected!");
+        await StartAsync(stream);
     }
 
     private Task StartAsync(Stream iostream) => StartAsync(iostream, iostream);
@@ -108,12 +99,17 @@ internal sealed class Program
 
         builder
             .Services
+            .AddSingleton<DataManager>()
+            .AddSingleton<Services.Ini.IniService>()
             .AddHostedService<LanguageServerHostedService>()
             .AddLanguageServer(
                 "Shimakaze.Sdk.LanguageServer",
                 options => options
                     .WithInput(input)
                     .WithOutput(output)
+                    .AddHandler<TextDocumentHandler>()
+                    .AddHandler<SemanticTokensHandler>()
+                    .AddHandler<FoldingRangeHandler>()
             );
 
         IHost host = builder.Build();

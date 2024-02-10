@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.HighPerformance" />
     <PackageReference Include="DotMake.CommandLine" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="OmniSharp.Extensions.LanguageServer" />
