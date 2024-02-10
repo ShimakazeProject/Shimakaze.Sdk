@@ -132,6 +132,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Shp.Maker", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{194FAB43-BCF3-4218-86EC-EB2A56107E8E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageServer", "LanguageServer", "{435F1121-3D87-44CD-BDFB-EF3A0E9BC7BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.LanguageServer", "src\Shimakaze.Sdk.LanguageServer\Shimakaze.Sdk.LanguageServer.csproj", "{A20B4E1B-7034-461A-9936-A131FC936CC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -270,6 +274,10 @@ Global
 		{DEB00B1D-9B33-45D2-B5BA-DB6F9F58BF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEB00B1D-9B33-45D2-B5BA-DB6F9F58BF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEB00B1D-9B33-45D2-B5BA-DB6F9F58BF94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A20B4E1B-7034-461A-9936-A131FC936CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A20B4E1B-7034-461A-9936-A131FC936CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A20B4E1B-7034-461A-9936-A131FC936CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A20B4E1B-7034-461A-9936-A131FC936CC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -320,6 +328,7 @@ Global
 		{D7DD2EA6-D4B7-46E6-8963-1DBAC80FA998} = {1F5F426E-BD6D-463D-AD40-B2697C8BB863}
 		{BA0EA652-839B-42CB-857F-B18CC6C5E926} = {D7622C6A-0847-4DE4-9463-224D0ED2C8FE}
 		{DEB00B1D-9B33-45D2-B5BA-DB6F9F58BF94} = {BA0EA652-839B-42CB-857F-B18CC6C5E926}
+		{A20B4E1B-7034-461A-9936-A131FC936CC0} = {435F1121-3D87-44CD-BDFB-EF3A0E9BC7BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C5FF25D-B54D-4920-A61E-180CCE63A876}
