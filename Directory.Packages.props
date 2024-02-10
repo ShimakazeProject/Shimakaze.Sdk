@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageVersion Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
     <PackageVersion Include="DotMake.CommandLine" Version="1.8.7" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.9.5" />

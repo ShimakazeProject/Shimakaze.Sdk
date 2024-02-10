@@ -134,7 +134,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{194F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageServer", "LanguageServer", "{435F1121-3D87-44CD-BDFB-EF3A0E9BC7BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.LanguageServer", "src\Shimakaze.Sdk.LanguageServer\Shimakaze.Sdk.LanguageServer.csproj", "{A20B4E1B-7034-461A-9936-A131FC936CC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.LanguageServer", "src\Shimakaze.Sdk.LanguageServer\Shimakaze.Sdk.LanguageServer.csproj", "{A20B4E1B-7034-461A-9936-A131FC936CC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
