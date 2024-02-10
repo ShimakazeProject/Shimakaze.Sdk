@@ -13,24 +13,8 @@
     <ShimakazeSdk_IsTest Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdk_UnitTestFolder)')) ">True</ShimakazeSdk_IsTest>
   </PropertyGroup>
 
-  <!-- CSharp -->
-  <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
-    <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <IncludeSymbols>True</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RootNamespace>$(MSBuildProjectName.Replace('.Abstractions', ''))</RootNamespace>
-
-    <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>latest-recommended</AnalysisLevel>
-    
+  <!-- Nuget -->
+  <PropertyGroup>
     <Authors>Shimakaze Project</Authors>
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
     <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
@@ -48,10 +32,29 @@
     <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(ShimakazeSdk_RootFolder)ReadMe.md')">$(ShimakazeSdk_RootFolder)ReadMe.md</ReadmeFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(ShimakazeSdk_IsCSharp)">
+  <ItemGroup>
     <None Include="$(IconPath)" Condition=" '$(IconPath)' != '' " Pack="True" PackagePath="\" />
     <None Include="$(ReadmeFile)" Condition=" '$(ReadmeFile)' != '' " Pack="True" PackagePath="\" />
   </ItemGroup>
+  
+  <!-- CSharp -->
+  <PropertyGroup Condition="$(ShimakazeSdk_IsCSharp)">
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>$(MSBuildProjectName.Replace('.Abstractions', ''))</RootNamespace>
+
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+  </PropertyGroup>
 
   <ItemGroup Condition="$(ShimakazeSdk_IsCSharp) AND $(MSBuildProjectName) != 'Shimakaze.Sdk.Common' AND $(MSBuildProjectName) != 'Shimakaze.Sdk.Polyfill'">
     <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />

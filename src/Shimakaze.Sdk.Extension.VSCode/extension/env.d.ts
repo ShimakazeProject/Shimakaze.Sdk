@@ -1,0 +1,11 @@
+interface ImportMetaEnv {
+  [key: string]: any
+  MODE: string
+  DEV: boolean
+  PROD: boolean
+}
+
+interface ImportMeta {
+  url: string
+  readonly env: ImportMetaEnv
+}

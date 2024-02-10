@@ -1,0 +1,1 @@
+# Shimakaze.Sdk.VSCode
