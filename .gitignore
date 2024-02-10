@@ -480,4 +480,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # Coverage
-coverage/*
+*.vsix
