@@ -4502,7 +4502,7 @@ __metadata:
     prettier: "npm:^3.2.4"
     prettier-plugin-organize-imports: "npm:^3.2.4"
     prettier-plugin-pkg: "npm:^0.18.1"
-    typescript: "npm:*"
+    typescript: "npm:^5.3.3"
     vite: "npm:^5.0.12"
     vscode-languageclient: "npm:^9.0.1"
     vue-tsc: "npm:^1.8.27"
@@ -5043,7 +5043,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:*":
+"typescript@npm:^5.3.3":
   version: 5.3.3
   resolution: "typescript@npm:5.3.3"
   bin:
@@ -5053,7 +5053,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A*#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.3.3#optional!builtin<compat/typescript>":
   version: 5.3.3
   resolution: "typescript@patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"
   bin:

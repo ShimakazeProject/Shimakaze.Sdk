@@ -17,4 +17,11 @@ parserOptions:
 plugins:
   - vue
   - prettier
-rules: { '@typescript-eslint/explicit-function-return-type': 'off' }
+rules:
+  {
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    # 您猜怎么着？ 
+    # 这个规则让我 await 了一个 vscode.window.showInformationMessage
+    # 程序等死了
+    '@typescript-eslint/no-floating-promises': 'off',
+  }

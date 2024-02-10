@@ -55,14 +55,14 @@
     "vue-tsc": "^1.8.27"
   },
   "activationEvents": [
-    "*"
+    "workspaceContains:**/*.ini"
   ],
   "contributes": {
     "configuration": [
       {
         "title": "Shimakaze.Sdk",
         "properties": {
-          "shimakaze.sdk.languageClient.LogLevel": {
+          "shimakaze.sdk.log.server": {
             "type": "integer",
             "description": "语言服务器的日志等级。",
             "default": 1,
@@ -74,13 +74,13 @@
             ],
             "enumItemLabels": [
               "禁用",
-              "消息",
+              "信息",
               "简略",
               "详细"
             ],
             "enumDescriptions": [
               "完全禁用日志",
-              "仅记录消息",
+              "仅记录信息",
               "不那么详细的日志",
               "详细的日志"
             ]
