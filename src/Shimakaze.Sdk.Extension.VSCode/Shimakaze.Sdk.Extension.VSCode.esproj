@@ -5,6 +5,7 @@
     <BuildCommand>yarn &amp;&amp; yarn build</BuildCommand>
     <BuildOutputFolder>dist</BuildOutputFolder>
     <StartupCommand>yarn dev</StartupCommand>
+    <ResolveNuGetPackages>false</ResolveNuGetPackages>
   </PropertyGroup>
 
   <!-- 在非Windows平台上使用的垫片 -->
