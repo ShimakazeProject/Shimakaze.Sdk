@@ -61,7 +61,7 @@ jobs:
         with:
           global-json-file: ./global.json
           cache-dependency-path: ./**/packages.lock.json
-          cache: true
+          cache: false
 
       - name: 还原本地工具
         shell: pwsh
