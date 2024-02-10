@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "Help": {
+      "commandName": "Project"
+    },
+    "Stdio": {
+      "commandName": "Project",
+      "commandLineArgs": "--stdio"
+    },
+    "Pipe Shimakaze.Sdk.LanguageServer": {
+      "commandName": "Project",
+      "commandLineArgs": "--pipe=Shimakaze.Sdk.LanguageServer"
+    },
+    "Socket 12345": {
+      "commandName": "Project",
+      "commandLineArgs": "--socket=12345"
+    }
+  }
+}
