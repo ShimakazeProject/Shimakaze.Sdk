@@ -11,7 +11,7 @@ internal sealed class IniService(DataManager dataManager)
     public readonly SemanticTokensLegend Legend = new()
     {
         TokenTypes = new([
-            SemanticTokenType.Class,
+            SemanticTokenType.Type,
             SemanticTokenType.Property,
             SemanticTokenType.Operator,
             SemanticTokenType.String,
@@ -23,34 +23,46 @@ internal sealed class IniService(DataManager dataManager)
 
     public void Open(DocumentUri uri, string text, int? version)
     {
-        dataManager.Context[uri] ??= new()
+        var context = dataManager.Context.GetOrAdd(uri, (uri) => new()
         {
             Attribute = new IniDocumentAttributes(uri, IniType.Unknown),
             Version = version,
-        };
+            Text = text,
+        });
 
         // TODO: 后续需要改为从 msbuild 项目中读取是否支持ares语法
         IniParser parser = IniParser.CreateAres();
         using StringReader reader = new(text);
         List<IniSymbol> tokens = parser.Parse(reader);
 
+        ((IniDocumentAttributes)context.Attribute).Tokens = tokens;
+
         List<FoldingRange> foldingRanges = [];
         GetCommentFoldings(tokens, foldingRanges);
         GetSectionFoldings(tokens, foldingRanges);
+
+        context.FoldingRanges = foldingRanges;
     }
 
     public void Tokenize(SemanticTokensBuilder builder, DocumentUri uri)
     {
         var tokens = ((IniDocumentAttributes)dataManager.Context[uri].Attribute).Tokens;
         foreach (IniSymbol symbol in tokens)
+        {
             builder.Push(symbol.Line, symbol.StartCharacter, symbol.Length, IniTokenToSemanticTokenType(symbol));
+            if (symbol.Token is IniTokens.Key)
+            {
+                // 需要给等于号着色
+                builder.Push(symbol.Line, symbol.EndCharacter, 1, (SemanticTokenType?)SemanticTokenType.Operator);
+            }
+        }
     }
 
     private static SemanticTokenType? IniTokenToSemanticTokenType(in IniSymbol symbol) => symbol.Token switch
     {
         IniTokens.Comment => SemanticTokenType.Comment,
-        IniTokens.BaseSection => SemanticTokenType.Class,
-        IniTokens.Section => SemanticTokenType.Class,
+        IniTokens.BaseSection => SemanticTokenType.Type,
+        IniTokens.Section => SemanticTokenType.Type,
         IniTokens.AddKey => SemanticTokenType.Operator,
         IniTokens.Key => SemanticTokenType.Property,
         IniTokens.Value => GetValueToken(symbol),
@@ -59,12 +71,14 @@ internal sealed class IniService(DataManager dataManager)
 
     private static SemanticTokenType? GetValueToken(in IniSymbol symbol)
     {
-        if (ParseNumber(symbol.Word))
+        if (string.IsNullOrWhiteSpace(symbol.Word))
+            return null;
+        else if (ParseNumber(symbol.Word))
             return SemanticTokenType.Number;
         else if (ParseBoolean(symbol.Word))
             return SemanticTokenType.Keyword;
-
-        return SemanticTokenType.String;
+        else
+            return SemanticTokenType.String;
     }
 
     private static bool ParseNumber(in ReadOnlySpan<char> str)

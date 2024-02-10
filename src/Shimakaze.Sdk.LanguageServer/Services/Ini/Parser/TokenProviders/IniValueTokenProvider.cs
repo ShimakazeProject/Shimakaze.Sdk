@@ -12,15 +12,24 @@ public sealed class IniValueTokenProvider : IIniParseProvider
     /// <inheritdoc/>
     public bool CanExecute(in ReadOnlySpan<char> line)
     {
-        return line.Contains('=');
+        if (!line.Contains('='))
+            return false;
+
+        int comment = line.IndexOf(';');
+        if (comment is -1)
+            comment = line.Length + 1;
+        int start = line.IndexOf('=');
+        return start < comment;
     }
 
     /// <inheritdoc/>
     public IniSymbol Execute(in ReadOnlySpan<char> line, in int lineNum)
     {
-        int start = line.IndexOf('=');
-        int length = line[start..].IndexOf(';') - 1;
+        int start = line.IndexOf('=') + 1;
+        int length = line[start..].IndexOf(';');
+        if (length < 0)
+            length = line.Length - start;
 
-        return new(Token, lineNum, start, length, line[start..length]);
+        return new(Token, lineNum, start, length, line.Slice(start, length));
     }
 }

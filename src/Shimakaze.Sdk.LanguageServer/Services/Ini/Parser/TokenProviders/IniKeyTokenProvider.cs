@@ -12,7 +12,15 @@ public sealed class IniKeyTokenProvider : IIniParseProvider
     /// <inheritdoc/>
     public bool CanExecute(in ReadOnlySpan<char> line)
     {
-        return line.Contains('=');
+        int end = line.IndexOf('=');
+        if (end is -1)
+            return false;
+
+        int comment = line.IndexOf(';');
+        if (comment is -1)
+            comment = line.Length + 1;
+
+        return end < comment;
     }
 
     /// <inheritdoc/>
