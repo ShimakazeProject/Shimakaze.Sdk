@@ -1,0 +1,45 @@
+name: DependaBot 更新锁文件
+on: pull_request
+
+# Set the access for individual scopes, or use permissions: write-all
+permissions:
+  pull-requests: write
+  issues: write
+  repository-projects: write
+
+jobs:
+  dependabot:
+    runs-on: windows-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          
+      - name: 签出仓库
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: 配置 .Net 环境
+        uses: actions/setup-dotnet@v4.0.0
+        with:
+          global-json-file: ./global.json
+          cache-dependency-path: ./**/packages.lock.json
+          cache: true
+
+      - name: 还原
+        shell: pwsh
+        run: dotnet restore
+
+      - name: 提交被修改的锁文件
+        shell: pwsh
+        run: |
+          git config user.name "Github Actions"
+          git config user.email "actions@github.com"
+          git add **/packages.lock.json
+          git commit -m 更新锁文件
+          git push
