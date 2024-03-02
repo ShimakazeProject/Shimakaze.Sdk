@@ -29,7 +29,7 @@ jobs:
         with:
           global-json-file: ./global.json
           cache-dependency-path: ./**/packages.lock.json
-          cache: true
+          cache: false
 
       - name: 还原
         shell: pwsh
@@ -42,4 +42,4 @@ jobs:
           git config user.email "actions@github.com"
           git add **/packages.lock.json
           git commit -m 更新锁文件
-          git push
+          git push origin HEAD:${{ github.head_ref }}

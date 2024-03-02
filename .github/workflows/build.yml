@@ -5,9 +5,6 @@ on:
     branches:
       - master
       - develop
-      - feat/**
-      - patch/**
-      - dependabot/**
     paths:
       - .github/workflows/build.yml      
       - .config/dotnet-tools.json
@@ -77,11 +74,11 @@ jobs:
 
       - name: 测试
         shell: pwsh
-        run: dotnet coverage collect -f cobertura dotnet test --configuration Release --no-build
+        run: dotnet coverage collect -f cobertura dotnet test --graph --configuration Release --no-build
 
       - name: 打包
         shell: pwsh
-        run: dotnet pack --configuration Release --no-restore --no-build --include-symbols --include-source
+        run: dotnet pack --graph --configuration Release --no-restore --no-build --include-symbols --include-source
 
       - name: 生成校验和
         shell: pwsh
@@ -103,17 +100,6 @@ jobs:
             nupkg/*
           retention-days: 3
 
-      - name: 推送 Nuget 包
-        shell: pwsh
-        continue-on-error: true
-        if: matrix.os == 'windows-latest' && github.repository == 'ShimakazeProject/Shimakaze.Sdk' && github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == 'master'
-        env:
-          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-        run: |
-          Set-Location nupkg
-          dotnet nuget push *.nupkg -s nuget -k $env:NUGET_TOKEN --skip-duplicate
-          Set-Location ..
-
       - name: 收集测试覆盖率
         uses: coverallsapp/github-action@v2
         continue-on-error: true
@@ -134,3 +120,31 @@ jobs:
         with:
           parallel-finished: true
           carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest"
+
+  release:
+    needs: build-dotnet
+    name: 发布
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+      discussions: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.4
+        with:
+          name: nuget-packages-windows-latest
+          path: artifact
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifact/*
+      - name: 推送 Nuget 包
+        shell: pwsh
+        continue-on-error: true
+        env:
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+        run: |
+          Set-Location nupkg
+          dotnet nuget push *.nupkg -s nuget -k $env:NUGET_TOKEN --skip-duplicate
+          Set-Location ..
