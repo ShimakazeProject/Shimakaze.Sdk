@@ -136,7 +136,7 @@ jobs:
           name: nuget-packages-windows-latest
           path: artifact
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: artifact/*
       - name: 推送 Nuget 包
