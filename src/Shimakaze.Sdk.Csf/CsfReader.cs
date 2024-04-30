@@ -1,12 +1,12 @@
 namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
-/// Csf ¶ÁÈ¡Æ÷
+/// Csf è¯»å–å™¨
 /// </summary>
 public sealed class CsfReader
 {
     /// <summary>
-    /// Csf ¶ÁÈ¡Æ÷
+    /// Csf è¯»å–å™¨
     /// </summary>
     /// <param name="stream"></param>
     /// <param name="progress"></param>
