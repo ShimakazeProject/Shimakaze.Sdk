@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.7" />
+    <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.8" />
     <GlobalPackageReference Include="GitVersion.MsBuild" Version="6.0.0-rc.1" />
   </ItemGroup>
 
