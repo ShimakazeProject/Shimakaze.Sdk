@@ -1,4 +1,4 @@
-﻿using YamlDotNet.Core;
+using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
@@ -9,29 +9,11 @@ namespace Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 /// </summary>
 public class CsfDataConverter : IYamlTypeConverter
 {
-    private static readonly WeakReference<CsfDataConverter> WeakReference = new(new());
-
-    /// <summary>
-    /// Gets csfValueConverter.
-    /// </summary>
-    public static CsfDataConverter Instance
-    {
-        get
-        {
-            if (!WeakReference.TryGetTarget(out CsfDataConverter? converter))
-            {
-                WeakReference.SetTarget(converter = new());
-            }
-
-            return converter;
-        }
-    }
-
     /// <inheritdoc />
     public bool Accepts(Type type) => typeof(CsfData).IsAssignableFrom(type);
 
     /// <inheritdoc />
-    public object? ReadYaml(IParser parser, Type type)
+    public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         // 检查是不是 CSF 标签
         if (!parser.TryConsume<Scalar>(out var label))
@@ -43,12 +25,14 @@ public class CsfDataConverter : IYamlTypeConverter
         {
             while (!parser.TryConsume<SequenceEnd>(out _))
             {
-                ParseValue(parser, values);
+                if (rootDeserializer(typeof(CsfValue)) is CsfValue value)
+                    values.Add(value);
             }
         }
         else
         {
-            ParseValue(parser, values);
+            if (rootDeserializer(typeof(CsfValue)) is CsfValue value)
+                values.Add(value);
         }
 
         data.Values = [.. values];
@@ -57,7 +41,7 @@ public class CsfDataConverter : IYamlTypeConverter
     }
 
     /// <inheritdoc />
-    public void WriteYaml(IEmitter emitter, object? value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         if (value is not CsfData data)
         {
@@ -71,7 +55,7 @@ public class CsfDataConverter : IYamlTypeConverter
             emitter.Emit(new SequenceStart(AnchorName.Empty, TagName.Empty, true, SequenceStyle.Block));
             foreach (CsfValue item in data.Values)
             {
-                CsfValueConverter.Instance.WriteYaml(emitter, item, item.GetType());
+                serializer(item, item.GetType());
             }
 
             emitter.Emit(new SequenceEnd());
@@ -79,15 +63,8 @@ public class CsfDataConverter : IYamlTypeConverter
         else
         {
             CsfValue v = data.Values.Length is > 0 ? data.Values.First() : CsfValue.Empty;
-            CsfValueConverter.Instance.WriteYaml(emitter, v, v.GetType());
+            serializer(v, v.GetType());
         }
     }
 
-    private static void ParseValue(IParser parser, List<CsfValue> data)
-    {
-        if (CsfValueConverter.Instance.ReadYaml(parser, typeof(CsfValue)) is CsfValue value)
-        {
-            data.Add(value);
-        }
-    }
 }

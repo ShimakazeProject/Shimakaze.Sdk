@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
@@ -11,29 +11,11 @@ namespace Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 /// </summary>
 public class CsfDocumentConverter : IYamlTypeConverter
 {
-    private static readonly WeakReference<CsfDocumentConverter> WeakReference = new(new());
-
-    /// <summary>
-    /// Gets CsfDocumentConverter.
-    /// </summary>
-    public static CsfDocumentConverter Instance
-    {
-        get
-        {
-            if (!WeakReference.TryGetTarget(out CsfDocumentConverter? converter))
-            {
-                WeakReference.SetTarget(converter = new());
-            }
-
-            return converter;
-        }
-    }
-
     /// <inheritdoc />
     public bool Accepts(Type type) => typeof(CsfDocument).IsAssignableFrom(type);
 
     /// <inheritdoc />
-    public object? ReadYaml(IParser parser, Type type)
+    public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         if (parser.Current is not MappingStart mappingStart)
         {
@@ -88,7 +70,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
 
         while (!parser.TryConsume<MappingEnd>(out _))
         {
-            if (CsfDataConverter.Instance.ReadYaml(parser, typeof(CsfData)) is CsfData data)
+            if (rootDeserializer(typeof(CsfData)) is CsfData data)
             {
                 datas.Add(data);
             }
@@ -104,7 +86,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
     }
 
     /// <inheritdoc />
-    public void WriteYaml(IEmitter emitter, object? value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         if (value is not CsfDocument doc)
         {
@@ -132,7 +114,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
         emitter.Emit(new Comment($"yaml-language-server: $schema={YamlConstants.SchemaUrls.V1}", false));
         foreach (CsfData item in doc.Data)
         {
-            CsfDataConverter.Instance.WriteYaml(emitter, item, item.GetType());
+            serializer(item, item.GetType());
         }
 
         emitter.Emit(new MappingEnd());

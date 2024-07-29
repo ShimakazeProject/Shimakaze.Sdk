@@ -1,4 +1,4 @@
-﻿using Shimakaze.Sdk.Csf.Yaml.Converter.V1;
+using Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 
 using YamlDotNet.Serialization;
 
@@ -20,9 +20,9 @@ public static class CsfYamlV1Reader
         builder ??= i => i;
 
         return builder(new())
-            .WithTypeConverter(CsfValueConverter.Instance)
-            .WithTypeConverter(CsfDataConverter.Instance)
-            .WithTypeConverter(CsfDocumentConverter.Instance)
+            .WithTypeConverter(new CsfValueConverter())
+            .WithTypeConverter(new CsfDataConverter())
+            .WithTypeConverter(new CsfDocumentConverter())
             .Build()
             .Deserialize<CsfDocument>(reader);
     }

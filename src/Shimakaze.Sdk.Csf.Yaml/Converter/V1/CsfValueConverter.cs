@@ -1,4 +1,4 @@
-﻿using YamlDotNet.Core;
+using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
@@ -9,29 +9,12 @@ namespace Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 /// </summary>
 public class CsfValueConverter : IYamlTypeConverter
 {
-    private static readonly WeakReference<CsfValueConverter> WeakReference = new(new());
-
-    /// <summary>
-    /// Gets csfValueConverter.
-    /// </summary>
-    public static CsfValueConverter Instance
-    {
-        get
-        {
-            if (!WeakReference.TryGetTarget(out CsfValueConverter? converter))
-            {
-                WeakReference.SetTarget(converter = new());
-            }
-
-            return converter;
-        }
-    }
-
     /// <inheritdoc />
     public bool Accepts(Type type) => typeof(CsfValue).IsAssignableFrom(type);
 
     /// <inheritdoc />
-    public object? ReadYaml(IParser parser, Type type)
+    public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+
     {
         if (parser.TryConsume<Scalar>(out var scalar))
         {
@@ -39,14 +22,14 @@ public class CsfValueConverter : IYamlTypeConverter
         }
         else if (parser.TryConsume<MappingStart>(out var start))
         {
-            MappingEnd? end;
             string? value = null;
             string? extra = null;
+            MappingEnd? end;
             while (!parser.TryConsume<MappingEnd>(out end))
             {
                 if (parser.TryConsume<Scalar>(out var property) && parser.TryConsume<Scalar>(out var propertyValue))
                 {
-                    if(property.Value is "value")
+                    if (property.Value is "value")
                     {
                         value = propertyValue.Value;
                     }
@@ -67,7 +50,7 @@ public class CsfValueConverter : IYamlTypeConverter
     }
 
     /// <inheritdoc />
-    public void WriteYaml(IEmitter emitter, object? value, Type type)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         switch (value)
         {

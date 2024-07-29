@@ -10,7 +10,7 @@ namespace Shimakaze.Sdk.Csf.Yaml;
 public static class CsfYamlV1Writer
 {
     /// <summary>
-    /// 写入到文本流
+    /// 鍐欏叆鍒版枃鏈祦
     /// </summary>
     /// <param name="writer"></param>
     /// <param name="value"></param>
@@ -20,9 +20,9 @@ public static class CsfYamlV1Writer
         builder ??= i => i;
 
         builder(new())
-            .WithTypeConverter(CsfValueConverter.Instance)
-            .WithTypeConverter(CsfDataConverter.Instance)
-            .WithTypeConverter(CsfDocumentConverter.Instance)
+            .WithTypeConverter(new CsfValueConverter())
+            .WithTypeConverter(new CsfDataConverter())
+            .WithTypeConverter(new CsfDocumentConverter())
             .Build()
             .Serialize(writer, value);
     }
