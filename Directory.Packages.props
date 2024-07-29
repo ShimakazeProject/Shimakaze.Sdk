@@ -7,7 +7,7 @@
     <!-- <NuGetLockFilePath>$(ShimakazeSdk_RootFolder)packages.lock.json</NuGetLockFilePath> -->
   </PropertyGroup>
   <ItemGroup>
-    <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.7" />
+    <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.8" />
     <GlobalPackageReference Include="GitVersion.MsBuild" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup Condition="$(ShimakazeSdk_IsTest)">
