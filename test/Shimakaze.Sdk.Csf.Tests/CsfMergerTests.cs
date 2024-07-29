@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 using Shimakaze.Sdk.Csf;
 
@@ -38,7 +38,7 @@ public class CsfSetTests
         output.Seek(0, SeekOrigin.Begin);
 
         while (stream.Position < stream.Length)
-            Assert.AreEqual(stream.ReadByte(), output.ReadByte(), $"at {stream.Position}");
+            Assert.AreEqual(stream.ReadByte(), output.ReadByte(), $"at 0x{stream.Position:X8}");
     }
 
     [TestMethod]

@@ -32,7 +32,7 @@ public static class CsfWriter
                 stream.Write(value.Data[i].Values[j].ValueLength);
                 var str = Encoding.Unicode.GetBytes(value.Data[i].Values[j].Value);
                 str = CsfConstants.CodingValue(str);
-                stream.Write(str, 0, value.Data[i].Values[j].ValueLength);
+                stream.Write(str, 0, value.Data[i].Values[j].ValueLength << 1);
 
                 if (value.Data[i].Values[j] is
                     {
