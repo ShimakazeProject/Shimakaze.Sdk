@@ -1,4 +1,6 @@
-﻿namespace Shimakaze.Sdk.Csf;
+using System.Text;
+
+namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
 /// Csf 写入器
@@ -26,15 +28,11 @@ public static class CsfWriter
 
             for (int j = 0; j < value.Data[i].Values.Length; j++)
             {
-
                 stream.Write(value.Data[i].Values[j].Identifier);
                 stream.Write(value.Data[i].Values[j].ValueLength);
-                unsafe
-                {
-                    fixed (char* ptr = value.Data[i].Values[j].Value)
-                        CsfConstants.CodingValue((byte*)ptr, value.Data[i].Values[j].ValueLength * sizeof(char));
-                }
-                stream.Write(value.Data[i].Values[j].Value, value.Data[i].Values[j].ValueLength, true);
+                var str = Encoding.Unicode.GetBytes(value.Data[i].Values[j].Value);
+                str = CsfConstants.CodingValue(str);
+                stream.Write(str, 0, value.Data[i].Values[j].ValueLength);
 
                 if (value.Data[i].Values[j] is
                     {
