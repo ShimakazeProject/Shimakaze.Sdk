@@ -57,10 +57,14 @@ public class CsfValueConverter : IYamlTypeConverter
             case CsfValue extra when extra.HasExtra:
                 emitter.Emit(new MappingStart());
                 emitter.Emit(new Scalar("value"));
-                emitter.Emit(new Scalar(extra.Value));
+                emitter.Emit(new Scalar(AnchorName.Empty, TagName.Empty, extra.Value, ScalarStyle.Literal, true, true));
                 emitter.Emit(new Scalar("extra"));
                 emitter.Emit(new Scalar(extra.ExtraValue));
                 emitter.Emit(new MappingEnd());
+                break;
+
+            case CsfValue csfValue when csfValue.Value.Contains('\r') || csfValue.Value.Contains('\n'):
+                emitter.Emit(new Scalar(AnchorName.Empty, TagName.Empty, csfValue.Value, ScalarStyle.Literal, true, true));
                 break;
 
             case CsfValue csfValue:
