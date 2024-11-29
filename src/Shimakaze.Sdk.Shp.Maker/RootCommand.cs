@@ -1,4 +1,4 @@
-﻿using DotMake.CommandLine;
+using DotMake.CommandLine;
 
 using Sharprompt;
 

@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Ini;
+namespace Shimakaze.Sdk.Ini;
 
 /// <summary>
 /// Ini Token

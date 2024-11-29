@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Pal;
+namespace Shimakaze.Sdk.Pal;
 
 internal static class PaletteColorExtensions
 {

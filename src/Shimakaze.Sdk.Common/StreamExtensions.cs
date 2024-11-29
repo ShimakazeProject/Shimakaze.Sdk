@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk;
+namespace Shimakaze.Sdk;
 
 /// <summary>
 /// 流实用工具

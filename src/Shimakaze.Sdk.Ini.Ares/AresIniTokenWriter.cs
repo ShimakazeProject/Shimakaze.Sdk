@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Ini.Ares;
+namespace Shimakaze.Sdk.Ini.Ares;
 
 /// <summary>
 /// INI Token 流写入器

@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Vxl;
+namespace Shimakaze.Sdk.Vxl;
 
 /// <summary>
 /// LimbBody

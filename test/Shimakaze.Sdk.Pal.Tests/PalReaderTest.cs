@@ -1,5 +1,3 @@
-using Shimakaze.Sdk;
-
 namespace Shimakaze.Sdk.Pal.Tests;
 
 [TestClass]

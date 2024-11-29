@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Ini.Ares;
+namespace Shimakaze.Sdk.Ini.Ares;
 
 /// <inheritdoc/>
 public sealed class AresIniDocument : IniDocument<AresIniSection>

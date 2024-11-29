@@ -1,4 +1,4 @@
-﻿
+
 using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Shp.Maker;

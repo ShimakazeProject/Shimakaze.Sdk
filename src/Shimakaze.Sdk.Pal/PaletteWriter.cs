@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Pal;
+namespace Shimakaze.Sdk.Pal;
 
 /// <summary>
 /// 调色板写入器

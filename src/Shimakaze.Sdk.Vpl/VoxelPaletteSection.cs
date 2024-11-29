@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Vpl;
+namespace Shimakaze.Sdk.Vpl;
 
 /// <summary>
 /// VPL节

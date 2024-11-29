@@ -1,4 +1,3 @@
-﻿using Shimakaze.Sdk;
 using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Vpl;
@@ -33,7 +32,7 @@ public sealed class VoxelPaletteReader
             unsafe
             {
                 fixed (byte* p = vpl.Sections[i].Data)
-                    stream.Read(new Span<byte>(p, 256));
+                    stream.ReadExactly(new Span<byte>(p, 256));
             }
         }
 

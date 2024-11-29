@@ -1,4 +1,4 @@
-﻿using Sharprompt;
+using Sharprompt;
 
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Vpl;

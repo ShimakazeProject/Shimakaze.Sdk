@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Csf.Tests;
+namespace Shimakaze.Sdk.Csf.Tests;
 
 [TestClass]
 public class CsfAssertsTests

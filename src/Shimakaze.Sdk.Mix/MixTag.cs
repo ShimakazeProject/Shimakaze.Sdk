@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Mix;
+namespace Shimakaze.Sdk.Mix;
 
 /// <summary>
 /// Flags for MixFile.

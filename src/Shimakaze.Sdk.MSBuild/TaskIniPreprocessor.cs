@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 using Microsoft.Build.Framework;
 using Microsoft.Extensions.DependencyInjection;

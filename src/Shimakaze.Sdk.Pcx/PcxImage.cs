@@ -1,4 +1,4 @@
-﻿using Shimakaze.Sdk.Pal;
+using Shimakaze.Sdk.Pal;
 
 namespace Shimakaze.Sdk.Pcx;
 

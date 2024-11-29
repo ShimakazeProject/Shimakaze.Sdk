@@ -1,7 +1,5 @@
 using System.Collections;
 
-using Shimakaze.Sdk.Csf;
-
 namespace Shimakaze.Sdk.Csf.Tests;
 
 [TestClass]

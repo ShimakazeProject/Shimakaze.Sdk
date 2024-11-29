@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Csf.Json.Tests;
+namespace Shimakaze.Sdk.Csf.Json.Tests;
 
 [TestClass]
 public class CsfJsonV2WriterTests

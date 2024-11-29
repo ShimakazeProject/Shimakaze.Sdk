@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Csf.Converter;
+namespace Shimakaze.Sdk.Csf.Converter;
 
 internal enum SupportedFormat
 {

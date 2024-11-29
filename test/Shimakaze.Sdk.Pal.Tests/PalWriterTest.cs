@@ -1,8 +1,3 @@
-using System.Globalization;
-using System.Security.Cryptography;
-
-using Shimakaze.Sdk;
-
 namespace Shimakaze.Sdk.Pal.Tests;
 
 [TestClass]
@@ -43,10 +38,10 @@ public sealed class PalWriterTest
 
         while (fs1.Position < fs1.Length)
         {
-            fs1.Read(buffer1);
-            fs2.Read(buffer2);
+            fs1.ReadExactly(buffer1);
+            fs2.ReadExactly(buffer2);
             Assert.IsTrue(buffer1.SequenceEqual(buffer2),
-                $"At Position: {fs1.Position}, BufferSize£º {buffer1.Length}, Should be {BitConverter.ToString(buffer1.ToArray())}, but {BitConverter.ToString(buffer2.ToArray())}");
+                $"At Position: {fs1.Position}, BufferSizeï¼š {buffer1.Length}, Should be {BitConverter.ToString(buffer1.ToArray())}, but {BitConverter.ToString(buffer2.ToArray())}");
         }
     }
 }

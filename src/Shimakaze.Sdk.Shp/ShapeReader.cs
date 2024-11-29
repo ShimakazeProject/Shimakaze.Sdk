@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using Shimakaze.Sdk;
+using System.Diagnostics;
 
 namespace Shimakaze.Sdk.Shp;
 
@@ -81,7 +79,7 @@ public static class ShapeReader
         int length = frameHeader.BodyLength;
         if (buffer.Length < length)
             buffer = new byte[length];
-        input.Read(buffer.AsSpan(0, length));
+        input.ReadExactly(buffer.AsSpan(0, length));
         output.Write(buffer.AsSpan(0, length));
     }
 

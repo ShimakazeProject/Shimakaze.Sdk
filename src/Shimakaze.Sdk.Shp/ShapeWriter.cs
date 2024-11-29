@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Shp;
+namespace Shimakaze.Sdk.Shp;
 
 /// <summary>
 /// SHP 写入器

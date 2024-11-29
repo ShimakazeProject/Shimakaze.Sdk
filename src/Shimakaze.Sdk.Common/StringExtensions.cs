@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk;
+namespace Shimakaze.Sdk;
 
 /// <summary>
 /// 字符串实用工具

@@ -1,10 +1,8 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 using DotMake.CommandLine;
 
 using ShellProgressBar;
-
-using Shimakaze.Sdk.Ini;
 
 namespace Shimakaze.Sdk.Mix.Toolkit;
 

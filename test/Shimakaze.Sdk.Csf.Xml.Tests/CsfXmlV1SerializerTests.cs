@@ -1,5 +1,3 @@
-﻿using Shimakaze.Sdk.Csf;
-
 namespace Shimakaze.Sdk.Csf.Xml.Tests;
 
 [TestClass]

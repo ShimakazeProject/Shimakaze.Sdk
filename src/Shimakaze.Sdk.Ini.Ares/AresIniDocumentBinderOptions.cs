@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Ini.Ares;
+namespace Shimakaze.Sdk.Ini.Ares;
 
 /// <summary>
 /// IniDocument 绑定器配置

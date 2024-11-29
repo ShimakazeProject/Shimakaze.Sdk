@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Ini.Tests;
+namespace Shimakaze.Sdk.Ini.Tests;
 
 [TestClass()]
 public class IniTokenReaderTests

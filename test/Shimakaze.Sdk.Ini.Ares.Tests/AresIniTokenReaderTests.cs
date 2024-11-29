@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Ini.Ares.Tests;
+namespace Shimakaze.Sdk.Ini.Ares.Tests;
 
 [TestClass()]
 public class AresIniTokenReaderTests

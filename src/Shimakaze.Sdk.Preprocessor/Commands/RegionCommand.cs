@@ -1,5 +1,3 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
 using Microsoft.Extensions.Logging;
 
 using Shimakaze.Sdk.Preprocessor.Kernel;

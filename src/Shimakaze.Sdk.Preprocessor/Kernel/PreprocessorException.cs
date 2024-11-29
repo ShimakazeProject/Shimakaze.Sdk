@@ -1,5 +1,3 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
 namespace Shimakaze.Sdk.Preprocessor.Kernel;
 
 /// <summary>

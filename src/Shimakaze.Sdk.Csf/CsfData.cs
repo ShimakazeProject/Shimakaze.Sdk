@@ -1,4 +1,4 @@
-﻿namespace Shimakaze.Sdk.Csf;
+namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
 /// Csf Data.

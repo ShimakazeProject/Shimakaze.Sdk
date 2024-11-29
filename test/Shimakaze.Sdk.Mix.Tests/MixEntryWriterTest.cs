@@ -1,4 +1,4 @@
-﻿
+
 namespace Shimakaze.Sdk.Mix.Tests;
 
 [TestClass]
