@@ -11,7 +11,7 @@ public record struct ShapeFrameHeader
     /// <summary>
     /// sizeof(ShapeFrameHeader)
     /// </summary>
-    public const int Size = 5 * sizeof(ushort) + 2 * sizeof(byte) + 3 * sizeof(uint);
+    public const int Size = (5 * sizeof(ushort)) + (2 * sizeof(byte)) + (3 * sizeof(uint));
 
     /// <summary>
     /// 0,0 的水平位置

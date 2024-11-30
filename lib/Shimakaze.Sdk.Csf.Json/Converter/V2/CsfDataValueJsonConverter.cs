@@ -37,7 +37,7 @@ public sealed class CsfDataValueJsonConverter : JsonConverter<IList<CsfValue>>
         {
             writer.WriteStartObject();
             writer.WriteStartArray("values");
-            foreach (var item in value)
+            foreach (CsfValue item in value)
             {
                 writer.WriteValue<CsfValueJsonConverter, CsfValue>(item, options);
             }

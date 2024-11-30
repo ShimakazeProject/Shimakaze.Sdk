@@ -63,8 +63,8 @@ public sealed class TypeCommand(Engine engine, Logger<TypeCommand>? logger = nul
     [Command]
     public void Type(string type)
     {
-        var typeCounter = engine.GetOrNew("TypeCounter", () => new TypeCounter());
-        var key = typeCounter.Counter.ToString(CultureInfo.InvariantCulture);
+        TypeCounter typeCounter = engine.GetOrNew("TypeCounter", () => new TypeCounter());
+        string key = typeCounter.Counter.ToString(CultureInfo.InvariantCulture);
         Type(type, key);
     }
 

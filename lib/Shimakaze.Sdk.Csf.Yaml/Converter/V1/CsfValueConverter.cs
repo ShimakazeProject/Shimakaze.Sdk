@@ -10,24 +10,27 @@ namespace Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 public class CsfValueConverter : IYamlTypeConverter
 {
     /// <inheritdoc />
-    public bool Accepts(Type type) => typeof(CsfValue).IsAssignableFrom(type);
+    public bool Accepts(Type type)
+    {
+        return typeof(CsfValue).IsAssignableFrom(type);
+    }
 
     /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
 
     {
-        if (parser.TryConsume<Scalar>(out var scalar))
+        if (parser.TryConsume<Scalar>(out Scalar? scalar))
         {
             return new CsfValue(scalar.Value);
         }
-        else if (parser.TryConsume<MappingStart>(out var start))
+        else if (parser.TryConsume<MappingStart>(out MappingStart? start))
         {
             string? value = null;
             string? extra = null;
             MappingEnd? end;
             while (!parser.TryConsume<MappingEnd>(out end))
             {
-                if (parser.TryConsume<Scalar>(out var property) && parser.TryConsume<Scalar>(out var propertyValue))
+                if (parser.TryConsume<Scalar>(out Scalar? property) && parser.TryConsume<Scalar>(out Scalar? propertyValue))
                 {
                     if (property.Value is "value")
                     {
@@ -40,12 +43,9 @@ public class CsfValueConverter : IYamlTypeConverter
                 }
             }
 
-            if (string.IsNullOrEmpty(value))
-            {
-                throw new FormatException($"Cannot found Value at {start.Start} - {end?.End}");
-            }
-
-            return new CsfValue(value, extra);
+            return string.IsNullOrEmpty(value)
+                ? throw new FormatException($"Cannot found Value at {start.Start} - {end?.End}")
+                : (object)new CsfValue(value, extra);
         }
 
         throw new FormatException($"Unknown Format at {parser.Current?.Start} - {parser.Current?.End}");

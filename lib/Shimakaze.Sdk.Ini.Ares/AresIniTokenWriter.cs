@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini.Ares;
 
 /// <summary>
@@ -40,7 +42,7 @@ public sealed class AresIniTokenWriter(TextWriter textWriter, bool leaveOpen = f
     public override void Write(in AresIniDocument document)
     {
         Write(document.DefaultSection);
-        foreach (var item in document)
+        foreach (AresIniSection item in document)
         {
             Write(item);
         }
@@ -66,7 +68,7 @@ public sealed class AresIniTokenWriter(TextWriter textWriter, bool leaveOpen = f
             }
             Write(AresIniTokenTools.LF);
         }
-        foreach (var item in section.Raw)
+        foreach (KeyValuePair<string, string> item in section.Raw)
         {
             Write(item);
         }

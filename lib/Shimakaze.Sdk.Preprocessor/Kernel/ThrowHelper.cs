@@ -31,12 +31,17 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    public static T ThrowNotSupport<T>(this Engine engine, string? message = default, int? col = default) => throw new NotSupportedException(
+    public static T ThrowNotSupport<T>(this Engine engine, string? message = default, int? col = default)
+    {
+        throw new NotSupportedException(
         engine.CreateExceptionMessage(message ?? "We do not support this operation."));
+    }
 
     [DoesNotReturn]
-    public static void Throw(this Engine engine, Exception ex, int? col = default) => throw new PreprocessorException(
+    public static void Throw(this Engine engine, Exception ex, int? col = default)
+    {
+        throw new PreprocessorException(
         engine.CreateExceptionMessage("Program terminated due to unknown error."),
         ex);
-
+    }
 }

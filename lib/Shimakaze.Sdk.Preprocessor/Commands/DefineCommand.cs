@@ -23,7 +23,7 @@ public sealed class DefineCommand(Engine engine, Logger<DefineCommand>? logger =
     [Command]
     public void Define(string identifier)
     {
-        var defines = engine.GetOrNew("Defines", () => new HashSet<string>());
+        HashSet<string> defines = engine.GetOrNew("Defines", () => new HashSet<string>());
         defines.Add(identifier);
         if (logger is not null)
         {
@@ -38,7 +38,7 @@ public sealed class DefineCommand(Engine engine, Logger<DefineCommand>? logger =
     [Command]
     public void Undef(string identifier)
     {
-        var defines = engine.GetOrNew("Defines", () => new HashSet<string>());
+        HashSet<string> defines = engine.GetOrNew("Defines", () => new HashSet<string>());
         defines.Remove(identifier);
         if (logger is not null)
         {

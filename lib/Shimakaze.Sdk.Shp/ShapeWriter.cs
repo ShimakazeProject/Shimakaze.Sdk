@@ -13,12 +13,12 @@ public static class ShapeWriter
     public static void Write(Stream stream, ShapeImage shp)
     {
         stream.Write(shp.Metadata);
-        foreach (var frame in shp.Frames)
+        foreach (ShapeImageFrame frame in shp.Frames)
         {
             stream.Write(frame.Metadata);
         }
 
-        foreach (var frame in shp.Frames)
+        foreach (ShapeImageFrame frame in shp.Frames)
         {
             if (frame.Indexes is { Length: not 0 })
             {

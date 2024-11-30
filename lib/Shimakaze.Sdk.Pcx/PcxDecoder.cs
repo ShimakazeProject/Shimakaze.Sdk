@@ -44,7 +44,7 @@ public sealed class PcxDecoder()
             case 8:
                 {
                     // 读取主体
-                    var indexes = DeRLE(input, _sizeOfBody);
+                    byte[] indexes = DeRLE(input, _sizeOfBody);
                     // 读调色板
                     DecodePalette(input, image);
                     if (image.Palette is null)

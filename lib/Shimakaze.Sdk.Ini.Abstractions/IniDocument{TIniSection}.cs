@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Shimakaze.Sdk.Ini;
+namespace Shimakaze.Sdk.Ini.Abstractions;
 
 /// <summary>
 /// 表示一个INI文档
@@ -65,35 +65,70 @@ public abstract class IniDocument<TIniSection> : IIniDocument<TIniSection>, ICol
     /// <param name="sectionNameComparer"></param>
     protected IniDocument(IEnumerable<TIniSection> sections, IEqualityComparer<string>? sectionNameComparer = default)
         : this(sectionNameComparer)
-        => _data = sections.ToDictionary(i => i.Name, sectionNameComparer);
+    {
+        _data = sections.ToDictionary(i => i.Name, sectionNameComparer);
+    }
 
     /// <inheritdoc cref="IniDocument{TIniSection}.IniDocument(IEnumerable{TIniSection}, IEqualityComparer{string})"/>
     protected IniDocument(IEqualityComparer<string>? sectionNameComparer = default)
-        => _data = new(sectionNameComparer);
+    {
+        _data = new(sectionNameComparer);
+    }
 
     /// <inheritdoc/>
-    public void Add(TIniSection item) => _data.Add(item.Name, item);
-    void IDictionary<string, TIniSection>.Add(string key, TIniSection value) => Add(value);
-    void ICollection<KeyValuePair<string, TIniSection>>.Add(KeyValuePair<string, TIniSection> item) => Add(item.Value);
+    public void Add(TIniSection item)
+    {
+        _data.Add(item.Name, item);
+    }
+
+    void IDictionary<string, TIniSection>.Add(string key, TIniSection value)
+    {
+        Add(value);
+    }
+
+    void ICollection<KeyValuePair<string, TIniSection>>.Add(KeyValuePair<string, TIniSection> item)
+    {
+        Add(item.Value);
+    }
 
     /// <inheritdoc/>
-    public void Clear() => _data.Clear();
+    public void Clear()
+    {
+        _data.Clear();
+    }
 
     /// <summary>
     /// ContainsSection
     /// </summary>
     /// <param name="sectionName"></param>
     /// <returns></returns>
-    public bool ContainsSection(string sectionName) => _data.ContainsKey(sectionName);
+    public bool ContainsSection(string sectionName)
+    {
+        return _data.ContainsKey(sectionName);
+    }
 
     /// <inheritdoc/>
     [Obsolete("Use ContainsSection instead of.")]
-    public bool ContainsKey(string key) => ContainsSection(key);
+    public bool ContainsKey(string key)
+    {
+        return ContainsSection(key);
+    }
 
     /// <inheritdoc/>
-    public bool Remove(string key) => _data.Remove(key);
-    bool ICollection<TIniSection>.Remove(TIniSection item) => Remove(item.Name);
-    bool ICollection<KeyValuePair<string, TIniSection>>.Remove(KeyValuePair<string, TIniSection> item) => Remove(item.Key);
+    public bool Remove(string key)
+    {
+        return _data.Remove(key);
+    }
+
+    bool ICollection<TIniSection>.Remove(TIniSection item)
+    {
+        return Remove(item.Name);
+    }
+
+    bool ICollection<KeyValuePair<string, TIniSection>>.Remove(KeyValuePair<string, TIniSection> item)
+    {
+        return Remove(item.Key);
+    }
 
     /// <summary>
     /// TryGetSection
@@ -101,25 +136,55 @@ public abstract class IniDocument<TIniSection> : IIniDocument<TIniSection>, ICol
     /// <param name="key"></param>
     /// <param name="section"></param>
     /// <returns></returns>
-    public bool TryGetSection(string key, [MaybeNullWhen(false)] out TIniSection section) => _data.TryGetValue(key, out section);
+    public bool TryGetSection(string key, [MaybeNullWhen(false)] out TIniSection section)
+    {
+        return _data.TryGetValue(key, out section);
+    }
+
     /// <inheritdoc/>
     [Obsolete("Use TryGetSection instead of.")]
     public virtual bool TryGetValue(string key, [MaybeNullWhen(false)] out TIniSection value)
-        => _data.TryGetValue(key, out value);
+    {
+        return _data.TryGetValue(key, out value);
+    }
 
     /// <inheritdoc/>
-    public IEnumerator<TIniSection> GetEnumerator() => _data.Values.GetEnumerator();
+    public IEnumerator<TIniSection> GetEnumerator()
+    {
+        return _data.Values.GetEnumerator();
+    }
 
-    IEnumerator<KeyValuePair<string, TIniSection>> IEnumerable<KeyValuePair<string, TIniSection>>.GetEnumerator() => _data.GetEnumerator();
+    IEnumerator<KeyValuePair<string, TIniSection>> IEnumerable<KeyValuePair<string, TIniSection>>.GetEnumerator()
+    {
+        return _data.GetEnumerator();
+    }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
 #pragma warning disable CA1033 // 接口方法应可由子类型调用
     bool ICollection<KeyValuePair<string, TIniSection>>.IsReadOnly => ((ICollection<KeyValuePair<string, TIniSection>>)_data).IsReadOnly;
     bool ICollection<TIniSection>.IsReadOnly => ((ICollection<KeyValuePair<string, TIniSection>>)_data).IsReadOnly;
-    bool ICollection<TIniSection>.Contains(TIniSection item) => ContainsSection(item.Name);
-    bool ICollection<KeyValuePair<string, TIniSection>>.Contains(KeyValuePair<string, TIniSection> item) => ContainsSection(item.Key);
-    void ICollection<TIniSection>.CopyTo(TIniSection[] array, int arrayIndex) => Sections.CopyTo(array, arrayIndex);
-    void ICollection<KeyValuePair<string, TIniSection>>.CopyTo(KeyValuePair<string, TIniSection>[] array, int arrayIndex) => ((ICollection<KeyValuePair<string, TIniSection>>)_data).CopyTo(array, arrayIndex);
+    bool ICollection<TIniSection>.Contains(TIniSection item)
+    {
+        return ContainsSection(item.Name);
+    }
+
+    bool ICollection<KeyValuePair<string, TIniSection>>.Contains(KeyValuePair<string, TIniSection> item)
+    {
+        return ContainsSection(item.Key);
+    }
+
+    void ICollection<TIniSection>.CopyTo(TIniSection[] array, int arrayIndex)
+    {
+        Sections.CopyTo(array, arrayIndex);
+    }
+
+    void ICollection<KeyValuePair<string, TIniSection>>.CopyTo(KeyValuePair<string, TIniSection>[] array, int arrayIndex)
+    {
+        ((ICollection<KeyValuePair<string, TIniSection>>)_data).CopyTo(array, arrayIndex);
+    }
 #pragma warning restore CA1033 // 接口方法应可由子类型调用
 }

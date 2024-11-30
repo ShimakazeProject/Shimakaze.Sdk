@@ -10,13 +10,18 @@ namespace Shimakaze.Sdk.Preprocessor.Kernel;
 /// </summary>
 public static class PreprocessorExtensions
 {
-    private static IEnumerable<Command> GetCommands(Type type) => type
+    private static IEnumerable<Command> GetCommands(Type type)
+    {
+        return type
             .GetMethods()
             .Select(i => (Metadata: i.GetCustomAttribute<CommandAttribute>(), Method: i))
             .Where(i => i.Metadata is not null)
             .Select(i => new Command(type, i.Metadata?.Name, i.Method, i.Method.GetCommandParameters().ToImmutableArray()));
+    }
 
-    private static IEnumerable<CommandParameter> GetCommandParameters(this MethodInfo method) => method
+    private static IEnumerable<CommandParameter> GetCommandParameters(this MethodInfo method)
+    {
+        return method
         .GetParameters()
         .Select(i =>
         {
@@ -28,6 +33,7 @@ public static class PreprocessorExtensions
 
             return new CommandParameter(regex, i);
         });
+    }
 
     /// <summary>
     /// 添加一个预处理器指令集
@@ -48,7 +54,10 @@ public static class PreprocessorExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IEnumerable<Command> AddCommands<T>(this IServiceCollection services) where T : class => services.AddCommands(typeof(T));
+    public static IEnumerable<Command> AddCommands<T>(this IServiceCollection services) where T : class
+    {
+        return services.AddCommands(typeof(T));
+    }
 
     /// <summary>
     /// 添加引擎

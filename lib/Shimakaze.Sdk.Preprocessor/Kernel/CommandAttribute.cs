@@ -16,7 +16,10 @@ public sealed class CommandAttribute : Attribute
     /// 使用自定义正则作为预处理器指令名
     /// </summary>
     /// <param name="name"></param>
-    public CommandAttribute([StringSyntax("Regex")] string name) => Name = name;
+    public CommandAttribute([StringSyntax("Regex")] string name)
+    {
+        Name = name;
+    }
 
     [StringSyntax("Regex")]
     internal string Name { get; init; }

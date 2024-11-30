@@ -31,7 +31,7 @@ public class CsfDataListXmlSerializer : IXmlSerializer<IList<CsfData>>
     /// <inheritdoc />
     public void Serialize(XmlWriter writer, IList<CsfData> value)
     {
-        foreach (var item in value)
+        foreach (CsfData item in value)
         {
             _csfDataXmlSerializer.Serialize(writer, item);
         }

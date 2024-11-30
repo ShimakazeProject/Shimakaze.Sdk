@@ -50,11 +50,11 @@ public sealed class Command
     internal void Execute(object? obj, string line)
     {
         Match match = Regex.Match(line);
-        var args = match.Groups.Values.Skip(1).Select(i => i.Value).ToImmutableArray();
+        ImmutableArray<string> args = match.Groups.Values.Skip(1).Select(i => i.Value).ToImmutableArray();
         object[] parameters = new object[Parameters.Length];
         for (int i = 0; i < Parameters.Length; i++)
         {
-            var parameter = Parameters[i];
+            CommandParameter parameter = Parameters[i];
             string arg = args[i];
             parameters[i] = parameter.Parameter.ParameterType != typeof(string)
                 ? Convert.ChangeType(arg, parameter.Parameter.ParameterType, CultureInfo.InvariantCulture)

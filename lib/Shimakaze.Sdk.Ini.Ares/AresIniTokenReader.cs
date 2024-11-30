@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Text;
 
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini.Ares;
 
 /// <summary>
@@ -70,9 +72,15 @@ public sealed class AresIniTokenReader(TextReader textReader, bool leaveOpen = f
     }
 
     /// <inheritdoc/>
-    public IEnumerator<IIniToken> GetEnumerator() => ReadAll().GetEnumerator();
+    public IEnumerator<IIniToken> GetEnumerator()
+    {
+        return ReadAll().GetEnumerator();
+    }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
     /// <inheritdoc/>
     public void Dispose()

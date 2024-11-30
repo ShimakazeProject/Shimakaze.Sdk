@@ -64,7 +64,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         (ushort x, ushort y, ushort width, ushort height, byte[] data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
         data = CompressCore(data, width, height);
 
-        var metadata = Metadata;
+        ShapeFrameHeader metadata = Metadata;
         metadata.X = x;
         metadata.Y = y;
         metadata.Width = width;
@@ -85,7 +85,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             throw new InvalidOperationException();
         }
 
-        var metadata = Metadata;
+        ShapeFrameHeader metadata = Metadata;
         metadata.CompressionType |= ShapeFrameCompressionType.ScanlineRLE;
 
         return new(metadata, CompressCore(Indexes, Metadata.Width, Metadata.Height));
@@ -159,7 +159,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
 
         (ushort x, ushort y, ushort width, ushort height, byte[] data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
 
-        var metadata = Metadata;
+        ShapeFrameHeader metadata = Metadata;
         metadata.X = x;
         metadata.Y = y;
         metadata.Width = width;
@@ -194,8 +194,15 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         return (left, top, width, height, ms.ToArray());
     }
 
-    private static bool IsNotZero(in byte i) => i is not 0;
-    private static bool LengthIsNotZero(in (ushort Start, ushort End, ushort Length) i) => i is not { Length: 0 };
+    private static bool IsNotZero(in byte i)
+    {
+        return i is not 0;
+    }
+
+    private static bool LengthIsNotZero(in (ushort Start, ushort End, ushort Length) i)
+    {
+        return i is not { Length: 0 };
+    }
 
     private static (ushort Start, ushort End, ushort Length) GetDataRange<T>(Span<T> span, Checker<T> checker)
     {

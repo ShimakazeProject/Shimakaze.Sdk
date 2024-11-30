@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini;
 
 /// <summary>
@@ -44,35 +46,67 @@ public class IniSection(string name, Dictionary<string, string> map) : IIniSecti
     { }
 
     /// <inheritdoc/>
-    public virtual void Add(string key, string value) => Data.Add(key, value);
+    public virtual void Add(string key, string value)
+    {
+        Data.Add(key, value);
+    }
 
     /// <inheritdoc/>
-    public virtual bool ContainsKey(string key) => Data.ContainsKey(key);
+    public virtual bool ContainsKey(string key)
+    {
+        return Data.ContainsKey(key);
+    }
 
     /// <inheritdoc/>
-    public virtual bool Remove(string key) => Data.Remove(key);
+    public virtual bool Remove(string key)
+    {
+        return Data.Remove(key);
+    }
 
     /// <inheritdoc/>
     public virtual bool TryGetValue(string key, [MaybeNullWhen(false)] out string value)
-        => Data.TryGetValue(key, out value);
+    {
+        return Data.TryGetValue(key, out value);
+    }
 
     /// <inheritdoc/>
-    public virtual void Clear() => Data.Clear();
+    public virtual void Clear()
+    {
+        Data.Clear();
+    }
 
     /// <inheritdoc/>
-    public virtual IEnumerator<KeyValuePair<string, string>> GetEnumerator() => Data.GetEnumerator();
+    public virtual IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+    {
+        return Data.GetEnumerator();
+    }
 
-    IEnumerator IEnumerable.GetEnumerator() => Data.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return Data.GetEnumerator();
+    }
 
 #pragma warning disable CA1033 // 接口方法应可由子类型调用
     bool ICollection<KeyValuePair<string, string>>.IsReadOnly => ((ICollection<KeyValuePair<string, string>>)Data).IsReadOnly;
 
-    void ICollection<KeyValuePair<string, string>>.Add(KeyValuePair<string, string> item) => ((ICollection<KeyValuePair<string, string>>)Data).Add(item);
+    void ICollection<KeyValuePair<string, string>>.Add(KeyValuePair<string, string> item)
+    {
+        ((ICollection<KeyValuePair<string, string>>)Data).Add(item);
+    }
 
-    void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => ((ICollection<KeyValuePair<string, string>>)Data).CopyTo(array, arrayIndex);
+    void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
+    {
+        ((ICollection<KeyValuePair<string, string>>)Data).CopyTo(array, arrayIndex);
+    }
 
-    bool ICollection<KeyValuePair<string, string>>.Remove(KeyValuePair<string, string> item) => ((ICollection<KeyValuePair<string, string>>)Data).Remove(item);
+    bool ICollection<KeyValuePair<string, string>>.Remove(KeyValuePair<string, string> item)
+    {
+        return ((ICollection<KeyValuePair<string, string>>)Data).Remove(item);
+    }
 
-    bool ICollection<KeyValuePair<string, string>>.Contains(KeyValuePair<string, string> item) => Data.Contains(item);
+    bool ICollection<KeyValuePair<string, string>>.Contains(KeyValuePair<string, string> item)
+    {
+        return Data.Contains(item);
+    }
 #pragma warning restore CA1033 // 接口方法应可由子类型调用
 }

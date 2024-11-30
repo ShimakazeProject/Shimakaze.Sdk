@@ -72,9 +72,14 @@ public sealed class MixEntryWriter(Stream stream, bool leaveOpen = false) : IDis
     }
 
     /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
+    public void Dispose()
+    {
+        _disposable.Dispose();
+    }
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
-
+    public ValueTask DisposeAsync()
+    {
+        return _disposable.DisposeAsync();
+    }
 }

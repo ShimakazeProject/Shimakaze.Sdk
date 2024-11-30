@@ -57,5 +57,8 @@ public readonly record struct PaletteColor
     }
 
     /// <inheritdoc />
-    public override readonly string ToString() => $"#{Red:X2}{Green:X2}{Blue:X2}";
+    public override readonly string ToString()
+    {
+        return $"#{Red:X2}{Green:X2}{Blue:X2}";
+    }
 }

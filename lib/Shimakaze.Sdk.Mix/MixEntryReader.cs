@@ -44,7 +44,7 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDis
 
         Count = info.Files;
         BodySize = info.Size;
-        BodyOffset = _disposable.Resource.Position + 12 * Count;
+        BodyOffset = _disposable.Resource.Position + (12 * Count);
 
         _inited = true;
     }
@@ -93,8 +93,14 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDis
     private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
     /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
+    public void Dispose()
+    {
+        _disposable.Dispose();
+    }
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+    public ValueTask DisposeAsync()
+    {
+        return _disposable.DisposeAsync();
+    }
 }

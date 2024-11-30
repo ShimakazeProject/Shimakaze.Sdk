@@ -12,7 +12,10 @@ namespace Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 public class CsfDocumentConverter : IYamlTypeConverter
 {
     /// <inheritdoc />
-    public bool Accepts(Type type) => typeof(CsfDocument).IsAssignableFrom(type);
+    public bool Accepts(Type type)
+    {
+        return typeof(CsfDocument).IsAssignableFrom(type);
+    }
 
     /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
@@ -36,12 +39,12 @@ public class CsfDocumentConverter : IYamlTypeConverter
         parser.Consume<MappingStart>();
         while (!parser.TryConsume<MappingEnd>(out _))
         {
-            if (parser.TryConsume<Scalar>(out var scalar))
+            if (parser.TryConsume<Scalar>(out Scalar? scalar))
             {
                 switch (scalar.Value)
                 {
                     case "lang":
-                        if (parser.TryConsume<Scalar>(out var scalar1))
+                        if (parser.TryConsume<Scalar>(out Scalar? scalar1))
                         {
                             if (!int.TryParse(scalar1.Value, out int lang))
                             {
@@ -54,7 +57,7 @@ public class CsfDocumentConverter : IYamlTypeConverter
                         break;
 
                     case "version":
-                        if (parser.TryConsume<Scalar>(out var scalar2))
+                        if (parser.TryConsume<Scalar>(out Scalar? scalar2))
                         {
                             metadata.Version = int.Parse(scalar2.Value, CultureInfo.InvariantCulture);
                         }

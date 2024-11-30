@@ -94,7 +94,7 @@ public sealed class CsfDataJsonConverter : JsonConverter<CsfData>
             writer.WriteStartObject();
             writer.WriteString("label", value.LabelName);
             writer.WriteStartArray("values");
-            foreach (var item in value.Values)
+            foreach (CsfValue item in value.Values)
             {
                 writer.WriteValue<CsfValueJsonConverter, CsfValue>(item, options);
             }

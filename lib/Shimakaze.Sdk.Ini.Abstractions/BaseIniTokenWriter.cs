@@ -1,5 +1,4 @@
-
-namespace Shimakaze.Sdk.Ini;
+namespace Shimakaze.Sdk.Ini.Abstractions;
 
 /// <summary>
 /// INI Token 流写入器
@@ -26,10 +25,16 @@ public abstract class BaseIniTokenWriter<TIniDocument, TIniSection>(TextWriter t
     }
 
     /// <inheritdoc/>
-    public void WriteLine() => BaseWriter.WriteLine();
+    public void WriteLine()
+    {
+        BaseWriter.WriteLine();
+    }
 
     /// <inheritdoc/>
-    public void Flush() => BaseWriter.Flush();
+    public void Flush()
+    {
+        BaseWriter.Flush();
+    }
 
     /// <summary>
     /// 

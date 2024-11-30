@@ -8,10 +8,16 @@ public sealed class HvaReader(Stream stream, bool leaveOpen = false) : IDisposab
     private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
 
     /// <inheritdoc/>
-    public void Dispose() => _disposable.Dispose();
+    public void Dispose()
+    {
+        _disposable.Dispose();
+    }
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _disposable.DisposeAsync();
+    public ValueTask DisposeAsync()
+    {
+        return _disposable.DisposeAsync();
+    }
 
     /// <inheritdoc />
     public async Task<HvaFile> ReadAsync(IProgress<float>? progress = default, CancellationToken cancellationToken = default)
@@ -33,7 +39,7 @@ public sealed class HvaReader(Stream stream, bool leaveOpen = false) : IDisposab
         {
             cancellationToken.ThrowIfCancellationRequested();
             hva.Frames[i] ??= new();
-            progress?.Report(1f / 3 + 2f / 3 * ((float)i / hva.Frames.Length));
+            progress?.Report((1f / 3) + (2f / 3 * ((float)i / hva.Frames.Length)));
 
             hva.Frames[i].Matrices = new HvaMatrix[hva.Header.NumSections];
             _disposable.Resource.Read(hva.Frames[i].Matrices);

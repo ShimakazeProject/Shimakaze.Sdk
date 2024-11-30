@@ -6,6 +6,9 @@ namespace Shimakaze.Sdk.Mix.Toolkit;
 internal sealed class RootCommand
 {
 #pragma warning disable CA1822 // 将成员标记为 static
-    public void Run() => Cli.Run<RootCommand>("--help");
+    public void Run()
+    {
+        Cli.Run<RootCommand>("--help");
+    }
 #pragma warning restore CA1822 // 将成员标记为 static
 }

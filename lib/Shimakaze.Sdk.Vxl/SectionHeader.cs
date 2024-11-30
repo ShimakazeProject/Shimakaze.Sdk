@@ -5,7 +5,7 @@ namespace Shimakaze.Sdk.Vxl;
 /// <summary>
 /// LimbHeader
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 16 + 3 * sizeof(int))]
+[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 16 + (3 * sizeof(int)))]
 public record struct SectionHeader
 {
     /// <summary>
@@ -27,6 +27,6 @@ public record struct SectionHeader
 
     /// <summary>
     /// </summary>
-    [FieldOffset(16 + sizeof(int) * 2)]
+    [FieldOffset(16 + (sizeof(int) * 2))]
     public uint Unknown2;
 }

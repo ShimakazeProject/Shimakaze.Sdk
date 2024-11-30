@@ -1,5 +1,7 @@
 using System.Text;
 
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini.Ares;
 
 /// <summary>
@@ -33,7 +35,7 @@ public sealed class AresIniDocumentBinder(
         bool isComment = false;
         string? key = default;
 
-        foreach (var token in _tokenReader)
+        foreach (IIniToken token in _tokenReader)
         {
             switch (token.Token)
             {
@@ -103,7 +105,7 @@ public sealed class AresIniDocumentBinder(
                     string sectionName = GetString(false);
                     if (!isBaseSection)
                     {
-                        if (!ini.TryGetSection(sectionName, out var section))
+                        if (!ini.TryGetSection(sectionName, out AresIniSection? section))
                         {
                             section = ini[sectionName] = new(sectionName, default, new(options.KeyComparer));
                         }
@@ -165,14 +167,14 @@ public sealed class AresIniDocumentBinder(
         options ??= AresIniDocumentBinderOptions.Default;
         ini ??= new(options.SectionComparer, options.KeyComparer);
         // 组织继承结构
-        foreach (var item in ini)
+        foreach (AresIniSection item in ini)
         {
             if (string.IsNullOrEmpty(item.BaseName))
             {
                 continue;
             }
 
-            if (ini.TryGetSection(item.BaseName, out var section))
+            if (ini.TryGetSection(item.BaseName, out AresIniSection? section))
             {
                 item.Base = section;
             }

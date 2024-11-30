@@ -20,7 +20,7 @@ public sealed class VoxelReader
         VoxelFile voxel = new();
         stream.Read(out voxel.InternalHeader);
 
-        uint limbDataOffset = 34 + Palette.DefaultColorCount * 3 + voxel.Header.NumSections * 28;
+        uint limbDataOffset = 34 + (Palette.DefaultColorCount * 3) + (voxel.Header.NumSections * 28);
 
         voxel.Palette = PaletteReader.Read(stream, skipPostprocess: true);
 
@@ -37,9 +37,9 @@ public sealed class VoxelReader
         for (int i = 0; i < voxel.Header.NumSections; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            progress?.Report(1f / 3 * ((float)i / voxel.Header.NumSections + 1));
+            progress?.Report(1f / 3 * (((float)i / voxel.Header.NumSections) + 1));
 
-            stream.Seek(limbDataOffset + voxel.Header.BodySize + i * 92, SeekOrigin.Begin);
+            stream.Seek(limbDataOffset + voxel.Header.BodySize + (i * 92), SeekOrigin.Begin);
             stream.Read(out voxel.SectionTailers[i]);
         }
 
@@ -47,7 +47,7 @@ public sealed class VoxelReader
         for (int i = 0; i < voxel.Header.NumSections; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            progress?.Report(1f / 3 * ((float)i / voxel.Header.NumSections + 2));
+            progress?.Report(1f / 3 * (((float)i / voxel.Header.NumSections) + 2));
 
             int n = voxel.SectionTailers[i].Size.X * voxel.SectionTailers[i].Size.Y;
             long start = limbDataOffset + voxel.SectionTailers[i].SpanStartOffset;

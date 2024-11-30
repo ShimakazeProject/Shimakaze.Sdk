@@ -7,20 +7,26 @@ internal static class PaletteColorExtensions
     /// </summary>
     /// <param name="pixel"></param>
     /// <returns></returns>
-    public static PaletteColor AsDisplaydColor(this in PaletteColor pixel) => new(
+    public static PaletteColor AsDisplaydColor(this in PaletteColor pixel)
+    {
+        return new(
         unchecked((byte)((pixel.Red << 2) & 0b11111000)),
         unchecked((byte)(pixel.Green << 2)),
         unchecked((byte)((pixel.Blue << 2) & 0b11111000)));
+    }
 
     /// <summary>
     /// 存储到文件中的颜色 (每个颜色的RGB值分别右移两位)
     /// </summary>
     /// <param name="pixel"></param>
     /// <returns></returns>
-    public static PaletteColor AsSavedColor(this in PaletteColor pixel) => new(
+    public static PaletteColor AsSavedColor(this in PaletteColor pixel)
+    {
+        return new(
         unchecked((byte)(pixel.Red >> 2)),
         unchecked((byte)(pixel.Green >> 2)),
         unchecked((byte)(pixel.Blue >> 2)));
+    }
 
     /// <summary>
     /// 将24位色转换为16位色

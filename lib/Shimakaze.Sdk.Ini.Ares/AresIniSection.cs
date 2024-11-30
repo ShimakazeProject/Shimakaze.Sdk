@@ -64,7 +64,7 @@ public sealed class AresIniSection(string name, string? @base, Dictionary<string
     {
         get
         {
-            if (base.TryGetValue(key, out var value))
+            if (base.TryGetValue(key, out string? value))
             {
                 return value;
             }
@@ -125,10 +125,12 @@ public sealed class AresIniSection(string name, string? @base, Dictionary<string
 
     /// <inheritdoc/>
     public override IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        => Base is not null
-        ? Data
-            .Concat(Base)
-            .DistinctBy(i => i.Key)
-            .GetEnumerator()
-        : base.GetEnumerator();
+    {
+        return Base is not null
+            ? Data
+                .Concat(Base)
+                .DistinctBy(i => i.Key)
+                .GetEnumerator()
+            : base.GetEnumerator();
+    }
 }

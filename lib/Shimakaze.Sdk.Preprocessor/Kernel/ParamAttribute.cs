@@ -12,7 +12,10 @@ public sealed class ParamAttribute : Attribute
     /// 正则匹配预处理器指令参数
     /// </summary>
     /// <param name="pattern"></param>
-    public ParamAttribute([StringSyntax("Regex")] string pattern = @"\w*") => Regex = pattern;
+    public ParamAttribute([StringSyntax("Regex")] string pattern = @"\w*")
+    {
+        Regex = pattern;
+    }
 
     [StringSyntax("Regex")]
     internal string Regex { get; init; }

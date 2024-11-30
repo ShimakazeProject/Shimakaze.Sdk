@@ -10,13 +10,16 @@ namespace Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 public class CsfDataConverter : IYamlTypeConverter
 {
     /// <inheritdoc />
-    public bool Accepts(Type type) => typeof(CsfData).IsAssignableFrom(type);
+    public bool Accepts(Type type)
+    {
+        return typeof(CsfData).IsAssignableFrom(type);
+    }
 
     /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
         // 检查是不是 CSF 标签
-        if (!parser.TryConsume<Scalar>(out var label))
+        if (!parser.TryConsume<Scalar>(out Scalar? label))
         {
             throw new FormatException($"Unknown Format at {parser.Current?.Start} - {parser.Current?.End}");
         }

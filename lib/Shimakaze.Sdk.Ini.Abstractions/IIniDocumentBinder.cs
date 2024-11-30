@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Ini;
+namespace Shimakaze.Sdk.Ini.Abstractions;
 
 /// <summary>
 /// IniDocument 绑定器

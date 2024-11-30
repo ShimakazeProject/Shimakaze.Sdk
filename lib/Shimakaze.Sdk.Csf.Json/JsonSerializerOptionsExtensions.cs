@@ -8,7 +8,7 @@ internal static class JsonSerializerOptionsExtensions
     public static JsonSerializerOptions Init(this JsonSerializerOptions? options, IEnumerable<JsonConverter> converters)
     {
         options ??= new();
-        foreach (var item in converters)
+        foreach (JsonConverter item in converters)
         {
             options.Converters.Add(item);
         }

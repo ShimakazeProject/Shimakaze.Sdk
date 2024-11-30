@@ -10,7 +10,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
 {
     public readonly VoxelPalette Vpl = vpl;
     private const int SIZE_OF_CELL = 3;
-    private const int X_SECTION_OFFSET = 3 * 16 + 4;
+    private const int X_SECTION_OFFSET = (3 * 16) + 4;
     private const int Y_OFFSET = 1;
     private readonly Palette _pal = pal;
     private (int X, int Y, int Section) _current;
@@ -28,7 +28,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
             }
             else
             {
-                Console.SetCursorPosition(X_SECTION_OFFSET + _current.X * SIZE_OF_CELL, Y_OFFSET + _current.Y);
+                Console.SetCursorPosition(X_SECTION_OFFSET + (_current.X * SIZE_OF_CELL), Y_OFFSET + _current.Y);
             }
 
             ConsoleKeyInfo key = Console.ReadKey(true);

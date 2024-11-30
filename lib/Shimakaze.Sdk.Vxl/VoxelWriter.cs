@@ -16,7 +16,7 @@ public sealed class VoxelWriter
     /// <param name="cancellationToken"></param>
     public static void Write(VoxelFile value, Stream stream, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
-        uint limbDataOffset = 34 + Palette.DefaultColorCount * 3 + value.Header.NumSections * 28;
+        uint limbDataOffset = 34 + (Palette.DefaultColorCount * 3) + (value.Header.NumSections * 28);
 
         stream.Write(value.Header);
 
@@ -38,7 +38,7 @@ public sealed class VoxelWriter
                 cancellationToken.ThrowIfCancellationRequested();
 
                 stream.Seek(data + value.SectionData[i].SpanStart[j], SeekOrigin.Begin);
-                foreach (var span in value.SectionData[i].Voxel[j].Sections)
+                foreach (VoxelSpanSegment span in value.SectionData[i].Voxel[j].Sections)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 

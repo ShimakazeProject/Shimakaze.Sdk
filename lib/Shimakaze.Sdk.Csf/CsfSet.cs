@@ -20,10 +20,16 @@ public class CsfSet
     public virtual bool IsReadOnly { get; }
 
     /// <inheritdoc />
-    public virtual bool Add(CsfData item) => Cache.TryAdd(item.LabelName, item);
+    public virtual bool Add(CsfData item)
+    {
+        return Cache.TryAdd(item.LabelName, item);
+    }
 
     /// <inheritdoc />
-    void ICollection<CsfData>.Add(CsfData item) => Add(item);
+    void ICollection<CsfData>.Add(CsfData item)
+    {
+        Add(item);
+    }
 
     /// <summary>
     /// 生成Csf
@@ -54,66 +60,102 @@ public class CsfSet
     }
 
     /// <inheritdoc />
-    public virtual void Clear() => Cache.Clear();
+    public virtual void Clear()
+    {
+        Cache.Clear();
+    }
 
     /// <inheritdoc />
-    public virtual bool Contains(CsfData item) => Cache.TryGetValue(item.LabelName, out _);
+    public virtual bool Contains(CsfData item)
+    {
+        return Cache.TryGetValue(item.LabelName, out _);
+    }
 
     /// <inheritdoc />
-    public virtual void CopyTo(CsfData[] array, int arrayIndex) => Cache.Values.CopyTo(array, arrayIndex);
+    public virtual void CopyTo(CsfData[] array, int arrayIndex)
+    {
+        Cache.Values.CopyTo(array, arrayIndex);
+    }
 
     /// <inheritdoc />
     public virtual void ExceptWith(IEnumerable<CsfData> other)
     {
-        foreach (var item in other)
+        foreach (CsfData item in other)
         {
             Cache.Remove(item.LabelName);
         }
     }
 
     /// <inheritdoc />
-    public virtual IEnumerator<CsfData> GetEnumerator() => Cache.Values.GetEnumerator();
+    public virtual IEnumerator<CsfData> GetEnumerator()
+    {
+        return Cache.Values.GetEnumerator();
+    }
 
     /// <inheritdoc />
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
     /// <inheritdoc />
     public virtual void IntersectWith(IEnumerable<CsfData> other)
     {
         Clear();
-        foreach (var item in other)
+        foreach (CsfData item in other)
         {
             Add(item);
         }
     }
 
     /// <inheritdoc />
-    public virtual bool IsProperSubsetOf(IEnumerable<CsfData> other) => other.Count() > Count && !Cache.Values.Any(i => !other.Contains(i));
+    public virtual bool IsProperSubsetOf(IEnumerable<CsfData> other)
+    {
+        return other.Count() > Count && !Cache.Values.Any(i => !other.Contains(i));
+    }
 
     /// <inheritdoc />
-    public virtual bool IsProperSupersetOf(IEnumerable<CsfData> other) => other.Count() < Count && !other.Any(i => !Cache.TryGetValue(i.LabelName, out _));
+    public virtual bool IsProperSupersetOf(IEnumerable<CsfData> other)
+    {
+        return other.Count() < Count && !other.Any(i => !Cache.TryGetValue(i.LabelName, out _));
+    }
 
     /// <inheritdoc />
-    public virtual bool IsSubsetOf(IEnumerable<CsfData> other) => other.Count() >= Count && !Cache.Values.Any(i => !other.Contains(i));
+    public virtual bool IsSubsetOf(IEnumerable<CsfData> other)
+    {
+        return other.Count() >= Count && !Cache.Values.Any(i => !other.Contains(i));
+    }
 
     /// <inheritdoc />
-    public virtual bool IsSupersetOf(IEnumerable<CsfData> other) => other.Count() <= Count && !other.Any(i => !Cache.TryGetValue(i.LabelName, out _));
+    public virtual bool IsSupersetOf(IEnumerable<CsfData> other)
+    {
+        return other.Count() <= Count && !other.Any(i => !Cache.TryGetValue(i.LabelName, out _));
+    }
 
     /// <inheritdoc />
-    public virtual bool Overlaps(IEnumerable<CsfData> other) => Cache.Values.Any(i => other.Contains(i));
+    public virtual bool Overlaps(IEnumerable<CsfData> other)
+    {
+        return Cache.Values.Any(i => other.Contains(i));
+    }
 
     /// <inheritdoc />
-    public virtual bool Remove(CsfData item) => Cache.Remove(item.LabelName);
+    public virtual bool Remove(CsfData item)
+    {
+        return Cache.Remove(item.LabelName);
+    }
 
     /// <inheritdoc />
-    public virtual bool SetEquals(IEnumerable<CsfData> other) => other.Count() == Count && !Cache.Values.Any(i => !other.Contains(i));
+    public virtual bool SetEquals(IEnumerable<CsfData> other)
+    {
+        return other.Count() == Count && !Cache.Values.Any(i => !other.Contains(i));
+    }
 
     /// <inheritdoc />
     public virtual void SymmetricExceptWith(IEnumerable<CsfData> other)
     {
-        foreach (var item in other)
+        foreach (CsfData item in other)
         {
-            if (Cache.TryGetValue(item.LabelName, out var value))
+            if (Cache.TryGetValue(item.LabelName, out CsfData? value))
             {
                 Remove(value);
             }
@@ -127,7 +169,7 @@ public class CsfSet
     /// <inheritdoc />
     public virtual void UnionWith(IEnumerable<CsfData> other)
     {
-        foreach (var item in other)
+        foreach (CsfData item in other)
         {
             Cache[item.LabelName] = item;
         }

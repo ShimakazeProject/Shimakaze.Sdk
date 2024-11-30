@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini;
 
 /// <summary>
@@ -38,7 +40,7 @@ public sealed class IniTokenWriter(TextWriter textWriter, bool leaveOpen = false
     public override void Write(in IniDocument document)
     {
         Write(document.DefaultSection);
-        foreach (var item in document)
+        foreach (IniSection item in document)
         {
             Write(item);
         }
@@ -57,7 +59,7 @@ public sealed class IniTokenWriter(TextWriter textWriter, bool leaveOpen = false
             Write(IniTokenTools.EndBracket);
             Write(IniTokenTools.LF);
         }
-        foreach (var item in section)
+        foreach (KeyValuePair<string, string> item in section)
         {
             Write(item);
         }

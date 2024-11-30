@@ -36,8 +36,8 @@ public sealed class ConditionalCommand(Engine engine, Logger<ConditionalCommand>
             throw new ArgumentNullException(nameof(condition));
         }
 
-        var conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
-        var conditionParser = engine.GetOrNew("ConditionParser", () => new ConditionParser(engine));
+        Stack<ConditionStatus> conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
+        ConditionParser conditionParser = engine.GetOrNew("ConditionParser", () => new ConditionParser(engine));
 
         engine.CanWritable = conditionParser.Parse(condition);
         if (logger is not null)
@@ -64,10 +64,10 @@ public sealed class ConditionalCommand(Engine engine, Logger<ConditionalCommand>
             throw new ArgumentNullException(nameof(condition));
         }
 
-        var conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
-        var conditionParser = engine.GetOrNew("ConditionParser", () => new ConditionParser(engine));
+        Stack<ConditionStatus> conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
+        ConditionParser conditionParser = engine.GetOrNew("ConditionParser", () => new ConditionParser(engine));
 
-        var lastStatus = conditionStack.Pop();
+        ConditionStatus lastStatus = conditionStack.Pop();
         if (logger is not null)
         {
             Pop(logger, lastStatus.Tag, default!);
@@ -103,9 +103,9 @@ public sealed class ConditionalCommand(Engine engine, Logger<ConditionalCommand>
     [Command]
     public void Else()
     {
-        var conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
+        Stack<ConditionStatus> conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
 
-        var lastStatus = conditionStack.Pop();
+        ConditionStatus lastStatus = conditionStack.Pop();
         if (logger is not null)
         {
             Pop(logger, lastStatus.Tag, default!);
@@ -142,9 +142,9 @@ public sealed class ConditionalCommand(Engine engine, Logger<ConditionalCommand>
     [Command]
     public void Endif()
     {
-        var conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
+        Stack<ConditionStatus> conditionStack = engine.GetOrNew("ConditionStack", () => new Stack<ConditionStatus>());
 
-        var lastStatus = conditionStack.Pop();
+        ConditionStatus lastStatus = conditionStack.Pop();
         if (logger is not null)
         {
             Pop(logger, lastStatus.Tag, default!);
@@ -170,7 +170,7 @@ file sealed class ConditionParser(Engine engine)
             default: break;
         }
 
-        var defines = engine.GetOrNew("Defines", () => new HashSet<string>());
+        HashSet<string> defines = engine.GetOrNew("Defines", () => new HashSet<string>());
 
         return defines.Any(i => i.Equals(condition, StringComparison.OrdinalIgnoreCase))
             || (condition.Contains("||")
@@ -180,7 +180,10 @@ file sealed class ConditionParser(Engine engine)
             : condition.TrimStart().StartsWith('!') && NOT(condition));
     }
 
-    private bool AND(string condition) => condition.Trim().Split("&&").All(Parse);
+    private bool AND(string condition)
+    {
+        return condition.Trim().Split("&&").All(Parse);
+    }
 
     private bool NOT(string condition)
     {
@@ -190,7 +193,10 @@ file sealed class ConditionParser(Engine engine)
             : Parse(condition);
     }
 
-    private bool OR(string condition) => condition.Trim().Split("||").Any(Parse);
+    private bool OR(string condition)
+    {
+        return condition.Trim().Split("||").Any(Parse);
+    }
 }
 
 file sealed record ConditionStatus(bool IsMatched, string Condition, string Tag);

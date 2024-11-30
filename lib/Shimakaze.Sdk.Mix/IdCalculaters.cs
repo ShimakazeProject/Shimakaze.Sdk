@@ -37,7 +37,10 @@ public static class IdCalculaters
 
     /// <inheritdoc cref="TDIdCalculater"/>
     [Obsolete("Use TDIdCalculater")]
-    public static uint TDdCalculater(string name) => TDIdCalculater(name);
+    public static uint TDdCalculater(string name)
+    {
+        return TDIdCalculater(name);
+    }
 
     /// <summary> 
     /// Id Calc for RA/TD 
@@ -65,7 +68,7 @@ public static class IdCalculaters
 
                 i++;
             }
-            id = (id << 1 | id >> 31) + a;
+            id = ((id << 1) | (id >> 31)) + a;
         }
         return id;
     }

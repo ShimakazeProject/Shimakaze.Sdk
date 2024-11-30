@@ -60,7 +60,7 @@ public class CsfValueListXmlSerializer : IXmlSerializer<IList<CsfValue>>
         {
             // <Values>
             writer.WriteStartElement("Values");
-            foreach (var item in value)
+            foreach (CsfValue item in value)
             {
                 // <Value>
                 writer.WriteStartElement("Value");

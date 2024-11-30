@@ -56,7 +56,7 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
         writer.WriteProperty<CsfMetadataJsonConverter, CsfMetadata>("head", value.Metadata, options);
 
         writer.WriteStartArray("data");
-        foreach (var item in value.Data)
+        foreach (CsfData item in value.Data)
         {
             writer.WriteValue<CsfDataJsonConverter, CsfData>(item, options);
         }

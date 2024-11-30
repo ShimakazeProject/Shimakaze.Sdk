@@ -97,11 +97,11 @@ public sealed class Engine
 
         line = line.Trim();
 
-        var argc = line
+        int argc = line
             .Split(' ')
             .Where(i => !string.IsNullOrWhiteSpace(i))
             .Count() - 1;
-        var cmd = _commands
+        Command cmd = _commands
             .Where(i => i.Parameters.Length >= argc)
             .OrderBy(i => i.Parameters.Length)
             .FirstOrDefault(i => i.CanExecute(line))

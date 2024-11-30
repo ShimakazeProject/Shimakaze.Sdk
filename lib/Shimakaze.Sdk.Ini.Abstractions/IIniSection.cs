@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Shimakaze.Sdk.Ini;
+namespace Shimakaze.Sdk.Ini.Abstractions;
 
 /// <summary>
 /// 表示一个INI节

@@ -61,7 +61,7 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
         writer.WriteProperty<V1.CsfLanguageJsonConverter, int>("language", value.Metadata.Language, options);
 
         writer.WriteStartObject("data");
-        foreach (var item in value.Data)
+        foreach (CsfData item in value.Data)
         {
             writer.WriteProperty<CsfDataValueJsonConverter, IList<CsfValue>>(item.LabelName, item.Values, options);
         }
@@ -83,7 +83,7 @@ public sealed class CsfFileJsonConverter : JsonConverter<CsfDocument>
                 break;
             }
 
-            var label = reader.GetString();
+            string? label = reader.GetString();
             CsfJsonAsserts.IsNotNull(label);
             list.Add(new(label)
             {

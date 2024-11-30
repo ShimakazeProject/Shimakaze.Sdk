@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini;
 
 /// <summary>
@@ -10,19 +12,30 @@ public static class IniTokenTools
     /// </summary>
     /// <param name="token"></param>
     /// <returns></returns>
-    public static IIniToken White(int token) => new IniToken(token, default);
+    public static IIniToken White(int token)
+    {
+        return new IniToken(token, default);
+    }
+
     /// <summary>
     /// 符号
     /// </summary>
     /// <param name="token"></param>
     /// <returns></returns>
-    public static IIniToken Sign(int token) => new IniToken(token, default);
+    public static IIniToken Sign(int token)
+    {
+        return new IniToken(token, default);
+    }
+
     /// <summary>
     /// 字符串
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static IIniToken Value(string value) => new IniToken(1, value);
+    public static IIniToken Value(string value)
+    {
+        return new IniToken(1, value);
+    }
 
     // ========================== 空白 ==========================
 

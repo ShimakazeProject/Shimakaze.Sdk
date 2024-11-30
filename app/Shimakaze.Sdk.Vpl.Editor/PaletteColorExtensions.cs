@@ -13,16 +13,22 @@ public static class PaletteColorExtensions
     /// <param name="color"> 颜色 </param>
     /// <param name="isBackground"> 是否是背景色 </param>
     /// <returns> </returns>
-    public static string GetANSIString(this in PaletteColor color, bool isBackground = false) => $"\x1B[{(isBackground ? 4 : 3)}8;2;{color.Red};{color.Green};{color.Blue}m";
+    public static string GetANSIString(this in PaletteColor color, bool isBackground = false)
+    {
+        return $"\x1B[{(isBackground ? 4 : 3)}8;2;{color.Red};{color.Green};{color.Blue}m";
+    }
 
     /// <summary>
     /// 反转颜色
     /// </summary>
     /// <param name="color"> 颜色 </param>
     /// <returns> 被反转后的颜色 </returns>
-    public static PaletteColor GetReverse(this in PaletteColor color) => new(
+    public static PaletteColor GetReverse(this in PaletteColor color)
+    {
+        return new(
         (byte)~color.Red,
         (byte)~color.Green,
         (byte)~color.Blue
     );
+    }
 }

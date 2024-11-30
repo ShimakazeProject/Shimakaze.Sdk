@@ -1,5 +1,7 @@
 using System.Text;
 
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini;
 
 /// <summary>
@@ -32,7 +34,7 @@ public sealed class IniDocumentBinder(
         bool isComment = false;
         string? key = default;
 
-        foreach (var token in _tokenReader)
+        foreach (IIniToken token in _tokenReader)
         {
             switch (token.Token)
             {
@@ -78,7 +80,7 @@ public sealed class IniDocumentBinder(
                 case ']' when !isComment:
                     isSection = false;
                     string sectionName = GetString(false);
-                    if (!ini.TryGetSection(sectionName, out var section))
+                    if (!ini.TryGetSection(sectionName, out IniSection? section))
                     {
                         section = ini[sectionName] = new(sectionName, new(options.KeyComparer));
                     }

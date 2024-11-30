@@ -28,7 +28,7 @@ public sealed class PaletteWriter
         fixed (void* ptr = palette.Colors)
         {
             byte* p = (byte*)ptr;
-            for (var i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 p[i] >>= 2;
             }

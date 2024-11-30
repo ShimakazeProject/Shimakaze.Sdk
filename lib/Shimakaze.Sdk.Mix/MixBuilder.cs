@@ -78,7 +78,7 @@ public sealed class MixBuilder(IdCalculater idCalculater)
         for (int i = 0; i < Files.Count; i++)
         {
             setProgress.Progress?.Report(i);
-            using var fs = Files[i].OpenRead();
+            using FileStream fs = Files[i].OpenRead();
             await fs.CopyToAsync(stream).ConfigureAwait(false);
         }
         WritedFiles?.Invoke(this, EventArgs.Empty);
@@ -95,8 +95,8 @@ public sealed class MixBuilder(IdCalculater idCalculater)
         ref MixEntry entry = ref MemoryMarshal.GetReference(Entries.AsSpan());
         for (int i = 0; i < Files.Count; i++)
         {
-            ref var currentFile = ref Unsafe.Add(ref file, i);
-            ref var currentEntry = ref Unsafe.Add(ref entry, i);
+            ref FileInfo currentFile = ref Unsafe.Add(ref file, i);
+            ref MixEntry currentEntry = ref Unsafe.Add(ref entry, i);
             currentEntry.Id = idCalculater(currentFile.Name.ToUpperInvariant());
             currentEntry.Offset = position;
             position += currentEntry.Size = (int)currentFile.Length;
