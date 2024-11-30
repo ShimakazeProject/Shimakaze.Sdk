@@ -14,8 +14,10 @@ on:
       - Directory.Build.props
       - Directory.Build.targets
       - Directory.Packages.props
+      - "app/**/*"
+      - "lib/**/*"
+      - "msbuild/**/*"
       - "src/**/*"
-      - "sdk/**/*"
       - "test/**/*"
   pull_request:
     branches:
@@ -30,8 +32,10 @@ on:
       - Directory.Build.props
       - Directory.Build.targets
       - Directory.Packages.props
+      - "app/**/*"
+      - "lib/**/*"
+      - "msbuild/**/*"
       - "src/**/*"
-      - "sdk/**/*"
       - "test/**/*"
   merge_group:
 
