@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project>
-  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
-  <PropertyGroup>
 
+  <ImportGroup>
+    <Import Project="$(MSBuildThisFileDirectory)\msbuild\Framework.props"/>
+    <Import Project="$(MSBuildThisFileDirectory)\msbuild\CSharp.props" Condition="$(ShimakazeSdkIsCSharp)"/>
+  </ImportGroup>
 
-  </PropertyGroup>
 </Project>

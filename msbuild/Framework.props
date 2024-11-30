@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <ShimakazeSdkRootFolder>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '..'))</ShimakazeSdkRootFolder>
+
+    <ShimakazeSdkIsCSharp Condition=" '$(ShimakazeSdkIsCSharp)' == '' ">False</ShimakazeSdkIsCSharp>
+    <ShimakazeSdkIsCSharp Condition=" '$(MSBuildProjectExtension)' == '.csproj' ">True</ShimakazeSdkIsCSharp>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,45 @@
+<Project>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    
+    <Authors>Shimakaze Project</Authors>
+    <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
+    <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageOutputPath>$(ShimakazeSdkRootFolder)nupkg</PackageOutputPath>
+
+    <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(MSBuildProjectDirectory)\Assets\logo.png')">$(MSBuildProjectDirectory)\Assets\logo.png</IconPath>
+    <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(ShimakazeSdkRootFolder)assets\logo.png')">$(ShimakazeSdkRootFolder)assets\logo.png</IconPath>
+    <PackageIcon Condition=" '$(IconPath)' != '' ">logo.png</PackageIcon>
+
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)\ReadMe.md')">$(MSBuildProjectDirectory)\ReadMe.md</ReadmeFile>
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(ShimakazeSdkRootFolder)ReadMe.md')">$(ShimakazeSdkRootFolder)ReadMe.md</ReadmeFile>
+    <PackageReadmeFile Condition=" '$(ReadmeFile)' != '' ">ReadMe.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(IconPath)" Link="logo.png" Condition=" '$(IconPath)' != '' " Pack="True" PackagePath="\" />
+    <None Include="$(ReadmeFile)" Link="ReadMe.md" Condition=" '$(ReadmeFile)' != '' " Pack="True" PackagePath="\" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Shimakaze.Sdk.Common'">
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
+    <Using Include="Shimakaze.Sdk.Common"/>
+  </ItemGroup>
+
+</Project>

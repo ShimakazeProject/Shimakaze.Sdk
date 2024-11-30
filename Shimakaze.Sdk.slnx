@@ -1,5 +1,29 @@
 <Solution>
-    <Folder Name="/Solution Items/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
+    <Folder Name="/Applications/">
+        <Project Path="app\Shimakaze.Sdk.Csf.Converter\Shimakaze.Sdk.Csf.Converter.csproj" />
+        <Project Path="app\Shimakaze.Sdk.Mix.Toolkit\Shimakaze.Sdk.Mix.Toolkit.csproj" />
+        <Project Path="app\Shimakaze.Sdk.Shp.Maker\Shimakaze.Sdk.Shp.Maker.csproj" />
+        <Project Path="app\Shimakaze.Sdk.Vpl.Editor\Shimakaze.Sdk.Vpl.Editor.csproj" />
+    </Folder>
+    <Folder Name="/Libraries/">
+        <Project Path="lib\Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Hva\Shimakaze.Sdk.Hva.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Ini.Abstractions\Shimakaze.Sdk.Ini.Abstractions.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Ini.Ares\Shimakaze.Sdk.Ini.Ares.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Pcx\Shimakaze.Sdk.Pcx.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Shp\Shimakaze.Sdk.Shp.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
+        <Project Path="lib\Shimakaze.Sdk.Vxl\Shimakaze.Sdk.Vxl.csproj" />
+    </Folder>
+    <Folder Name="/Solution Items/">
         <File Path=".editorconfig" />
         <File Path=".gitattributes" />
         <File Path=".gitignore" />
@@ -10,5 +34,9 @@
         <File Path="LICENSE" />
         <File Path="nuget.config" />
         <File Path="ReadMe.md" />
+    </Folder>
+    <Folder Name="/Solution Items/msbuild/">
+        <File Path="msbuild/CSharp.props" />
+        <File Path="msbuild/Framework.props" />
     </Folder>
 </Solution>
