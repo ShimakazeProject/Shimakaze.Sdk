@@ -63,7 +63,7 @@ jobs:
 
       - name: 测试
         shell: pwsh
-        run: dotnet coverage collect -f cobertura dotnet test --graph --artifacts-path artifacts --configuration Release --no-restore --no-build
+        run: dotnet coverage collect --output-format coverage dotnet test --graph --artifacts-path artifacts --configuration Release --no-restore --no-build
 
       - name: 打包
         run: dotnet pack --graph --artifacts-path artifacts --configuration Release --no-restore --no-build --include-symbols --include-source
@@ -94,7 +94,7 @@ jobs:
         uses: coverallsapp/github-action@v2
         continue-on-error: true
         with:
-          file: .\output.cobertura.xml
+          file: .\output.coverage
 
   release:
     needs: build-dotnet
