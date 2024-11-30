@@ -36,23 +36,25 @@ internal sealed class ExtractCommand
         IDictionary<string, string>? nameMap = default;
         if (NameMap is not null)
         {
-            using var reader = NameMap.OpenText();
+            using StreamReader reader = NameMap.OpenText();
             using IniTokenReader tokens = new(reader);
             using IniDocumentBinder binder = new(tokens);
-            var ini = binder.Bind();
-            if (ini.TryGetSection("NameMap", out var section))
+            IniDocument ini = binder.Bind();
+            if (ini.TryGetSection("NameMap", out IniSection? section))
+            {
                 nameMap = section;
+            }
         }
 
         nameMap ??= new Dictionary<string, string>();
 
-        using var stream = Input.OpenRead();
+        using FileStream stream = Input.OpenRead();
         using MixEntryReader entryReader = new(stream);
-        var entries = entryReader.ReadAll();
+        MixEntry[] entries = entryReader.ReadAll();
         initProgressBar.Finished();
 
-        using var extractProgressBar = progressBar.Spawn(entries.Length, "释放文件");
-        var metadataProgress = extractProgressBar.AsProgress<int>(
+        using ChildProgressBar extractProgressBar = progressBar.Spawn(entries.Length, "释放文件");
+        IProgress<int> metadataProgress = extractProgressBar.AsProgress<int>(
             i => $"当前进度 {i}/{entries.Length}",
             i => i / entries.Length
             );
@@ -62,11 +64,13 @@ internal sealed class ExtractCommand
             metadataProgress.Report(i);
 
             string name = entries[i].Id.ToString("X8", CultureInfo.InvariantCulture);
-            if (nameMap.TryGetValue(name, out var value))
+            if (nameMap.TryGetValue(name, out string? value))
+            {
                 name = value;
+            }
 
-            using var pb = extractProgressBar.Spawn(entries[i].Size, $"正在释放 \"{name}\"");
-            var progress = pb.AsProgress<int>(
+            using ChildProgressBar pb = extractProgressBar.Spawn(entries[i].Size, $"正在释放 \"{name}\"");
+            IProgress<int> progress = pb.AsProgress<int>(
                 i =>
                 {
                     string unit = "B";

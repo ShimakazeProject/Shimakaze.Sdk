@@ -45,8 +45,8 @@ internal sealed class RootCommand
         InitOutputFormat();
         InitOutput();
 
-        await using var ifs = Input.OpenRead();
-        await using var ofs = Output.Create();
+        await using FileStream ifs = Input.OpenRead();
+        await using FileStream ofs = Output.Create();
 
         Task<CsfDocument> reader = InputFormat switch
         {
@@ -91,7 +91,9 @@ internal sealed class RootCommand
     private void InitInputFormat()
     {
         if (InputFormat is not SupportedFormat.Auto)
+        {
             return;
+        }
 
         if (Input.Name.EndsWith(".csf", StringComparison.OrdinalIgnoreCase))
         {
@@ -135,7 +137,9 @@ internal sealed class RootCommand
     private void InitOutputFormat()
     {
         if (OutputFormat is not SupportedFormat.Auto)
+        {
             return;
+        }
 
         OutputFormat = InputFormat is SupportedFormat.Csf
             ? SupportedFormat.Yaml
@@ -155,12 +159,16 @@ internal sealed class RootCommand
     private void InitOutput()
     {
         if (Output is not null)
+        {
             return;
+        }
 
         string output = GetSupportedFormatExt(OutputFormat, Input.FullName);
 
         if (!Quiet)
+        {
             output = Prompt.Input<string>("请输入生成的文件的路径", output);
+        }
 
         Output = new(output);
     }
@@ -179,13 +187,16 @@ internal sealed class RootCommand
         };
     }
 
-    private static string GetSupportedFormatName(SupportedFormat format) => format switch
+    private static string GetSupportedFormatName(SupportedFormat format)
     {
-        SupportedFormat.Yaml => "Shimakaze.Sdk 定义的 Yaml 格式",
-        SupportedFormat.JsonV2 => "Shimakaze.Sdk 定义的 Json 格式 第2版",
-        SupportedFormat.JsonV1 => "Shimakaze.Sdk 定义的 Json 格式 第1版",
-        SupportedFormat.Xml => "Shimakaze.Sdk 定义的 Xml 格式",
-        SupportedFormat.Csf => "游戏引擎所使用的 Csf 二进制格式",
-        _ => "未知",
-    };
+        return format switch
+        {
+            SupportedFormat.Yaml => "Shimakaze.Sdk 定义的 Yaml 格式",
+            SupportedFormat.JsonV2 => "Shimakaze.Sdk 定义的 Json 格式 第2版",
+            SupportedFormat.JsonV1 => "Shimakaze.Sdk 定义的 Json 格式 第1版",
+            SupportedFormat.Xml => "Shimakaze.Sdk 定义的 Xml 格式",
+            SupportedFormat.Csf => "游戏引擎所使用的 Csf 二进制格式",
+            _ => "未知",
+        };
+    }
 }

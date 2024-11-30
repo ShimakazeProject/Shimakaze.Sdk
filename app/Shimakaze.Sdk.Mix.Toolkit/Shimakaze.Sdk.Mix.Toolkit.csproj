@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
-    <ProjectReference Include="..\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
   </ItemGroup>
 
 </Project>

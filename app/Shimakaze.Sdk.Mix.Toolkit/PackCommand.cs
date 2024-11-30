@@ -79,7 +79,7 @@ internal sealed class PackCommand
         };
         builder.WritedFiles += (_, _) => cpb?.Dispose();
 
-        using var output = Output.Create();
+        using FileStream output = Output.Create();
         await builder.BuildAsync(output);
     }
 }

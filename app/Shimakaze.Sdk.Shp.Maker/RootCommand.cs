@@ -30,50 +30,68 @@ internal sealed class RootCommand
     public void UsePrompt()
     {
         while (Palette is null)
+        {
             Palette = Prompt.Input<FileInfo>("您要使用哪一个调色板文件？");
+        }
+
         while (Objects is null)
+        {
             Objects = Prompt.Input<DirectoryInfo>("您的对象帧数列存放在哪里？");
+        }
+
         while (Shadows is null)
+        {
             Shadows = Prompt.Input<DirectoryInfo>("您的影子帧数列存放在哪里？");
+        }
+
         while (Colors is null)
+        {
             Colors = Prompt.Input<DirectoryInfo>("您的对象的所属方着色帧数列存放在哪里？");
+        }
+
         while (Output is null)
+        {
             Output = Prompt.Input<FileInfo>("您要将文件保存到哪里？");
+        }
     }
 
     public async Task RunAsync()
     {
         Palette palette;
-        await using (var fs = Palette!.OpenRead())
+        await using (FileStream fs = Palette!.OpenRead())
+        {
             palette = PaletteReader.Read(fs);
+        }
 
         int width = 0;
         int height = 0;
         List<ShapeImageFrame> frames = [];
 
-        foreach (var file in Objects!.GetFiles())
+        foreach (FileInfo file in Objects!.GetFiles())
         {
             string colPath = Path.Combine(Colors!.FullName, file.Name);
-            using var obj = await Image.LoadAsync<Rgba32>(file.FullName);
-            using var col = await Image.LoadAsync<Rgba32>(colPath);
+            using Image<Rgba32> obj = await Image.LoadAsync<Rgba32>(file.FullName);
+            using Image<Rgba32> col = await Image.LoadAsync<Rgba32>(colPath);
             width = obj.Width;
             height = obj.Height;
             frames.Add(Quantization(obj, col, palette).TrimAndCompress());
         }
 
-        foreach (var file in Shadows!.GetFiles())
+        foreach (FileInfo file in Shadows!.GetFiles())
         {
-            using var sha = await Image.LoadAsync<Rgba32>(file.FullName);
+            using Image<Rgba32> sha = await Image.LoadAsync<Rgba32>(file.FullName);
             frames.Add(Shadow(sha).TrimAndCompress());
         }
 
-        await using (var fs = Output!.Create())
+        await using (FileStream fs = Output!.Create())
+        {
             ShapeWriter.Write(fs, new(new()
             {
                 Width = (ushort)width,
                 Height = (ushort)height,
                 NumImages = (ushort)frames.Count,
             }, [.. frames]));
+        }
     }
 
     private static ShapeImageFrame Quantization(Image<Rgba32> obj, Image<Rgba32> col, Palette palette)
@@ -81,18 +99,20 @@ internal sealed class RootCommand
         using MemoryStream output = new();
 
         if (obj.Size != col.Size)
+        {
             throw new FormatException();
+        }
 
-        var ob = obj.Frames[0].PixelBuffer;
-        var cb = col.Frames[0].PixelBuffer;
+        SixLabors.ImageSharp.Memory.Buffer2D<Rgba32> ob = obj.Frames[0].PixelBuffer;
+        SixLabors.ImageSharp.Memory.Buffer2D<Rgba32> cb = col.Frames[0].PixelBuffer;
         for (int y = 0; y < obj.Height; y++)
         {
             Span<Rgba32> or = ob.DangerousGetRowSpan(y);
             Span<Rgba32> cr = cb.DangerousGetRowSpan(y);
             for (int x = 0; x < obj.Width; x++)
             {
-                var op = or[x];
-                var cp = cr[x];
+                Rgba32 op = or[x];
+                Rgba32 cp = cr[x];
                 byte index = cp.A is not 0 ? GetHouseIndex(palette, cp) : GetIndex(palette, op);
                 output.WriteByte(index);
             }
@@ -113,13 +133,15 @@ internal sealed class RootCommand
     private static byte GetIndex(in Palette palette, in Rgba32 pixel)
     {
         if (pixel.A is 0)
+        {
             return 0;
+        }
 
         double cdistance = double.MaxValue;
         byte index = 0;
         for (byte i = 32; i < 240; i++)
         {
-            var color = palette[i];
+            PaletteColor color = palette[i];
 
             double distance = Math.Sqrt(Math.Pow(color.Red - pixel.R, 2) + Math.Pow(color.Green - pixel.G, 2) + Math.Pow(color.Blue - pixel.B, 2));
             if (distance < cdistance)
@@ -134,13 +156,15 @@ internal sealed class RootCommand
     private static byte GetHouseIndex(in Palette palette, in Rgba32 pixel)
     {
         if (pixel.A is 0)
+        {
             return 0;
+        }
 
         double cdistance = double.MaxValue;
         byte index = 0;
         for (byte i = 16; i < 32; i++)
         {
-            var color = palette[i];
+            PaletteColor color = palette[i];
 
             double distance = Math.Sqrt(Math.Pow(color.Red - pixel.R, 2) + Math.Pow(color.Green - pixel.G, 2) + Math.Pow(color.Blue - pixel.B, 2));
             if (distance < cdistance)
@@ -157,13 +181,13 @@ internal sealed class RootCommand
     {
         using MemoryStream output = new();
 
-        var buffer = sha.Frames[0].PixelBuffer;
+        SixLabors.ImageSharp.Memory.Buffer2D<Rgba32> buffer = sha.Frames[0].PixelBuffer;
         for (int y = 0; y < sha.Height; y++)
         {
             Span<Rgba32> raw = buffer.DangerousGetRowSpan(y);
             for (int x = 0; x < sha.Width; x++)
             {
-                var pixel = raw[x];
+                Rgba32 pixel = raw[x];
                 output.WriteByte(pixel.A is 0 ? (byte)0 : (byte)1);
             }
         }

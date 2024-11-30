@@ -11,10 +11,14 @@ VoxelPalette vpl;
 Palette pal;
 
 using (Stream vplStream = File.OpenRead(vplPath))
+{
     vpl = VoxelPaletteReader.Read(vplStream);
+}
 
 using (Stream palStream = File.OpenRead(palPath))
+{
     pal = PaletteReader.Read(palStream);
+}
 
 VplEditor editor = new(vpl, pal, (editor) =>
 {

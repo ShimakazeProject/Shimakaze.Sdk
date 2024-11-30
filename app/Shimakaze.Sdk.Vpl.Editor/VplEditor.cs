@@ -23,11 +23,15 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
         while (true)
         {
             if (_isEditing)
+            {
                 Console.SetCursorPosition(_editing.X * SIZE_OF_CELL, Y_OFFSET + _editing.Y);
+            }
             else
+            {
                 Console.SetCursorPosition(X_SECTION_OFFSET + _current.X * SIZE_OF_CELL, Y_OFFSET + _current.Y);
+            }
 
-            var key = Console.ReadKey(true);
+            ConsoleKeyInfo key = Console.ReadKey(true);
             switch (key.Key)
             {
                 case ConsoleKey.Tab when !_isEditing && key.Modifiers is ConsoleModifiers.Shift && _current.Section > 0:
@@ -95,7 +99,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
                 case ConsoleKey.Spacebar when _isEditing:
                     index = (byte)((_editing.Y * 16) + _editing.X);
                     {
-                        var tmp = Vpl[_current.Section];
+                        VoxelPaletteSection tmp = Vpl[_current.Section];
                         tmp[(_current.Y * 16) + _current.X] = index;
                         Vpl[_current.Section] = tmp;
                     }
@@ -112,9 +116,11 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
                 case ConsoleKey.Escape when !_isEditing:
                 case ConsoleKey.Q when !_isEditing:
                     Console.SetCursorPosition(0, Y_OFFSET + 16);
-                    var isExit = Prompt.Confirm("Are you sure you want to exit? Your changed will NOT saved!", false);
+                    bool isExit = Prompt.Confirm("Are you sure you want to exit? Your changed will NOT saved!", false);
                     if (isExit)
+                    {
                         Environment.Exit(0);
+                    }
 
                     PrintColor();
                     break;
@@ -157,7 +163,9 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
                     Console.Write(" x ");
                 }
                 else
+                {
                     Console.Write("   ");
+                }
             }
 
             Console.WriteLine("\x1B[0m");
