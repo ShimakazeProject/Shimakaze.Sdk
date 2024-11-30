@@ -14,9 +14,9 @@ public class CsfYamlV1WriterTests
     [TestMethod]
     public void DeserializeTest()
     {
-        using var stream = File.OpenText(Path.Combine(Assets, InputYmlFile));
+        using StreamReader stream = File.OpenText(Path.Combine(Assets, InputYmlFile));
         using Stream csfout = File.Create(Path.Combine(OutputPath, OutputDeserializeCsfFile));
-        using var ymlout = File.CreateText(Path.Combine(OutputPath, OutputDeserializeYamlFile));
+        using StreamWriter ymlout = File.CreateText(Path.Combine(OutputPath, OutputDeserializeYamlFile));
         CsfDocument doc = CsfYamlV1Reader.Read(stream);
         CsfWriter.Write(csfout, doc);
         CsfYamlV1Writer.Write(ymlout, doc);
@@ -26,7 +26,7 @@ public class CsfYamlV1WriterTests
     public void SerializeTest()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputCsfFile));
-        using var output = File.CreateText(Path.Combine(OutputPath, OutputSerializeFile));
+        using StreamWriter output = File.CreateText(Path.Combine(OutputPath, OutputSerializeFile));
         CsfDocument document = CsfReader.Read(stream);
         CsfYamlV1Writer.Write(output, document);
     }

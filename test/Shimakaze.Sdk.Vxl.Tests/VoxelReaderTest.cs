@@ -9,8 +9,8 @@ public sealed class VoxelReaderTest
     [TestMethod]
     public void ReadTest()
     {
-        using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using FileStream stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        var res = VoxelReader.Read(stream);
+        VoxelFile res = VoxelReader.Read(stream);
     }
 }

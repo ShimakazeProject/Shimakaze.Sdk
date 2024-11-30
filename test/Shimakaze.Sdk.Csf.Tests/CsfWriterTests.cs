@@ -22,7 +22,9 @@ public class CsfWriterTests
     public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
+        {
             CsfWriter.Write(stream, _csf);
+        }
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }

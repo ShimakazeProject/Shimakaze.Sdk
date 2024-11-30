@@ -49,7 +49,7 @@ public class IniSectionTests
     [TestMethod()]
     public void TryGetValueTest()
     {
-        Assert.IsTrue(_section.TryGetValue("Key1", out var value));
+        Assert.IsTrue(_section.TryGetValue("Key1", out string? value));
         Assert.AreEqual("Value1", value);
         Assert.IsFalse(_section.TryGetValue("Key2", out value));
         Assert.IsNull(value);
@@ -65,7 +65,7 @@ public class IniSectionTests
     [TestMethod()]
     public void GetEnumeratorTest()
     {
-        using var enumerator = _section.GetEnumerator();
+        using IEnumerator<KeyValuePair<string, string>> enumerator = _section.GetEnumerator();
         Assert.IsNotNull(enumerator);
     }
 }

@@ -11,7 +11,7 @@ public sealed class PaletteColorTest
         Assert.AreEqual(248, _color.Red);
         Assert.AreEqual(252, _color.Green);
         Assert.AreEqual(248, _color.Blue);
-        var pixel = _color.AsRGB565();
+        ushort pixel = _color.AsRGB565();
         Assert.AreEqual(65535, pixel);
         Assert.AreEqual("#F8FCF8", _color.ToString());
     }

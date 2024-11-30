@@ -9,8 +9,8 @@ public sealed class PalReaderTest
     [TestMethod]
     public void ReadTest()
     {
-        using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using FileStream stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        var res = PaletteReader.Read(stream);
+        Palette res = PaletteReader.Read(stream);
     }
 }

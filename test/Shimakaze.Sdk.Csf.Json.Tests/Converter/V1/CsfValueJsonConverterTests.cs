@@ -14,16 +14,18 @@ public class CsfValueJsonConverterTests
     public void Startup()
     {
         _options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
+        foreach (System.Text.Json.Serialization.JsonConverter item in CsfJsonSerializerOptions.Converters)
+        {
             _options.Converters.Add(item);
+        }
     }
 
     [TestMethod]
     public void ReadTest()
     {
-        var reader = new Utf8JsonReader("""{"value":"Value"}"""u8);
+        Utf8JsonReader reader = new("""{"value":"Value"}"""u8);
         reader.Read();
-        var value = _converter.Read(ref reader, typeof(CsfValue), _options!);
+        CsfValue value = _converter.Read(ref reader, typeof(CsfValue), _options!);
         Assert.AreEqual("Value", value.Value);
     }
 
@@ -31,16 +33,16 @@ public class CsfValueJsonConverterTests
     public void WriteTest()
     {
         // Arrange
-        using var stream = new MemoryStream();
-        using var writer = new Utf8JsonWriter(stream);
+        using MemoryStream stream = new();
+        using Utf8JsonWriter writer = new(stream);
         // Act
         _converter.Write(writer, new CsfValue("hello", "extra"), _options!);
         writer.Flush();
         stream.Position = 0;
 
         // Assert
-        using var reader = new StreamReader(stream);
-        var json = reader.ReadToEnd();
+        using StreamReader reader = new(stream);
+        string json = reader.ReadToEnd();
         Assert.AreEqual("""{"value":"hello","extra":"extra"}""", json);
     }
 }

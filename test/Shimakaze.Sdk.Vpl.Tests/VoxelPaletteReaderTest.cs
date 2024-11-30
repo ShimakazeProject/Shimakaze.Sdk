@@ -9,9 +9,9 @@ public sealed class VoxelPaletteReaderTest
     [TestMethod]
     public void ReadTest()
     {
-        using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using FileStream stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
-        var res = VoxelPaletteReader.Read(stream);
+        VoxelPalette res = VoxelPaletteReader.Read(stream);
 
         Assert.AreEqual(16u, res.Header.RemapPlayerColorStart);
         Assert.AreEqual(31u, res.Header.RemapPlayerColorEnd);

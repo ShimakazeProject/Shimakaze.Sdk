@@ -61,6 +61,10 @@ jobs:
       - name: 生成
         run: dotnet build --graph --artifacts-path artifacts --configuration Release --no-restore
 
+      - name: 测试
+        shell: pwsh
+        run: dotnet coverage collect -f cobertura dotnet test --graph --artifacts-path artifacts --configuration Release --no-restore --no-build
+
       - name: 打包
         run: dotnet pack --graph --artifacts-path artifacts --configuration Release --no-restore --no-build --include-symbols --include-source
 
@@ -85,6 +89,12 @@ jobs:
           path: |
             artifacts\package\release\*
           retention-days: 3
+
+      - name: 上传测试覆盖率
+        uses: coverallsapp/github-action@v2
+        continue-on-error: true
+        with:
+          file: .\output.cobertura.xml
 
   release:
     needs: build-dotnet

@@ -36,7 +36,9 @@ public class CsfSetTests
         output.Seek(0, SeekOrigin.Begin);
 
         while (stream.Position < stream.Length)
+        {
             Assert.AreEqual(stream.ReadByte(), output.ReadByte(), $"at 0x{stream.Position:X8}");
+        }
     }
 
     [TestMethod]
@@ -182,11 +184,11 @@ public class CsfSetTests
 
         merger.Remove(_csf.Data.Last());
         merger.SymmetricExceptWith(_csf.Data.Skip(1));
-        Assert.IsTrue(merger.SetEquals(new[]
-        {
+        Assert.IsTrue(merger.SetEquals(
+        [
             _csf.Data.Last(),
             _csf.Data.First(),
-        }));
+        ]));
     }
 
     [TestMethod]

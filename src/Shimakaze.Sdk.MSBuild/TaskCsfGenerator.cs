@@ -9,7 +9,7 @@ using Shimakaze.Sdk.Csf.Yaml;
 using MSTask = Microsoft.Build.Utilities.Task;
 using Task = System.Threading.Tasks.Task;
 
-namespace Shimakaze.Sdk.Build;
+namespace Shimakaze.Sdk.MSBuild;
 
 /// <summary>
 /// Csf 构建器
@@ -44,12 +44,14 @@ public sealed class TaskCsfGenerator : MSTask
         Log.LogMessage("Generating CSF File...");
 
         List<ITaskItem> items = new(SourceFiles.Length);
-        foreach (var file in SourceFiles)
+        foreach (ITaskItem file in SourceFiles)
         {
-            var dest = file.GetMetadata(MetadataIntermediate);
-            var tag = file.GetMetadata(MetadataType);
+            string dest = file.GetMetadata(MetadataIntermediate);
+            string tag = file.GetMetadata(MetadataType);
             if (!dest.CreateParentDirectory(Log))
+            {
                 return false;
+            }
 
             using Stream stream = File.OpenRead(file.ItemSpec);
             using Stream output = File.Create(dest);

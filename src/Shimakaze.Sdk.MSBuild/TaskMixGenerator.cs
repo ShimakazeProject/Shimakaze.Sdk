@@ -5,7 +5,7 @@ using Shimakaze.Sdk.Mix;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 
-namespace Shimakaze.Sdk.Build;
+namespace Shimakaze.Sdk.MSBuild;
 
 /// <summary>
 /// Mix Packer Task
@@ -50,20 +50,22 @@ public sealed class TaskMixGenerator : MSTask
     {
         Log.LogMessage("Generating Mix...");
         if (!DestinationFile.CreateParentDirectory(Log))
+        {
             return false;
+        }
 
         MixBuilder builder = new(IsTD
             ? IdCalculaters.TDIdCalculater
             : IdCalculaters.TSIdCalculater);
 
         OutputFile = new TaskItem(DestinationFile);
-        foreach (var file in SourceFiles)
+        foreach (ITaskItem file in SourceFiles)
         {
             Log.LogMessage(MessageImportance.Low, $"Add \"{file.ItemSpec}\" into mix.");
             builder.Files.Add(new(file.ItemSpec));
         }
 
-        using var output = File.Create(DestinationFile);
+        using FileStream output = File.Create(DestinationFile);
         builder.BuildAsync(output).Wait();
         output.Flush();
 

@@ -13,7 +13,7 @@ public sealed class PalWriterTest
     public void Startup()
     {
         Directory.CreateDirectory(OutputPath);
-        using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using FileStream stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         _pal = PaletteReader.Read(stream);
     }
@@ -22,7 +22,9 @@ public sealed class PalWriterTest
     public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
+        {
             PaletteWriter.Write(_pal, stream);
+        }
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }

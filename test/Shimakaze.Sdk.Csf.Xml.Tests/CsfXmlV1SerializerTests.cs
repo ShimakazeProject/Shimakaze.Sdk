@@ -14,8 +14,8 @@ public class CsfXmlV1WriterTests
     [TestMethod]
     public void DeserializeTest()
     {
-        using var stream = File.OpenText(Path.Combine(Assets, InputXmlFile));
-        using var xmlout = File.CreateText(Path.Combine(OutputPath, OutputDeserializeXmlFile));
+        using StreamReader stream = File.OpenText(Path.Combine(Assets, InputXmlFile));
+        using StreamWriter xmlout = File.CreateText(Path.Combine(OutputPath, OutputDeserializeXmlFile));
         using Stream csfout = File.Create(Path.Combine(OutputPath, OutputDeserializeCsfFile));
         CsfDocument doc = CsfXmlV1Reader.Read(stream);
         Assert.IsNotNull(doc);
@@ -27,7 +27,7 @@ public class CsfXmlV1WriterTests
     public void SerializeTest()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputCsfFile));
-        using var output = File.CreateText(Path.Combine(OutputPath, OutputSerializeFile));
+        using StreamWriter output = File.CreateText(Path.Combine(OutputPath, OutputSerializeFile));
         CsfDocument document = CsfReader.Read(stream);
         CsfXmlV1Writer.Write(output, document);
     }

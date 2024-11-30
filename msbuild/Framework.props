@@ -4,5 +4,8 @@
 
     <ShimakazeSdkIsCSharp Condition=" '$(ShimakazeSdkIsCSharp)' == '' ">False</ShimakazeSdkIsCSharp>
     <ShimakazeSdkIsCSharp Condition=" '$(MSBuildProjectExtension)' == '.csproj' ">True</ShimakazeSdkIsCSharp>
+
+    <ShimakazeSdkIsUnitTest Condition=" '$(ShimakazeSdkIsUnitTest)' == '' ">False</ShimakazeSdkIsUnitTest>
+    <ShimakazeSdkIsUnitTest Condition=" $(MSBuildProjectFullPath.StartsWith('$(ShimakazeSdkRootFolder)test')) ">True</ShimakazeSdkIsUnitTest>
   </PropertyGroup>
 </Project>

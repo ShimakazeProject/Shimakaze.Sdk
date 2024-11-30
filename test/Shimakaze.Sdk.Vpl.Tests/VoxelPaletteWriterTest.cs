@@ -13,7 +13,7 @@ public sealed class VoxelPaletteWriterTest
     public void Startup()
     {
         Directory.CreateDirectory(OutputPath);
-        using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using FileStream stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         _vpl = VoxelPaletteReader.Read(stream);
     }
@@ -22,7 +22,9 @@ public sealed class VoxelPaletteWriterTest
     public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
+        {
             VoxelPaletteWriter.Write(_vpl, stream);
+        }
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }

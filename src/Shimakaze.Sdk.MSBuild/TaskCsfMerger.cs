@@ -5,7 +5,7 @@ using Shimakaze.Sdk.Csf;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 
-namespace Shimakaze.Sdk.Build;
+namespace Shimakaze.Sdk.MSBuild;
 
 /// <summary>
 /// Csf 合并器
@@ -40,11 +40,13 @@ public sealed class TaskCsfMerger : MSTask
     {
         Log.LogMessage("Merging Csf...");
         if (!DestinationFile.CreateParentDirectory(Log))
+        {
             return false;
+        }
 
         CsfSet merger = [];
         OutputFile = new TaskItem(DestinationFile);
-        foreach (var file in SourceFiles)
+        foreach (ITaskItem file in SourceFiles)
         {
             using Stream stream = File.OpenRead(file.ItemSpec);
             merger.UnionWith(CsfReader.Read(stream).Data);

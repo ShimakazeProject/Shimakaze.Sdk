@@ -5,7 +5,6 @@ namespace Shimakaze.Sdk.Mix.Tests;
 public class MixEntryReaderTest
 {
     private const string Assets = "Assets";
-    private const string CsfFile = "ra2md.csf";
     private const string InputFile = "test.mix";
     private const uint Ra2mdCsf = 3179499641;
 
@@ -99,12 +98,14 @@ public class MixEntryReaderTest
         MixEntry csf = default;
         for (int i = 0; i < reader.Count; i++)
         {
-            var entry = reader.Read();
+            MixEntry entry = reader.Read();
             Console.WriteLine(entry);
-            Assert.AreEqual(4 + 2 + 4 + (i + 1) * 12, fs.Position);
+            Assert.AreEqual(4 + 2 + 4 + ((i + 1) * 12), fs.Position);
 
             if (entry.Id is Ra2mdCsf)
+            {
                 csf = entry;
+            }
         }
 
         Assert.ThrowsException<EndOfEntryTableException>(() => reader.Read());

@@ -14,7 +14,7 @@ public class CsfMetadataJsonConverterTests
     [TestMethod]
     public void ReadTest()
     {
-        var reader = new Utf8JsonReader("""{"hello":null}"""u8);
+        Utf8JsonReader reader = new("""{"hello":null}"""u8);
         reader.Read();
         _converter.Read(ref reader, typeof(int), _options!);
     }
@@ -23,7 +23,9 @@ public class CsfMetadataJsonConverterTests
     public void Startup()
     {
         _options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
+        foreach (System.Text.Json.Serialization.JsonConverter item in CsfJsonSerializerOptions.Converters)
+        {
             _options.Converters.Add(item);
+        }
     }
 }

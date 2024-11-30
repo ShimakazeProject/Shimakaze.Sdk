@@ -9,15 +9,19 @@ public sealed class HvaReaderTest
     [TestMethod]
     public async Task ReadTestAsync()
     {
-        using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using FileStream stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         using HvaReader reader = new(stream);
 
-        var res = await reader.ReadAsync();
+        HvaFile res = await reader.ReadAsync();
 
         Console.WriteLine(res);
-        foreach (var a in res.Frames)
-            foreach (var item in a.Matrices)
+        foreach (HvaFrame a in res.Frames)
+        {
+            foreach (HvaMatrix item in a.Matrices)
+            {
                 Console.WriteLine(item);
+            }
+        }
     }
 }

@@ -10,7 +10,7 @@ using Shimakaze.Sdk.Preprocessor.Kernel;
 using MSTask = Microsoft.Build.Utilities.Task;
 using TaskItem = Microsoft.Build.Utilities.TaskItem;
 
-namespace Shimakaze.Sdk.Build;
+namespace Shimakaze.Sdk.MSBuild;
 
 /// <summary>
 /// Ini 预处理器
@@ -43,11 +43,11 @@ public sealed class TaskIniPreprocessor : MSTask
     /// <inheritdoc />
     public override bool Execute()
     {
-        var services = new ServiceCollection()
+        IServiceCollection services = new ServiceCollection()
             .AddLogging(builder => builder.AddSimpleConsole())
             .AddEngine((options, services) =>
             {
-                options.Defines = new(Defines.Split(';').Select(i => i.Trim()));
+                options.Defines = [.. Defines.Split(';').Select(i => i.Trim())];
                 options.Commands = new[]{
                     services.AddCommands<ConditionalCommand>(),
                     services.AddCommands<DefineCommand>(),
@@ -56,20 +56,22 @@ public sealed class TaskIniPreprocessor : MSTask
                 }.SelectMany(i => i).ToImmutableArray();
             });
 
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         List<ITaskItem> outputs = new(SourceFiles.Length);
 
-        foreach (var file in SourceFiles)
+        foreach (ITaskItem file in SourceFiles)
         {
             try
             {
-                var dest = file.GetMetadata(MetadataIntermediate);
+                string dest = file.GetMetadata(MetadataIntermediate);
                 if (!dest.CreateParentDirectory(Log))
+                {
                     return false;
+                }
 
-                using var source = File.OpenText(file.ItemSpec);
-                using var target = File.CreateText(dest);
+                using StreamReader source = File.OpenText(file.ItemSpec);
+                using StreamWriter target = File.CreateText(dest);
                 provider.GetRequiredService<Engine>()
                     .Execute(source, target, file.ItemSpec);
 

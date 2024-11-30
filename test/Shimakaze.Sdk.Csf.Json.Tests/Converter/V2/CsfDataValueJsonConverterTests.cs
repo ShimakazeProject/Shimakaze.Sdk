@@ -13,7 +13,7 @@ public class CsfDataValueJsonConverterTests
     [TestMethod]
     public void ReadTest()
     {
-        var reader = new Utf8JsonReader("""
+        Utf8JsonReader reader = new("""
         {
             "values": [
                 "hello"
@@ -22,7 +22,7 @@ public class CsfDataValueJsonConverterTests
         }
         """u8);
         reader.Read();
-        var value = _converter.Read(ref reader, typeof(IList<CsfValue>), _options!);
+        IList<CsfValue>? value = _converter.Read(ref reader, typeof(IList<CsfValue>), _options!);
         Assert.IsNotNull(value);
         Assert.AreEqual(1, value.Count);
         Assert.AreEqual("hello", value[0].Value);
@@ -31,14 +31,14 @@ public class CsfDataValueJsonConverterTests
     [TestMethod]
     public void ReadTest2()
     {
-        var reader = new Utf8JsonReader("""
+        Utf8JsonReader reader = new("""
         {
             "value": "hello",
             "test": null
         }
         """u8);
         reader.Read();
-        var value = _converter.Read(ref reader, typeof(IList<CsfValue>), _options!);
+        IList<CsfValue>? value = _converter.Read(ref reader, typeof(IList<CsfValue>), _options!);
         Assert.IsNotNull(value);
         Assert.AreEqual(1, value.Count);
         Assert.AreEqual("hello", value[0].Value);
@@ -48,27 +48,29 @@ public class CsfDataValueJsonConverterTests
     public void Startup()
     {
         _options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
+        foreach (System.Text.Json.Serialization.JsonConverter item in CsfJsonSerializerOptions.Converters)
+        {
             _options.Converters.Add(item);
+        }
     }
 
     [TestMethod]
     public void WriteTest()
     {
         // Arrange
-        using var stream = new MemoryStream();
-        using var writer = new Utf8JsonWriter(stream);
+        using MemoryStream stream = new();
+        using Utf8JsonWriter writer = new(stream);
         // Act
-        _converter.Write(writer, new List<CsfValue>() {
+        _converter.Write(writer, [
             new("hello"),
             new("world"),
-        }, _options!);
+        ], _options!);
         writer.Flush();
         stream.Position = 0;
 
         // Assert
-        using var reader = new StreamReader(stream);
-        var json = reader.ReadToEnd();
+        using StreamReader reader = new(stream);
+        string json = reader.ReadToEnd();
         Assert.AreEqual("""{"values":["hello","world"]}""", json);
     }
 }

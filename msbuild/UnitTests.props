@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+
+    <TargetProjectName>$(MSBuildProjectName.Replace('.Tests', ''))</TargetProjectName>
+    <TargetProjectFilePath>$(TargetProjectName)\$(TargetProjectName).csproj</TargetProjectFilePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\$(TargetProjectFilePath)" Condition="Exists('$(ShimakazeSdkRootFolder)lib\$(TargetProjectFilePath)')" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)app\$(TargetProjectFilePath)" Condition="Exists('$(ShimakazeSdkRootFolder)app\$(TargetProjectFilePath)')" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)src\$(TargetProjectFilePath)" Condition="Exists('$(ShimakazeSdkRootFolder)src\$(TargetProjectFilePath)')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+</Project>

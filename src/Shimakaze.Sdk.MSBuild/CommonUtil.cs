@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.Build.Utilities;
 
-namespace Shimakaze.Sdk.Build;
+namespace Shimakaze.Sdk.MSBuild;
 
 internal static class CommonUtil
 {
@@ -19,7 +19,7 @@ internal static class CommonUtil
             log?.LogError($"File path cannot be empty.");
             return false;
         }
-        var outdir = Path.GetDirectoryName(file);
+        string? outdir = Path.GetDirectoryName(file);
         if (string.IsNullOrEmpty(outdir))
         {
             log?.LogError($"Cannot found the parent path from path \"{file}\".");

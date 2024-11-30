@@ -56,7 +56,7 @@ public class AresIniDocumentTests
     [TestMethod()]
     public void TryGetSectionTest()
     {
-        Assert.IsTrue(_ini.TryGetSection("Section", out var section));
+        Assert.IsTrue(_ini.TryGetSection("Section", out AresIniSection? section));
         Assert.IsNotNull(section);
         Assert.IsFalse(_ini.TryGetSection("Section1", out section));
         Assert.IsNull(section);
@@ -65,7 +65,7 @@ public class AresIniDocumentTests
     [TestMethod()]
     public void GetEnumeratorTest()
     {
-        using var enumerator = _ini.GetEnumerator();
+        using IEnumerator<AresIniSection> enumerator = _ini.GetEnumerator();
         Assert.IsNotNull(enumerator);
     }
 }

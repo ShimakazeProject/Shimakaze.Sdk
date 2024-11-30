@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini.Tests;
 
 [TestClass()]
@@ -26,7 +28,7 @@ public class IniTokenToolsTests
     public void StringTest()
     {
         string value = Guid.NewGuid().ToString();
-        var token = IniTokenTools.Value(value);
+        IIniToken token = IniTokenTools.Value(value);
         Assert.AreEqual(1, token.Token);
         Assert.AreEqual(value, token.Value);
     }

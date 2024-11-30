@@ -3,7 +3,7 @@ using Microsoft.Build.Utilities;
 
 using Moq;
 
-namespace Shimakaze.Sdk.Build.Tests;
+namespace Shimakaze.Sdk.MSBuild.Tests;
 
 [TestClass]
 public class TaskIniPreprocessorTest
@@ -33,7 +33,7 @@ public class TaskIniPreprocessorTest
         {
             SourceFiles = InputFile.Split(';').Select(i =>
             {
-                var path = Path.GetFullPath(Path.Combine(Assets, i));
+                string path = Path.GetFullPath(Path.Combine(Assets, i));
                 TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
                 item.SetMetadata(TaskIniPreprocessor.MetadataIntermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
                 return item;
@@ -51,7 +51,7 @@ public class TaskIniPreprocessorTest
         {
             SourceFiles = Input2File.Split(';').Select(i =>
             {
-                var path = Path.GetFullPath(Path.Combine(Assets, i));
+                string path = Path.GetFullPath(Path.Combine(Assets, i));
                 TaskItem item = new(Path.GetFullPath(Path.Combine(Assets, i)));
                 item.SetMetadata(TaskIniPreprocessor.MetadataIntermediate, Path.GetFullPath(Path.Combine(OutputPath, i)));
                 return item;

@@ -16,16 +16,16 @@ public class CsfAdvancedValueJsonConverterTests
     public void ReadShouldReturnCorrectCsfValue()
     {
         // Arrange
-        var json = """{"value":"Hello","extra":"World"}"""u8;
-        var reader = new Utf8JsonReader(json);
+        ReadOnlySpan<byte> json = """{"value":"Hello","extra":"World"}"""u8;
+        Utf8JsonReader reader = new(json);
         reader.Read(); // Move to the start object token
 
         // Act
-        var result = _converter.Read(ref reader, typeof(CsfValue), _options!);
+        CsfValue result = _converter.Read(ref reader, typeof(CsfValue), _options!);
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(CsfValue));
+        Assert.IsInstanceOfType<CsfValue>(result);
         Assert.AreEqual("Hello", result.Value);
         Assert.AreEqual("World", result.ExtraValue);
     }
@@ -35,16 +35,16 @@ public class CsfAdvancedValueJsonConverterTests
     public void ReadShouldReturnCorrectCsfValue1()
     {
         // Arrange
-        var json = """{"value":"Hello","extra":"World"}"""u8;
-        var reader = new Utf8JsonReader(json);
+        ReadOnlySpan<byte> json = """{"value":"Hello","extra":"World"}"""u8;
+        Utf8JsonReader reader = new(json);
         reader.Read(); // Move to the start object token
 
         // Act
-        var result = _converter.Read(ref reader, typeof(CsfValue), _options!);
+        CsfValue result = _converter.Read(ref reader, typeof(CsfValue), _options!);
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(CsfValue));
+        Assert.IsInstanceOfType<CsfValue>(result);
         Assert.AreEqual("Hello", result.Value);
     }
 
@@ -52,8 +52,10 @@ public class CsfAdvancedValueJsonConverterTests
     public void Startup()
     {
         _options ??= new();
-        foreach (var item in CsfJsonSerializerOptions.Converters)
+        foreach (System.Text.Json.Serialization.JsonConverter item in CsfJsonSerializerOptions.Converters)
+        {
             _options.Converters.Add(item);
+        }
     }
 
     // This is the test method for Write method
@@ -61,15 +63,15 @@ public class CsfAdvancedValueJsonConverterTests
     public void WriteShouldWriteCorrectJson()
     {
         // Arrange
-        var value = new CsfValue("Hello", "World");
-        using var ms = new MemoryStream();
-        using var writer = new Utf8JsonWriter(ms);
+        CsfValue value = new("Hello", "World");
+        using MemoryStream ms = new();
+        using Utf8JsonWriter writer = new(ms);
 
         // Act
         _converter.Write(writer, value, _options!);
         // Flush the writer to get the json bytes
         writer.Flush();
-        var json = Encoding.UTF8.GetString(ms.ToArray());
+        string json = Encoding.UTF8.GetString(ms.ToArray());
 
         // Assert
         Assert.AreEqual("""{"value":"Hello","extra":"World"}""", json);

@@ -43,16 +43,16 @@ public class MixEntryWriterTest
         Assert.AreEqual(4 + 2 + 4 + 12, fs.Position);
         writer.Write(_lxd);
         Assert.AreEqual(4 + 2 + 4 + 12 + 12, fs.Position);
-        var bodyOffset = fs.Position;
+        long bodyOffset = fs.Position;
 
-        using var ra2mdfs = File.OpenRead(Path.Combine(Assets, CsfFile));
+        using FileStream ra2mdfs = File.OpenRead(Path.Combine(Assets, CsfFile));
         fs.Seek(bodyOffset, SeekOrigin.Begin);
         fs.Seek(_csf.Offset, SeekOrigin.Current);
         Assert.AreEqual(bodyOffset + _csf.Offset, fs.Position);
         await ra2mdfs.CopyToAsync(fs);
         Assert.AreEqual(bodyOffset + _csf.Offset + _csf.Size, fs.Position);
 
-        using var lxdfs = File.OpenRead(Path.Combine(Assets, LxdFile));
+        using FileStream lxdfs = File.OpenRead(Path.Combine(Assets, LxdFile));
         fs.Seek(bodyOffset, SeekOrigin.Begin);
         fs.Seek(_lxd.Offset, SeekOrigin.Current);
         Assert.AreEqual(bodyOffset + _lxd.Offset, fs.Position);
@@ -61,12 +61,12 @@ public class MixEntryWriterTest
 
         writer.WriteMetadata();
 
-        using var mixfs = File.OpenRead(Path.Combine(Assets, MixFile));
+        using FileStream mixfs = File.OpenRead(Path.Combine(Assets, MixFile));
         fs.Seek(0, SeekOrigin.Begin);
         while (mixfs.Position < mixfs.Length)
         {
-            var _1 = fs.ReadByte();
-            var _2 = mixfs.ReadByte();
+            int _1 = fs.ReadByte();
+            int _2 = mixfs.ReadByte();
             Assert.AreEqual(_2, _1, $"At Position {fs.Position}");
         }
     }

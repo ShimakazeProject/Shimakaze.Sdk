@@ -23,20 +23,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini.Abstractions\Shimakaze.Sdk.Ini.Abstractions.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini.Ares\Shimakaze.Sdk.Ini.Ares.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
-    <ProjectReference Include="$(ShimakazeSdk_SourceFolder)Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Ini.Abstractions\Shimakaze.Sdk.Ini.Abstractions.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Ini.Ares\Shimakaze.Sdk.Ini.Ares.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Ini\Shimakaze.Sdk.Ini.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Preprocessor\Shimakaze.Sdk.Preprocessor.csproj" />
+    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
   </ItemGroup>
 
   <Target Name="PackAllDependencies">
     <ItemGroup>
-      <BuildOutputInPackage Include="$(MSBuildThisFileDirectory)$(OutputPath)*" Exclude="$(MSBuildThisFileDirectory)$(OutputPath)$(AssemblyName).*" />
+      <BuildOutputInPackage Include="$(OutputPath)*" Exclude="$(OutputPath)$(AssemblyName).*" />
     </ItemGroup>
   </Target>
 

@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Ini.Abstractions;
+
 namespace Shimakaze.Sdk.Ini.Tests;
 
 [TestClass()]
@@ -22,7 +24,7 @@ public class IniTokenReaderTests
 
         using StringReader sr = new(ini);
         using IniTokenReader reader = new(sr);
-        foreach (var item in reader)
+        foreach (IIniToken item in reader)
         {
             Console.WriteLine(item);
             Assert.AreEqual(tokens.Pop(), item);

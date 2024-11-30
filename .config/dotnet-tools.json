@@ -1,5 +1,13 @@
 {
   "version": 1,
   "isRoot": true,
-  "tools": {}
+  "tools": {
+    "dotnet-coverage": {
+      "version": "17.12.6",
+      "commands": [
+        "dotnet-coverage"
+      ],
+      "rollForward": false
+    }
+  }
 }

@@ -13,7 +13,7 @@ public sealed class HvaWriterTest
     public async Task StartupAsync()
     {
         Directory.CreateDirectory(OutputPath);
-        using var stream = File.OpenRead(Path.Combine(Assets, InputFile));
+        using FileStream stream = File.OpenRead(Path.Combine(Assets, InputFile));
 
         using HvaReader reader = new(stream);
 
@@ -25,7 +25,9 @@ public sealed class HvaWriterTest
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
         using (HvaWriter writer = new(stream))
+        {
             await writer.WriteAsync(_hva);
+        }
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }

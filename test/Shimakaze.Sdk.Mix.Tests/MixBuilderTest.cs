@@ -18,7 +18,7 @@ public class MixBuilderTest
     [TestMethod]
     public async Task Test()
     {
-        using var fs = File.Create(Path.Combine(OutputPath, MixFile));
+        using FileStream fs = File.Create(Path.Combine(OutputPath, MixFile));
         FileInfo fileInfo = new(Path.Combine(Assets, CsfFile));
         MixBuilder builder = new(IdCalculaters.TSIdCalculater);
         builder.Files.Add(fileInfo);

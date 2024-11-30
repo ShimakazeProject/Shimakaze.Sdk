@@ -3,7 +3,7 @@ using Microsoft.Build.Utilities;
 
 using Moq;
 
-namespace Shimakaze.Sdk.Build.Tests;
+namespace Shimakaze.Sdk.MSBuild.Tests;
 
 [TestClass]
 public class TaskMixGeneratorTest
