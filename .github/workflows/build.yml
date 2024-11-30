@@ -50,13 +50,13 @@ jobs:
         uses: actions/setup-dotnet@v4.1.0
         with:
           global-json-file: ./global.json
-          cache-dependency-path: ./packages.lock.json
+          cache: false
 
       - name: 还原本地工具
         run: dotnet tool restore
 
       - name: 还原
-        run: dotnet restore --graph --artifacts-path artifacts --locked-mode --use-lock-file
+        run: dotnet restore --graph --artifacts-path artifacts
 
       - name: 生成
         run: dotnet build --graph --artifacts-path artifacts --configuration Release --no-restore
