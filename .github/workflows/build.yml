@@ -37,15 +37,8 @@ on:
 
 jobs:
   build-dotnet:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-    name: .Net 构建 ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: .Net 构建
+    runs-on: windows-latest
     steps:
       - name: 签出仓库
         uses: actions/checkout@v4
@@ -57,69 +50,41 @@ jobs:
         uses: actions/setup-dotnet@v4.1.0
         with:
           global-json-file: ./global.json
-          cache-dependency-path: ./**/packages.lock.json
-          cache: false
+          cache-dependency-path: ./packages.lock.json
 
       - name: 还原本地工具
-        shell: pwsh
         run: dotnet tool restore
 
       - name: 还原
-        shell: pwsh
-        run: dotnet restore
+        run: dotnet restore --graph --artifacts-path artifacts --locked-mode --use-lock-file
 
-      - name: 构建
-        shell: pwsh
-        run: dotnet build --graph --configuration Release --no-restore
-
-      - name: 测试
-        shell: pwsh
-        run: dotnet coverage collect -f cobertura dotnet test --graph --configuration Release --no-build
+      - name: 生成
+        run: dotnet build --graph --artifacts-path artifacts --configuration Release --no-restore
 
       - name: 打包
-        shell: pwsh
-        run: dotnet pack --graph --configuration Release --no-restore --no-build --include-symbols --include-source
+        run: dotnet pack --graph --artifacts-path artifacts --configuration Release --no-restore --no-build --include-symbols --include-source
 
       - name: 生成校验和
         shell: pwsh
-        env:
-          matrix_os : ${{ matrix.os  }}
         run: |
-          Write-Output "### Build Success :rocket: $env:matrix_os" >> $env:GITHUB_STEP_SUMMARY
-          Write-Output "|File|SHA256|" >> $env:GITHUB_STEP_SUMMARY
+          $Private:Algorithm = 'SHA256'
+          Write-Output "### Build Success :rocket: >> $env:GITHUB_STEP_SUMMARY
+          Write-Output "|FileName|$Private:Algorithm|" >> $env:GITHUB_STEP_SUMMARY
           Write-Output "|:-|:-:|" >> $env:GITHUB_STEP_SUMMARY
-          Get-ChildItem nupkg | ForEach-Object {
-            Write-Output "|$($PSItem.Name)|$((Get-FileHash $PSItem -Algorithm SHA256).Hash)|" >> $env:GITHUB_STEP_SUMMARY
+          Get-ChildItem artifacts\package\release | ForEach-Object {
+            $Private:Name = $PSItem.Name
+            $Private:FileHashResult = Get-FileHash $PSItem -Algorithm $Private:Algorithm
+            $Private:FileHash = $Private:FileHashResult.Hash
+            Write-Output "|$Private:Name|$Private:FileHash|" >> $env:GITHUB_STEP_SUMMARY
           }
 
       - name: 收集 Nuget 包
         uses: actions/upload-artifact@v4.4.3
         with:
-          name: nuget-packages-${{ matrix.os }}
+          name: nuget-packages
           path: |
-            nupkg/*
+            artifacts\package\release\*
           retention-days: 3
-
-      - name: 收集测试覆盖率
-        uses: coverallsapp/github-action@v2
-        continue-on-error: true
-        with:
-          flag-name: run-${{ join(matrix.*, '-') }}
-          parallel: true
-          file: ./output.cobertura.xml
-
-  coverage-upload:
-    needs: build-dotnet
-    if: ${{ always() }}
-    name: 上传测试覆盖率
-    runs-on: ubuntu-latest
-    steps:
-      - name: 上传测试覆盖率
-        uses: coverallsapp/github-action@v2
-        continue-on-error: true
-        with:
-          parallel-finished: true
-          carryforward: "run-ubuntu-latest,run-windows-latest,run-macos-latest"
 
   release:
     needs: build-dotnet

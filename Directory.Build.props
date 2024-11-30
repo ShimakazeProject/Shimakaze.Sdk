@@ -2,8 +2,8 @@
 <Project>
 
   <ImportGroup>
-    <Import Project="$(MSBuildThisFileDirectory)\msbuild\Framework.props"/>
-    <Import Project="$(MSBuildThisFileDirectory)\msbuild\CSharp.props" Condition="$(ShimakazeSdkIsCSharp)"/>
+    <Import Project="$(MSBuildThisFileDirectory)msbuild\Framework.props"/>
+    <Import Project="$(MSBuildThisFileDirectory)msbuild\CSharp.props" Condition="$(ShimakazeSdkIsCSharp)"/>
   </ImportGroup>
 
 </Project>
