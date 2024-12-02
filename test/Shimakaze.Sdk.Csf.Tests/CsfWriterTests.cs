@@ -38,10 +38,12 @@ public class CsfWriterTests
         using Stream fs2 = File.OpenRead(path2);
         Assert.AreEqual(fs1.Length, fs2.Length);
 
-        while (fs1.Position < fs1.Length)
+        int size = (int)fs1.Length;
+        while (size > 0)
         {
-            fs1.ReadExactly(buffer1);
-            fs2.ReadExactly(buffer2);
+            fs1.ReadExactly(buffer1[..Math.Min(size, 8)]);
+            fs2.ReadExactly(buffer2[..Math.Min(size, 8)]);
+            size -= 8;
             Assert.IsTrue(buffer1.SequenceEqual(buffer2),
                 $"At Position: 0x{fs1.Position:X8}, BufferSize: {buffer1.Length}, Should be {BitConverter.ToString(buffer1.ToArray())}, but {BitConverter.ToString(buffer2.ToArray())}");
         }
