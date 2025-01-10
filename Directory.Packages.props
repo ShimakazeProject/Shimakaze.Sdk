@@ -29,7 +29,7 @@
     <PackageVersion Include="MSTest.TestAdapter" Version="3.6.3" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.6.3" />
     <PackageVersion Include="Polyfill" Version="2.1.0" />
-    <PackageVersion Include="Sharprompt" Version="2.4.5" />
+    <PackageVersion Include="Sharprompt" Version="3.0.0" />
     <PackageVersion Include="ShellProgressBar" Version="5.2.0" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageVersion Include="System.Collections.Immutable" Version="9.0.0" />
