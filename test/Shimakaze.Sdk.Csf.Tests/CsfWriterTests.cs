@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Csf.IO;
+
 namespace Shimakaze.Sdk.Csf.Tests;
 
 [TestClass]
@@ -8,23 +10,24 @@ public class CsfWriterTests
 
     private const string OutputFile = "WriteTest.csf";
     private const string OutputPath = "Out";
-    private CsfDocument _csf = default!;
+    private CsfData _csf = default!;
 
     [TestInitialize]
     public void Startup()
     {
         Directory.CreateDirectory(OutputPath);
+
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputFile));
-        _csf = CsfReader.Read(stream);
+        using CsfReader reader = new(stream);
+        _csf = reader.ReadAllData();
     }
 
     [TestMethod]
     public void WriteTest()
     {
         using (Stream stream = File.Create(Path.Combine(OutputPath, OutputFile)))
-        {
-            CsfWriter.Write(stream, _csf);
-        }
+        using (CsfWriter writer = new(stream))
+            writer.WriteAllData(_csf);
 
         Compare(Path.Combine(Assets, InputFile), Path.Combine(OutputPath, OutputFile));
     }

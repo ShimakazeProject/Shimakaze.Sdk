@@ -4,37 +4,30 @@ namespace Shimakaze.Sdk.Csf.Tests;
 public class CsfAssertsTests
 {
     [TestMethod]
-    public void Test()
+    public void IsCsfFileTest()
     {
         Assert.AreEqual(CsfConstants.CsfFlagRaw, CsfAsserts.IsCsfFile(CsfConstants.CsfFlagRaw));
-        try
-        {
-            CsfAsserts.IsCsfFile(CsfConstants.LblFlagRaw);
-        }
-        catch (FormatException e)
-        {
-            Assert.AreEqual("It's not CSF File Flag.", e.Message);
-        }
+        Assert.ThrowsException<FormatException>(static () => CsfAsserts.IsCsfFile(-1), "It's not CSF File Flag.");
+    }
 
-        Assert.AreEqual(CsfConstants.LblFlagRaw, CsfAsserts.IsLabel(CsfConstants.LblFlagRaw, () => new[] { string.Empty }));
-        try
-        {
-            CsfAsserts.IsLabel(CsfConstants.CsfFlagRaw, () => new object[] { "0", 1 });
-        }
-        catch (FormatException e)
-        {
-            Assert.AreEqual("It's not CSF Label Flag. #0 at 0x00000001.", e.Message);
-        }
+    [TestMethod]
+    public void IsLabelTest()
+    {
+        Assert.AreEqual(CsfConstants.LblFlagRaw, CsfAsserts.IsLabel(CsfConstants.LblFlagRaw, static () => [string.Empty]));
+        Assert.ThrowsException<FormatException>(static () => CsfAsserts.IsLabel(-1, static () => [1]), "It's not CSF Label Flag. 0x00000001.");
+    }
 
-        Assert.AreEqual(CsfConstants.StrFlagRaw, CsfAsserts.IsStringOrExtraString(CsfConstants.StrFlagRaw, () => new[] { string.Empty }));
-        Assert.AreEqual(CsfConstants.StrwFlgRaw, CsfAsserts.IsStringOrExtraString(CsfConstants.StrwFlgRaw, () => new[] { string.Empty }));
-        try
-        {
-            CsfAsserts.IsStringOrExtraString(CsfConstants.CsfFlagRaw, () => new object[] { "0", "1", 1 });
-        }
-        catch (FormatException e)
-        {
-            Assert.AreEqual("It's not CSF String Flag #0:1 at 0x00000001.", e.Message);
-        }
+    [TestMethod]
+    public void IsStringTest()
+    {
+        Assert.AreEqual(CsfConstants.StrFlagRaw, CsfAsserts.IsStringOrExtraString(CsfConstants.StrFlagRaw, static () => [string.Empty]));
+        Assert.ThrowsException<FormatException>(static () => CsfAsserts.IsStringOrExtraString(-1, static () => [1]), "It's not CSF String Flag 0x00000001.");
+    }
+
+    [TestMethod]
+    public void IsExtraStringTest()
+    {
+        Assert.AreEqual(CsfConstants.StrwFlgRaw, CsfAsserts.IsStringOrExtraString(CsfConstants.StrwFlgRaw, static () => [string.Empty]));
+        Assert.ThrowsException<FormatException>(static () => CsfAsserts.IsStringOrExtraString(-1, static () => [1]), "It's not CSF String Flag 0x00000001.");
     }
 }

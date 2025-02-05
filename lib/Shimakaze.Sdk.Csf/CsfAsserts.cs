@@ -33,7 +33,7 @@ internal static class CsfAsserts
     {
         return flag is CsfConstants.LblFlagRaw
                 ? flag
-                : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF Label Flag. #{0} at 0x{1:X8}.", args()));
+                : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF Label Flag. at 0x{0:X8}.", args()));
     }
 
     /// <summary>
@@ -47,6 +47,6 @@ internal static class CsfAsserts
     {
         return flag is CsfConstants.StrFlagRaw or CsfConstants.StrwFlgRaw
                 ? flag
-                : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF String Flag #{0}:{1} at 0x{2:X8}.", args()));
+                : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF String Flag at 0x{0:X8}.", args()));
     }
 }

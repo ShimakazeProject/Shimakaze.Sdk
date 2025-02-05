@@ -1,0 +1,140 @@
+using System.Runtime.InteropServices;
+using System.Text;
+
+using Shimakaze.Sdk.Csf;
+
+namespace Shimakaze.Sdk.Csf.IO;
+
+/// <summary>
+/// CSF 阅读器
+/// </summary>
+/// <param name="stream"></param>
+/// <param name="leaveOpen"></param>
+public sealed class CsfReader(Stream stream, bool leaveOpen = false) : IDisposable
+{
+    private bool _disposedValue;
+
+    /// <summary>
+    /// 从流中读取文件头
+    /// </summary>
+    /// <returns></returns>
+    public CsfMetadata ReadMetadata()
+    {
+        Span<byte> head = stackalloc byte[24];
+        Span<int> ints = MemoryMarshal.Cast<byte, int>(head);
+
+        stream.ReadExactly(head);
+        CsfAsserts.IsCsfFile(ints[0]);
+        return new()
+        {
+            Identifier = ints[0],
+            Version = ints[1],
+            LabelCount = ints[2],
+            StringCount = ints[3],
+            Unknown = ints[4],
+            Language = (CsfLanguage)ints[5],
+        };
+    }
+
+    /// <summary>
+    /// 从流中读取一个标签
+    /// </summary>
+    /// <returns></returns>
+    public CsfLabel ReadLabel()
+    {
+        Span<byte> head = stackalloc byte[12];
+        Span<int> ints = MemoryMarshal.Cast<byte, int>(head);
+
+        stream.ReadExactly(head);
+        CsfAsserts.IsLabel(ints[0], () => [stream.Position]);
+
+        int count = ints[1];
+        Span<byte> name = stackalloc byte[ints[2]];
+        stream.ReadExactly(name);
+
+        CsfLabel label = new(Encoding.ASCII.GetString(name), count);
+
+        for (int i = 0; i < count; i++)
+            label.Add(ReadValue());
+
+        return label;
+    }
+
+
+    /// <summary>
+    /// 从流中读取全部数据
+    /// </summary>
+    /// <returns></returns>
+    public CsfData ReadAllData()
+    {
+        CsfData data = new(ReadMetadata());
+        for (int i = 0; i < data.Metadata.LabelCount; i++)
+            data.Labels.Add(ReadLabel());
+
+        return data;
+    }
+
+    /// <summary>
+    /// 从流中读取一个值
+    /// </summary>
+    /// <returns></returns>
+    public CsfValue ReadValue()
+    {
+        Span<byte> head = stackalloc byte[8];
+        Span<int> ints = MemoryMarshal.Cast<byte, int>(head);
+
+        stream.ReadExactly(head);
+        CsfAsserts.IsStringOrExtraString(ints[0], () => [stream.Position]);
+
+        Span<byte> buffer = stackalloc byte[ints[1] << 1];
+
+        stream.ReadExactly(buffer);
+        CsfConstants.CodingValue(buffer);
+        string value = Encoding.Unicode.GetString(buffer);
+
+        if (ints[0] is not CsfConstants.StrwFlgRaw)
+            return new(value, default);
+
+        buffer = stackalloc byte[4];
+        stream.ReadExactly(buffer);
+
+        buffer = stackalloc byte[MemoryMarshal.Cast<byte, int>(buffer)[0]];
+        stream.ReadExactly(buffer);
+        string extra = Encoding.ASCII.GetString(buffer);
+
+        return new(value, extra);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="disposing"></param>
+    private void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                if (!leaveOpen)
+                    stream.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    // ~CsfReader()
+    // {
+    //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+    //     Dispose(disposing: false);
+    // }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+        Dispose(disposing: true);
+        // GC.SuppressFinalize(this);
+    }
+}
