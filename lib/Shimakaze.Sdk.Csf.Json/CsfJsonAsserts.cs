@@ -7,57 +7,16 @@ namespace Shimakaze.Sdk.Csf.Json;
 [StackTraceHidden]
 internal static class CsfJsonAsserts
 {
-    public static void IsNotEndOfStream(bool b)
+    public static void IsKind(this in JsonElement json, in JsonValueKind kind)
     {
-        if (!b)
-        {
-            throw new EndOfStreamException();
-        }
+        if (json.ValueKind != kind)
+            throw new FormatException($"Json element is \"{json.ValueKind}\", but it should be \"{kind}\".");
     }
 
-    public static void IsProtocol(int protocol, int value)
+    public static void HasProtocol(this in JsonElement json, in int protocol)
     {
-        if (value != protocol)
-        {
+        if (!json.TryGetProperty("protocol", out var value)
+            || protocol != value.GetInt32())
             throw new NotSupportedException($"Cannot Support Protocol {value}, This Converter are only supported Protocol {protocol}");
-        }
-    }
-
-    public static void IsToken(JsonTokenType token, JsonTokenType value)
-    {
-        if (value != token)
-        {
-            throw new FormatException($"Token is \"{value}\", but it should be \"{token}\".");
-        }
-    }
-
-    public static void IsNotNull<T>([NotNull] T? obj)
-    {
-        if (obj is null)
-        {
-            throw new InvalidCastException($"Cannot convert Json to {typeof(T)}");
-        }
-    }
-
-    public static void PropertyIsNull([MaybeNull] List<CsfValue>? values, string propertyName)
-    {
-        if (values is not null)
-        {
-            throw new FormatException($"Cannot have property \"{propertyName}\" and property \"values\" at the same time.");
-        }
-    }
-    public static void PropertyIsNull([MaybeNull] CsfValue? value)
-    {
-        if (value is not null)
-        {
-            throw new FormatException($"Cannot have property \"value\" and property \"values\" at the same time.");
-        }
-    }
-    public static void PropertyIsNotNull([NotNull] CsfValue? value)
-    {
-        if (value is null)
-        {
-            throw new FormatException($"Property \"value\" cannot be null.");
-        }
     }
 }

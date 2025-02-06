@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Shimakaze.Sdk.Csf.Json;
 
 /// <summary>
@@ -13,7 +15,7 @@ internal static class JsonConstants
         /// <summary>
         /// BASEURL.
         /// </summary>
-        public const string BASEURL = "https://shimakazeproject.github.io/Shimakaze.Sdk/schemas";
+        public const string BASEURL = "https://schema.shimakaze.org";
 
         /// <summary>
         /// V1.

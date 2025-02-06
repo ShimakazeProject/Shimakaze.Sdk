@@ -1,5 +1,5 @@
 {
-  "$schema": "https://shimakazeproject.github.io/Schemas/json/csf/v1.json",
+  "$schema": "https://schema.shimakaze.org/json/csf/v1.json",
   "protocol": 1,
   "head": {
     "version": 3,
