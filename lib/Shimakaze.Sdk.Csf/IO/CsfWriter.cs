@@ -12,6 +12,16 @@ public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : IDisposab
     private bool _disposedValue;
 
     /// <summary>
+    /// 写入全部数据
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="csf"></param>
+    public static void WriteAllData(Stream stream, CsfData csf)
+    {
+        using CsfWriter writer = new(stream, leaveOpen: true);
+        writer.WriteAllData(csf);
+    }
+    /// <summary>
     /// 写入元数据
     /// </summary>
     /// <param name="metadata"></param>

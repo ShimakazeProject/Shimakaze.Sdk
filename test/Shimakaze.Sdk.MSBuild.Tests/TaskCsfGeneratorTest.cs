@@ -26,7 +26,7 @@ public class TaskCsfGeneratorTest
 
         TaskCsfGenerator task = new()
         {
-            SourceFiles = new[] { item },
+            SourceFiles = [item],
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
@@ -41,7 +41,7 @@ public class TaskCsfGeneratorTest
 
         TaskCsfGenerator task = new()
         {
-            SourceFiles = new[] { item },
+            SourceFiles = [item],
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
@@ -66,7 +66,7 @@ public class TaskCsfGeneratorTest
 
         TaskCsfGenerator task = new()
         {
-            SourceFiles = new[] { item },
+            SourceFiles = [item],
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsFalse(task.Execute());
@@ -81,7 +81,7 @@ public class TaskCsfGeneratorTest
 
         TaskCsfGenerator task = new()
         {
-            SourceFiles = new[] { item },
+            SourceFiles = [item],
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());
@@ -96,7 +96,7 @@ public class TaskCsfGeneratorTest
 
         TaskCsfGenerator task = new()
         {
-            SourceFiles = new[] { item },
+            SourceFiles = [item],
             BuildEngine = _buildEngine?.Object,
         };
         Assert.IsTrue(task.Execute());

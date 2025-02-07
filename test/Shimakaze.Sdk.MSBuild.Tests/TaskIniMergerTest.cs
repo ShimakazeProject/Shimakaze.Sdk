@@ -21,7 +21,7 @@ public class TaskIniMergerTest
 
         TaskIniMerger task = new()
         {
-            SourceFiles = new[] { item },
+            SourceFiles = [item],
             DestinationFile = Path.Combine(OutputPath, InputFile),
             BuildEngine = _buildEngine?.Object,
         };

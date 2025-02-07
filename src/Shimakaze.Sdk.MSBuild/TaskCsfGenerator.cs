@@ -2,7 +2,9 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Shimakaze.Sdk.Csf;
+using Shimakaze.Sdk.Csf.IO;
 using Shimakaze.Sdk.Csf.Json;
+using Shimakaze.Sdk.Csf.Json.IO;
 using Shimakaze.Sdk.Csf.Xml;
 using Shimakaze.Sdk.Csf.Yaml;
 
@@ -56,7 +58,7 @@ public sealed class TaskCsfGenerator : MSTask
             using Stream stream = File.OpenRead(file.ItemSpec);
             using Stream output = File.Create(dest);
 
-            Task<CsfDocument> reader;
+            Task<CsfData> reader;
             switch (tag.ToLowerInvariant())
             {
                 case "jsonv1":
@@ -70,12 +72,12 @@ public sealed class TaskCsfGenerator : MSTask
                         0,
                         0,
                         "You shouldn't use the \"CSF Json version 1\". Please port your file to \"version 2\" or use \"Csf Yaml version 1\" to replace that.");
-                    reader = CsfJsonV1Reader.ReadAsync(stream);
+                    reader = CsfJsonV1.ReadAllDataAsync(stream);
                     break;
 
                 case "json":
                 case "jsonv2":
-                    reader = CsfJsonV2Reader.ReadAsync(stream);
+                    reader = CsfJsonV2.ReadAllDataAsync(stream);
                     break;
 
                 case "xml":
@@ -109,7 +111,7 @@ public sealed class TaskCsfGenerator : MSTask
                         0,
                         0,
                         "You shouldn't use the \"CSF File\" direct in your project. Please port your file to \"version 2\" or use \"Csf Yaml version 1\" to replace that.");
-                    reader = Task.Run(() => CsfReader.Read(stream));
+                    reader = Task.Run(() => CsfReader.ReadAllData(stream));
                     break;
 
                 default:
@@ -126,7 +128,7 @@ public sealed class TaskCsfGenerator : MSTask
                         tag);
                     return false;
             }
-            CsfDocument csf;
+            CsfData csf;
             try
             {
                 csf = reader.Result;
@@ -152,7 +154,7 @@ public sealed class TaskCsfGenerator : MSTask
                 return false;
             }
 
-            CsfWriter.Write(output, csf);
+            CsfWriter.WriteAllData(output, csf);
             TaskItem item = new(dest);
             file.CopyMetadataTo(item);
             item.RemoveMetadata(MetadataIntermediate);

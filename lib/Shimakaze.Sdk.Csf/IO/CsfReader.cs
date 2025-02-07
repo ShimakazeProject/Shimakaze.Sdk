@@ -1,8 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-using Shimakaze.Sdk.Csf;
-
 namespace Shimakaze.Sdk.Csf.IO;
 
 /// <summary>
@@ -14,6 +12,16 @@ public sealed class CsfReader(Stream stream, bool leaveOpen = false) : IDisposab
 {
     private bool _disposedValue;
 
+    /// <summary>
+    /// 从流中读取全部数据
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static CsfData ReadAllData(Stream stream)
+    {
+        using CsfReader reader = new(stream, leaveOpen: true);
+        return reader.ReadAllData();
+    }
     /// <summary>
     /// 从流中读取文件头
     /// </summary>
@@ -137,4 +145,5 @@ public sealed class CsfReader(Stream stream, bool leaveOpen = false) : IDisposab
         Dispose(disposing: true);
         // GC.SuppressFinalize(this);
     }
+
 }
