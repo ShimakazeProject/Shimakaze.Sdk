@@ -1,46 +1,62 @@
+using System.Globalization;
 using System.Xml;
 
 namespace Shimakaze.Sdk.Csf.Xml.Converter.V1;
 
 /// <summary>
-/// Csf数据序列化器
+/// Csf文档序列化器
 /// </summary>
 public class CsfDataXmlSerializer : IXmlSerializer<CsfData>
 {
-    private readonly CsfValueListXmlSerializer _csfValueListXmlSerializer = new();
-    private readonly CsfValueXmlSerializer _csfValueXmlSerializer = new();
+    private readonly CsfLabelListXmlSerializer _csfLabelListXmlSerializer = new();
 
     /// <inheritdoc />
     public CsfData Deserialize(XmlReader reader)
     {
-        CsfData label = new();
-        if (reader.NodeType is XmlNodeType.Element && reader.Name is "Label")
+        CsfMetadata head = new();
+        while (reader.Read())
         {
-            string? lbl = reader.GetAttribute("name");
-            if (!string.IsNullOrWhiteSpace(lbl))
+            switch (reader.NodeType)
             {
-                label.LabelName = lbl;
-            }
+                case XmlNodeType.Element when reader.Name is "Resources":
+                    if (int.TryParse(reader.GetAttribute("version"), out int v))
+                    {
+                        head.Version = v;
+                    }
 
-            label.Values = reader.GetAttribute("extra") switch
-            {
-                not null => [_csfValueXmlSerializer.Deserialize(reader)],
-                _ => [.. _csfValueListXmlSerializer.Deserialize(reader)],
-            };
+                    if (int.TryParse(reader.GetAttribute("language"), out int l))
+                    {
+                        head.Language = l;
+                    }
+
+                    goto outer;
+            }
         }
-        return label;
+
+    outer:
+        return new()
+        {
+            Metadata = head,
+            Labels = [.. _csfLabelListXmlSerializer.Deserialize(reader)]
+        };
     }
 
     /// <inheritdoc />
     public void Serialize(XmlWriter writer, CsfData value)
     {
-        // <Label name="label_name">
-        writer.WriteStartElement("Label");
-        writer.WriteAttributeString("name", value.LabelName);
+        writer.WriteStartDocument();
+        writer.WriteProcessingInstruction("xml-model", $"href=\"{XmlConstants.SchemaUrls.V1}\" type=\"application/xml\" schematypens=\"http://www.w3.org/2001/XMLSchema\"");
 
-        _csfValueListXmlSerializer.Serialize(writer, value.Values);
+        // <Resources protocol="1" version="3" language="0">
+        writer.WriteStartElement("Resources");
+        writer.WriteAttributeString("protocol", "1");
+        writer.WriteAttributeString("version", value.Metadata.Version.ToString(CultureInfo.InvariantCulture));
+        writer.WriteAttributeString("language", value.Metadata.Language.Value.ToString(CultureInfo.InvariantCulture));
 
-        // </Label>
+        _csfLabelListXmlSerializer.Serialize(writer, value.Labels);
+
+        // </Resources>
         writer.WriteEndElement();
+        writer.WriteEndDocument();
     }
 }

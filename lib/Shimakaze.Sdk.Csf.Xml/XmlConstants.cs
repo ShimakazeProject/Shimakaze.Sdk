@@ -4,7 +4,7 @@ internal static class XmlConstants
 {
     public static class SchemaUrls
     {
-        public const string BASE_URL = "https://shimakazeproject.github.io/Schemas";
-        public const string V1 = BASE_URL + "/xml/csf/v1.xsd";
+        public const string BASE_URL = "https://schema.shimakaze.org";
+        public const string V1 = $"{BASE_URL}/xml/csf/v1.xsd";
     }
 }
