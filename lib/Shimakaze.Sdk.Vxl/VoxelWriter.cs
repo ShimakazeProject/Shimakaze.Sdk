@@ -22,7 +22,7 @@ public sealed class VoxelWriter
 
         PaletteWriter.Write(value.Palette, stream, skipPreprocess: true);
 
-        stream.Write(value.SectionHeaders);
+        stream.Write<SectionHeader>(value.SectionHeaders);
 
         for (int i = 0; i < value.SectionData.Length; i++)
         {
@@ -30,8 +30,8 @@ public sealed class VoxelWriter
             progress?.Report((float)i / value.SectionData.Length);
 
             long data = limbDataOffset + value.SectionTailers[i].SpanDataOffset;
-            stream.Write(value.SectionData[i].SpanStart);
-            stream.Write(value.SectionData[i].SpanEnd);
+            stream.Write<int>(value.SectionData[i].SpanStart);
+            stream.Write<int>(value.SectionData[i].SpanEnd);
 
             for (int j = 0; j < value.SectionData[i].Voxel.Length; j++)
             {
@@ -45,13 +45,13 @@ public sealed class VoxelWriter
                     stream.WriteByte(span.SkipCount);
                     stream.WriteByte(span.NumVoxels);
 
-                    stream.Write(span.Voxels);
+                    stream.Write<Voxel>(span.Voxels);
 
                     stream.WriteByte(span.NumVoxels2);
                 }
             }
         }
 
-        stream.Write(value.SectionTailers);
+        stream.Write<SectionTailer>(value.SectionTailers);
     }
 }

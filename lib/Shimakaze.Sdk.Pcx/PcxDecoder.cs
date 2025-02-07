@@ -131,26 +131,24 @@ public sealed class PcxDecoder()
         byte[] data = new byte[length];
         for (int p = 0; p < length;)
         {
-            int flag = stream.ReadByte();
-            PcxAsserts.IsNotEndOfStream(flag);
+            byte flag = stream.ReadAsByte();
             if ((flag & 0b11000000) is 0b11000000)
             {
                 int size = flag & 0b00111111;
                 PcxAsserts.IsNotUndefined(size);
 
-                int b = stream.ReadByte();
-                PcxAsserts.IsNotEndOfStream(b);
+                byte b = stream.ReadAsByte();
 
                 for (int i = 0; i < size; i++)
                 {
-                    data[p + i] = (byte)b;
+                    data[p + i] = b;
                 }
 
                 p += size;
             }
             else
             {
-                data[p] = (byte)flag;
+                data[p] = flag;
                 p++;
             }
         }
@@ -169,7 +167,7 @@ public sealed class PcxDecoder()
         {
             PcxAsserts.IsPalette(stream.ReadByte());
             image.Palette = new();
-            PcxAsserts.IsNotEndOfStream(stream.Read(image.Palette.Colors), Palette.DefaultColorCount * 3);
+            stream.Read<PaletteColor>(image.Palette.Colors);
         }
         else
         {

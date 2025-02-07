@@ -35,20 +35,7 @@ internal static class PcxAsserts
             throw new NotImplementedException("Undefined");
         }
     }
-    public static void IsNotEndOfStream(in int size, in int length)
-    {
-        if (size != length)
-        {
-            throw new EndOfStreamException();
-        }
-    }
-    public static void IsNotEndOfStream(in int @byte)
-    {
-        if (@byte is -1)
-        {
-            throw new EndOfStreamException();
-        }
-    }
+
     public static void IsPalette(in int @byte)
     {
         if (@byte is not 0x0c)

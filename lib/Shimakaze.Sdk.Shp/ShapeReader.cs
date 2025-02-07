@@ -94,6 +94,6 @@ public static class ShapeReader
     {
         input.Read(out header);
         frames = new ShapeFrameHeader[header.NumImages];
-        input.Read(frames);
+        input.Read<ShapeFrameHeader>(frames);
     }
 }

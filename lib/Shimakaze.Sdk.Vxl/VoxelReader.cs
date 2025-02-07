@@ -62,10 +62,10 @@ public sealed class VoxelReader
             };
 
             stream.Seek(start, SeekOrigin.Begin);
-            stream.Read(voxel.SectionData[i].SpanStart);
+            stream.Read<int>(voxel.SectionData[i].SpanStart);
 
             stream.Seek(end, SeekOrigin.Begin);
-            stream.Read(voxel.SectionData[i].SpanEnd);
+            stream.Read<int>(voxel.SectionData[i].SpanEnd);
 
             for (int j = 0; j < n; j++)
             {
@@ -98,7 +98,7 @@ public sealed class VoxelReader
                     voxelSpanSegment.Voxels = new Voxel[voxelSpanSegment.NumVoxels];
                     if (voxelSpanSegment.NumVoxels is > 0)
                     {
-                        stream.Read(voxelSpanSegment.Voxels);
+                        stream.Read<Voxel>(voxelSpanSegment.Voxels);
                     }
 
                     voxelSpanSegment.NumVoxels2 = (byte)stream.ReadByte();
