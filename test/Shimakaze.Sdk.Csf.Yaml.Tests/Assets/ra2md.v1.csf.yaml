@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://shimakazeproject.github.io/Schemas/yaml/csf/metadata.yaml
+# yaml-language-server: $schema=https://schema.shimakaze.org/yaml/csf/v1.yaml#/definitions/head
 lang: en_US
 version: 3
 ---
-# yaml-language-server: $schema=https://shimakazeproject.github.io/Schemas/yaml/csf/v1.yaml
+# yaml-language-server: $schema=https://schema.shimakaze.org/yaml/csf/v1.yaml#/definitions/data
 THEME:Intro: Intro
 THEME:MadRap: Hell March
 THEME:Defense: Defense
@@ -374,7 +374,7 @@ GUI:Kills: Kills
 GUI:Return: Resume
 GUI:Briefing: Briefing
 GUI:LeaveGame: Quit Game
-GUI:Blank: ''
+GUI:Blank: null
 GUI:Open: Open
 GUI:Closed: Closed
 GUI:Waiting: Waiting...
@@ -499,7 +499,7 @@ STT:KeyboardComboCategory: Pick a category of keyboard command.
 STT:KeyboardGroupDescription: The description of your selected command.
 STT:KeyboardListCommands: Available commands for the current category.
 STT:KeyboardLabelShortcut: Displays the current Hotkey for this command.
-STT:KeyboardLabelError: ''
+STT:KeyboardLabelError: null
 STT:KeyboardEditEntry: Enter your new command Hotkey here.
 STT:KeyboardButtonAssign: Assigns your chosen Hotkey command.
 STT:KeyboardLabelAssigned: The command this hotkey is currently assigned to.
@@ -1096,7 +1096,7 @@ Brief:ALL11: "Einstein has found the perfect place for his Chronosphere. Unfortu
 Brief:ALL12: "The war is nearly at an end. A hand-picked group of volunteers will use the Chronosphere to invade Moscow from across the world. Once you have secured the Kremlin, Tanya will capture Romanov and put an end to Soviet aggression. You are the only commander skilled enough to make this work. Your forces will be outnumbered at least ten to one. Good luck. \n \n Objective 1: Clear the area so Chrono Reinforcements can arrive. \n \n Objective 2: Eliminate Romanov's Elite Black Guard around the Kremlin."
 Brief:TRN01: This is basic training. Listen to your sergeant and do as he tells you.
 Brief:TRN02: This is the last day of your basic training. Time is short and the Soviets may attack soon. Listen to your sergeant, learn what you can, and prepare for battle.
-TXT_NONE: ''
+TXT_NONE: null
 TXT_COPYRIGHT: © 2000, 2001 ELECTRONIC ARTS INC. ALL RIGHTS RESERVED
 TXT_TIME_FORMAT_HOURS: 'Time: %02d:%02d:%02d'
 TXT_TIME_FORMAT_NO_HOURS: Time:%02d:%02d
@@ -5237,7 +5237,7 @@ MSG:PlanningModeMixedLoop1: Cannot make loop with branch that does not contain t
 MSG:PlanningModeMixedLoop2: entire selection.
 MSG:AttackMoveUnsupported: A member of the selection does not support attack move.
 MSG:AutoDeployUnsupported: A member of the selection does not support auto deploy.
-GUI:Empty: ''
+GUI:Empty: null
 GUI:MoviesAndCredits: Movies & Credits
 GUI:AIEasy: Easy Enemy
 GUI:AINormal: Medium Enemy
@@ -5336,7 +5336,7 @@ GUI:UnderParMsgSov11: Already your name is known to school children as the great
 GUI:OverParMsgSov11: Yuri's defenses were weak and feeble. Your tank divisions swept him aside as you have swept aside so many others.
 GUI:UnderParMsgSov12: History will name you among the greatest commanders that has ever lived. Now the world is yours to rule.
 GUI:OverParMsgSov12: The Allies are beaten and the world is begging to be spared the carnage of your armed forces. Supreme power is yours alone.
-STT:Empty: ''
+STT:Empty: null
 STT:MainButtonMovies: View movies and credits.
 STT:MainOptButtonNetwork: Customize your network configuration.
 STT:MainOptCBoxStretch: Expand movies to fill your screen in higher resolutions.

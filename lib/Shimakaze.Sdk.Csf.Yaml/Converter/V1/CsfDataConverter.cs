@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
@@ -5,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace Shimakaze.Sdk.Csf.Yaml.Converter.V1;
 
 /// <summary>
-/// Csf Label Converter.
+/// Csf Data Converter.
 /// </summary>
 public class CsfDataConverter : IYamlTypeConverter
 {
@@ -18,62 +20,101 @@ public class CsfDataConverter : IYamlTypeConverter
     /// <inheritdoc />
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
-        // 检查是不是 CSF 标签
-        if (!parser.TryConsume<Scalar>(out Scalar? label))
+        if (parser.Current is not MappingStart mappingStart)
         {
-            throw new FormatException($"Unknown Format at {parser.Current?.Start} - {parser.Current?.End}");
+            if (parser.Current is null)
+            {
+                throw new FormatException("???");
+            }
+
+            Mark start = parser.Current.Start;
+            Mark end = parser.Current.End;
+            throw new YamlException(start, end, "Unknown Token");
         }
 
-        CsfData data = new(label.Value);
-        List<CsfValue> values = [];
-        if (parser.TryConsume<SequenceStart>(out _))
+        CsfMetadata metadata = new();
+        List<CsfLabel> datas = [];
+
+        parser.Consume<MappingStart>();
+        while (!parser.TryConsume<MappingEnd>(out _))
         {
-            while (!parser.TryConsume<SequenceEnd>(out _))
+            if (parser.TryConsume<Scalar>(out Scalar? scalar))
             {
-                if (rootDeserializer(typeof(CsfValue)) is CsfValue value)
+                switch (scalar.Value)
                 {
-                    values.Add(value);
+                    case "lang":
+                        if (parser.TryConsume<Scalar>(out Scalar? scalar1))
+                        {
+                            if (!int.TryParse(scalar1.Value, out int lang))
+                            {
+                                lang = YamlConstants.LanguageList.IndexOf(scalar1.Value);
+                            }
+
+                            metadata.Language = lang;
+                        }
+
+                        break;
+
+                    case "version":
+                        if (parser.TryConsume<Scalar>(out Scalar? scalar2))
+                        {
+                            metadata.Version = int.Parse(scalar2.Value, CultureInfo.InvariantCulture);
+                        }
+
+                        break;
                 }
             }
         }
-        else
+
+        parser.TryConsume<DocumentEnd>(out _);
+        parser.TryConsume<DocumentStart>(out _);
+        parser.Consume<MappingStart>();
+
+        while (!parser.TryConsume<MappingEnd>(out _))
         {
-            if (rootDeserializer(typeof(CsfValue)) is CsfValue value)
+            if (rootDeserializer(typeof(CsfLabel)) is CsfLabel data)
             {
-                values.Add(value);
+                datas.Add(data);
             }
         }
 
-        data.Values = [.. values];
-        data.ReCount();
-        return data;
+        CsfData doc = new(metadata, datas);
+        doc.UpdateMetadataCount();
+        return doc;
     }
 
     /// <inheritdoc />
     public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
-        if (value is not CsfData data)
+        if (value is not CsfData doc)
         {
             return;
         }
 
-        emitter.Emit(new Scalar(data.LabelName));
-
-        if (data.Values.Length > 1)
+        emitter.Emit(new MappingStart());
+        emitter.Emit(new Comment($"yaml-language-server: $schema={YamlConstants.SchemaUrls.V1.Head}", false));
+        emitter.Emit(new Scalar("lang"));
+        if (doc.Metadata.Language < YamlConstants.LanguageList.Count)
         {
-            emitter.Emit(new SequenceStart(AnchorName.Empty, TagName.Empty, true, SequenceStyle.Block));
-            foreach (CsfValue item in data.Values)
-            {
-                serializer(item, item.GetType());
-            }
-
-            emitter.Emit(new SequenceEnd());
+            emitter.Emit(new Scalar(YamlConstants.LanguageList[doc.Metadata.Language]));
         }
         else
         {
-            CsfValue v = data.Values.Length is > 0 ? data.Values.First() : CsfValue.Empty;
-            serializer(v, v.GetType());
+            emitter.Emit(new Scalar(doc.Metadata.Language.Value.ToString(CultureInfo.InvariantCulture)));
         }
-    }
 
+        emitter.Emit(new Scalar("version"));
+        emitter.Emit(new Scalar(doc.Metadata.Version.ToString(CultureInfo.InvariantCulture)));
+        emitter.Emit(new MappingEnd());
+        emitter.Emit(new DocumentEnd(true));
+        emitter.Emit(new DocumentStart());
+        emitter.Emit(new MappingStart());
+        emitter.Emit(new Comment($"yaml-language-server: $schema={YamlConstants.SchemaUrls.V1.Data}", false));
+        foreach (var item in doc.Labels)
+        {
+            serializer(item, item.GetType());
+        }
+
+        emitter.Emit(new MappingEnd());
+    }
 }

@@ -30,16 +30,19 @@ internal static class YamlConstants
         /// <summary>
         /// BASEURL.
         /// </summary>
-        public const string BASEURL = "https://shimakazeproject.github.io/Schemas";
+        public const string BASEURL = "https://schema.shimakaze.org";
 
-        /// <summary>
-        /// Metadata.
-        /// </summary>
-        public const string Metadata = $"{BASEURL}/yaml/csf/metadata.yaml";
+        public static class V1
+        {
+            /// <summary>
+            /// Metadata.
+            /// </summary>
+            public const string Head = $"{BASEURL}/yaml/csf/v1.yaml#/definitions/head";
 
-        /// <summary>
-        /// V1.
-        /// </summary>
-        public const string V1 = $"{BASEURL}/yaml/csf/v1.yaml";
+            /// <summary>
+            /// V1.
+            /// </summary>
+            public const string Data = $"{BASEURL}/yaml/csf/v1.yaml#/definitions/data";
+        }
     }
 }

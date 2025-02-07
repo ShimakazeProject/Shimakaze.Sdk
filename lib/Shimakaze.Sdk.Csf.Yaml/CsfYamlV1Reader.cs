@@ -15,15 +15,15 @@ public static class CsfYamlV1Reader
     /// <param name="reader"></param>
     /// <param name="builder"></param>
     /// <returns></returns>
-    public static CsfDocument Read(TextReader reader, Func<DeserializerBuilder, DeserializerBuilder>? builder = default)
+    public static CsfData Read(TextReader reader, Func<DeserializerBuilder, DeserializerBuilder>? builder = default)
     {
         builder ??= i => i;
 
         return builder(new())
             .WithTypeConverter(new CsfValueConverter())
+            .WithTypeConverter(new CsfLabelConverter())
             .WithTypeConverter(new CsfDataConverter())
-            .WithTypeConverter(new CsfDocumentConverter())
             .Build()
-            .Deserialize<CsfDocument>(reader);
+            .Deserialize<CsfData>(reader);
     }
 }

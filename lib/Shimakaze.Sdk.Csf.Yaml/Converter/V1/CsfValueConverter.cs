@@ -19,18 +19,18 @@ public class CsfValueConverter : IYamlTypeConverter
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
 
     {
-        if (parser.TryConsume<Scalar>(out Scalar? scalar))
+        if (parser.TryConsume<Scalar>(out var scalar))
         {
-            return new CsfValue(scalar.Value);
+            return new CsfValue(scalar.Value, null);
         }
-        else if (parser.TryConsume<MappingStart>(out MappingStart? start))
+        else if (parser.TryConsume<MappingStart>(out var start))
         {
             string? value = null;
             string? extra = null;
             MappingEnd? end;
             while (!parser.TryConsume<MappingEnd>(out end))
             {
-                if (parser.TryConsume<Scalar>(out Scalar? property) && parser.TryConsume<Scalar>(out Scalar? propertyValue))
+                if (parser.TryConsume<Scalar>(out var property) && parser.TryConsume<Scalar>(out Scalar? propertyValue))
                 {
                     if (property.Value is "value")
                     {
@@ -56,12 +56,12 @@ public class CsfValueConverter : IYamlTypeConverter
     {
         switch (value)
         {
-            case CsfValue extra when extra.HasExtra:
+            case CsfValue extra when extra.Extra is not null:
                 emitter.Emit(new MappingStart());
                 emitter.Emit(new Scalar("value"));
                 emitter.Emit(new Scalar(AnchorName.Empty, TagName.Empty, extra.Value, ScalarStyle.Literal, true, true));
                 emitter.Emit(new Scalar("extra"));
-                emitter.Emit(new Scalar(extra.ExtraValue));
+                emitter.Emit(new Scalar(extra.Extra));
                 emitter.Emit(new MappingEnd());
                 break;
 
@@ -69,8 +69,12 @@ public class CsfValueConverter : IYamlTypeConverter
                 emitter.Emit(new Scalar(AnchorName.Empty, TagName.Empty, csfValue.Value, ScalarStyle.Literal, true, true));
                 break;
 
+            case CsfValue csfValue when double.TryParse(csfValue.Value, out _):
+                emitter.Emit(new Scalar(AnchorName.Empty, TagName.Empty, csfValue.Value, ScalarStyle.SingleQuoted, true, true));
+                break;
+
             case CsfValue csfValue:
-                emitter.Emit(new Scalar(csfValue.Value));
+                emitter.Emit(new Scalar( csfValue.Value));
                 break;
         }
     }
