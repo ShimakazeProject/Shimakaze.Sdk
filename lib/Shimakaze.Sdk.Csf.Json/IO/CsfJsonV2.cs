@@ -39,7 +39,7 @@ public static class CsfJsonV2
 
         return data;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>

@@ -74,7 +74,7 @@ public class CsfValueConverter : IYamlTypeConverter
                 break;
 
             case CsfValue csfValue:
-                emitter.Emit(new Scalar( csfValue.Value));
+                emitter.Emit(new Scalar(csfValue.Value));
                 break;
         }
     }
