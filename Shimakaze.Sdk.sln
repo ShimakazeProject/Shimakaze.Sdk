@@ -65,8 +65,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Ini.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Mix.Tests", "test\Shimakaze.Sdk.Mix.Tests\Shimakaze.Sdk.Mix.Tests.csproj", "{886FC28A-388B-4B3A-93A2-132A9703BA2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.MSBuild.Tests", "test\Shimakaze.Sdk.MSBuild.Tests\Shimakaze.Sdk.MSBuild.Tests.csproj", "{BAC52AA7-0784-483E-BCCA-0FC33185E2B2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Pal.Tests", "test\Shimakaze.Sdk.Pal.Tests\Shimakaze.Sdk.Pal.Tests.csproj", "{54BD4658-75CD-4066-9B13-377587CEA0B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shimakaze.Sdk.Vpl.Tests", "test\Shimakaze.Sdk.Vpl.Tests\Shimakaze.Sdk.Vpl.Tests.csproj", "{105C0FD8-87B5-4DB8-81F5-CC2FEE8CC26C}"
@@ -93,8 +91,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "msbuild", "msbuild", "{4614
 		msbuild\Framework.props = msbuild\Framework.props
 		msbuild\UnitTests.props = msbuild\UnitTests.props
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimakaze.Sdk.MSBuild", "src\Shimakaze.Sdk.MSBuild\Shimakaze.Sdk.MSBuild.csproj", "{11EA6FC8-A515-9595-BC4B-99802C190BED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -214,10 +210,6 @@ Global
 		{886FC28A-388B-4B3A-93A2-132A9703BA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{886FC28A-388B-4B3A-93A2-132A9703BA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{886FC28A-388B-4B3A-93A2-132A9703BA2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BAC52AA7-0784-483E-BCCA-0FC33185E2B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BAC52AA7-0784-483E-BCCA-0FC33185E2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BAC52AA7-0784-483E-BCCA-0FC33185E2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BAC52AA7-0784-483E-BCCA-0FC33185E2B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{54BD4658-75CD-4066-9B13-377587CEA0B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{54BD4658-75CD-4066-9B13-377587CEA0B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54BD4658-75CD-4066-9B13-377587CEA0B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -230,10 +222,6 @@ Global
 		{E110BE61-7888-4F51-B850-C02FCECCF324}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E110BE61-7888-4F51-B850-C02FCECCF324}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E110BE61-7888-4F51-B850-C02FCECCF324}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11EA6FC8-A515-9595-BC4B-99802C190BED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11EA6FC8-A515-9595-BC4B-99802C190BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11EA6FC8-A515-9595-BC4B-99802C190BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11EA6FC8-A515-9595-BC4B-99802C190BED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -267,7 +255,6 @@ Global
 		{AC3B4A5E-CD16-4608-98AD-F3311AFD3295} = {6BC11685-F4D9-4B6B-987F-A6F50DAE2BB1}
 		{5057FFDB-F290-459F-B6C0-F001B4F680A8} = {6BC11685-F4D9-4B6B-987F-A6F50DAE2BB1}
 		{886FC28A-388B-4B3A-93A2-132A9703BA2B} = {6BC11685-F4D9-4B6B-987F-A6F50DAE2BB1}
-		{BAC52AA7-0784-483E-BCCA-0FC33185E2B2} = {6BC11685-F4D9-4B6B-987F-A6F50DAE2BB1}
 		{54BD4658-75CD-4066-9B13-377587CEA0B0} = {6BC11685-F4D9-4B6B-987F-A6F50DAE2BB1}
 		{105C0FD8-87B5-4DB8-81F5-CC2FEE8CC26C} = {6BC11685-F4D9-4B6B-987F-A6F50DAE2BB1}
 		{E110BE61-7888-4F51-B850-C02FCECCF324} = {6BC11685-F4D9-4B6B-987F-A6F50DAE2BB1}
