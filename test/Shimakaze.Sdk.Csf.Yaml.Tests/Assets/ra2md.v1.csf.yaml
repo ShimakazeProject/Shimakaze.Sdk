@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://shimakazeproject.github.io/Schemas/yaml/csf/metadata.yaml
+# yaml-language-server: $schema=https://schema.shimakaze.org/yaml/csf/v1.yaml#/definitions/head
 lang: en_US
 version: 3
 ---
-# yaml-language-server: $schema=https://shimakazeproject.github.io/Schemas/yaml/csf/v1.yaml
+# yaml-language-server: $schema=https://schema.shimakaze.org/yaml/csf/v1.yaml#/definitions/data
 THEME:Intro: Intro
 THEME:MadRap: Hell March
 THEME:Defense: Defense

@@ -23,7 +23,7 @@ public sealed class HvaWriter(Stream stream, bool leaveOpen = false) : IDisposab
     public async Task WriteAsync(HvaFile value, IProgress<float>? progress = default, CancellationToken cancellationToken = default)
     {
         _disposable.Resource.Write(value.Header);
-        _disposable.Resource.Write(value.SectionNames);
+        _disposable.Resource.Write<HvaSectionName>(value.SectionNames);
 
         cancellationToken.ThrowIfCancellationRequested();
         progress?.Report(1f / 3);
@@ -36,7 +36,7 @@ public sealed class HvaWriter(Stream stream, bool leaveOpen = false) : IDisposab
             progress?.Report((1f / 3) + (2f / 3 * ((float)i / value.Frames.Length)));
 
             HvaFrame item = value.Frames[i];
-            _disposable.Resource.Write(item.Matrices);
+            _disposable.Resource.Write<HvaMatrix>(item.Matrices);
         }
     }
 }

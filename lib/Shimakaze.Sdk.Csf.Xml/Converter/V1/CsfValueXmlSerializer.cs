@@ -42,9 +42,9 @@ public class CsfValueXmlSerializer : IXmlSerializer<CsfValue>
     /// <inheritdoc />
     public void Serialize(XmlWriter writer, CsfValue value)
     {
-        if (value.HasExtra)
+        if (value.Extra is not null)
         {
-            writer.WriteAttributeString("extra", value.ExtraValue);
+            writer.WriteAttributeString("extra", value.Extra);
         }
 
         writer.WriteString(value.Value);

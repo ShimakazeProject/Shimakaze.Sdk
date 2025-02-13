@@ -1,8 +1,8 @@
 {
-  "$schema": "https://shimakazeproject.github.io/Schemas/json/csf/v2.json",
+  "$schema": "https://schema.shimakaze.org/json/csf/v2.json",
   "protocol": 2,
   "version": 3,
-  "language": 0,
+  "language": "en_US",
   "data": {
     "THEME:Intro": "Intro",
     "THEME:MadRap": "Hell March",

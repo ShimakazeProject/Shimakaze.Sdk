@@ -2,6 +2,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Shimakaze.Sdk.Csf;
+using Shimakaze.Sdk.Csf.IO;
 
 using MSTask = Microsoft.Build.Utilities.Task;
 
@@ -44,18 +45,61 @@ public sealed class TaskCsfMerger : MSTask
             return false;
         }
 
-        CsfSet merger = [];
+        Dictionary<string, CsfLabel> map = [];
         OutputFile = new TaskItem(DestinationFile);
+        int? version = null;
+        CsfLanguage? language = null;
         foreach (ITaskItem file in SourceFiles)
         {
             using Stream stream = File.OpenRead(file.ItemSpec);
-            merger.UnionWith(CsfReader.Read(stream).Data);
+            var csf = CsfReader.ReadAllData(stream);
+            version ??= csf.Metadata.Version;
+            language ??= csf.Metadata.Language;
+            if (language != csf.Metadata.Language)
+            {
+                Log.LogError(
+                    "Shimakaze.Sdk.Csf",
+                    "CSF0004",
+                    "Inconsistent language",
+                    file.ItemSpec,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "Only allow merging CSFs of the same language");
+                continue;
+            }
+            if (version != csf.Metadata.Version)
+            {
+                Log.LogError(
+                    "Shimakaze.Sdk.Csf",
+                    "CSF0004",
+                    "Inconsistent version",
+                    file.ItemSpec,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "Only allow merging CSFs of the same version");
+                continue;
+            }
+
+            csf.Labels
+                .ForEach(label => map.TryAdd(label.Name, label));
             file.CopyMetadataTo(OutputFile);
         }
-
         OutputFile.SetMetadata(MetadataPack, true.ToString());
         using Stream output = File.Create(DestinationFile);
-        merger.BuildAndWriteTo(output);
+        CsfWriter.WriteAllData(
+            output,
+            new(
+                new()
+                {
+                    Version = version ?? 3,
+                    Language = language ?? 0,
+                },
+                [.. map.Values]));
+
         output.Flush();
 
         return !Log.HasLoggedErrors;

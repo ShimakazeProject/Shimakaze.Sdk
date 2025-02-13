@@ -15,7 +15,7 @@ public sealed class PaletteWriter
             PreProcess(palette);
         }
 
-        stream.Write(palette.Colors);
+        stream.Write<PaletteColor>(palette.Colors);
     }
 
     /// <summary>

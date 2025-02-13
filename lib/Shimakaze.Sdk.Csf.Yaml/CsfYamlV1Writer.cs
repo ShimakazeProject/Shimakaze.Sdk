@@ -15,14 +15,14 @@ public static class CsfYamlV1Writer
     /// <param name="writer"></param>
     /// <param name="value"></param>
     /// <param name="builder"></param>
-    public static void Write(TextWriter writer, CsfDocument value, Func<SerializerBuilder, SerializerBuilder>? builder = null)
+    public static void Write(TextWriter writer, CsfData value, Func<SerializerBuilder, SerializerBuilder>? builder = null)
     {
         builder ??= i => i;
 
         builder(new())
             .WithTypeConverter(new CsfValueConverter())
+            .WithTypeConverter(new CsfLabelConverter())
             .WithTypeConverter(new CsfDataConverter())
-            .WithTypeConverter(new CsfDocumentConverter())
             .Build()
             .Serialize(writer, value);
     }

@@ -45,37 +45,36 @@ public class CsfValueListXmlSerializer : IXmlSerializer<IList<CsfValue>>
         }
 
     outer:
-        if (values.Count is 0)
-        {
-            values.Add(new(string.Empty));
-        }
 
-        return values.ToArray();
+        return values;
     }
 
     /// <inheritdoc />
     public void Serialize(XmlWriter writer, IList<CsfValue> value)
     {
-        if (value.Count is not 1)
+        switch (value.Count)
         {
-            // <Values>
-            writer.WriteStartElement("Values");
-            foreach (CsfValue item in value)
-            {
-                // <Value>
-                writer.WriteStartElement("Value");
-                _csfValueXmlSerializer.Serialize(writer, item);
+            case 0:
+                return;
+            case 1:
+                _csfValueXmlSerializer.Serialize(writer, value[0]);
+                break;
+            default:
+                // <Values>
+                writer.WriteStartElement("Values");
+                foreach (CsfValue item in value)
+                {
+                    // <Value>
+                    writer.WriteStartElement("Value");
+                    _csfValueXmlSerializer.Serialize(writer, item);
 
-                // </Value>
+                    // </Value>
+                    writer.WriteEndElement();
+                }
+
+                // </Values>
                 writer.WriteEndElement();
-            }
-
-            // </Values>
-            writer.WriteEndElement();
-        }
-        else
-        {
-            _csfValueXmlSerializer.Serialize(writer, value[0]);
+                break;
         }
     }
 }

@@ -26,35 +26,14 @@ public static class CsfConstants
     public const int StrwFlgRaw = 0x53_54_52_57;
 
     /// <summary>
-    /// Value string Encode/decode <br /> The Unicode encoded content in CSF documents are all
-    /// bitwise isochronous <br /> This method is implemented using a for loop.
+    /// 编/解码 CSF 值
     /// </summary>
-    /// <param name="data"> data. </param>
-    /// <param name="length"> length. </param>
-    /// <param name="start"> start index. </param>
-    public static unsafe void CodingValue(byte* data, int length, int start = 0)
+    /// <param name="data"></param>
+    public static Span<byte> CodingValue(Span<byte> data)
     {
-        for (int i = 0; i < length; i++)
-        {
-            data[start + i] = (byte)~data[start + i];
-        }
-    }
+        for (int i = 0; i < data.Length; i++)
+            data[i] = (byte)~data[i];
 
-    /// <summary>
-    /// Value string Encode/decode <br /> The Unicode encoded content in CSF documents are all
-    /// bitwise isochronous <br /> This method is implemented using a for loop.
-    /// </summary>
-    /// <param name="data"> data. </param>
-    /// <returns> result. </returns>
-    public static byte[] CodingValue(byte[] data)
-    {
-        unsafe
-        {
-            fixed (byte* ptr = data)
-            {
-                CodingValue(ptr, data.Length);
-                return data;
-            }
-        }
+        return data;
     }
 }

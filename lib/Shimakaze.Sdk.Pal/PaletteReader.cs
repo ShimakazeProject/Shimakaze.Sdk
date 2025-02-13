@@ -18,7 +18,7 @@ public static class PaletteReader
     public static Palette Read(Stream stream, int length = Palette.DefaultColorCount, bool skipPostprocess = false)
     {
         Palette palette = new(length);
-        stream.Read(palette.Colors);
+        stream.Read<PaletteColor>(palette.Colors);
         if (!skipPostprocess)
         {
             PostProcess(palette);

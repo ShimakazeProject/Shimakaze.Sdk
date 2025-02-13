@@ -5,20 +5,20 @@ namespace Shimakaze.Sdk.Csf.Xml.Converter.V1;
 /// <summary>
 /// Csf数据列表序列化器
 /// </summary>
-public class CsfDataListXmlSerializer : IXmlSerializer<IList<CsfData>>
+public class CsfLabelListXmlSerializer : IXmlSerializer<IList<CsfLabel>>
 {
-    private readonly CsfDataXmlSerializer _csfDataXmlSerializer = new();
+    private readonly CsfLabelXmlSerializer _csfLabelXmlSerializer = new();
 
     /// <inheritdoc />
-    public IList<CsfData> Deserialize(XmlReader reader)
+    public IList<CsfLabel> Deserialize(XmlReader reader)
     {
-        List<CsfData> data = [];
+        List<CsfLabel> data = [];
         while (reader.Read())
         {
             switch (reader.NodeType)
             {
                 case XmlNodeType.Element when reader.Name is "Label":
-                    data.Add(_csfDataXmlSerializer.Deserialize(reader));
+                    data.Add(_csfLabelXmlSerializer.Deserialize(reader));
                     break;
 
                     // case XmlNodeType.EndElement when reader.Name is "Resources": goto outer;
@@ -29,11 +29,11 @@ public class CsfDataListXmlSerializer : IXmlSerializer<IList<CsfData>>
     }
 
     /// <inheritdoc />
-    public void Serialize(XmlWriter writer, IList<CsfData> value)
+    public void Serialize(XmlWriter writer, IList<CsfLabel> value)
     {
-        foreach (CsfData item in value)
+        foreach (CsfLabel item in value)
         {
-            _csfDataXmlSerializer.Serialize(writer, item);
+            _csfLabelXmlSerializer.Serialize(writer, item);
         }
     }
 }

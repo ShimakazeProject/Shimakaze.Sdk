@@ -1,61 +1,44 @@
-using System.Runtime.InteropServices;
-
 namespace Shimakaze.Sdk.Csf;
+
 /// <summary>
-/// CsfMetadata.
+/// CSF 文件元数据
 /// </summary>
-[StructLayout(LayoutKind.Sequential)]
-public record struct CsfMetadata
+public record class CsfMetadata
 {
     /// <summary>
-    /// CsfMetadata.
+    /// CSF 文件的魔术头，它永远是“CSF ”，即<br />
+    /// <code>
+    ///      00 01 02 03 | ASCII
+    /// 0x00 43 53 46 20 | FSC 
+    /// </code>
     /// </summary>
-    public CsfMetadata()
-    {
-    }
+    public int Identifier { get; set; } = CsfConstants.CsfFlagRaw;
 
     /// <summary>
-    /// CsfMetadata.
+    /// CSF 文件的版本。通常情况下，它应该始终为 <c>3</c>
     /// </summary>
-    /// <param name="version"> version. </param>
-    /// <param name="language"> language. </param>
-    public CsfMetadata(int version, int language)
-    {
-        Identifier = CsfConstants.CsfFlagRaw;
-        Version = version;
-        LabelCount = 0;
-        StringCount = 0;
-        Unknown = 0;
-        Language = language;
-    }
+    public int Version { get; set; } = 3;
 
     /// <summary>
-    /// Identifier.
+    /// 标签数量。CSF 文件中包含的所有的标签的总数
     /// </summary>
-    public int Identifier;
+    public int LabelCount { get; set; }
 
     /// <summary>
-    /// Version.
+    /// 字符串数量。一般情况下，它应该与标签数相同。
     /// </summary>
-    public int Version;
+    /// <remarks>
+    /// 字符串数量是将所有标签中的字符串值计数得到的
+    /// </remarks>
+    public int StringCount { get; set; }
 
     /// <summary>
-    /// LabelCount.
+    /// 保留。作用未知。
     /// </summary>
-    public int LabelCount;
+    public int Unknown { get; set; }
 
     /// <summary>
-    /// StringCount.
+    /// 使用的语言。
     /// </summary>
-    public int StringCount;
-
-    /// <summary>
-    /// Unknown.
-    /// </summary>
-    public int Unknown;
-
-    /// <summary>
-    /// Language.
-    /// </summary>
-    public int Language;
-};
+    public CsfLanguage Language { get; set; } = CsfLanguage.ENUS;
+}

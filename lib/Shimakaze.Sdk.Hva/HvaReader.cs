@@ -27,7 +27,7 @@ public sealed class HvaReader(Stream stream, bool leaveOpen = false) : IDisposab
         _disposable.Resource.Read(out hva.InternalHeader);
 
         hva.SectionNames = new HvaSectionName[hva.Header.NumSections];
-        _disposable.Resource.Read(hva.SectionNames);
+        _disposable.Resource.Read<HvaSectionName>(hva.SectionNames);
 
         cancellationToken.ThrowIfCancellationRequested();
         progress?.Report(1f / 3);
@@ -42,7 +42,7 @@ public sealed class HvaReader(Stream stream, bool leaveOpen = false) : IDisposab
             progress?.Report((1f / 3) + (2f / 3 * ((float)i / hva.Frames.Length)));
 
             hva.Frames[i].Matrices = new HvaMatrix[hva.Header.NumSections];
-            _disposable.Resource.Read(hva.Frames[i].Matrices);
+            _disposable.Resource.Read<HvaMatrix>(hva.Frames[i].Matrices);
         }
 
         return hva;

@@ -32,7 +32,7 @@ public class TaskMixGeneratorTest
 
         TaskMixGenerator task = new()
         {
-            SourceFiles = new[] { item },
+            SourceFiles = [item],
             DestinationFile = Path.Combine(OutputPath, OutputFile),
             BuildEngine = _buildEngine?.Object,
         };

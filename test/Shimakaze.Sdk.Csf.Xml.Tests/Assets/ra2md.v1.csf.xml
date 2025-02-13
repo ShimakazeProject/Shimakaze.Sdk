@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-model href="https://shimakazeproject.github.io/Schemas/xml/csf/v1.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<?xml-model href="https://schema.shimakaze.org/xml/csf/v1.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <Resources protocol="1" version="3" language="0">
   <Label name="THEME:Intro">Intro</Label>
   <Label name="THEME:MadRap">Hell March</Label>
@@ -373,7 +373,7 @@
   <Label name="GUI:Return">Resume</Label>
   <Label name="GUI:Briefing">Briefing</Label>
   <Label name="GUI:LeaveGame">Quit Game</Label>
-  <Label name="GUI:Blank"><Values /></Label>
+  <Label name="GUI:Blank"></Label>
   <Label name="GUI:Open">Open</Label>
   <Label name="GUI:Closed">Closed</Label>
   <Label name="GUI:Waiting">Waiting...</Label>
@@ -501,7 +501,7 @@
   <Label name="STT:KeyboardGroupDescription">The description of your selected command.</Label>
   <Label name="STT:KeyboardListCommands">Available commands for the current category.</Label>
   <Label name="STT:KeyboardLabelShortcut">Displays the current Hotkey for this command.</Label>
-  <Label name="STT:KeyboardLabelError"><Values /></Label>
+  <Label name="STT:KeyboardLabelError"></Label>
   <Label name="STT:KeyboardEditEntry">Enter your new command Hotkey here.</Label>
   <Label name="STT:KeyboardButtonAssign">Assigns your chosen Hotkey command.</Label>
   <Label name="STT:KeyboardLabelAssigned">The command this hotkey is currently assigned to.</Label>
@@ -1182,7 +1182,7 @@
   <Label name="Brief:TRN01">This is basic training. Listen to your sergeant and do as he tells you.</Label>
   <Label name="Brief:TRN02">This is the last day of your basic training. Time is short and the
     Soviets may attack soon. Listen to your sergeant, learn what you can, and prepare for battle.</Label>
-  <Label name="TXT_NONE"><Values /></Label>
+  <Label name="TXT_NONE"></Label>
   <Label name="TXT_COPYRIGHT">© 2000, 2001 ELECTRONIC ARTS INC. ALL RIGHTS RESERVED</Label>
   <Label name="TXT_TIME_FORMAT_HOURS">Time: %02d:%02d:%02d</Label>
   <Label name="TXT_TIME_FORMAT_NO_HOURS">Time:%02d:%02d</Label>
@@ -3453,7 +3453,7 @@
   <Label name="MSG:PlanningModeMixedLoop2">entire selection.</Label>
   <Label name="MSG:AttackMoveUnsupported">A member of the selection does not support attack move.</Label>
   <Label name="MSG:AutoDeployUnsupported">A member of the selection does not support auto deploy.</Label>
-  <Label name="GUI:Empty"><Values /></Label>
+  <Label name="GUI:Empty"></Label>
   <Label name="GUI:MoviesAndCredits">Movies &amp; Credits</Label>
   <Label name="GUI:AIEasy">Easy Enemy</Label>
   <Label name="GUI:AINormal">Medium Enemy</Label>
@@ -3599,7 +3599,7 @@
     ever lived. Now the world is yours to rule.</Label>
   <Label name="GUI:OverParMsgSov12">The Allies are beaten and the world is begging to be spared the
     carnage of your armed forces. Supreme power is yours alone.</Label>
-  <Label name="STT:Empty"><Values /></Label>
+  <Label name="STT:Empty"></Label>
   <Label name="STT:MainButtonMovies">View movies and credits.</Label>
   <Label name="STT:MainOptButtonNetwork">Customize your network configuration.</Label>
   <Label name="STT:MainOptCBoxStretch">Expand movies to fill your screen in higher resolutions.</Label>

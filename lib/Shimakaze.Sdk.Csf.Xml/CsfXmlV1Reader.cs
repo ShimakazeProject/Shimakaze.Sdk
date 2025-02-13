@@ -14,11 +14,10 @@ public static class CsfXmlV1Reader
     /// </summary>
     /// <param name="reader"></param>
     /// <param name="settings"></param>
-    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static CsfDocument Read(TextReader reader, XmlReaderSettings? settings = default, CancellationToken cancellationToken = default)
+    public static CsfData Read(TextReader reader, XmlReaderSettings? settings = default)
     {
-        CsfDocumentXmlSerializer serializer = new();
+        CsfDataXmlSerializer serializer = new();
         using XmlReader xmlReader = XmlReader.Create(reader, settings);
         return serializer.Deserialize(xmlReader);
     }

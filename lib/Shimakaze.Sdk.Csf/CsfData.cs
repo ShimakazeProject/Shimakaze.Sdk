@@ -1,105 +1,157 @@
+using System.Collections;
+
 namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
-/// Csf Data.
+/// CSF 文件
 /// </summary>
-public record class CsfData
+public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList<CsfLabel>
 {
-    internal int InternalIdentifier = CsfConstants.LblFlagRaw;
-    internal int InternalStringCount;
-    internal int InternalLabelNameLength;
-    internal string InternalLabelName;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData" /> class.
+    /// 
     /// </summary>
-    public CsfData()
-      : this(string.Empty)
+    public CsfData() : this(new(), [])
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData" /> class.
+    /// 
     /// </summary>
-    /// <param name="labelName"> labelName. </param>
-    public CsfData(string labelName)
-      : this(labelName, [])
+    /// <param name="metadata"></param>
+    public CsfData(CsfMetadata metadata) : this(metadata, new(metadata.LabelCount))
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData" /> class.
-    /// </summary>
-    /// <param name="labelName"> labelName. </param>
-    /// <param name="values"> values. </param>
-    public CsfData(string labelName, IEnumerable<CsfValue> values)
-      : this(CsfConstants.LblFlagRaw, 1, labelName.Length, labelName, values)
+    /// <inheritdoc/>
+    public CsfLabel this[int index]
     {
-        ReCount();
+        get => Labels[index];
+        set => Labels[index] = value;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CsfData" /> class.
+    /// Gets or sets metadata.
     /// </summary>
-    /// <param name="identifier"> identifier. </param>
-    /// <param name="stringCount"> stringCount. </param>
-    /// <param name="labelNameLength"> labelNameLength. </param>
-    /// <param name="labelName"> labelName. </param>
-    /// <param name="values"> values. </param>
-    public CsfData(int identifier, int stringCount, int labelNameLength, string labelName, IEnumerable<CsfValue> values)
+    public CsfMetadata Metadata { get; set; } = Metadata;
+
+    /// <inheritdoc/>
+    public int Count => Labels.Count;
+
+    /// <inheritdoc/>
+    public bool IsReadOnly => false;
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// 此方法会修改元数据，若不希望被修改元数据请直接操作 <see cref="Labels" />
+    /// </remarks>
+    public virtual void Add(CsfLabel item)
     {
-        InternalIdentifier = identifier;
-        InternalStringCount = stringCount;
-        InternalLabelNameLength = labelNameLength;
-        InternalLabelName = labelName;
-        Values = values.ToArray();
+        Metadata.LabelCount++;
+        Metadata.StringCount += item.Count;
+        Labels.Add(item);
     }
 
     /// <summary>
-    /// Gets or sets identifier.
+    /// 添加一个标签
     /// </summary>
-    public int Identifier
+    /// <remarks>
+    /// 此方法会修改元数据，若不希望被修改元数据请直接操作 <see cref="Labels" />
+    /// </remarks>
+    /// <param name="label"></param>
+    /// <param name="values"></param>
+    public void Add(string label, params ReadOnlySpan<string> values)
     {
-        get => InternalIdentifier;
-        set => InternalIdentifier = value;
-    }
-    /// <summary>
-    /// Gets or sets stringCount.
-    /// </summary>
-    public int StringCount
-    {
-        get => InternalStringCount;
-        set => InternalStringCount = value;
+        CsfLabel data = new(label, values.Length);
+
+        foreach (var value in values)
+            data.Add(new(value, default));
+
+        Add(data);
     }
 
     /// <summary>
-    /// Gets or sets labelNameLength.
+    /// 添加一个标签
     /// </summary>
-    public int LabelNameLength
+    /// <remarks>
+    /// 此方法会修改元数据，若不希望被修改元数据请直接操作 <see cref="Labels" />
+    /// </remarks>
+    /// <param name="label"></param>
+    /// <param name="values"></param>
+    public void Add(string label, params CsfValue[] values)
     {
-        get => InternalLabelNameLength;
-        set => InternalLabelNameLength = value;
+        CsfLabel data = new(label, [.. values]);
+
+        Add(data);
+    }
+
+    /// <inheritdoc/>
+    public void Clear()
+    {
+        Metadata.LabelCount = 0;
+        Metadata.StringCount = 0;
+        Labels.Clear();
+    }
+
+
+    /// <inheritdoc/>
+    public bool Contains(CsfLabel item) => Labels.Contains(item);
+
+
+    /// <inheritdoc/>
+    public void CopyTo(CsfLabel[] array, int arrayIndex) => Labels.CopyTo(array, arrayIndex);
+
+
+    /// <inheritdoc/>
+    public IEnumerator<CsfLabel> GetEnumerator() => Labels.GetEnumerator();
+
+
+    /// <inheritdoc/>
+    public int IndexOf(CsfLabel item) => Labels.IndexOf(item);
+
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// 此方法会修改元数据，若不希望被修改元数据请直接操作 <see cref="Labels" />
+    /// </remarks>
+    public void Insert(int index, CsfLabel item)
+    {
+        Metadata.LabelCount++;
+        Metadata.StringCount += item.Count;
+        Labels.Insert(index, item);
+    }
+
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// 此方法会修改元数据，若不希望被修改元数据请直接操作 <see cref="Labels" />
+    /// </remarks>
+    public bool Remove(CsfLabel item)
+    {
+        Metadata.LabelCount--;
+        Metadata.StringCount -= item.Count;
+        return Labels.Remove(item);
+    }
+
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// 此方法会修改元数据，若不希望被修改元数据请直接操作 <see cref="Labels" />
+    /// </remarks>
+    public void RemoveAt(int index)
+    {
+        Metadata.LabelCount--;
+        Metadata.StringCount -= Labels[index].Count;
+        Labels.RemoveAt(index);
     }
 
     /// <summary>
-    /// Gets or sets labelName.
+    /// 更新文件头数据
     /// </summary>
-    public string LabelName
+    public void UpdateMetadataCount()
     {
-        get => InternalLabelName;
-        set => InternalLabelName = value;
+        Metadata.LabelCount = Labels.Count;
+        Metadata.StringCount = Labels.Select(x => x.Count).Sum();
     }
 
-    /// <summary>
-    /// Gets or sets values.
-    /// </summary>
-    public CsfValue[] Values { get; set; }
-
-    /// <summary>
-    /// Re Count.
-    /// </summary>
-    public void ReCount()
-    {
-        StringCount = Values.Length;
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

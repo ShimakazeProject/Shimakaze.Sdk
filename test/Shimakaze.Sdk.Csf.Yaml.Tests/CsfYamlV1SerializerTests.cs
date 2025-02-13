@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Csf.IO;
+
 namespace Shimakaze.Sdk.Csf.Yaml.Tests;
 
 [TestClass]
@@ -16,9 +18,10 @@ public class CsfYamlV1WriterTests
     {
         using StreamReader stream = File.OpenText(Path.Combine(Assets, InputYmlFile));
         using Stream csfout = File.Create(Path.Combine(OutputPath, OutputDeserializeCsfFile));
+        using CsfWriter writer = new(csfout);
         using StreamWriter ymlout = File.CreateText(Path.Combine(OutputPath, OutputDeserializeYamlFile));
-        CsfDocument doc = CsfYamlV1Reader.Read(stream);
-        CsfWriter.Write(csfout, doc);
+        CsfData doc = CsfYamlV1Reader.Read(stream);
+        writer.WriteAllData(doc);
         CsfYamlV1Writer.Write(ymlout, doc);
     }
 
@@ -26,8 +29,9 @@ public class CsfYamlV1WriterTests
     public void SerializeTest()
     {
         using Stream stream = File.OpenRead(Path.Combine(Assets, InputCsfFile));
+        using CsfReader reader = new(stream);
         using StreamWriter output = File.CreateText(Path.Combine(OutputPath, OutputSerializeFile));
-        CsfDocument document = CsfReader.Read(stream);
+        CsfData document = reader.ReadAllData();
         CsfYamlV1Writer.Write(output, document);
     }
 
