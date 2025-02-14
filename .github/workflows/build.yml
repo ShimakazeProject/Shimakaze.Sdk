@@ -76,14 +76,14 @@ jobs:
         shell: pwsh
         run: |
           $Private:Algorithm = 'SHA256'
-          Write-Output "### Build Success :rocket: >> $env:GITHUB_STEP_SUMMARY
-          Write-Output "| FileName | $Private:Algorithm |" >> $env:GITHUB_STEP_SUMMARY
+          Write-Output "### Build Success :rocket: ">> $env:GITHUB_STEP_SUMMARY
+          Write-Output "|FileName|$Private:Algorithm|" >> $env:GITHUB_STEP_SUMMARY
           Write-Output "|:-|:-:|" >> $env:GITHUB_STEP_SUMMARY
           Get-ChildItem artifacts\package\release | ForEach-Object {
             $Private:Name = $PSItem.Name
             $Private:FileHashResult = Get-FileHash $PSItem -Algorithm $Private:Algorithm
             $Private:FileHash = $Private:FileHashResult.Hash
-            Write-Output "| $Private:Name | $Private:FileHash |" >> $env:GITHUB_STEP_SUMMARY
+            Write-Output "|$Private:Name|$Private:FileHash|" >> $env:GITHUB_STEP_SUMMARY
           }
 
       - name: 收集 Nuget 包
