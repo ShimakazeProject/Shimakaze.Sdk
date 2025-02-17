@@ -76,7 +76,7 @@ jobs:
         shell: pwsh
         run: |
           $Private:Algorithm = 'SHA256'
-          Write-Output "### Build Success :rocket: >> $env:GITHUB_STEP_SUMMARY
+          Write-Output "### Build Success :rocket: ">> $env:GITHUB_STEP_SUMMARY
           Write-Output "|FileName|$Private:Algorithm|" >> $env:GITHUB_STEP_SUMMARY
           Write-Output "|:-|:-:|" >> $env:GITHUB_STEP_SUMMARY
           Get-ChildItem artifacts\package\release | ForEach-Object {
