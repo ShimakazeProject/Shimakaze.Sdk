@@ -14,8 +14,8 @@
     <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" Condition="'$(IsTestProject)' != 'True'" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Shimakaze.Sdk.Common'">
-    <ProjectReference Include="$(MSBuildThisFileDirectory)src\Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" Condition="'$(IsTestProject)' != 'True'" />
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Shimakaze.Sdk.Common' AND '$(IsTestProject)' != 'True' AND '$(IsRoslynComponent)' != 'True'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)src\Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
     <Using Include="Shimakaze.Sdk.Common" />
   </ItemGroup>
 
