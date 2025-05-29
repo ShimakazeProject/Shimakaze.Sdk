@@ -4,8 +4,6 @@ using DotMake.CommandLine;
 
 using ShellProgressBar;
 
-using Shimakaze.Sdk.Ini;
-
 namespace Shimakaze.Sdk.Mix.Toolkit;
 
 [CliCommand(
@@ -22,6 +20,32 @@ internal sealed class ExtractCommand
     [CliOption(Description = "文件名对照表。根据文件名对照表生成文件名")]
     public FileInfo? NameMap { get; set; } = default;
 
+    private Dictionary<string, string> LoadNameMap()
+    {
+        Dictionary<string, string> nameMap = [];
+        if (NameMap is null)
+            return nameMap;
+
+        using StreamReader reader = NameMap.OpenText();
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine()!;
+            if (line.StartsWith("[NameMap]", StringComparison.Ordinal))
+                break;
+        }
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine()!;
+            if (line.StartsWith('['))
+                break;
+
+            var data = line.Split(';', '#')[0];
+            var kvp = data.Split('=', StringSplitOptions.TrimEntries);
+            nameMap[kvp[0]] = kvp[1];
+        }
+        return nameMap;
+    }
+
     public void Run()
     {
         using IndeterminateProgressBar progressBar = new("释放中...", new ProgressBarOptions()
@@ -33,20 +57,7 @@ internal sealed class ExtractCommand
 
         Output.Create();
 
-        IDictionary<string, string>? nameMap = default;
-        if (NameMap is not null)
-        {
-            using StreamReader reader = NameMap.OpenText();
-            using IniTokenReader tokens = new(reader);
-            using IniDocumentBinder binder = new(tokens);
-            IniDocument ini = binder.Bind();
-            if (ini.TryGetSection("NameMap", out IniSection? section))
-            {
-                nameMap = section;
-            }
-        }
-
-        nameMap ??= new Dictionary<string, string>();
+        var nameMap = LoadNameMap();
 
         using FileStream stream = Input.OpenRead();
         using MixEntryReader entryReader = new(stream);

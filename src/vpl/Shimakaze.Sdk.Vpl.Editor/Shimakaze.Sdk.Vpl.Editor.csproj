@@ -7,6 +7,6 @@
     <PackageReference Include="Sharprompt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
   </ItemGroup>
 </Project>

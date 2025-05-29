@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\vpl\Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
+  </ItemGroup>
+</Project>

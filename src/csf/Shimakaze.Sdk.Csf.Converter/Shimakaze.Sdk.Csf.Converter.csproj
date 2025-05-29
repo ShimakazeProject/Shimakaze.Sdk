@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotMake.CommandLine" />
+    <PackageReference Include="Sharprompt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+  </ItemGroup>
+
+</Project>

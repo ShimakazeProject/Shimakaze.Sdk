@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
 
-  <ImportGroup>
-    <Import Project="$(MSBuildThisFileDirectory)msbuild\Framework.props"/>
-    <Import Project="$(MSBuildThisFileDirectory)msbuild\CSharp.props" Condition="$(ShimakazeSdkIsCSharp)"/>
-    <Import Project="$(MSBuildThisFileDirectory)msbuild\UnitTests.props" Condition="$(ShimakazeSdkIsUnitTest)"/>
-  </ImportGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <LangVersion>13</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Shimakaze Project</Authors>
+    <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
+    <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(MSBuildProjectDirectory)\Assets\logo.png')">$(MSBuildProjectDirectory)\Assets\logo.png</IconPath>
+    <IconPath Condition=" '$(IconPath)' == '' AND Exists('$(MSBuildThisFileDirectory)\assets\logo.png')">$(MSBuildThisFileDirectory)\assets\logo.png</IconPath>
+    <PackageIcon Condition=" '$(IconPath)' != '' ">logo.png</PackageIcon>
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)\ReadMe.md')">$(MSBuildProjectDirectory)\ReadMe.md</ReadmeFile>
+    <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildThisFileDirectory)\ReadMe.md')">$(MSBuildThisFileDirectory)\ReadMe.md</ReadmeFile>
+    <PackageReadmeFile Condition=" '$(ReadmeFile)' != '' ">ReadMe.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+  </PropertyGroup>
 
 </Project>

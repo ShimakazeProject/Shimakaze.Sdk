@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
-    <ProjectReference Include="$(ShimakazeSdkRootFolder)lib\Shimakaze.Sdk.Shp\Shimakaze.Sdk.Shp.csproj" />
+    <ProjectReference Include="..\..\pal\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Shp\Shimakaze.Sdk.Shp.csproj" />
   </ItemGroup>
 
 </Project>

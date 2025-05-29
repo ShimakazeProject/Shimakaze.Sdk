@@ -2,20 +2,12 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <!-- <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile> -->
-    <!-- <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode> -->
-    <!-- <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.lock.json</NuGetLockFilePath> -->
     <GitVersionTargetFramework>net8.0</GitVersionTargetFramework>
     <UseProjectNamespaceForGitVersionInformation>true</UseProjectNamespaceForGitVersionInformation>
   </PropertyGroup>
   <ItemGroup>
     <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.8" />
     <GlobalPackageReference Include="GitVersion.MsBuild" Version="6.2.0" />
-  </ItemGroup>
-  <ItemGroup Condition="$(ShimakazeSdkIsUnitTest)">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="MSTest.TestAdapter" />
-    <PackageReference Include="MSTest.TestFramework" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="DotMake.CommandLine" Version="2.3.0" />

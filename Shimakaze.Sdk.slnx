@@ -1,0 +1,53 @@
+<Solution>
+  <Folder Name="/csf/">
+    <Project Path="src/csf/Shimakaze.Sdk.Csf.Converter/Shimakaze.Sdk.Csf.Converter.csproj" />
+    <Project Path="src/csf/Shimakaze.Sdk.Csf.Json/Shimakaze.Sdk.Csf.Json.csproj" />
+    <Project Path="src/csf/Shimakaze.Sdk.Csf.Xml/Shimakaze.Sdk.Csf.Xml.csproj" />
+    <Project Path="src/csf/Shimakaze.Sdk.Csf.Yaml/Shimakaze.Sdk.Csf.Yaml.csproj" />
+    <Project Path="src/csf/Shimakaze.Sdk.Csf/Shimakaze.Sdk.Csf.csproj" />
+  </Folder>
+  <Folder Name="/hva/">
+    <Project Path="src/hva/Shimakaze.Sdk.Hva/Shimakaze.Sdk.Hva.csproj" />
+  </Folder>
+  <Folder Name="/ini/">
+    <Project Path="src/ini/Shimakaze.Sdk.Ini.Abstractions/Shimakaze.Sdk.Ini.Abstractions.csproj" />
+    <Project Path="src/ini/Shimakaze.Sdk.Ini.Ares/Shimakaze.Sdk.Ini.Ares.csproj" />
+    <Project Path="src/ini/Shimakaze.Sdk.Ini/Shimakaze.Sdk.Ini.csproj" />
+    <Project Path="src/ini/Shimakaze.Sdk.Preprocessor/Shimakaze.Sdk.Preprocessor.csproj" />
+  </Folder>
+  <Folder Name="/mix/">
+    <Project Path="src/mix/Shimakaze.Sdk.Mix.Toolkit/Shimakaze.Sdk.Mix.Toolkit.csproj" />
+    <Project Path="src/mix/Shimakaze.Sdk.Mix/Shimakaze.Sdk.Mix.csproj" />
+  </Folder>
+  <Folder Name="/pal/">
+    <Project Path="src/pal/Shimakaze.Sdk.Pal/Shimakaze.Sdk.Pal.csproj" />
+  </Folder>
+  <Folder Name="/pcx/">
+    <Project Path="src/pcx/Shimakaze.Sdk.Pcx/Shimakaze.Sdk.Pcx.csproj" />
+  </Folder>
+  <Folder Name="/shp/">
+    <Project Path="src/shp/Shimakaze.Sdk.Shp.Maker/Shimakaze.Sdk.Shp.Maker.csproj" />
+    <Project Path="src/shp/Shimakaze.Sdk.Shp/Shimakaze.Sdk.Shp.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="GitVersion.yaml" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="nuget.config" />
+    <File Path="ReadMe.md" />
+  </Folder>
+  <Folder Name="/vpl/">
+    <Project Path="src/vpl/Shimakaze.Sdk.Vpl.Editor/Shimakaze.Sdk.Vpl.Editor.csproj" />
+    <Project Path="src/vpl/Shimakaze.Sdk.Vpl/Shimakaze.Sdk.Vpl.csproj" />
+  </Folder>
+  <Folder Name="/vxl/">
+    <Project Path="src/vxl/Shimakaze.Sdk.Vxl/Shimakaze.Sdk.Vxl.csproj" />
+  </Folder>
+  <Project Path="src/Shimakaze.Sdk.Common/Shimakaze.Sdk.Common.csproj" />
+</Solution>
