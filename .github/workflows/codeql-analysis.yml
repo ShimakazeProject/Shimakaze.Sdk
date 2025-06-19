@@ -46,6 +46,12 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: 配置 .Net 环境
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: ./global.json
+        cache: false
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
