@@ -131,14 +131,14 @@ internal sealed class ShpBuilder(Palette palette, int endIndex)
                     }
                 }
             }
-            if (line.StartsWith("#pargam sequenceName ", StringComparison.Ordinal))
+            if (line.StartsWith("#pragma sequenceName ", StringComparison.Ordinal))
             {
-                _iniName = line["#pargam sequenceName ".Length..].Trim();
+                _iniName = line["#pragma sequenceName ".Length..].Trim();
             }
 
-            if (line.StartsWith("#pargam base ", StringComparison.Ordinal))
+            if (line.StartsWith("#pragma base ", StringComparison.Ordinal))
             {
-                var dir = line["#pargam base ".Length..].Trim();
+                var dir = line["#pragma base ".Length..].Trim();
                 _workFolder = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path)!, dir));
                 continue;
             }
