@@ -12,16 +12,16 @@ namespace Shimakaze.Sdk.Shp.Maker;
 internal sealed class RootCommand
 {
     [CliArgument(Description = "图像列表文件", Required = true)]
-    public FileInfo? Input { get; set; }
+    public string? Input { get; set; }
 
     [CliArgument(Description = "参考的调色板文件", Required = true)]
-    public FileInfo? Palette { get; set; }
+    public string? Palette { get; set; }
 
     [CliArgument(Description = "输出的 SHP(TS) 文件", Required = true)]
-    public FileInfo? Output { get; set; }
+    public string? Output { get; set; }
 
     [CliOption(Description = "输出的包含 Sequence 的 INI 文件", Required = false)]
-    public FileInfo? SequenceIniOutput { get; set; }
+    public string? SequenceIniOutput { get; set; }
 
     [CliOption(Description = "调色板结束索引")]
     public int EndIndex { get; set; } = 240;
@@ -39,22 +39,22 @@ internal sealed class RootCommand
 
     public void UsePrompt()
     {
-        if (Input is null or { Exists: false })
+        if (Input is null || !File.Exists(Input))
         {
         Input:
-            Input = Prompt.Input<FileInfo>("请输入图像列表文件路径");
-            if (Input is null or { Exists: false })
+            Input = Prompt.Input<string>("请输入图像列表文件路径");
+            if (Input is null || !File.Exists(Input))
             {
                 Console.Error.WriteLine("无效的图像列表文件路径");
                 goto Input;
             }
         }
 
-        if (Palette is null or { Exists: false })
+        if (Palette is null || !File.Exists(Palette))
         {
         Palette:
-            Palette = Prompt.Input<FileInfo>("请输入参考的调色板文件路径");
-            if (Palette is null or { Exists: false })
+            Palette = Prompt.Input<string>("请输入参考的调色板文件路径");
+            if (Palette is null || !File.Exists(Palette))
             {
                 Console.Error.WriteLine("无效的调色板文件路径");
                 goto Palette;
@@ -64,13 +64,13 @@ internal sealed class RootCommand
         if (Output is null)
         {
         Output:
-            Output = Prompt.Input<FileInfo>("请输入输出的 SHP(TS) 文件路径");
+            Output = Prompt.Input<string>("请输入输出的 SHP(TS) 文件路径");
             if (Output is null)
             {
                 Console.Error.WriteLine("无效的 SHP(TS) 文件路径");
                 goto Output;
             }
-            if (Output is { Exists: true }
+            if (File.Exists(Output)
                 && !Prompt.Confirm("已存在同名文件，是否覆盖？", false))
                 goto Output;
         }
@@ -78,8 +78,8 @@ internal sealed class RootCommand
         if (SequenceIniOutput is null)
         {
         SequenceIniOutput:
-            SequenceIniOutput = Prompt.Input<FileInfo>("请输入输出的包含 Sequence 的 INI 文件路径");
-            if (SequenceIniOutput is { Exists: true }
+            SequenceIniOutput = Prompt.Input<string>("请输入输出的包含 Sequence 的 INI 文件路径");
+            if (File.Exists(SequenceIniOutput)
                 && !Prompt.Confirm("已存在同名文件，是否覆盖？", false))
                 goto SequenceIniOutput;
         }
@@ -93,17 +93,17 @@ internal sealed class RootCommand
         Assert();
 
         Palette palette;
-        await using (var fs = Palette.OpenRead())
+        await using (var fs = File.OpenRead(Palette))
             palette = PaletteReader.Read(fs);
 
         ShpBuilder builder = new(palette, EndIndex);
-        builder.Load(Input.FullName);
+        builder.Load(Path.GetFullPath(Input));
 
-        using var writer = SequenceIniOutput?.CreateText() ?? Console.Out;
+        using var writer = SequenceIniOutput is null ? Console.Out : File.CreateText(SequenceIniOutput);
 
         await builder.WriteIniAsync(writer);
 
-        await using (FileStream fs = Output.Create())
+        await using (var fs = File.Create(Output))
         {
             List<ShapeImageFrame> frames = [];
             await foreach (var item in builder.BuildAsync())
