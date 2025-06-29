@@ -10,10 +10,8 @@
     <Project Path="src/hva/Shimakaze.Sdk.Hva/Shimakaze.Sdk.Hva.csproj" />
   </Folder>
   <Folder Name="/ini/">
-    <Project Path="src/ini/Shimakaze.Sdk.Ini.Abstractions/Shimakaze.Sdk.Ini.Abstractions.csproj" />
-    <Project Path="src/ini/Shimakaze.Sdk.Ini.Ares/Shimakaze.Sdk.Ini.Ares.csproj" />
-    <Project Path="src/ini/Shimakaze.Sdk.Ini/Shimakaze.Sdk.Ini.csproj" />
-    <Project Path="src/ini/Shimakaze.Sdk.Preprocessor/Shimakaze.Sdk.Preprocessor.csproj" />
+    <Project Path="src/ini/Shimakaze.Sdk.Inilyn.Generators/Shimakaze.Sdk.Inilyn.Generators.csproj" />
+    <Project Path="src/ini/Shimakaze.Sdk.Inilyn/Shimakaze.Sdk.Inilyn.csproj" />
   </Folder>
   <Folder Name="/mix/">
     <Project Path="src/mix/Shimakaze.Sdk.Mix.Toolkit/Shimakaze.Sdk.Mix.Toolkit.csproj" />
