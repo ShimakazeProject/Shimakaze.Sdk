@@ -38,6 +38,28 @@ public abstract class SourceText(int[] lineIndexes, DocumentUri uri)
     public abstract int EndIndex { get; }
 
     /// <summary>
+    /// 是否为空白内容
+    /// </summary>
+    public bool IsWhiteSpace
+    {
+        get
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                if (!char.IsWhiteSpace(this[i]))
+                    return false;
+            }
+
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// 是否为空内容
+    /// </summary>
+    public bool IsEmpty => Length is 0;
+
+    /// <summary>
     /// 获取指定字符
     /// </summary>
     /// <param name="index">以 <c>0</c> 为基础的字符索引</param>
@@ -191,6 +213,42 @@ public abstract class SourceText(int[] lineIndexes, DocumentUri uri)
     }
 
     /// <summary>
+    /// 去除首空格
+    /// </summary>
+    /// <returns></returns>
+    public SourceText TrimStart()
+    {
+        int start = 0;
+        for (int i = 0; i < Length; i++)
+        {
+            if (!char.IsWhiteSpace(this[i]))
+            {
+                start = i;
+                break;
+            }
+        }
+        return this[start..];
+    }
+
+    /// <summary>
+    /// 去除尾空格
+    /// </summary>
+    /// <returns></returns>
+    public SourceText TrimEnd()
+    {
+        int end = 0;
+        for (int i = Length - 1; i >= 0; i--)
+        {
+            if (!char.IsWhiteSpace(this[i]))
+            {
+                end = i;
+                break;
+            }
+        }
+        return this[..end];
+    }
+
+    /// <summary>
     /// 判断两个文本是否相等
     /// </summary>
     /// <param name="obj"></param>
@@ -270,5 +328,81 @@ public abstract class SourceText(int[] lineIndexes, DocumentUri uri)
             }
         }
         return [.. lineStarts];
+    }
+
+    /// <summary>
+    /// 判断是否以<paramref name="chars"/>开头
+    /// </summary>
+    /// <param name="chars"></param>
+    /// <param name="comparisonType"></param>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException"></exception>
+    public bool StartsWith(ReadOnlySpan<char> chars, StringComparison comparisonType = StringComparison.Ordinal)
+    {
+        if (chars.Length > Length)
+            return false;
+
+        switch (comparisonType)
+        {
+            case StringComparison.Ordinal:
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    if (this[i] != chars[i])
+                        return false;
+                }
+                return true;
+            case StringComparison.OrdinalIgnoreCase:
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    char a = this[i];
+                    char b = chars[i];
+                    if (a is >= 'a' and <= 'z')
+                        a -= ' ';
+                    if (b is >= 'a' and <= 'z')
+                        b -= ' ';
+
+                    if (a != b)
+                        return false;
+                }
+                return true;
+            case StringComparison.CurrentCulture:
+            case StringComparison.CurrentCultureIgnoreCase:
+            case StringComparison.InvariantCulture:
+            case StringComparison.InvariantCultureIgnoreCase:
+            default:
+                throw new NotSupportedException();
+        }
+    }
+
+    /// <summary>
+    /// 查找<paramref name="character"/>在字符串中的位置
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="startIndex"></param>
+    /// <returns></returns>
+    public int IndexOf(char character, int startIndex = 0)
+    {
+        for (int i = startIndex; i < Length; i++)
+        {
+            if (this[i] == character)
+                return i;
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// 查找<paramref name="character"/>在字符串中最后出现的位置
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="startIndex"></param>
+    /// <returns></returns>
+    public int LastIndexOf(char character, int? startIndex = null)
+    {
+        for (int i = int.Min(startIndex ?? int.MaxValue, Length - 1); i >= 0; i--)
+        {
+            if (this[i] == character)
+                return i;
+        }
+        return -1;
     }
 }

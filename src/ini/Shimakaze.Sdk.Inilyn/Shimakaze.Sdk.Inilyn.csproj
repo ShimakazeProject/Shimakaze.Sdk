@@ -1,5 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <AdditionalFiles Include="Diagnostics.csv" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Draco.Lsp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Inilyn.Generators\Shimakaze.Sdk.Inilyn.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>
