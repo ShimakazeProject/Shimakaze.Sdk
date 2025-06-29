@@ -11,6 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="DotMake.CommandLine" Version="2.4.3" />
+    <PackageVersion Include="Draco.Lsp" Version="0.4.14-pre" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
