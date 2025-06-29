@@ -34,7 +34,6 @@ public sealed class SectionDataSyntaxNode : SyntaxNode
     /// <item><see cref="KeyValuePairSyntaxNode"/> 键值对</item>
     /// <item><see cref="CommentSyntaxNode"/> 普通注释</item>
     /// <item><see cref="DocumentCommentSyntaxNode"/> 意外写的文档注释 作为普通注释处理</item>
-    /// <item><see cref="CompilerCommandSyntaxNode"/> 编译器指令</item>
     /// <!--<item><see cref="ErrorNode"/> 语法错误</item>-->
     /// </list>
     /// </remarks>
@@ -51,7 +50,6 @@ public sealed class SectionDataSyntaxNode : SyntaxNode
         KeyValuePairNode kv => new KeyValuePairSyntaxNode(kv, this),
         CommentNode c => new CommentSyntaxNode(c, this),
         DocumentCommentNode dc => new DocumentCommentSyntaxNode(dc, this),
-        CompilerCommandNode cc => new CompilerCommandSyntaxNode(cc, this),
         _ => null,
     };
 

@@ -9,6 +9,71 @@ namespace Shimakaze.Sdk.Inilyn;
 /// </summary>
 public static class Parser
 {
+    private static IEnumerable<Range> BuildRanges(this IEnumerable<int> indexes)
+    {
+        int latest = 0;
+        foreach (var item in indexes)
+        {
+            yield return latest..item;
+            latest = item;
+        }
+    }
+
+    private static void ParseCompilerCommand(this IniToken token, out string command, out string[] arguments)
+    {
+        var str = token.Value.AsSpan().Trim();
+        List<int> whiteSpaceIndexes = [];
+        Stack<char> stack = [];
+        for (int i = 0; i < str.Length; i++)
+        {
+            var current = str[i];
+            switch (current)
+            {
+                case '>' when stack.TryPeek(out var ch) && ch is '<':
+                    stack.Pop();
+                    continue;
+                case '<':
+                    stack.Push(current);
+                    continue;
+                case ']' when stack.TryPeek(out var ch) && ch is '[':
+                    stack.Pop();
+                    continue;
+                case '[':
+                    stack.Push(current);
+                    continue;
+                case '"' when stack.TryPeek(out var ch) && ch is '"':
+                    stack.Pop();
+                    continue;
+                case '"':
+                    stack.Push(current);
+                    continue;
+                case '\'' when stack.TryPeek(out var ch) && ch is '\'':
+                    stack.Pop();
+                    continue;
+                case '\'':
+                    stack.Push(current);
+                    continue;
+                default:
+                    if (char.IsWhiteSpace(current) && stack.Count is 0)
+                        whiteSpaceIndexes.Add(i);
+
+                    continue;
+            }
+        }
+        whiteSpaceIndexes.Add(str.Length);
+
+        List<string> arr = [];
+        foreach (var range in whiteSpaceIndexes.BuildRanges())
+        {
+            var span = str[range].Trim();
+            if (!span.IsEmpty)
+                arr.Add(span.ToString());
+        }
+
+        command = arr[0];
+        arguments = [.. arr.Skip(1)];
+    }
+
     private static bool Match(this IEnumerable<IniToken> tokens, params IEnumerable<IniTokenType> types)
     {
         using var tokensEnumerator = tokens.GetEnumerator();
@@ -43,7 +108,7 @@ public static class Parser
             yield return tmp.AsReadOnly();
     }
 
-    private static IEnumerable<GreenNode> ParseLine(this IEnumerable<IReadOnlyList<IniToken>> tokens)
+    private static IEnumerable<GreenNode> ParseLine(this IEnumerable<IReadOnlyList<IniToken>> tokens, ParserContext context)
     {
         foreach (var line in tokens)
         {
@@ -53,17 +118,20 @@ public static class Parser
             int skip = 0;
             if (line.Match(IniTokenType.Hash, IniTokenType.Value))
             {
-                yield return new CompilerCommandNode(line[1]);
+                line[1].ParseCompilerCommand(out var command, out var arguments);
+
+                if (context.CompilerCommands.TryGetValue(command, out var method))
+                    method.DynamicInvoke([context, .. arguments]);
             }
-            else if (line.Match(IniTokenType.Semicolon, IniTokenType.Value))
+            else if (context.CanWritable && line.Match(IniTokenType.Semicolon, IniTokenType.Value))
             {
                 yield return new CommentNode(line[1]);
             }
-            else if (line.Match(IniTokenType.TripleSemicolon, IniTokenType.Value))
+            else if (context.CanWritable && line.Match(IniTokenType.TripleSemicolon, IniTokenType.Value))
             {
                 yield return new DocumentCommentNode(line[1]);
             }
-            else if (line.Match(IniTokenType.LeftBracket, IniTokenType.Value, IniTokenType.RightBracket))
+            else if (context.CanWritable && line.Match(IniTokenType.LeftBracket, IniTokenType.Value, IniTokenType.RightBracket))
             {
                 SectionNameNode sectionName = new(line[skip + 1]);
                 InheritSectionNameNode? inheritSectionName = null;
@@ -84,7 +152,7 @@ public static class Parser
 
                 yield return new SectionHeaderNode(sectionName, inheritSectionName, comment);
             }
-            else if (line.Match(IniTokenType.Value, IniTokenType.Eq))
+            else if (context.CanWritable && line.Match(IniTokenType.Value, IniTokenType.Eq))
             {
                 KeyNode key = new(line[skip]);
                 ValueNode? value = null;
@@ -105,7 +173,7 @@ public static class Parser
 
                 yield return new KeyValuePairNode(key, value, comment);
             }
-            else
+            else if (context.CanWritable)
             {
                 // TODO: 不合法内容 应该创建一个错误节点
                 // TODO: 即使是错误内容 也要判断后面有没有注释
@@ -174,6 +242,12 @@ public static class Parser
     /// </summary>
     /// <param name="tokens"></param>
     /// <returns></returns>
-    public static DocumentSyntaxNode Parse(IEnumerable<IniToken> tokens)
-        => new(new(tokens.SplitByEOL().ParseLine().ParseSections()));
+    public static DocumentSyntaxNode? Parse(this EngineContext engine, IEnumerable<IniToken> tokens)
+    {
+        if (!tokens.Any())
+            return null;
+
+        ParserContext context = new();
+        return new(new(tokens.SplitByEOL().ParseLine(context).ParseSections()));
+    }
 }

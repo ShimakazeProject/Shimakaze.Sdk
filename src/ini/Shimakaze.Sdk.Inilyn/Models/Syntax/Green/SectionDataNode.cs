@@ -20,7 +20,6 @@ internal sealed class SectionDataNode(IEnumerable<GreenNode> items) : GreenNode
     /// <item><see cref="KeyValuePairNode"/> 键值对</item>
     /// <item><see cref="CommentNode"/> 普通注释</item>
     /// <item><see cref="DocumentCommentNode"/> 意外写的文档注释 作为普通注释处理</item>
-    /// <item><see cref="CompilerCommandNode"/> 编译器指令</item>
     /// <!--<item><see cref="ErrorNode"/> 语法错误</item>-->
     /// </list>
     /// </remarks>

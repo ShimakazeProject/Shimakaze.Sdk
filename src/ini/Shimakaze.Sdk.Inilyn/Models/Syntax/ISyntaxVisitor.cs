@@ -37,12 +37,6 @@ public interface ISyntaxVisitor
     void Visit(DocumentCommentBlockSyntaxNode documentCommentBlockSyntaxNode);
 
     /// <summary>
-    /// 访问编译器指令语法节点。
-    /// </summary>
-    /// <param name="node">要访问的编译器指令语法节点。</param>
-    void Visit(CompilerCommandSyntaxNode node);
-
-    /// <summary>
     /// 访问节名称语法节点。
     /// </summary>
     /// <param name="node">要访问的节名称语法节点。</param>

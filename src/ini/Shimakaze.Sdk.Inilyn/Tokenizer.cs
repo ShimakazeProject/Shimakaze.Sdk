@@ -52,7 +52,7 @@ public static class Tokenizer
                     int end = lineText.IndexOf(']');
                     if (end is -1)
                     {
-                        engine.Diagnostics.Add(Diagnostics.INI1001(lineText, lineText.GetRange(..)));
+                        engine.Report(Diagnostics.INI1001(lineText, lineText.GetRange(..)));
                         yield return IniTokenType.Unknown.Create(lineText);
                         continue;
                     }
@@ -69,7 +69,7 @@ public static class Tokenizer
 
                         if (lineText.Length <= 0 || lineText[0] is not '[')
                         {
-                            engine.Diagnostics.Add(Diagnostics.INI1002(lineText, lineText.GetRange(..)));
+                            engine.Report(Diagnostics.INI1002(lineText, lineText.GetRange(..)));
                             yield return IniTokenType.Unknown.Create(lineText);
                             continue;
                         }
@@ -80,7 +80,7 @@ public static class Tokenizer
                         end = lineText.IndexOf(']');
                         if (end is -1)
                         {
-                            engine.Diagnostics.Add(Diagnostics.INI1001(lineText, lineText.GetRange(..)));
+                            engine.Report(Diagnostics.INI1001(lineText, lineText.GetRange(..)));
                             yield return IniTokenType.Unknown.Create(lineText);
                             continue;
                         }
@@ -95,7 +95,7 @@ public static class Tokenizer
 
                     if (!lineText.IsWhiteSpace)
                     {
-                        engine.Diagnostics.Add(Diagnostics.INI1003(lineText, lineText.GetRange(..)));
+                        engine.Report(Diagnostics.INI1003(lineText, lineText.GetRange(..)));
                         yield return IniTokenType.Unknown.Create(lineText);
                         continue;
                     }
@@ -120,7 +120,7 @@ public static class Tokenizer
                     }
                     else
                     {
-                        engine.Diagnostics.Add(Diagnostics.INI1003(data, data.GetRange(..)));
+                        engine.Report(Diagnostics.INI1003(data, data.GetRange(..)));
                         yield return IniTokenType.Unknown.Create(data.Trim());
                     }
 
