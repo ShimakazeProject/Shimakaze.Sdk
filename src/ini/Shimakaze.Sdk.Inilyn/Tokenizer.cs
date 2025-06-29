@@ -4,12 +4,12 @@ using Shimakaze.Sdk.Inilyn.Text;
 namespace Shimakaze.Sdk.Inilyn;
 
 /// <summary>
-/// INI 文本解析器
+/// INI 词法分析器
 /// </summary>
 public static class Tokenizer
 {
     /// <summary>
-    /// 解析 INI 文本
+    /// 分析 INI 词法
     /// </summary>
     /// <param name="engine"></param>
     /// <param name="text"></param>
