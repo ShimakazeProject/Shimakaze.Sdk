@@ -18,31 +18,33 @@ public sealed class SectionHeaderSyntaxNode : SyntaxNode
     internal SectionHeaderSyntaxNode(SectionHeaderNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
+        SectionName = new(Green.SectionName, this);
+        if (green.InheritSectionName is not null)
+            InheritSectionName = new(green.InheritSectionName, this);
+        if (green.Comment is not null)
+            Comment = new(green.Comment, this);
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new SectionHeaderNode Green => (SectionHeaderNode)base.Green;
+    internal new SectionHeaderNode Green { get; }
 
     /// <summary>
     /// 获取当前节的名称语法节点。
     /// </summary>
-    public SectionNameSyntaxNode SectionName => new(Green.SectionName, this);
+    public SectionNameSyntaxNode SectionName { get; }
 
     /// <summary>
     /// 获取当前节的继承节名称语法节点（可能为 null）。
     /// </summary>
-    public InheritSectionNameSyntaxNode? InheritSectionName => Green.InheritSectionName is not null
-        ? new(Green.InheritSectionName, this)
-        : null;
+    public InheritSectionNameSyntaxNode? InheritSectionName { get; }
 
     /// <summary>
     /// 获取当前节头中的注释语法节点（可能为 null）。
     /// </summary>
-    public CommentSyntaxNode? Comment => Green.Comment is not null
-        ? new(Green.Comment, this)
-        : null;
+    public CommentSyntaxNode? Comment { get; }
 
     /// <summary>
     /// 获取当前节点的所有直接子节点。

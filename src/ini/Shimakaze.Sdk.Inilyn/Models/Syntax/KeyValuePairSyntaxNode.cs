@@ -17,27 +17,33 @@ public sealed class KeyValuePairSyntaxNode : SyntaxNode
     internal KeyValuePairSyntaxNode(KeyValuePairNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
+        Key = new(Green.Key, this);
+        if (Green.Value is not null)
+            Value = new(Green.Value, this);
+        if (Green.Comment is not null)
+            Comment = new(Green.Comment, this);
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new KeyValuePairNode Green => (KeyValuePairNode)base.Green;
+    internal new KeyValuePairNode Green { get; }
 
     /// <summary>
     /// 获取键部分的语法节点。
     /// </summary>
-    public KeySyntaxNode Key => new(Green.Key, this);
+    public KeySyntaxNode Key { get; }
 
     /// <summary>
     /// 获取值部分的语法节点（可能为 null）。
     /// </summary>
-    public ValueSyntaxNode? Value => Green.Value is not null ? new(Green.Value, this) : null;
+    public ValueSyntaxNode? Value { get; }
 
     /// <summary>
     /// 获取注释部分的语法节点（可能为 null）。
     /// </summary>
-    public CommentSyntaxNode? Comment => Green.Comment is not null ? new(Green.Comment, this) : null;
+    public CommentSyntaxNode? Comment { get; }
 
     /// <summary>
     /// 获取当前节点的所有直接子节点。

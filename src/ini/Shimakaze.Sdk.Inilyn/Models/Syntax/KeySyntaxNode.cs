@@ -18,12 +18,13 @@ public sealed class KeySyntaxNode : SyntaxNode
     internal KeySyntaxNode(KeyNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new KeyNode Green => (KeyNode)base.Green;
+    internal new KeyNode Green { get; }
 
     /// <summary>
     /// 获取当前键的词法单元（Token），包含原始文本及其位置信息。

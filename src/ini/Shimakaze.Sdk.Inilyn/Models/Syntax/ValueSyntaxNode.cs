@@ -18,12 +18,13 @@ public sealed class ValueSyntaxNode : SyntaxNode
     internal ValueSyntaxNode(ValueNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new ValueNode Green => (ValueNode)base.Green;
+    internal new ValueNode Green { get; }
 
     /// <summary>
     /// 获取当前值的词法单元（Token），包含原始文本及其位置信息。

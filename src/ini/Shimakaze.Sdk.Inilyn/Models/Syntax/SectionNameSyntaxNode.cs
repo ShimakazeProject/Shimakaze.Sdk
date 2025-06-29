@@ -17,12 +17,13 @@ public sealed class SectionNameSyntaxNode : SyntaxNode
     internal SectionNameSyntaxNode(SectionNameNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new SectionNameNode Green => (SectionNameNode)base.Green;
+    internal new SectionNameNode Green { get; }
 
     /// <summary>
     /// 获取当前节名称的词法单元（Token），包含原始文本及其位置信息。

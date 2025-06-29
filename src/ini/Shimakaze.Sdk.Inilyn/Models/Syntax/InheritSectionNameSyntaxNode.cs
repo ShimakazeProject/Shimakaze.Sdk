@@ -17,12 +17,13 @@ public sealed class InheritSectionNameSyntaxNode : SyntaxNode
     internal InheritSectionNameSyntaxNode(InheritSectionNameNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new InheritSectionNameNode Green => (InheritSectionNameNode)base.Green;
+    internal new InheritSectionNameNode Green { get; }
 
     /// <summary>
     /// 获取当前继承节名称的词法单元（Token），包含原始文本及其位置信息。

@@ -14,34 +14,36 @@ public sealed class SectionSyntaxNode : SyntaxNode
     /// </summary>
     /// <param name="green">对应的绿树节点。</param>
     /// <param name="parent">当前节点的父节点，若为根节点则为 null。</param>
-    internal SectionSyntaxNode(SectionNode green, SyntaxNode? parent)
+    internal SectionSyntaxNode(SectionNode green, DocumentSyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
+        if (Green.DocumentComment is not null)
+            DocumentComment = new(Green.DocumentComment, this);
+        if (Green.SectionHeader is not null)
+            SectionHeader = new(Green.SectionHeader, this);
+        SectionData = new(Green.SectionData, this);
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new SectionNode Green => (SectionNode)base.Green;
+    internal new SectionNode Green { get; }
 
     /// <summary>
     /// 获取当前节的文档注释块节点（可能为 null）。
     /// </summary>
-    public DocumentCommentBlockSyntaxNode? DocumentComment => Green.DocumentComment is not null
-        ? new(Green.DocumentComment, this)
-        : null;
+    public DocumentCommentBlockSyntaxNode? DocumentComment { get; }
 
     /// <summary>
     /// 获取当前节的节头语法节点（可能为 null）。
     /// </summary>
-    public SectionHeaderSyntaxNode? SectionHeader => Green.SectionHeader is not null
-        ? new(Green.SectionHeader, this)
-        : null;
+    public SectionHeaderSyntaxNode? SectionHeader { get; }
 
     /// <summary>
     /// 获取当前节的数据部分语法节点。
     /// </summary>
-    public SectionDataSyntaxNode SectionData => new(Green.SectionData, this);
+    public SectionDataSyntaxNode SectionData { get; }
 
     /// <summary>
     /// 获取当前节点的所有直接子节点。

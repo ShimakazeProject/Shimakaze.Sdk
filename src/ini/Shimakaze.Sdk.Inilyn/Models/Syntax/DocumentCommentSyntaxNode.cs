@@ -17,12 +17,13 @@ public sealed class DocumentCommentSyntaxNode : SyntaxNode
     internal DocumentCommentSyntaxNode(DocumentCommentNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new DocumentCommentNode Green => (DocumentCommentNode)base.Green;
+    internal new DocumentCommentNode Green { get; }
 
     /// <summary>
     /// 获取当前文档注释的词法单元（Token），包含原始文本及其位置信息。

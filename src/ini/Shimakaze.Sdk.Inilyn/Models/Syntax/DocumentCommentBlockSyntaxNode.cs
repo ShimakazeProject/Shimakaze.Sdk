@@ -8,6 +8,7 @@ namespace Shimakaze.Sdk.Inilyn.Models.Syntax;
 /// </summary>
 public sealed class DocumentCommentBlockSyntaxNode : SyntaxNode
 {
+    private readonly Lazy<IReadOnlyList<DocumentCommentSyntaxNode>> _comments;
     /// <summary>
     /// 初始化一个新的 <see cref="DocumentCommentBlockSyntaxNode"/> 实例。
     /// </summary>
@@ -16,19 +17,19 @@ public sealed class DocumentCommentBlockSyntaxNode : SyntaxNode
     internal DocumentCommentBlockSyntaxNode(DocumentCommentBlockNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
+        _comments = new(() => [.. green.Comments.Select(i => new DocumentCommentSyntaxNode(i, this))]);
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new DocumentCommentBlockNode Green => (DocumentCommentBlockNode)base.Green;
+    internal new DocumentCommentBlockNode Green { get; }
 
     /// <summary>
     /// 获取该注释块中的所有文档注释节点。
     /// </summary>
-    public IReadOnlyList<DocumentCommentSyntaxNode> Comments => Green.Comments
-        .Select(c => new DocumentCommentSyntaxNode(c, this))
-        .ToList();
+    public IReadOnlyList<DocumentCommentSyntaxNode> Comments => _comments.Value;
 
     /// <summary>
     /// 获取当前节点的所有直接子节点。

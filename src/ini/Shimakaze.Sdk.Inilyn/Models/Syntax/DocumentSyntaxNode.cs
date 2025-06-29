@@ -8,27 +8,28 @@ namespace Shimakaze.Sdk.Inilyn.Models.Syntax;
 /// </summary>
 public sealed class DocumentSyntaxNode : SyntaxNode
 {
+    private readonly Lazy<IReadOnlyList<SectionSyntaxNode>> _sections;
+
     /// <summary>
     /// 初始化一个新的 <see cref="DocumentSyntaxNode"/> 实例。
     /// </summary>
     /// <param name="green">对应的绿树节点。</param>
-    /// <param name="parent">当前节点的父节点，若为根节点则为 null。</param>
-    internal DocumentSyntaxNode(DocumentNode green, SyntaxNode? parent)
-        : base(green, parent)
+    internal DocumentSyntaxNode(DocumentNode green)
+        : base(green, null)
     {
+        Green = green;
+        _sections = new(() => [.. green.Sections.Select(s => new SectionSyntaxNode(s, this))]);
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new DocumentNode Green => (DocumentNode)base.Green;
+    internal new DocumentNode Green { get; }
 
     /// <summary>
     /// 获取文件中的所有节（包括虚拟节）
     /// </summary>
-    public IReadOnlyList<SectionSyntaxNode> Sections => Green.Sections
-        .Select(s => new SectionSyntaxNode(s, this))
-        .ToList();
+    public IReadOnlyList<SectionSyntaxNode> Sections => _sections.Value;
 
     /// <summary>
     /// 获取当前节点的所有直接子节点。

@@ -8,6 +8,7 @@ namespace Shimakaze.Sdk.Inilyn.Models.Syntax;
 /// </summary>
 public sealed class SectionDataSyntaxNode : SyntaxNode
 {
+    private readonly Lazy<IReadOnlyList<SyntaxNode>> _items;
     /// <summary>
     /// 初始化一个新的 <see cref="SectionDataSyntaxNode"/> 实例。
     /// </summary>
@@ -16,19 +17,28 @@ public sealed class SectionDataSyntaxNode : SyntaxNode
     internal SectionDataSyntaxNode(SectionDataNode green, SyntaxNode? parent)
         : base(green, parent)
     {
+        Green = green;
+        _items = new(() => [.. Green.Items.Select(CreateRedNode).OfType<SyntaxNode>()]);
     }
 
     /// <summary>
     /// 获取与此红树节点关联的绿树节点。
     /// </summary>
-    internal new SectionDataNode Green => (SectionDataNode)base.Green;
+    internal new SectionDataNode Green { get; }
 
     /// <summary>
     /// 获取所有数据项（键值对、注释、编译器指令等）
     /// </summary>
-    public IReadOnlyList<SyntaxNode> Items => [.. Green.Items
-        .Select(n => CreateRedNode(n, this))
-        .OfType<SyntaxNode>()];
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item><see cref="KeyValuePairSyntaxNode"/> 键值对</item>
+    /// <item><see cref="CommentSyntaxNode"/> 普通注释</item>
+    /// <item><see cref="DocumentCommentSyntaxNode"/> 意外写的文档注释 作为普通注释处理</item>
+    /// <item><see cref="CompilerCommandSyntaxNode"/> 编译器指令</item>
+    /// <!--<item><see cref="ErrorNode"/> 语法错误</item>-->
+    /// </list>
+    /// </remarks>
+    public IReadOnlyList<SyntaxNode> Items => _items.Value;
 
     /// <summary>
     /// 获取当前节点的所有直接子节点。
@@ -36,16 +46,14 @@ public sealed class SectionDataSyntaxNode : SyntaxNode
     /// <returns>当前节点的子节点序列。</returns>
     public override IEnumerable<SyntaxNode> GetChildren() => Items;
 
-    private static SyntaxNode? CreateRedNode(GreenNode green, SyntaxNode parent)
+    private SyntaxNode? CreateRedNode(GreenNode green) => green switch
     {
-        return green switch
-        {
-            KeyValuePairNode kv => new KeyValuePairSyntaxNode(kv, parent),
-            CommentNode c => new CommentSyntaxNode(c, parent),
-            CompilerCommandNode cc => new CompilerCommandSyntaxNode(cc, parent),
-            _ => null,
-        };
-    }
+        KeyValuePairNode kv => new KeyValuePairSyntaxNode(kv, this),
+        CommentNode c => new CommentSyntaxNode(c, this),
+        DocumentCommentNode dc => new DocumentCommentSyntaxNode(dc, this),
+        CompilerCommandNode cc => new CompilerCommandSyntaxNode(cc, this),
+        _ => null,
+    };
 
     /// <summary>
     /// 接受一个 <see cref="ISyntaxVisitor"/> 来访问该节点。

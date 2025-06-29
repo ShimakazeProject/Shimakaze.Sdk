@@ -15,6 +15,15 @@ internal sealed class SectionDataNode(IEnumerable<GreenNode> items) : GreenNode
     /// <summary>
     /// 获取所有数据项（键值对、注释、编译器指令等）
     /// </summary>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item><see cref="KeyValuePairNode"/> 键值对</item>
+    /// <item><see cref="CommentNode"/> 普通注释</item>
+    /// <item><see cref="DocumentCommentNode"/> 意外写的文档注释 作为普通注释处理</item>
+    /// <item><see cref="CompilerCommandNode"/> 编译器指令</item>
+    /// <!--<item><see cref="ErrorNode"/> 语法错误</item>-->
+    /// </list>
+    /// </remarks>
     public IReadOnlyList<GreenNode> Items { get; } = [.. items];
 
     public override IEnumerable<GreenNode> GetChildren() => Items;
