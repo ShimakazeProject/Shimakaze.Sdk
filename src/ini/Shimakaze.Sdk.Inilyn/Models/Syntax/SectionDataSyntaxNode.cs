@@ -37,13 +37,8 @@ public sealed class SectionDataSyntaxNode : SyntaxNode
     /// <!--<item><see cref="ErrorNode"/> 语法错误</item>-->
     /// </list>
     /// </remarks>
-    public IReadOnlyList<SyntaxNode> Items => _items.Value;
-
-    /// <summary>
-    /// 获取当前节点的所有直接子节点。
-    /// </summary>
     /// <returns>当前节点的子节点序列。</returns>
-    public override IEnumerable<SyntaxNode> GetChildren() => Items;
+    public override IEnumerable<SyntaxNode> GetChildren() => _items.Value;
 
     private SyntaxNode? CreateRedNode(GreenNode green) => green switch
     {

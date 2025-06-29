@@ -240,6 +240,7 @@ public static class Parser
     /// <summary>
     /// 分析 INI 语法
     /// </summary>
+    /// <param name="engine"></param>
     /// <param name="tokens"></param>
     /// <returns></returns>
     public static DocumentSyntaxNode? Parse(this EngineContext engine, IEnumerable<IniToken> tokens)

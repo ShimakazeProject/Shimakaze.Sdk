@@ -29,13 +29,8 @@ public sealed class DocumentCommentBlockSyntaxNode : SyntaxNode
     /// <summary>
     /// 获取该注释块中的所有文档注释节点。
     /// </summary>
-    public IReadOnlyList<DocumentCommentSyntaxNode> Comments => _comments.Value;
-
-    /// <summary>
-    /// 获取当前节点的所有直接子节点。
-    /// </summary>
     /// <returns>当前节点的子节点序列。</returns>
-    public override IEnumerable<SyntaxNode> GetChildren() => Comments;
+    public override IEnumerable<DocumentCommentSyntaxNode> GetChildren() => _comments.Value;
 
     /// <summary>
     /// 接受一个 <see cref="ISyntaxVisitor"/> 来访问该节点。

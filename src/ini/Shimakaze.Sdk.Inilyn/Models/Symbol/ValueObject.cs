@@ -12,4 +12,9 @@ public sealed class ValueObject(string rawText)
 
     /// <inheritdoc/>
     public override string ToString() => RawText;
+
+    /// <summary>
+    /// 隐式转换，将字符串转换为 <see cref="ValueObject"/> 对象。
+    /// </summary>
+    public static implicit operator ValueObject(string value) => new(value);
 }
