@@ -67,7 +67,7 @@ internal sealed class ShpBuilder(Palette palette, int endIndex)
         {
             if (item.Value.HasAngle)
             {
-                int count = (item.Value.End + 1) / 8;
+                int count = (item.Value.End + 1) / item.Value.AngleCount;
 
                 await writer.WriteLineAsync($"{item.Key}={item.Value.Start},{count},{count}");
             }
