@@ -58,7 +58,7 @@ public static class Tokenizer
                     }
 
                     yield return IniTokenType.Value.Create(lineText[..end].Trim());
-                    yield return IniTokenType.RightBracket.Create(lineText[end..1]);
+                    yield return IniTokenType.RightBracket.Create(lineText[end..(end + 1)]);
                     lineText = lineText[(end + 1)..].TrimStart();
 
                     // 继承节
@@ -86,7 +86,7 @@ public static class Tokenizer
                         }
 
                         yield return IniTokenType.Value.Create(lineText[..end].Trim());
-                        yield return IniTokenType.RightBracket.Create(lineText[end..1]);
+                        yield return IniTokenType.RightBracket.Create(lineText[end..(end + 1)]);
                         lineText = lineText[(end + 1)..].TrimStart();
                     }
 
@@ -113,7 +113,7 @@ public static class Tokenizer
                     if (eq is not -1)
                     {
                         yield return IniTokenType.Value.Create(data[..eq].Trim());
-                        yield return IniTokenType.Eq.Create(data[eq..1]);
+                        yield return IniTokenType.Eq.Create(data[eq..(eq + 1)]);
                         data = data[(eq + 1)..];
                         if (!data.IsWhiteSpace)
                             yield return IniTokenType.Value.Create(data.Trim());
