@@ -10,7 +10,7 @@ namespace Shimakaze.Sdk.Inilyn.Models.Emit;
 /// <param name="name"></param>
 /// <param name="data"></param>
 #pragma warning disable CA1710 // 标识符应具有正确的后缀
-public class IniSection(string name, IEnumerable<KeyValuePair<string, string>> data) : IReadOnlyDictionary<string, string>
+public sealed class IniSection(string name, IEnumerable<KeyValuePair<string, string>> data) : IReadOnlyDictionary<string, string>
 #pragma warning restore CA1710 // 标识符应具有正确的后缀
 {
     private readonly Dictionary<string, string> _data = new(data);

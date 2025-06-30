@@ -8,10 +8,24 @@ namespace Shimakaze.Sdk.Inilyn.Models.Emit;
 /// INI文档
 /// </summary>
 #pragma warning disable CA1710 // 标识符应具有正确的后缀
-public sealed class IniDocument(IEnumerable<KeyValuePair<string, IniSection>> data) : IReadOnlyDictionary<string, IniSection>
+public sealed class IniDocument : IReadOnlyDictionary<string, IniSection>
 #pragma warning restore CA1710 // 标识符应具有正确的后缀
 {
-    private readonly Dictionary<string, IniSection> _data = new(data);
+    private readonly Dictionary<string, IniSection> _data;
+
+    internal IniDocument(IEnumerable<KeyValuePair<string, IniSection>> data)
+    {
+        _data = new(data);
+    }
+
+    /// <summary>
+    /// 通过节列表创建INI文档
+    /// </summary>
+    /// <param name="sections"></param>
+    public IniDocument(IEnumerable<IniSection> sections)
+    {
+        _data = sections.ToDictionary(i => i.Name);
+    }
 
     /// <summary>
     /// 获取指定名称的节
