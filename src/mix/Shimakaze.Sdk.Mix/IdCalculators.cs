@@ -4,21 +4,21 @@ using System.Text;
 namespace Shimakaze.Sdk.Mix;
 
 /// <summary>
-/// File Id Calculater
+/// File Id Calculator
 /// </summary>
-public delegate uint IdCalculater(string name);
+public delegate uint IdCalculator(string name);
 
 /// <summary>
-/// File Id Calculaters
+/// File Id Calculators
 /// </summary>
-public static class IdCalculaters
+public static class IdCalculators
 {
     /// <summary>
     /// Tiberian Sun Id Calc
     /// </summary>
     /// <param name="name"> File Name </param>
     /// <returns> Id </returns>
-    public static uint TSIdCalculater(string name)
+    public static uint TSIdCalculator(string name)
     {
         name = name.ToUpperInvariant();
         int l = name.Length;
@@ -35,13 +35,6 @@ public static class IdCalculaters
         return BitConverter.ToUInt32(Crc32.Hash(Encoding.ASCII.GetBytes(name)), 0);
     }
 
-    /// <inheritdoc cref="TDIdCalculater"/>
-    [Obsolete("Use TDIdCalculater")]
-    public static uint TDdCalculater(string name)
-    {
-        return TDIdCalculater(name);
-    }
-
     /// <summary> 
     /// Id Calc for RA/TD 
     /// </summary> 
@@ -50,7 +43,7 @@ public static class IdCalculaters
     /// </markup> 
     /// <param name="name">File Name</param> 
     ///  <returns>Id</returns>
-    public static uint TDIdCalculater(string name)
+    public static uint TDIdCalculator(string name)
     {
         name = name.ToUpperInvariant();
         int i = 0;

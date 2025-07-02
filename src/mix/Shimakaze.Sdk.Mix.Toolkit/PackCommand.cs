@@ -37,8 +37,8 @@ internal sealed class PackCommand
         using (IndeterminateChildProgressBar initProgressBar = progressBar.SpawnIndeterminate("正在初始化"))
         {
             builder = new(IsTD
-                ? IdCalculaters.TDIdCalculater
-                : IdCalculaters.TSIdCalculater);
+                ? IdCalculators.TDIdCalculator
+                : IdCalculators.TSIdCalculator);
 
             if (nameMapWriter is not null)
             {

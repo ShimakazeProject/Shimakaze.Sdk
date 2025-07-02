@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Mix;
 /// Mix 构建器
 /// </summary>
 /// <param name="idCalculater">ID计算器</param>
-public sealed class MixBuilder(IdCalculater idCalculater)
+public sealed class MixBuilder(IdCalculator idCalculater)
 {
     /// <summary>
     /// 将要被打包的文件

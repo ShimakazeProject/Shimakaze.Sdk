@@ -1,3 +1,10 @@
+using System.Diagnostics;
+using System.IO;
+
+using Shimakaze.Sdk.Mix.Blowfish;
+
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace Shimakaze.Sdk.Mix;
 
 /// <summary>
@@ -6,11 +13,12 @@ namespace Shimakaze.Sdk.Mix;
 /// <remarks>
 /// 构造 Mix Entry 读取器
 /// </remarks>
-/// <param name="stream"> 基础流 </param>
-/// <param name="leaveOpen"> 退出时是否保持流打开 </param>
-public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDisposable, IAsyncDisposable
+public sealed class MixEntryReader : IDisposable, IAsyncDisposable
 {
-    private bool _inited;
+    private readonly bool _isEncrypted;
+    private readonly Stream _decryptedStream;
+    private readonly bool _leaveOpen;
+    private bool _disposedValue;
 
     /// <summary>
     /// 主体部分偏移位置
@@ -28,25 +36,50 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDis
     public short Count { get; private set; }
 
     /// <summary>
-    /// 初始化
+    /// 
     /// </summary>
-    /// <exception cref="NotImplementedException"> 当Mix Entry被加密时抛出 </exception>
-    public void Init()
+    /// <param name="stream"></param>
+    /// <param name="leaveOpen"></param>
+    /// <param name="noFlag"></param>
+    public MixEntryReader(Stream stream, bool leaveOpen = false, bool noFlag = false)
     {
-        // 标识符
-        _disposable.Resource.Read(out MixTag flag);
-        if ((flag & MixTag.ENCRYPTED) is not 0)
+        _leaveOpen = leaveOpen;
+        _isEncrypted = false;
+        if (!noFlag)
         {
-            throw new NotImplementedException("This Mix File is Encrypted.");
-        }
+            // 标识符
+            stream.Read(out MixTag flag);
+            if (flag.HasFlag(MixTag.ENCRYPTED))
+            {
+                _isEncrypted = true;
 
-        _disposable.Resource.Read(out MixMetadata info);
+                Span<byte> keySource = stackalloc byte[80];
+                stream.ReadExactly(keySource);
+
+                Span<byte> key = stackalloc byte[56];
+                WSKey.Decrypt(keySource, key);
+
+                _decryptedStream = new BlowfishStream(stream, key);
+            }
+            else
+            {
+                // 未加密
+                _decryptedStream = stream;
+            }
+        }
+        else
+        {
+            // 未加密
+            _decryptedStream = stream;
+        }
+        var zero = _decryptedStream.Position;
+
+        _decryptedStream.Read(out MixMetadata info);
 
         Count = info.Files;
         BodySize = info.Size;
-        BodyOffset = _disposable.Resource.Position + (12 * Count);
 
-        _inited = true;
+        BodyOffset = _isEncrypted ? zero + (long)Math.Ceiling((6 + (12 * Count)) / 8d) * 8 : zero + 6 + (12 * Count);
     }
 
     /// <summary>
@@ -56,17 +89,10 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDis
     /// <exception cref="EndOfEntryTableException"> 当没有可被读取的Entry时抛出 </exception>
     public MixEntry Read()
     {
-        if (!_inited)
-        {
-            Init();
-        }
-
-        if (_disposable.Resource.Position >= BodyOffset)
-        {
+        if (_decryptedStream.Position >= BodyOffset)
             throw new EndOfEntryTableException();
-        }
 
-        _disposable.Resource.Read(out MixEntry entry);
+        _decryptedStream.Read(out MixEntry entry);
         return entry;
     }
 
@@ -76,31 +102,91 @@ public sealed class MixEntryReader(Stream stream, bool leaveOpen = false) : IDis
     /// <returns></returns>
     public MixEntry[] ReadAll()
     {
-        if (!_inited)
-        {
-            Init();
-        }
-
-        MixEntry[] entries = new MixEntry[Count];
-        for (int i = 0; i < Count; i++)
-        {
-            _disposable.Resource.Read(out entries[i]);
-        }
-
-        return entries;
+        Span<MixEntry> entries = stackalloc MixEntry[Count];
+        ReadAll(entries);
+        return entries.ToArray();
     }
 
-    private readonly DisposableObject<Stream> _disposable = new(stream, leaveOpen);
+    /// <summary>
+    /// 读取所有Entry
+    /// </summary>
+    /// <param name="entries"></param>
+    /// <exception cref="EndOfEntryTableException"></exception>
+    public void ReadAll(Span<MixEntry> entries)
+    {
+        if (_decryptedStream.Position >= BodyOffset)
+            throw new EndOfEntryTableException();
+
+        _decryptedStream.Read(entries);
+    }
+
+    /// <summary>
+    /// 读取一个Entry
+    /// </summary>
+    /// <param name="entry"></param>
+    /// <param name="data"></param>
+    public void ReadFile(MixEntry entry, out byte[] data)
+    {
+        data = new byte[entry.Size];
+        ReadFile(entry, data.AsSpan());
+    }
+
+    /// <summary>
+    /// 读取文件
+    /// </summary>
+    /// <param name="entry"></param>
+    /// <param name="data"></param>
+    public void ReadFile(MixEntry entry, Span<byte> data)
+    {
+        var blowfish = _decryptedStream as BlowfishStream;
+        if (blowfish is not null)
+            blowfish.UnsafeSeek(BodyOffset, SeekOrigin.Begin);
+        else
+            _decryptedStream.Seek(BodyOffset, SeekOrigin.Begin);
+
+        if (_isEncrypted)
+            Debug.Assert(entry.Offset % 8 is 0);
+
+        if (blowfish is not null)
+            blowfish.UnsafeSeek(entry.Offset, SeekOrigin.Current);
+        else
+            _decryptedStream.Seek(entry.Offset, SeekOrigin.Current);
+
+        _decryptedStream.ReadExactly(data);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposedValue)
+            return;
+
+        if (disposing)
+        {
+            if (!_leaveOpen)
+                _decryptedStream.Dispose();
+        }
+
+        // TODO: 释放未托管的资源(未托管的对象)并重写终结器
+        // TODO: 将大型字段设置为 null
+        _disposedValue = true;
+    }
+
+    private async ValueTask DisposeAsyncCore()
+    {
+        if (!_leaveOpen)
+            await _decryptedStream.DisposeAsync().ConfigureAwait(false);
+    }
 
     /// <inheritdoc/>
     public void Dispose()
     {
-        _disposable.Dispose();
+        Dispose(disposing: true);
     }
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return _disposable.DisposeAsync();
+        await DisposeAsyncCore();
+        Dispose(false);
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Shimakaze.Sdk.Mix;
@@ -11,4 +12,11 @@ namespace Shimakaze.Sdk.Mix;
 /// <param name="Offset"> File Offset <br /> This is the offset of the file in the archive. </param>
 /// <param name="Size"> File Size <br /> This is the size of the file in the archive. </param>
 [StructLayout(LayoutKind.Sequential)]
-public record struct MixEntry(uint Id, int Offset, int Size);
+public record struct MixEntry(uint Id, int Offset, int Size)
+{
+    /// <summary>
+    /// Get the file info
+    /// </summary>
+    /// <returns></returns>
+    public override readonly string ToString() => $"[{Id:X8}]: {Size} (0x{Offset:X8})";
+}
