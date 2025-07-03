@@ -1,19 +1,13 @@
 using System.Diagnostics;
-using System.IO;
 
 using Shimakaze.Sdk.Mix.Blowfish;
-
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Shimakaze.Sdk.Mix;
 
 /// <summary>
-/// Mix Entry 读取器
+/// Mix 文件读取器
 /// </summary>
-/// <remarks>
-/// 构造 Mix Entry 读取器
-/// </remarks>
-public sealed class MixEntryReader : IDisposable, IAsyncDisposable
+public sealed class MixReader : IDisposable, IAsyncDisposable
 {
     private readonly bool _isEncrypted;
     private readonly Stream _decryptedStream;
@@ -36,12 +30,12 @@ public sealed class MixEntryReader : IDisposable, IAsyncDisposable
     public short Count { get; private set; }
 
     /// <summary>
-    /// 
+    /// 创建一个 Mix 文件读取器
     /// </summary>
     /// <param name="stream"></param>
     /// <param name="leaveOpen"></param>
     /// <param name="noFlag"></param>
-    public MixEntryReader(Stream stream, bool leaveOpen = false, bool noFlag = false)
+    public MixReader(Stream stream, bool leaveOpen = false, bool noFlag = false)
     {
         _leaveOpen = leaveOpen;
         _isEncrypted = false;
@@ -79,31 +73,20 @@ public sealed class MixEntryReader : IDisposable, IAsyncDisposable
         Count = info.Files;
         BodySize = info.Size;
 
-        BodyOffset = _isEncrypted ? zero + (long)Math.Ceiling((6 + (12 * Count)) / 8d) * 8 : zero + 6 + (12 * Count);
-    }
-
-    /// <summary>
-    /// 读取一个Entry
-    /// </summary>
-    /// <returns> Entry </returns>
-    /// <exception cref="EndOfEntryTableException"> 当没有可被读取的Entry时抛出 </exception>
-    public MixEntry Read()
-    {
-        if (_decryptedStream.Position >= BodyOffset)
-            throw new EndOfEntryTableException();
-
-        _decryptedStream.Read(out MixEntry entry);
-        return entry;
+        int size = 6 + 12 * Count;
+        BodyOffset = zero + (_isEncrypted
+            ? (size + 7) / 8 * 8 // 整数魔法
+            : size);
     }
 
     /// <summary>
     /// 读取所有的Entry
     /// </summary>
     /// <returns></returns>
-    public MixEntry[] ReadAll()
+    public MixEntry[] ReadEntries()
     {
         Span<MixEntry> entries = stackalloc MixEntry[Count];
-        ReadAll(entries);
+        ReadEntries(entries);
         return entries.ToArray();
     }
 
@@ -112,7 +95,7 @@ public sealed class MixEntryReader : IDisposable, IAsyncDisposable
     /// </summary>
     /// <param name="entries"></param>
     /// <exception cref="EndOfEntryTableException"></exception>
-    public void ReadAll(Span<MixEntry> entries)
+    public void ReadEntries(Span<MixEntry> entries)
     {
         if (_decryptedStream.Position >= BodyOffset)
             throw new EndOfEntryTableException();
