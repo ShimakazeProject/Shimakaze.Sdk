@@ -60,8 +60,8 @@ internal sealed class ExtractCommand
         var nameMap = LoadNameMap();
 
         using FileStream stream = Input.OpenRead();
-        using MixEntryReader entryReader = new(stream);
-        MixEntry[] entries = entryReader.ReadAll();
+        using MixReader entryReader = new(stream);
+        MixEntry[] entries = entryReader.ReadEntries();
         initProgressBar.Finished();
 
         using ChildProgressBar extractProgressBar = progressBar.Spawn(entries.Length, "释放文件");
