@@ -10,7 +10,7 @@
     <GlobalPackageReference Include="GitVersion.MsBuild" Version="6.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="DotMake.CommandLine" Version="2.7.0" />
+    <PackageVersion Include="DotMake.CommandLine" Version="2.7.1" />
     <PackageVersion Include="Draco.Lsp" Version="0.4.14-pre" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
