@@ -15,22 +15,56 @@ namespace Shimakaze.Sdk.Hva;
 ///
 /// The HVA format is very simple, just note that the matrices are stored in section-fastest order.
 /// </remarks>
-public record class HvaFile
+public record class HvaFile(HvaHeader Header, Memory<HvaSectionName> SectionNames, HvaFrame[] Frames)
 {
-    internal HvaHeader InternalHeader;
-
     /// <summary>
     /// </summary>
-    public HvaHeader Header
-    {
-        get => InternalHeader;
-        set => InternalHeader = value;
-    }
+    public HvaHeader Header { get; set; } = Header;
+
     /// <summary>
     /// The names of all the sections (null-terminated)
     /// </summary>
-    public HvaSectionName[] SectionNames { get; set; } = [];
+    public Memory<HvaSectionName> SectionNames { get; set; } = SectionNames;
+
     /// <summary>
     /// </summary>
-    public HvaFrame[] Frames { get; set; } = [];
+    public HvaFrame[] Frames { get; set; } = Frames;
+
+    /// <summary>
+    /// Reads a HVA file from a stream
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static HvaFile ReadFrom(Stream stream)
+    {
+        stream.Read(out HvaHeader header);
+        Memory<HvaSectionName> sectionNames = new HvaSectionName[header.NumSections];
+        stream.Read(sectionNames);
+        var frames = new HvaFrame[header.NumFrames];
+        for (int i = 0; i < frames.Length; i++)
+        {
+            frames[i] ??= new(new HvaMatrix[header.NumSections]);
+            stream.Read(frames[i].Matrices);
+        }
+
+        return new(header, sectionNames, frames);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public void WriteTo(Stream stream)
+    {
+        stream.Write(Header);
+        stream.Write<HvaSectionName>(SectionNames);
+
+
+        for (int i = 0; i < Frames.Length; i++)
+        {
+            HvaFrame item = Frames[i];
+            stream.Write<HvaMatrix>(item.Matrices);
+        }
+    }
 }
