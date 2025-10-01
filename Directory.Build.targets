@@ -1,5 +1,4 @@
 <Project>
-  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
 
   <ItemGroup>
     <None Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
@@ -8,21 +7,6 @@
   <ItemGroup>
     <None Include="$(IconPath)" Link="logo.png" Condition=" '$(IconPath)' != '' " Pack="True" PackagePath="\" />
     <None Include="$(ReadmeFile)" Link="ReadMe.md" Condition=" '$(ReadmeFile)' != '' " Pack="True" PackagePath="\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" Condition="'$(IsTestProject)' != 'True'" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Shimakaze.Sdk.Common' AND '$(IsTestProject)' != 'True' AND '$(IsRoslynComponent)' != 'True'">
-    <ProjectReference Include="$(MSBuildThisFileDirectory)src\Shimakaze.Sdk.Common\Shimakaze.Sdk.Common.csproj" />
-    <Using Include="Shimakaze.Sdk.Common" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(IsTestProject)' == 'True'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="MSTest.TestAdapter" />
-    <PackageReference Include="MSTest.TestFramework" />
   </ItemGroup>
 
 </Project>
