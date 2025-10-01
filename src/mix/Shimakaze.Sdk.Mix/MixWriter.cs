@@ -12,7 +12,9 @@ public sealed class MixWriter : IDisposable, IAsyncDisposable
 {
     private readonly bool _isEncrypted;
     private readonly bool _noFlag;
+#pragma warning disable IDISP008 // Don't assign member with injected and created disposables
     private readonly Stream _encryptedStream;
+#pragma warning restore IDISP008 // Don't assign member with injected and created disposables
     private readonly bool _leaveOpen;
     private readonly long _zero;
     private bool _disposedValue;
@@ -28,6 +30,7 @@ public sealed class MixWriter : IDisposable, IAsyncDisposable
     {
         _zero = stream.Position;
         _noFlag = noFlag;
+        _leaveOpen = leaveOpen;
         if (noFlag && encrypt)
             throw new NotSupportedException("不支持不写入标记的同时加密 mix");
 

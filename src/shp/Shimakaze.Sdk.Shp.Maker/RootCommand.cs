@@ -23,6 +23,9 @@ internal sealed class RootCommand
     [CliOption(Description = "输出的包含 Sequence 的 INI 文件", Required = false)]
     public string? SequenceIniOutput { get; set; }
 
+    [CliOption(Description = "调色板开始索引")]
+    public int StartIndex { get; set; } = -1;
+
     [CliOption(Description = "调色板结束索引")]
     public int EndIndex { get; set; } = 240;
 
@@ -96,7 +99,7 @@ internal sealed class RootCommand
         await using (var fs = File.OpenRead(Palette))
             palette = Pal.Palette.ReadFrom(fs);
 
-        ShpBuilder builder = new(palette, EndIndex);
+        ShpBuilder builder = new(palette, StartIndex, EndIndex);
         builder.Load(Path.GetFullPath(Input));
 
         using var writer = SequenceIniOutput is null ? Console.Out : File.CreateText(SequenceIniOutput);
