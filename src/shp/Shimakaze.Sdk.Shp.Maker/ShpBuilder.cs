@@ -253,7 +253,7 @@ internal sealed class ShpBuilder(Palette palette, int startIndex, int endIndex)
 
         for (byte i = (byte)start; i < endIndex; i++)
         {
-            PaletteColor color = palette[i];
+            DisplayColor color = palette[i];
 
             double distance = Math.Sqrt(Math.Pow(color.Red - pixel.R, 2) + Math.Pow(color.Green - pixel.G, 2) + Math.Pow(color.Blue - pixel.B, 2));
             if (distance < cdistance)
@@ -281,7 +281,7 @@ internal sealed class ShpBuilder(Palette palette, int startIndex, int endIndex)
         byte index = 0;
         for (byte i = 16; i < 32; i++)
         {
-            PaletteColor color = palette[i];
+            DisplayColor color = palette[i];
 
             double distance = Math.Sqrt(Math.Pow(color.Red - pixel.R, 2) + Math.Pow(color.Green - pixel.G, 2) + Math.Pow(color.Blue - pixel.B, 2));
             if (distance < cdistance)
