@@ -50,12 +50,10 @@ public record struct ShapeFrameHeader
 
     /// <inheritdoc cref="ShapeFileHeader.Reserved"/>
     public uint Reserved;
+
     /// <summary>
     /// 帧数据在文件内部的位置。将此值与 Seek 一起使用以访问帧数据。如果偏移量等于 0，则为 NULL“帧”
     /// </summary>
-    /// <remarks>
-    /// 此值可被<see cref="ShapeWriter"/>修改
-    /// </remarks>
     public uint Offset;
 
     /// <summary>
