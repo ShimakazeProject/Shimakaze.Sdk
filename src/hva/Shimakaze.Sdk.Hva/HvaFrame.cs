@@ -2,10 +2,10 @@ namespace Shimakaze.Sdk.Hva;
 
 /// <summary>
 /// </summary>
-public record class HvaFrame
+public sealed record class HvaFrame(Memory<HvaMatrix> Matrices)
 {
     /// <summary>
     /// Transformation matrix for each section
     /// </summary>
-    public HvaMatrix[] Matrices { get; set; } = [];
+    public Memory<HvaMatrix> Matrices { get; set; } = Matrices;
 }
