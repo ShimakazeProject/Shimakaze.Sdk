@@ -8,60 +8,137 @@ namespace Shimakaze.Sdk.Pcx;
 /// <remarks>
 /// PCX是单帧图像，只有一个帧
 /// </remarks>
-public sealed class PcxImage
+/// <param name="metadata">元数据</param>
+public abstract class PcxImage(PcxHeader metadata)
 {
-    /// <summary>
-    /// PCX图像构造器
-    /// </summary>
-    /// <param name="metadata">元数据</param>
-    public PcxImage(PcxHeader metadata)
-    {
-        Metadata = metadata;
-        Width = metadata.WindowXMax - metadata.WindowXMin + 1;
-        Height = metadata.WindowYMax - metadata.WindowYMin + 1;
-        BitsPerPixel = metadata.ColorPlanes * metadata.BitsPerPlane;
-        Pixels = new PaletteColor[Width * Height];
-    }
-
-    /// <summary>
-    /// 色板
-    /// </summary>
-    public Palette? Palette { get; internal set; }
-
     /// <summary>
     /// 图像元数据
     /// </summary>
-    public PcxHeader Metadata { get; }
+    public PcxHeader Metadata { get; } = metadata;
 
     /// <summary>
     /// 图像宽度
     /// </summary>
-    public int Width { get; }
+    public int Width => Metadata.Width;
 
     /// <summary>
     /// 图像高度
     /// </summary>
-    public int Height { get; }
+    public int Height => Metadata.Height;
 
     /// <summary>
     /// 位每像素（颜色深度/颜色位数）
     /// </summary>
-    public int BitsPerPixel { get; private set; }
+    public int BitsPerPixel => Metadata.BitsPerPixel;
 
     /// <summary>
-    /// 直接获取像素数据
+    /// 获取像素数据
     /// </summary>
-    public PaletteColor[] Pixels { get; }
+    public abstract IEnumerable<PaletteColor> GetPixels();
+
 
     /// <summary>
-    /// 写入RGB24数据到流
+    /// 解码图片
     /// </summary>
-    /// <param name="stream"></param>
-    public void WriteTo(Stream stream)
+    /// <param name="input"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    /// <exception cref="InvalidDataException"></exception>
+    /// <exception cref="FormatException"></exception>
+    public static PcxImage Decode(Stream input)
     {
-        foreach (PaletteColor pixel in Pixels)
+        input.Read(out PcxHeader header);
+        PcxAsserts.IsPCX(header);
+
+        switch (header.BitsPerPixel)
         {
-            stream.Write(pixel);
+            // 2色
+            case 1:
+                Console.WriteLine("2色");
+                throw new NotImplementedException();
+            // 4色
+            case 2:
+                Console.WriteLine("4色");
+                throw new NotImplementedException();
+            // 16色
+            case 4:
+                Console.WriteLine("16色");
+                throw new NotImplementedException();
+            // 256色
+            case 8:
+                {
+                    // 读取主体
+                    byte[] indexes = new byte[header.SizeOfBody];
+                    using PcxRLEStream rle = new(input, true);
+                    rle.ReadExactly(indexes);
+                    // 读调色板
+                    var palette = DecodePalette(input, header);
+
+                    return new Pcx8BitsImage(header, indexes, palette);
+                }
+            // 24位色
+            case 24:
+                {
+                    Pcx24BitsImage image = new(header);
+                    byte[] source = new byte[header.SizeOfBody * 3];
+                    using PcxRLEStream rle = new(input, true);
+                    rle.ReadExactly(source);
+
+                    // 缓存
+                    int _3TimesWidth = header.Width * 3;
+                    int r = header.BytesPerPlaneLine * 0;
+                    int g = header.BytesPerPlaneLine * 1;
+                    int b = header.BytesPerPlaneLine * 2;
+                    int a = header.BytesPerPlaneLine * 3;
+                    unsafe
+                    {
+                        fixed (PaletteColor* pt = image.Pixels.Span)
+                        fixed (byte* ps = source)
+                        {
+                            byte* p = (byte*)pt;
+                            for (int y = 0; y < image.Height; y++)
+                            {
+                                int sy = y * _3TimesWidth;
+                                for (int x = 0; x < image.Width; x++)
+                                {
+                                    int si = sy + x;
+                                    *p = ps[si + r];
+                                    p++;
+                                    *p = ps[si + g];
+                                    p++;
+                                    *p = ps[si + b];
+                                    p++;
+                                }
+                            }
+                        }
+                    }
+                    return image;
+                }
+            default:
+                throw new FormatException($"Unknown BitsPerPixel: {header.BitsPerPixel}");
+        }
+    }
+
+    /// <summary>
+    /// 解码色板
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="FormatException"></exception>
+    /// <exception cref="EndOfStreamException"></exception>
+    private static unsafe Palette DecodePalette(in Stream stream, in PcxHeader header)
+    {
+        if (header.BitsPerPixel is 8)
+        {
+            PcxAsserts.IsPalette(stream.ReadByte());
+            return Palette.ReadFrom(stream);
+        }
+        else
+        {
+            fixed (void* ps = header.Palette)
+            {
+                var span = new Span<PaletteColor>(ps, 16);
+                return new(span.ToArray());
+            }
         }
     }
 }
