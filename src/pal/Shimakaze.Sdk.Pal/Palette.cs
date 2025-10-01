@@ -1,9 +1,13 @@
+using System.Collections;
+
 namespace Shimakaze.Sdk.Pal;
 
 /// <summary>
 /// 色板
 /// </summary>
-public record class Palette
+/// <param name="Colors">色表</param>
+public record class Palette(Memory<PaletteColor> Colors)
+    : IEnumerable<PaletteColor>, IEnumerable<DisplayColor>
 {
     /// <summary>
     /// 颜色数量
@@ -11,47 +15,60 @@ public record class Palette
     public const int DefaultColorCount = 256;
 
     /// <summary>
-    /// 创建默认长度的色板
+    /// 创建指定大小的空色板
     /// </summary>
-    public Palette() : this(DefaultColorCount)
+    /// <param name="size">容量</param>
+    public Palette(int size = DefaultColorCount) : this(new PaletteColor[size].AsMemory())
     {
     }
 
     /// <summary>
-    /// 创建具有指定长度的色板
+    /// 取出指定颜色
     /// </summary>
-    public Palette(int size) : this(new PaletteColor[size])
-    {
-    }
+    /// <param name="index"></param>
+    /// <returns></returns>
 
-    /// <summary>
-    /// 从颜色数组中创建色板
-    /// </summary>
-    /// <param name="colors"></param>
-    public Palette(PaletteColor[] colors)
-    {
-        Colors = colors;
-    }
-
-
-    /// <summary>
-    /// 颜色
-    /// </summary>
-    public PaletteColor[] Colors { get; }
-
-    /// <summary>
-    /// 调色板的颜色数量
-    /// </summary>
-    public int Count => Colors.Length;
-
-    /// <summary>
-    /// 颜色
-    /// </summary>
-    /// <param name="index"> 索引 </param>
-    /// <returns> 颜色 </returns>
     public PaletteColor this[int index]
     {
-        get => Colors[index];
-        set => Colors[index] = value;
+        get => Colors.Span[index];
+        set => Colors.Span[index] = value;
+    }
+
+    /// <summary>
+    /// 从指定流中加载
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static Palette ReadFrom(Stream stream, int length = DefaultColorCount)
+    {
+        Palette palette = new(length);
+        stream.Read(palette.Colors);
+        return palette;
+    }
+
+    /// <summary>
+    /// 写入数据到流中
+    /// </summary>
+    /// <param name="stream"></param>
+    public void WriteTo(Stream stream)
+        => stream.Write(Colors);
+
+    /// <summary>
+    /// 获取所有颜色
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator<PaletteColor> GetEnumerator()
+    {
+        for (int i = 0; i < Colors.Length; i++)
+            yield return Colors.Span[i];
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    IEnumerator<DisplayColor> IEnumerable<DisplayColor>.GetEnumerator()
+    {
+        for (int i = 0; i < Colors.Length; i++)
+            yield return Colors.Span[i];
     }
 }

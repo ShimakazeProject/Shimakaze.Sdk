@@ -2,15 +2,15 @@
 <Project>
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <LangVersion>13</LangVersion>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <IsAotCompatible>True</IsAotCompatible>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
 
@@ -41,5 +41,7 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <NoWarn>$(NoWarn);CA1711</NoWarn>
   </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)src\Shimakaze.Sdk.Shared\Shimakaze.Sdk.Shared.props" />
 
 </Project>
