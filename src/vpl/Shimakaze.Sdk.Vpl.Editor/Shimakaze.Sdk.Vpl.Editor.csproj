@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Sharprompt" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Vpl\Shimakaze.Sdk.Vpl.csproj" />
   </ItemGroup>
