@@ -10,7 +10,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <IsTrimmable>True</IsTrimmable>
     <IsAotCompatible>True</IsAotCompatible>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
@@ -32,6 +31,8 @@
     <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)\ReadMe.md')">$(MSBuildProjectDirectory)\ReadMe.md</ReadmeFile>
     <ReadmeFile Condition=" '$(ReadmeFile)' == '' AND Exists('$(MSBuildThisFileDirectory)\ReadMe.md')">$(MSBuildThisFileDirectory)\ReadMe.md</ReadmeFile>
     <PackageReadmeFile Condition=" '$(ReadmeFile)' != '' ">ReadMe.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup>
