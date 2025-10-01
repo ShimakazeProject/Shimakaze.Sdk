@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Shimakaze.Sdk.Shp.Maker;
 
-internal sealed class ShpBuilder(Palette palette, int endIndex)
+internal sealed class ShpBuilder(Palette palette, int startIndex, int endIndex)
 {
     private readonly List<string> _objects = [];
     private readonly List<string> _shadows = [];
@@ -247,7 +247,11 @@ internal sealed class ShpBuilder(Palette palette, int endIndex)
         double cdistance = double.MaxValue;
         byte index = 0;
 
-        for (byte i = useHouse ? (byte)16 : (byte)32; i < endIndex; i++)
+        var start = startIndex;
+        if (start is < 0)
+            start = useHouse ? (byte)16 : (byte)32;
+
+        for (byte i = (byte)start; i < endIndex; i++)
         {
             PaletteColor color = palette[i];
 

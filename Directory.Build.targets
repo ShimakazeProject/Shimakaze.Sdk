@@ -1,8 +1,18 @@
 <Project>
 
-  <PropertyGroup>
-    <TargetFrameworks Condition=" '$(PackAsTool)' == 'true' ">$(ToolTargetFrameworks)</TargetFrameworks>
+  <PropertyGroup Condition=" '$(PackAsTool)' == 'true' ">
+    <TargetFrameworks>$(ToolTargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IsRoslynComponent)' == 'true' ">
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsAotCompatible>False</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(IsRoslynComponent)' == 'true' ">
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
   
   <ItemGroup>
     <None Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
