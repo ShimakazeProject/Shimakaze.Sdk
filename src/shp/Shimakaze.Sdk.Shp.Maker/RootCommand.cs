@@ -94,7 +94,7 @@ internal sealed class RootCommand
 
         Palette palette;
         await using (var fs = File.OpenRead(Palette))
-            palette = PaletteReader.Read(fs);
+            palette = Pal.Palette.ReadFrom(fs);
 
         ShpBuilder builder = new(palette, EndIndex);
         builder.Load(Path.GetFullPath(Input));
@@ -109,12 +109,13 @@ internal sealed class RootCommand
             await foreach (var item in builder.BuildAsync())
                 frames.Add(item);
 
-            ShapeWriter.Write(fs, new(new()
+            new ShapeImage(new()
             {
                 Width = (ushort)builder.Width,
                 Height = (ushort)builder.Height,
                 NumImages = (ushort)frames.Count,
-            }, [.. frames]));
+            }, [.. frames]).WriteTo(fs);
+
             await fs.FlushAsync();
         }
     }

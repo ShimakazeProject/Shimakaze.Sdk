@@ -1,5 +1,9 @@
 <Project>
 
+  <PropertyGroup>
+    <TargetFrameworks Condition=" '$(PackAsTool)' == 'true' ">$(ToolTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+  
   <ItemGroup>
     <None Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

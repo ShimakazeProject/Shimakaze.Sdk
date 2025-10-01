@@ -9,6 +9,8 @@ namespace Shimakaze.Sdk.Shp;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public sealed class ShapeImage
 {
+    private readonly ShapeFileHeader _metadata;
+
     /// <summary>
     /// 创建SHP图像
     /// </summary>
@@ -16,17 +18,16 @@ public sealed class ShapeImage
     /// <param name="frames">图像帧</param>
     public ShapeImage(ShapeFileHeader metadata, IReadOnlyList<ShapeImageFrame> frames)
     {
-        metadata.NumImages = (ushort)frames.Count;
-        Metadata = metadata;
+        _metadata = metadata;
+        ref ShapeFileHeader a = ref _metadata;
+        a.NumImages = (ushort)frames.Count;
         Frames = frames;
-        CalcOffset();
     }
 
     /// <summary>
     /// SHP文件元数据
     /// </summary>
-    public ShapeFileHeader Metadata { get; }
-
+    public ShapeFileHeader Metadata => _metadata;
     /// <summary>
     /// 获取帧
     /// </summary>
@@ -44,31 +45,64 @@ public sealed class ShapeImage
     /// </summary>
     public ShapeImageFrame RootFrame => Frames[0];
 
-    private unsafe void CalcOffset()
+
+    private string GetDebuggerDisplay()
+    {
+        return Metadata.ToString();
+    }
+
+    /// <summary>
+    /// 从流中读取SHP图像
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public static unsafe ShapeImage ReadFrom(Stream input)
+    {
+        input.Read(out ShapeFileHeader shapeFileHeader);
+        Memory<ShapeFrameHeader> shapeFrameHeaders = new ShapeFrameHeader[shapeFileHeader.NumImages];
+        input.Read(shapeFrameHeaders);
+
+        ShapeImageFrame[] frames = new ShapeImageFrame[shapeFileHeader.NumImages];
+        for (int i = 0; i < shapeFrameHeaders.Length; i++)
+            frames[i] ??= ShapeImageFrame.ReadFrom(input, shapeFrameHeaders.Span[i]);
+
+        return new(shapeFileHeader, frames);
+    }
+
+    /// <summary>
+    /// 计算帧偏移
+    /// </summary>
+    public void CalcOffset()
     {
         uint offset = ShapeFileHeader.Size;
         offset += (uint)Metadata.NumImages * ShapeFrameHeader.Size;
         for (int i = 0; i < Metadata.NumImages; i++)
         {
-            ShapeImageFrame frame = Frames[i];
-            ref ShapeFrameHeader metadata = ref frame.MetadataRef;
-            fixed (ShapeFrameHeader* p = &metadata)
+            var frame = Frames[i];
+            var metadata = frame.Metadata;
+            if (frame.Indexes is { Length: 0 })
             {
-                if (frame.Indexes is { Length: 0 })
-                {
-                    p->Offset = 0;
-                }
-                else
-                {
-                    p->Offset = offset;
-                    offset += (uint)frame.Indexes.Length;
-                }
+                metadata.Offset = 0;
             }
+            else
+            {
+                metadata.Offset = offset;
+                offset += (uint)frame.Indexes.Length;
+            }
+            frame.Metadata = metadata;
         }
     }
-
-    private string GetDebuggerDisplay()
+    /// <summary>
+    /// 写入SHP到流
+    /// </summary>
+    /// <param name="stream"></param>
+    public void WriteTo(Stream stream)
     {
-        return Metadata.ToString();
+        CalcOffset();
+        stream.Write(Metadata);
+        foreach (var frame in Frames.Select(i => i.Metadata))
+            stream.Write(frame);
+        foreach (var frame in Frames)
+            frame.WriteTo(stream);
     }
 }
