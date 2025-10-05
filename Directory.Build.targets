@@ -1,5 +1,7 @@
 <Project>
 
+  <Import Project="$(MSBuildThisFileDirectory)src\Shimakaze.Sdk.Shared\Shimakaze.Sdk.Shared.props" Condition=" '$(IsInherit)' != 'True' " />
+
   <PropertyGroup Condition=" '$(PackAsTool)' == 'true' ">
     <TargetFrameworks>$(ToolTargetFrameworks)</TargetFrameworks>
   </PropertyGroup>

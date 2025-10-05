@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>Shimakaze Project</Authors>
+    <Authors>Shimakaze.Org</Authors>
     <Copyright>Copyright © 2020 - $([System.DateTime]::Now.ToString("yyyy")) $(Authors)</Copyright>
     <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ShimakazeProject/Shimakaze.Sdk.git</RepositoryUrl>
@@ -42,7 +42,5 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <NoWarn>$(NoWarn);CA1711</NoWarn>
   </PropertyGroup>
-
-  <Import Project="$(MSBuildThisFileDirectory)src\Shimakaze.Sdk.Shared\Shimakaze.Sdk.Shared.props" />
 
 </Project>
