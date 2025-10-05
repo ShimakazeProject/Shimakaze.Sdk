@@ -118,10 +118,11 @@ internal sealed class ExtractCommand
             for (int j = 0; j < entries[i].Size; j++)
             {
                 progress.Report(j);
-                output.WriteByte(stream.ReadAsByte());
+                var b = stream.ReadByte();
+                if (b is -1)
+                    throw new EndOfStreamException();
+                output.WriteByte(unchecked((byte)b));
             }
         }
-
-
     }
 }

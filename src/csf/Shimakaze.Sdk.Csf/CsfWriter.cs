@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Shimakaze.Sdk.Csf.IO;
+namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
 /// CSF 写入器
@@ -44,7 +44,7 @@ public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : IDisposab
         stream.Write(CsfConstants.LblFlagRaw);
         stream.Write(label.Count);
         stream.Write(Encoding.ASCII.GetByteCount(label.Name));
-        stream.Write(Encoding.ASCII.GetBytes(label.Name));
+        stream.Write(Encoding.ASCII.GetBytes(label.Name).AsSpan());
 
         foreach (var value in label)
             WriteValue(value);
@@ -67,7 +67,7 @@ public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : IDisposab
         if (value.Extra is not null)
         {
             stream.Write(Encoding.ASCII.GetByteCount(value.Extra));
-            stream.Write(Encoding.ASCII.GetBytes(value.Extra));
+            stream.Write(Encoding.ASCII.GetBytes(value.Extra).AsSpan());
         }
     }
 

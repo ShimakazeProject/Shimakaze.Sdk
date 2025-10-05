@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Shimakaze.Sdk.Csf.IO;
+namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
 /// CSF 阅读器

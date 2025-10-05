@@ -1,0 +1,8 @@
+<Project>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)*.props" Link="Shared\%(Filename)%(Extension)" />
+    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" Link="Shared\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)Polyfill.props" />
+</Project>

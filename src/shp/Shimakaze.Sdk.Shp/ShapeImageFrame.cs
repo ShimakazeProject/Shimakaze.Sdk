@@ -9,36 +9,39 @@ namespace Shimakaze.Sdk.Shp;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
 {
-    private ShapeFrameHeader _metadata = metadata;
     /// <summary>
     /// Shape 帧
     /// </summary>
     /// <param name="metadata">帧元数据</param>
     /// <param name="data">数据</param>
-    public ShapeImageFrame(ShapeFrameHeader metadata, byte[] data) : this(metadata)
+    public ShapeImageFrame(ShapeFrameHeader metadata, Memory<byte> data) : this(metadata)
     {
         Indexes = data;
     }
     /// <summary>
     /// SHP帧元数据
     /// </summary>
-    public ShapeFrameHeader Metadata => _metadata;
-    internal ref ShapeFrameHeader MetadataRef => ref _metadata;
+    public ShapeFrameHeader Metadata { get; internal set; } = metadata;
 
     /// <summary>
     /// 图像宽度
     /// </summary>
-    public int Width => _metadata.Width;
+    public int Width => Metadata.Width;
 
     /// <summary>
     /// 图像高度
     /// </summary>
-    public int Height => _metadata.Height;
+    public int Height => Metadata.Height;
 
     /// <summary>
     /// 直接获取像素数据
     /// </summary>
-    public byte[] Indexes { get; } = new byte[metadata.Width * metadata.Height];
+    public Memory<byte> Indexes { get; } = new byte[metadata.Width * metadata.Height];
+
+    /// <summary>
+    /// 是否为空帧
+    /// </summary>
+    public bool IsEmpty => Indexes is { Length: 0 };
 
     /// <summary>
     /// 写入索引数据到流
@@ -46,6 +49,9 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
     /// <param name="stream"></param>
     public void WriteTo(Stream stream)
     {
+        if (IsEmpty)
+            return;
+
         stream.Write(Indexes);
     }
 
@@ -61,17 +67,18 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             throw new InvalidOperationException();
         }
 
-        (ushort x, ushort y, ushort width, ushort height, byte[] data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
+        var (x, y, width, height, data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
         data = CompressCore(data, width, height);
 
         ShapeFrameHeader metadata = Metadata;
-        metadata.X = x;
-        metadata.Y = y;
-        metadata.Width = width;
-        metadata.Height = height;
-        metadata.CompressionType |= ShapeFrameCompressionType.ScanlineRLE;
+        ref ShapeFrameHeader refMetadata = ref metadata;
+        refMetadata.X = x;
+        refMetadata.Y = y;
+        refMetadata.Width = width;
+        refMetadata.Height = height;
+        refMetadata.CompressionType |= ShapeFrameCompressionType.ScanlineRLE;
 
-        return new(metadata, data);
+        return new(refMetadata, data);
     }
     /// <summary>
     /// 使用RLE压缩
@@ -91,7 +98,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         return new(metadata, CompressCore(Indexes, Metadata.Width, Metadata.Height));
     }
 
-    private static byte[] CompressCore(in byte[] data, in ushort rawWidth, in ushort rawHeight)
+    private static Memory<byte> CompressCore(Memory<byte> data, in ushort rawWidth, in ushort rawHeight)
     {
         if (data is { Length: 0 })
         {
@@ -99,50 +106,23 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         }
 
         using MemoryStream ms = new();
+        using ShapeRLEStream rle = new(ms);
         for (int y = 0; y < rawHeight; y++)
         {
             int i = y * rawWidth;
 
-            Span<byte> row = data.AsSpan(i, rawWidth);
-            WriteRLE(ms, row);
+            Span<byte> row = data.Span.Slice(i, rawWidth);
+            long baseOffset = ms.Position;
+            ms.Seek(sizeof(ushort), SeekOrigin.Current);
+            rle.Write(row);
+            rle.Flush();
+
+            long currentOffset = ms.Position;
+            ms.Seek(baseOffset, SeekOrigin.Begin);
+            ms.Write((ushort)(currentOffset - baseOffset));
+            ms.Seek(currentOffset, SeekOrigin.Begin);
         }
         return ms.ToArray();
-    }
-
-    private static void WriteRLE(in Stream stream, in Span<byte> row)
-    {
-        long baseOffset = stream.Position;
-        stream.Seek(sizeof(ushort), SeekOrigin.Current);
-
-        byte counter = 0;
-        for (int i = 0; i < row.Length; i++)
-        {
-            ref byte current = ref row[i];
-            if (current is 0)
-            {
-                counter++;
-            }
-            else
-            {
-                if (counter is not 0)
-                {
-                    stream.WriteByte(0);
-                    Debug.Assert(counter is not 0);
-                    stream.WriteByte(counter);
-                    counter = 0;
-                }
-                stream.WriteByte(current);
-            }
-        }
-        if (counter is not 0)
-        {
-            stream.WriteByte(0);
-            stream.WriteByte(counter);
-        }
-        long currentOffset = stream.Position;
-        stream.Seek(baseOffset, SeekOrigin.Begin);
-        stream.Write((ushort)(currentOffset - baseOffset));
-        stream.Seek(currentOffset, SeekOrigin.Begin);
     }
 
     /// <summary>
@@ -157,7 +137,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             throw new InvalidOperationException();
         }
 
-        (ushort x, ushort y, ushort width, ushort height, byte[] data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
+        var (x, y, width, height, data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
 
         ShapeFrameHeader metadata = Metadata;
         metadata.X = x;
@@ -168,14 +148,14 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         return new(metadata, data);
     }
 
-    private static (ushort X, ushort Y, ushort Width, ushort Height, byte[] Data) TrimCore(in byte[] data, in ushort rawWidth, in ushort rawHeight)
+    private static (ushort X, ushort Y, ushort Width, ushort Height, Memory<byte> Data) TrimCore(Memory<byte> data, in ushort rawWidth, in ushort rawHeight)
     {
         (ushort Start, ushort End, ushort Length)[] maps = new (ushort Start, ushort End, ushort Length)[rawHeight];
         for (int y = 0; y < rawHeight; y++)
         {
             int i = y * rawWidth;
 
-            Span<byte> row = data.AsSpan(i, rawWidth);
+            Span<byte> row = data.Span.Slice(i, rawWidth);
             maps[y] = GetDataRange(row, IsNotZero);
         }
         (ushort top, ushort bottom, ushort height) = GetDataRange<(ushort Start, ushort End, ushort Length)>(maps, LengthIsNotZero);
@@ -188,7 +168,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         {
             int i = y * rawWidth;
 
-            Span<byte> row = data.AsSpan(i, rawWidth).Slice(left, width);
+            Span<byte> row = data.Span.Slice(i, rawWidth).Slice(left, width);
             ms.Write(row);
         }
         return (left, top, width, height, ms.ToArray());
@@ -243,5 +223,50 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
     private string GetDebuggerDisplay()
     {
         return Metadata.ToString();
+    }
+
+    /// <summary>
+    /// 从流中读取
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="frameHeader"></param>
+    /// <returns></returns>
+    public static ShapeImageFrame ReadFrom(in Stream input, in ShapeFrameHeader frameHeader)
+    {
+        using MemoryStream indexStream = new();
+        if (frameHeader.CompressionType.HasFlag(ShapeFrameCompressionType.Scanline))
+        {
+            using ShapeRLEStream rle = new(input, true);
+
+            // TODO: 行为可能不一致
+            for (int y = 0; y < frameHeader.Height; y++)
+            {
+                input.Read(out ushort length);
+                length -= sizeof(ushort);
+                CopyTo(rle, indexStream, length);
+            }
+        }
+        else
+        {
+            CopyTo(input, indexStream, frameHeader.BodyLength);
+        }
+
+        Debug.Assert(indexStream.Length == frameHeader.BodyLength);
+
+        indexStream.Seek(0, SeekOrigin.Begin);
+
+        return new(frameHeader, indexStream.ToArray());
+    }
+
+    private static void CopyTo(Stream input, Stream output, int length)
+    {
+        Span<byte> buffer = stackalloc byte[Math.Min(length, 1024)];
+        while (length > 0)
+        {
+            var size = Math.Min(length, buffer.Length);
+            input.ReadExactly(buffer[..size]);
+            output.Write(buffer);
+            length -= size;
+        }
     }
 }

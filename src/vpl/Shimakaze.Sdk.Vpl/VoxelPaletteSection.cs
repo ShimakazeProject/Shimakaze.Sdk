@@ -17,7 +17,7 @@ public struct VoxelPaletteSection
     /// <returns> 颜色索引 </returns>
     public unsafe byte this[int index]
     {
-        get => Data[index];
+        readonly get => Data[index];
         set => Data[index] = value;
     }
 }

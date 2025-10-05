@@ -6,6 +6,10 @@
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Yaml/Shimakaze.Sdk.Csf.Yaml.csproj" />
     <Project Path="src/csf/Shimakaze.Sdk.Csf/Shimakaze.Sdk.Csf.csproj" />
   </Folder>
+  <Folder Name="/engine/">
+    <Project Path="src/engine/Shimakaze.Sdk.Engine.Cli/Shimakaze.Sdk.Engine.Cli.csproj" />
+    <Project Path="src/engine/Shimakaze.Sdk.Engine/Shimakaze.Sdk.Engine.csproj" />
+  </Folder>
   <Folder Name="/hva/">
     <Project Path="src/hva/Shimakaze.Sdk.Hva/Shimakaze.Sdk.Hva.csproj" />
   </Folder>
@@ -47,5 +51,4 @@
   <Folder Name="/vxl/">
     <Project Path="src/vxl/Shimakaze.Sdk.Vxl/Shimakaze.Sdk.Vxl.csproj" />
   </Folder>
-  <Project Path="src/Shimakaze.Sdk.Common/Shimakaze.Sdk.Common.csproj" />
 </Solution>

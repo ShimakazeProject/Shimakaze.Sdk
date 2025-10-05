@@ -2,14 +2,14 @@ using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 
-using Shimakaze.Sdk.Csf.Json.Models.V2;
+using Shimakaze.Sdk.Csf.Json.Models.V1;
 
-namespace Shimakaze.Sdk.Csf.Json.IO;
+namespace Shimakaze.Sdk.Csf.Json;
 
 /// <summary>
 /// 
 /// </summary>
-public static class CsfJsonV2
+public static class CsfJsonV1
 {
     /// <summary>
     /// 默认的反序列化设置

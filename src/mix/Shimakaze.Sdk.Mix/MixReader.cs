@@ -10,7 +10,9 @@ namespace Shimakaze.Sdk.Mix;
 public sealed class MixReader : IDisposable, IAsyncDisposable
 {
     private readonly bool _isEncrypted;
+#pragma warning disable IDISP008 // Don't assign member with injected and created disposables
     private readonly Stream _decryptedStream;
+#pragma warning restore IDISP008 // Don't assign member with injected and created disposables
     private readonly bool _leaveOpen;
     private bool _disposedValue;
 

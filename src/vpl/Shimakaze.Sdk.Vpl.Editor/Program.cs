@@ -12,19 +12,19 @@ Palette pal;
 
 using (Stream vplStream = File.OpenRead(vplPath))
 {
-    vpl = VoxelPaletteReader.Read(vplStream);
+    vpl = VoxelPalette.ReadFrom(vplStream);
 }
 
 using (Stream palStream = File.OpenRead(palPath))
 {
-    pal = PaletteReader.Read(palStream);
+    pal = Palette.ReadFrom(palStream);
 }
 
 VplEditor editor = new(vpl, pal, (editor) =>
 {
     string path = Prompt.Input<string>("Where is your new VPL file save to?", vplPath);
     using Stream fs = File.Create(path);
-    VoxelPaletteWriter.Write(editor.Vpl, fs);
+    editor.Vpl.WriteTo(fs);
 });
 
 editor.Run();

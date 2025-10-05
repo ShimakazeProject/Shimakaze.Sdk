@@ -4,6 +4,9 @@
     <IsAotCompatible>False</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
   </ItemGroup>
 </Project>
