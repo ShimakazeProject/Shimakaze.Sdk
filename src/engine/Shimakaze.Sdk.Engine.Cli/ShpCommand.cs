@@ -32,6 +32,14 @@ internal sealed class ShpCommand
 
     public async Task RunAsync()
     {
+        if (Output is not { Directory.Exists: true })
+        {
+            if (Output.Directory is null)
+                throw new DirectoryNotFoundException(Output.FullName);
+
+            Output.Directory.Create();
+        }
+
         List<ShpFrameSource> sources = new(Input.Count);
         for (int i = 0; i < Input.Count; i++)
         {
