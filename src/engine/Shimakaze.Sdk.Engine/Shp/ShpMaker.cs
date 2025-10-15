@@ -52,7 +52,7 @@ internal static class ShpMaker
             if (src.Shadow is { Exists: true })
             {
                 using var sha = SKBitmap.Decode(src.Shadow.FullName);
-                frame = Shadow(sha).TrimAndCompress();
+                frame = Shadow(sha);
             }
             else
             {
