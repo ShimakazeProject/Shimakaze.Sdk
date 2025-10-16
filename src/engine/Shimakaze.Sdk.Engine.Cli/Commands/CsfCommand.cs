@@ -5,21 +5,21 @@ using DotMake.CommandLine;
 using Shimakaze.Sdk.Engine.Cli.Resources;
 using Shimakaze.Sdk.Engine.Csf;
 
-namespace Shimakaze.Sdk.Engine.Cli;
+namespace Shimakaze.Sdk.Engine.Cli.Commands;
 
-[CliCommand(Description = nameof(Resource.CsfCommand_Description), Parent = typeof(RootCommand))]
+[CliCommand(Description = nameof(Resource.Command_Csf_Description), Parent = typeof(RootCommand))]
 internal sealed class CsfCommand
 {
-    [CliArgument(Description = nameof(Resource.CsfCommand_Input_Description))]
+    [CliArgument(Description = nameof(Resource.Command_Csf_Input_Description))]
     public required FileInfo Input { get; set; }
 
-    [CliArgument(Description =  nameof(Resource.CsfCommand_Output_Description), Required = false)]
+    [CliArgument(Description =  nameof(Resource.Command_Csf_Output_Description), Required = false)]
     public FileInfo? Output { get; set; } = null;
 
-    [CliOption(Description = nameof(Resource.CsfCommand_InputFormat_Description), Required = false)]
+    [CliOption(Description = nameof(Resource.Command_Csf_InputFormat_Description), Required = false)]
     public CsfFormat? InputFormat { get; set; }
 
-    [CliOption(Description = nameof(Resource.CsfCommand_OutputFormat_Description), Required = false)]
+    [CliOption(Description = nameof(Resource.Command_Csf_OutputFormat_Description), Required = false)]
     public CsfFormat? OutputFormat { get; set; }
 
     public async Task RunAsync()

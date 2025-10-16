@@ -117,46 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CsfCommand.Description" xml:space="preserve">
-    <value>Shimakaze.Sdk Csf 格式转换工具</value>
+  <data name="Command.Csf.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk CSF 格式转换工具</value>
   </data>
-  <data name="CsfCommand.Input.Description" xml:space="preserve">
+  <data name="Command.Csf.Input.Description" xml:space="preserve">
     <value>将要被转换的字符串表文件</value>
   </data>
-  <data name="CsfCommand.InputFormat.Description" xml:space="preserve">
+  <data name="Command.Csf.InputFormat.Description" xml:space="preserve">
     <value>转换前的字符串表文件格式</value>
   </data>
-  <data name="CsfCommand.Output.Description" xml:space="preserve">
+  <data name="Command.Csf.Output.Description" xml:space="preserve">
     <value>转换后的字符串表文件保存路径</value>
   </data>
-  <data name="CsfCommand.OutputFormat.Description" xml:space="preserve">
+  <data name="Command.Csf.OutputFormat.Description" xml:space="preserve">
     <value>转换后的字符串表文件格式</value>
   </data>
-  <data name="RootCommand.Description" xml:space="preserve">
-    <value>Shimakaze.Sdk 引擎核心</value>
+  <data name="Command.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk 实用工具集</value>
   </data>
-  <data name="ShpCommand.Description" xml:space="preserve">
-    <value>Shimakaze.Sdk Shp 生成工具</value>
+  <data name="Command.Shp.Build.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk SHP 生成工具</value>
   </data>
-  <data name="ShpCommand.EndIndex.Description" xml:space="preserve">
+  <data name="Command.Shp.Build.EndIndex.Description" xml:space="preserve">
     <value>将要使用的调色板颜色范围的结束索引</value>
   </data>
-  <data name="ShpCommand.House.Description" xml:space="preserve">
+  <data name="Command.Shp.Build.House.Description" xml:space="preserve">
     <value>对象帧所属色蒙板图片列表</value>
   </data>
-  <data name="ShpCommand.Input.Description" xml:space="preserve">
+  <data name="Command.Shp.Build.Input.Description" xml:space="preserve">
     <value>对象帧图片列表</value>
   </data>
-  <data name="ShpCommand.Output.Description" xml:space="preserve">
+  <data name="Command.Shp.Build.Output.Description" xml:space="preserve">
     <value>输出的 SHP(TS) 文件</value>
   </data>
-  <data name="ShpCommand.Palette.Description" xml:space="preserve">
+  <data name="Command.Shp.Build.Palette.Description" xml:space="preserve">
     <value>将参考的调色板文件</value>
   </data>
-  <data name="ShpCommand.Shadow.Description" xml:space="preserve">
+  <data name="Command.Shp.Build.Shadow.Description" xml:space="preserve">
     <value>影子帧图片列表</value>
   </data>
-  <data name="ShpCommand.StartIndex.Description" xml:space="preserve">
+  <data name="Command.Shp.Build.StartIndex.Description" xml:space="preserve">
     <value>将要使用的调色板颜色范围的起始索引</value>
+  </data>
+  <data name="Command.Shp.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk SHP 实用工具</value>
   </data>
 </root>

@@ -1,6 +1,6 @@
 using DotMake.CommandLine;
 
-using Shimakaze.Sdk.Engine.Cli;
+using Shimakaze.Sdk.Engine.Cli.Commands;
 
 CliSettings settings = new()
 {
