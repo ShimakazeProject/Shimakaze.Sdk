@@ -67,18 +67,11 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             throw new InvalidOperationException();
         }
 
-        var (x, y, width, height, data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
-        data = CompressCore(data, width, height);
-
         ShapeFrameHeader metadata = Metadata;
-        ref ShapeFrameHeader refMetadata = ref metadata;
-        refMetadata.X = x;
-        refMetadata.Y = y;
-        refMetadata.Width = width;
-        refMetadata.Height = height;
-        refMetadata.CompressionType |= ShapeFrameCompressionType.ScanlineRLE;
+        TrimCore(Indexes.Span, ref metadata, out var data);
+        CompressCore(data, ref metadata, out data);
 
-        return new(refMetadata, data);
+        return new(metadata, data.ToArray());
     }
     /// <summary>
     /// 使用RLE压缩
@@ -93,25 +86,27 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         }
 
         ShapeFrameHeader metadata = Metadata;
-        metadata.CompressionType |= ShapeFrameCompressionType.ScanlineRLE;
+        CompressCore(Indexes.Span, ref metadata, out var data);
 
-        return new(metadata, CompressCore(Indexes, Metadata.Width, Metadata.Height));
+        return new(metadata, data.ToArray());
     }
 
-    private static Memory<byte> CompressCore(Memory<byte> data, in ushort rawWidth, in ushort rawHeight)
+    private static void CompressCore(ReadOnlySpan<byte> data, ref ShapeFrameHeader metadata, out Span<byte> newData)
     {
+        metadata.CompressionType |= ShapeFrameCompressionType.ScanlineRLE;
         if (data is { Length: 0 })
         {
-            return data;
+            newData = [];
+            return;
         }
 
         using MemoryStream ms = new();
         using ShapeRLEStream rle = new(ms);
-        for (int y = 0; y < rawHeight; y++)
+        for (int y = 0; y < metadata.Height; y++)
         {
-            int i = y * rawWidth;
+            int i = y * metadata.Width;
 
-            Span<byte> row = data.Span.Slice(i, rawWidth);
+            var row = data.Slice(i, metadata.Width);
             long baseOffset = ms.Position;
             ms.Seek(sizeof(ushort), SeekOrigin.Current);
             rle.Write(row);
@@ -122,7 +117,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             ms.Write((ushort)(currentOffset - baseOffset));
             ms.Seek(currentOffset, SeekOrigin.Begin);
         }
-        return ms.ToArray();
+        newData = ms.ToArray();
     }
 
     /// <summary>
@@ -133,45 +128,47 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
     public ShapeImageFrame Trim()
     {
         if (Metadata.CompressionType.HasFlag(ShapeFrameCompressionType.Scanline))
-        {
             throw new InvalidOperationException();
-        }
-
-        var (x, y, width, height, data) = TrimCore(Indexes, Metadata.Width, Metadata.Height);
 
         ShapeFrameHeader metadata = Metadata;
-        metadata.X = x;
-        metadata.Y = y;
-        metadata.Width = width;
-        metadata.Height = height;
-
-        return new(metadata, data);
+        TrimCore(Indexes.Span, ref metadata, out var data);
+        return new(metadata, data.ToArray());
     }
 
-    private static (ushort X, ushort Y, ushort Width, ushort Height, Memory<byte> Data) TrimCore(Memory<byte> data, in ushort rawWidth, in ushort rawHeight)
+    private static void TrimCore(ReadOnlySpan<byte> data, ref ShapeFrameHeader metadata, out Span<byte> newData)
     {
-        (ushort Start, ushort End, ushort Length)[] maps = new (ushort Start, ushort End, ushort Length)[rawHeight];
-        for (int y = 0; y < rawHeight; y++)
+        var oldWidth = metadata.Width;
+        List<int> lengths = new(metadata.Height);
+
+        for (ushort y = 0; y < metadata.Height; y++)
         {
-            int i = y * rawWidth;
+            var row = data.Slice(y * metadata.Width, metadata.Width);
 
-            Span<byte> row = data.Span.Slice(i, rawWidth);
-            maps[y] = GetDataRange(row, IsNotZero);
+            if (metadata is not { X: 0, Y: 0 })
+            {
+                var tmp = row.TrimStart((byte)0);
+                if (tmp.Length is not 0)
+                {
+                    metadata.X = unchecked((ushort)(metadata.Width - tmp.Length));
+                    metadata.Y = y;
+                    break;
+                }
+            }
+
+            row = row.TrimEnd((byte)0);
+            lengths.Add(row.Length);
         }
-        (ushort top, ushort bottom, ushort height) = GetDataRange<(ushort Start, ushort End, ushort Length)>(maps, LengthIsNotZero);
-        ushort left = maps.Select(i => i.Start).Min();
-        ushort right = maps.Select(i => i.End).Max();
-        ushort width = (ushort)(right - left);
 
-        using MemoryStream ms = new(width * height);
-        for (int y = top; y < bottom; y++)
-        {
-            int i = y * rawWidth;
+        metadata.Width = unchecked((ushort)(lengths.Max() - metadata.X));
+        metadata.Height = unchecked((ushort)lengths.FindLastIndex(static i => i is not 0));
 
-            Span<byte> row = data.Span.Slice(i, rawWidth).Slice(left, width);
-            ms.Write(row);
-        }
-        return (left, top, width, height, ms.ToArray());
+        using MemoryStream ms = new(metadata.Width * metadata.Height);
+        for (int y = metadata.Y; y < metadata.Height; y++)
+            ms.Write(data.Slice(y * oldWidth + metadata.X, metadata.Width));
+
+        ms.Flush();
+        ms.Seek(0, SeekOrigin.Begin);
+        newData = ms.ToArray();
     }
 
     private static bool IsNotZero(in byte i)

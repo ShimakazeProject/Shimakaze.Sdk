@@ -1,3 +1,5 @@
+using System.Drawing;
+
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 
@@ -9,21 +11,23 @@ internal static class ShpMaker
 {
     public static void Build(IEnumerable<ShpFrameSource> frames, Stream output, Palette palette, int paletteStartIndex, int paletteEndIndex)
     {
-        var shpFrames = BuildFrames(frames, palette, paletteStartIndex, paletteEndIndex).ToList();
+        var shpFrames = BuildFrames(frames, palette, paletteStartIndex, paletteEndIndex);
 
-        var width = shpFrames.Select(i => i.Width).Max();
-        var height = shpFrames.Select(i => i.Height).Max();
+        var width = shpFrames.Max(i => i.Size.Width);
+        var height = shpFrames.Max(i => i.Size.Height);
 
-        new ShapeImage(new()
-        {
-            Width = (ushort)width,
-            Height = (ushort)height,
-            NumImages = (ushort)shpFrames.Count,
-        }, shpFrames).WriteTo(output);
+        new ShapeImage(
+            new()
+            {
+                Width = (ushort)width,
+                Height = (ushort)height,
+            },
+            [.. shpFrames.Select(static i => i.Frame)])
+            .WriteTo(output);
 
     }
 
-    private static IEnumerable<ShapeImageFrame> BuildFrames(IEnumerable<ShpFrameSource> frames, Palette palette, int paletteStartIndex, int paletteEndIndex)
+    private static IEnumerable<(ShapeImageFrame Frame, Size Size)> BuildFrames(IEnumerable<ShpFrameSource> frames, Palette palette, int paletteStartIndex, int paletteEndIndex)
     {
         foreach (var src in frames)
         {
@@ -40,7 +44,7 @@ internal static class ShpMaker
                 frame = Quantization(obj, null, palette, paletteStartIndex, paletteEndIndex);
             }
 
-            yield return frame.TrimAndCompress();
+            yield return (frame.TrimAndCompress(), new(obj.Width, obj.Height));
         }
 
         if (!frames.Any(i => i.Shadow is not null))
@@ -49,14 +53,17 @@ internal static class ShpMaker
         foreach (var src in frames)
         {
             ShapeImageFrame frame;
+            Size size;
             if (src.Shadow is { Exists: true })
             {
                 using var sha = SKBitmap.Decode(src.Shadow.FullName);
+                size = new(sha.Width, sha.Height);
                 frame = Shadow(sha);
             }
             else
             {
                 using var obj = SKBitmap.Decode(src.Object.FullName);
+                size = new(obj.Width, obj.Height);
                 frame = new(new()
                 {
                     X = 0,
@@ -66,7 +73,7 @@ internal static class ShpMaker
                     CompressionType = ShapeFrameCompressionType.None
                 }, new byte[obj.Width * obj.Height]);
             }
-            yield return frame.TrimAndCompress();
+            yield return (frame.TrimAndCompress(), size);
         }
     }
 
