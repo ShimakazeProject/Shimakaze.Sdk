@@ -101,23 +101,55 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         }
 
         using MemoryStream ms = new();
-        using ShapeRLEStream rle = new(ms);
         for (int y = 0; y < metadata.Height; y++)
         {
             int i = y * metadata.Width;
 
             var row = data.Slice(i, metadata.Width);
-            long baseOffset = ms.Position;
-            ms.Seek(sizeof(ushort), SeekOrigin.Current);
-            rle.Write(row);
-            rle.Flush();
 
-            long currentOffset = ms.Position;
-            ms.Seek(baseOffset, SeekOrigin.Begin);
-            ms.Write((ushort)(currentOffset - baseOffset));
-            ms.Seek(currentOffset, SeekOrigin.Begin);
+            WriteRLE(ms, row);
         }
         newData = ms.ToArray();
+    }
+
+    private static void WriteRLE(Stream stream, ReadOnlySpan<byte> row)
+    {
+        // Scanline
+        long baseOffset = stream.Position;
+        stream.Seek(sizeof(ushort), SeekOrigin.Current);
+
+        byte counter = 0;
+        for (int i = 0; i < row.Length; i++)
+        {
+            byte current = row[i];
+            if (current is not 0)
+            {
+                Flush();
+                stream.WriteByte(current);
+                continue;
+            }
+
+            if (counter == byte.MaxValue)
+                Flush();
+            counter++;
+        }
+        Flush();
+
+        long currentOffset = stream.Position;
+        stream.Seek(baseOffset, SeekOrigin.Begin);
+
+        stream.Write((ushort)(currentOffset - baseOffset));
+        stream.Seek(currentOffset, SeekOrigin.Begin);
+
+        void Flush()
+        {
+            if (counter is 0)
+                return;
+
+            stream.WriteByte(0);
+            stream.WriteByte(counter);
+            counter = 0;
+        }
     }
 
     /// <summary>
@@ -233,19 +265,15 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         using MemoryStream indexStream = new();
         if (frameHeader.CompressionType.HasFlag(ShapeFrameCompressionType.Scanline))
         {
-            using ShapeRLEStream rle = new(input, true);
-
             // TODO: 行为可能不一致
             for (int y = 0; y < frameHeader.Height; y++)
             {
-                input.Read(out ushort length);
-                length -= sizeof(ushort);
-                CopyTo(rle, indexStream, length);
+                ReadRLE(input, indexStream);
             }
         }
         else
         {
-            CopyTo(input, indexStream, frameHeader.BodyLength);
+            ReadDirect(input, indexStream, frameHeader);
         }
 
         Debug.Assert(indexStream.Length == frameHeader.BodyLength);
@@ -255,14 +283,49 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         return new(frameHeader, indexStream.ToArray());
     }
 
-    private static void CopyTo(Stream input, Stream output, int length)
+    private static void ReadRLE(in Stream input, in Stream output)
     {
-        Span<byte> buffer = stackalloc byte[Math.Min(length, 1024)];
+        input.Read(out ushort length);
+        length -= sizeof(ushort);
+
+        for (int j = 0; j < length; j++)
+        {
+            var b = input.ReadByte();
+            if (b is -1)
+                throw new EndOfStreamException();
+            if (b is 0)
+            {
+                var count = input.ReadByte();
+                if (count is -1)
+                    throw new EndOfStreamException();
+                j++;
+                for (int k = 0; k < count; k++)
+                {
+                    output.WriteByte(0);
+                }
+            }
+            else
+            {
+                output.WriteByte(unchecked((byte)b));
+            }
+        }
+
+    }
+
+    private static void ReadDirect(in Stream input, in Stream output, in ShapeFrameHeader frameHeader)
+    {
+        int length = frameHeader.BodyLength;
+
+#if NETSTANDARD2_0
+        Span<byte> buffer = new byte[4096]; 
+#else
+        Span<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
+#endif
         while (length > 0)
         {
             var size = Math.Min(length, buffer.Length);
             input.ReadExactly(buffer[..size]);
-            output.Write(buffer);
+            output.Write(buffer[..size]);
             length -= size;
         }
     }
