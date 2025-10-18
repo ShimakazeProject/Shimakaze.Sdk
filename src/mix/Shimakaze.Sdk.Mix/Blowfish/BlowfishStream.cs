@@ -72,11 +72,7 @@ internal sealed class BlowfishStream(Stream stream, ReadOnlySpan<byte> key) : St
         Span<byte> span;
         if (_writeBuffer.Count is not 0)
         {
-#if NETSTANDARD
-            span = new byte[count + _writeBuffer.Count]; 
-#else
-            span = GC.AllocateUninitializedArray<byte>(count + _writeBuffer.Count);
-#endif
+            span = Array.FastCreate<byte>(count + _writeBuffer.Count);
             var tmp = span;
             while (_writeBuffer.Count is not 0)
             {

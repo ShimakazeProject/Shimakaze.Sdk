@@ -49,7 +49,7 @@ public static class Mix
         if (!noFlag)
             bodyOffset += sizeof(MixTag);
 
-        MixEntry[] entries = new MixEntry[info.Files];
+        MixEntry[] entries = Array.FastCreate<MixEntry>(info.Files);
         decryptedStream.Read(entries);
         return entries;
     }
@@ -97,11 +97,7 @@ public static class Mix
     /// <returns></returns>
     public static async Task ReadFileAsync(Stream stream, int bodyOffset, MixEntry entry, Stream destination, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
-#if NETSTANDARD
-        Memory<byte> buffer = new byte[4096];
-#else
-        Memory<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
-#endif
+        Memory<byte> buffer = Array.FastCreate<byte>(4096);
         int work = 0;
         int offset = bodyOffset + entry.Offset;
         stream.Seek(offset, SeekOrigin.Begin);
@@ -130,11 +126,8 @@ public static class Mix
     {
         if (entry.Size != source.Length)
             throw new InvalidDataException();
-#if NETSTANDARD
-        Memory<byte> buffer = new byte[4096];
-#else
-        Memory<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
-#endif
+            
+        Memory<byte> buffer = Array.FastCreate<byte>(4096);
         int work = 0;
         int offset = bodyOffset + entry.Offset;
         stream.Seek(offset, SeekOrigin.Begin);
