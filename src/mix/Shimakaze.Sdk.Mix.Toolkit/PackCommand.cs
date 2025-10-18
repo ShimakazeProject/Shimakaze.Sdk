@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 
 using DotMake.CommandLine;
 
@@ -31,6 +32,10 @@ internal sealed class PackCommand
 
     public async Task RunAsync()
     {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        Encoding encoding = Encoding.GetEncoding(0);
+        Console.WriteLine($"Encoding: {encoding.EncodingName}");
+
         using StreamWriter? nameMapWriter = NameMap?.CreateText();
 
         using IndeterminateProgressBar progressBar = new("打包中...", new ProgressBarOptions()
@@ -48,7 +53,7 @@ internal sealed class PackCommand
         await using FileStream output = Output.Create();
         IdCalculator idCalculator = IsTD
                 ? IdCalculators.TDIdCalculator
-                : IdCalculators.TSIdCalculator;
+                : IdCalculators.TSIdCalculator(encoding);
         List<MixEntry> entries = new(Input.Count);
         int offset = 0;
         foreach (var file in Input)

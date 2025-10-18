@@ -6,7 +6,7 @@ namespace Shimakaze.Sdk.Mix;
 /// <summary>
 /// File Id Calculator
 /// </summary>
-public delegate uint IdCalculator(string name);
+public delegate uint IdCalculator(string name, Encoding? encoding = default);
 
 /// <summary>
 /// File Id Calculators
@@ -17,22 +17,24 @@ public static class IdCalculators
     /// Tiberian Sun Id Calc
     /// </summary>
     /// <param name="name"> File Name </param>
+    /// <param name="encoding"> File Name Encoding </param>
     /// <returns> Id </returns>
-    public static uint TSIdCalculator(string name)
+    public static uint TSIdCalculator(string name, Encoding? encoding = default)
     {
+        encoding ??= Encoding.GetEncoding(0);
         name = name.ToUpperInvariant();
-        int l = name.Length;
+        List<byte> data = [.. encoding.GetBytes(name)];
+        int l = data.Count;
         int a = l >> 2;
         if ((l & 3) is not 0)
         {
-            name += (char)(byte)(l - (a << 2));
+            data.Add((byte)(l - (a << 2)));
             int i = 3 - (l & 3);
             while (i-- is not 0)
-            {
-                name += name[a << 2];
-            }
+                data.Add(data[a << 2]);
+
         }
-        return BitConverter.ToUInt32(Crc32.Hash(Encoding.ASCII.GetBytes(name)), 0);
+        return BitConverter.ToUInt32(Crc32.Hash([.. data]), 0);
     }
 
     /// <summary> 
@@ -42,13 +44,16 @@ public static class IdCalculators
     /// This method are used by RedAlert and Tiberian Down. 
     /// </markup> 
     /// <param name="name">File Name</param> 
+    /// <param name="encoding"> File Name Encoding </param>
     ///  <returns>Id</returns>
-    public static uint TDIdCalculator(string name)
+    public static uint TDIdCalculator(string name, Encoding? encoding = default)
     {
+        encoding ??= Encoding.GetEncoding(0);
         name = name.ToUpperInvariant();
+        var data = encoding.GetBytes(name);
         int i = 0;
         uint id = 0;
-        int l = name.Length;
+        int l = data.Length;
         while (i < l)
         {
             uint a = 0; for (int j = 0; j < 4; j++)
@@ -56,7 +61,7 @@ public static class IdCalculators
                 a >>= 8;
                 if (i < l)
                 {
-                    a += ((uint)name[i]) << 24;
+                    a += ((uint)data[i]) << 24;
                 }
 
                 i++;
