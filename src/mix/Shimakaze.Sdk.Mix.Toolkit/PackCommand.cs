@@ -53,14 +53,14 @@ internal sealed class PackCommand
         await using FileStream output = Output.Create();
         IdCalculator idCalculator = IsTD
                 ? IdCalculators.TDIdCalculator
-                : IdCalculators.TSIdCalculator(encoding);
+                : IdCalculators.TSIdCalculator;
         List<MixEntry> entries = new(Input.Count);
         int offset = 0;
         foreach (var file in Input)
         {
             MixEntry entry = new()
             {
-                Id = idCalculator(file.Name),
+                Id = idCalculator(file.Name, encoding),
                 Offset = offset,
                 Size = (int)file.Length
             };

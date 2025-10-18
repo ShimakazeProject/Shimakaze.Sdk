@@ -135,6 +135,47 @@
   <data name="Command.Description" xml:space="preserve">
     <value>Shimakaze.Sdk 实用工具集</value>
   </data>
+  <data name="Command.Mix.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk MIX 实用工具</value>
+  </data>
+  <data name="Command.Mix.Extract.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk MIX 内容释放工具</value>
+  </data>
+  <data name="Command.Mix.Extract.Input.Description" xml:space="preserve">
+    <value>将要被释放的 MIX 文件</value>
+  </data>
+  <data name="Command.Mix.Extract.IsTDMode.Description" xml:space="preserve">
+    <value>表示这是一个适用于 C&amp;C1 / RA1 的旧版无标记 MIX 文件</value>
+  </data>
+  <data name="Command.Mix.Extract.NameMap.Description" xml:space="preserve">
+    <value>文件名对照表。
+将根据此对照表应用文件名，不填则写文件 ID</value>
+  </data>
+  <data name="Command.Mix.Extract.Output.Description" xml:space="preserve">
+    <value>被释放的文件的存放位置</value>
+  </data>
+  <data name="Command.Mix.Pack.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk MIX 打包工具</value>
+  </data>
+  <data name="Command.Mix.Pack.Encoding.Description" xml:space="preserve">
+    <value>文件名使用的字符编码</value>
+  </data>
+  <data name="Command.Mix.Pack.Encrypt.Description" xml:space="preserve">
+    <value>使用河豚算法加密 MIX 文件</value>
+  </data>
+  <data name="Command.Mix.Pack.Input.Description" xml:space="preserve">
+    <value>将要被打包的文件列表。</value>
+  </data>
+  <data name="Command.Mix.Pack.IsTDMode.Description" xml:space="preserve">
+    <value>使用旧的 MIX 格式。
+这将使用适用于 Red Alert 或 Tiberian Down 的游戏引擎的 ID 计算器和不写入 Mix Flag。</value>
+  </data>
+  <data name="Command.Mix.Pack.NameMapOutput.Description" xml:space="preserve">
+    <value>文件名对照表位置。留空则不生成文件名对照表。</value>
+  </data>
+  <data name="Command.Mix.Pack.Output.Description" xml:space="preserve">
+    <value>生成的MIX文件的路径。</value>
+  </data>
   <data name="Command.Shp.Build.Description" xml:space="preserve">
     <value>Shimakaze.Sdk SHP 生成工具</value>
   </data>

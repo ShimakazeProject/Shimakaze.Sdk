@@ -16,16 +16,15 @@ public static class Mix
     /// <param name="bodyOffset">主体起始偏移点</param>
     /// <param name="noFlag">适用于 CnC1 / RA1 的旧MIX </param>
     /// <returns></returns>
-    public static MixEntry[] ReadMetadata(Stream stream, out MixMetadata info, out MixTag? flag, out int bodyOffset, bool noFlag = false)
+    public static MixEntry[] ReadMetadata(Stream stream, out MixMetadata info, out MixTag flag, out int bodyOffset, bool noFlag = false)
     {
-        flag = null;
+        flag = MixTag.NONE;
         bool isEncrypted = false;
         Stream decryptedStream = stream;
         if (!noFlag)
         {
-            stream.Read(out MixTag tmp);
-            flag = tmp;
-            if (flag!.Value.HasFlag(MixTag.ENCRYPTED))
+            stream.Read(out flag);
+            if (flag.HasFlag(MixTag.ENCRYPTED))
             {
                 isEncrypted = true;
                 Span<byte> keySource = stackalloc byte[80];
