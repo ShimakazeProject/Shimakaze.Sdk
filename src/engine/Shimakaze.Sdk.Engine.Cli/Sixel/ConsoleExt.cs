@@ -5,7 +5,7 @@ using System.Text;
 namespace Shimakaze.Sdk.Engine.Cli.Sixel;
 
 // https://github.com/ShaunLawrie/spectre.console/blob/main/src/Extensions/Spectre.Console.ImageSharp/Sixels/Compatibility.cs
-internal class ConsoleExt
+internal sealed class ConsoleExt
 {
     private static bool? s_terminalSupportsSixel;
     public static bool TerminalSupportsSixel()
