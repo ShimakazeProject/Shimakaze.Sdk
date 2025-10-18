@@ -49,7 +49,7 @@ public static class Mix
         if (!noFlag)
             bodyOffset += sizeof(MixTag);
 
-        MixEntry[] entries = new MixEntry[size];
+        MixEntry[] entries = new MixEntry[info.Files];
         decryptedStream.Read(entries);
         return entries;
     }
@@ -101,18 +101,17 @@ public static class Mix
 #else
         Memory<byte> buffer = GC.AllocateUninitializedArray<byte>(4096); 
 #endif
-        int todo = entry.Size;
-        float work = 0;
+        int work = 0;
         int offset = bodyOffset + entry.Offset;
         stream.Seek(offset, SeekOrigin.Begin);
 
-        while (todo > 0)
+        while (work < entry.Size)
         {
-            int size = Math.Min(todo, buffer.Length);
+            int size = Math.Min(entry.Size - work, buffer.Length);
             await stream.ReadExactlyAsync(buffer[..size], cancellationToken);
             await destination.WriteAsync(buffer[..size], cancellationToken);
             work += size;
-            progress?.Report(work / entry.Size);
+            progress?.Report(work / (float)entry.Size);
         }
     }
 
