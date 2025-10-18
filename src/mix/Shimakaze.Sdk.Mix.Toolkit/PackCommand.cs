@@ -69,8 +69,6 @@ internal sealed class PackCommand
         MixTag? tag = NoFlag
             ? null
             : MixTag.NONE;
-        if (Encrypt)
-            throw new NotSupportedException("暂时不支持加密 Mix");
 
         MixMetadata metadata = new((short)Input.Count, offset);
         Mix.WriteMetadata(output, metadata, entries.ToArray(), tag, []);

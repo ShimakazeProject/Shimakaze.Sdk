@@ -8,7 +8,7 @@ namespace Shimakaze.Sdk.Mix.Toolkit;
 
 [CliCommand(
     Description = "释放保存在MIX文件中的文件。",
-    Aliases = ["x"],
+    Alias = "x",
     Parent = typeof(RootCommand))]
 internal sealed class ExtractCommand
 {

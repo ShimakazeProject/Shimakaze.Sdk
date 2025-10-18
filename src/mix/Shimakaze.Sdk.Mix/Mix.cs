@@ -100,7 +100,7 @@ public static class Mix
 #if NETSTANDARD
         Memory<byte> buffer = new byte[4096];
 #else
-        Memory<byte> buffer = GC.AllocateUninitializedArray<byte>(4096); 
+        Memory<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
 #endif
         int work = 0;
         int offset = bodyOffset + entry.Offset;
@@ -128,23 +128,23 @@ public static class Mix
     /// <returns></returns>
     public static async Task WriteFileAsync(Stream stream, int bodyOffset, MixEntry entry, Stream source, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
+        if (entry.Size != source.Length)
+            throw new InvalidDataException();
 #if NETSTANDARD
         Memory<byte> buffer = new byte[4096];
 #else
-        Memory<byte> buffer = GC.AllocateUninitializedArray<byte>(4096); 
+        Memory<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
 #endif
-        int todo = entry.Size;
-        float work = 0;
+        int work = 0;
         int offset = bodyOffset + entry.Offset;
         stream.Seek(offset, SeekOrigin.Begin);
-
-        while (todo > 0)
+        while (work < entry.Size)
         {
-            int size = Math.Min(todo, buffer.Length);
+            int size = Math.Min(entry.Size - work, buffer.Length);
             await source.ReadExactlyAsync(buffer[..size], cancellationToken);
             await stream.WriteAsync(buffer[..size], cancellationToken);
             work += size;
-            progress?.Report(work / entry.Size);
+            progress?.Report(work / (float)entry.Size);
         }
     }
 
