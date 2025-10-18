@@ -1,18 +1,16 @@
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
-using System.Numerics;
-
 
 namespace Shimakaze.Sdk.Mix;
 
 internal static class WSKey
 {
-    private static readonly Lazy<BigInteger> Modulus = new(() => ToBigInteger("AihRvNoIbTn85FZRYNZRcT+i6KpU+maCsEqr3Q5q+LDB5tH7Tz2qQ38V"u8));
-    private static readonly Lazy<BigInteger> PublicKeyExponent = new(() => 0x10001u);
-    private static readonly Lazy<BigInteger> PrivateKeyExponent = new(() => ToBigInteger("AigKVje8mROcR8QixnxUEF5b29Curkq01DNDWCdOG99XBqH79OaCiTCB"u8));
+    private static readonly Lazy<BigIntegerPolyfill> Modulus = new(() => ToBigIntegerPolyfill("AihRvNoIbTn85FZRYNZRcT+i6KpU+maCsEqr3Q5q+LDB5tH7Tz2qQ38V"u8));
+    private static readonly Lazy<BigIntegerPolyfill> PublicKeyExponent = new(() => 0x10001u);
+    private static readonly Lazy<BigIntegerPolyfill> PrivateKeyExponent = new(() => ToBigIntegerPolyfill("AigKVje8mROcR8QixnxUEF5b29Curkq01DNDWCdOG99XBqH79OaCiTCB"u8));
 
-    private static BigInteger ToBigInteger(ReadOnlySpan<byte> base64)
+    private static BigIntegerPolyfill ToBigIntegerPolyfill(ReadOnlySpan<byte> base64)
     {
         var len = Base64.GetMaxDecodedFromUtf8Length(base64.Length);
         Span<byte> data = stackalloc byte[len];
@@ -49,11 +47,11 @@ internal static class WSKey
         var modulus = Modulus.Value;
         var exponent = PublicKeyExponent.Value;
 
-        BigInteger cipher1 = new(encrypted[..40], isUnsigned: true, isBigEndian: false);
-        BigInteger cipher2 = new(encrypted[40..], isUnsigned: true, isBigEndian: false);
+        BigIntegerPolyfill cipher1 = new(encrypted[..40], isUnsigned: true, isBigEndian: false);
+        BigIntegerPolyfill cipher2 = new(encrypted[40..], isUnsigned: true, isBigEndian: false);
 
-        var plain1 = BigInteger.ModPow(cipher1, exponent, modulus);
-        var plain2 = BigInteger.ModPow(cipher2, exponent, modulus);
+        var plain1 = BigIntegerPolyfill.ModPow(cipher1, exponent, modulus);
+        var plain2 = BigIntegerPolyfill.ModPow(cipher2, exponent, modulus);
 
         plain1.TryWriteBytes(output, out int written1, isUnsigned: true, isBigEndian: false);
         plain2.TryWriteBytes(output[written1..], out int written2, isUnsigned: true, isBigEndian: false);
@@ -70,11 +68,11 @@ internal static class WSKey
 
         var split = modulus.GetByteCount() - 1;
 
-        BigInteger part1 = new(input[..split], isUnsigned: true, isBigEndian: true);
-        BigInteger part2 = new(input[split..], isUnsigned: true, isBigEndian: true);
+        BigIntegerPolyfill part1 = new(input[..split], isUnsigned: true, isBigEndian: true);
+        BigIntegerPolyfill part2 = new(input[split..], isUnsigned: true, isBigEndian: true);
 
-        BigInteger cipher1 = BigInteger.ModPow(part1, exponent, modulus);
-        BigInteger cipher2 = BigInteger.ModPow(part2, exponent, modulus);
+        BigIntegerPolyfill cipher1 = BigIntegerPolyfill.ModPow(part1, exponent, modulus);
+        BigIntegerPolyfill cipher2 = BigIntegerPolyfill.ModPow(part2, exponent, modulus);
 
         cipher1.TryWriteBytes(encrypted, out int written1, isUnsigned: true, isBigEndian: false);
         cipher2.TryWriteBytes(encrypted[written1..], out int written2, isUnsigned: true, isBigEndian: false);

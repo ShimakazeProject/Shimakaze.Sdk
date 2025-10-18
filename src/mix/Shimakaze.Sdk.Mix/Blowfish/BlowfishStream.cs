@@ -4,94 +4,128 @@ internal sealed class BlowfishStream(Stream stream, ReadOnlySpan<byte> key) : St
     private readonly Codec _codec = new(key);
 
     public override bool CanRead => stream.CanRead;
-    public override bool CanSeek => false;
-    public bool CanUnsafeSeek => stream.CanSeek;
+    public override bool CanSeek => throw new NotSupportedException();
     public override bool CanWrite => stream.CanWrite;
-    public override long Length => stream.Length;
+    public override long Length => throw new NotSupportedException();
 
     public override long Position
     {
-        get => stream.Position;
-        set => Seek(value, SeekOrigin.Begin);
+        get => throw new NotSupportedException();
+        set => throw new NotSupportedException();
     }
 
-    internal bool Encrypt(Span<byte> data)
+    private void Encrypt(Span<byte> data)
     {
-        if (data.Length is 0 || data.Length % 8 != 0)
-            return false;
+        if (data is not { Length: 8 })
+            throw new InvalidDataException();
 
-        for (var i = 0; i < data.Length; i += 8)
-            _codec.Encrypt(data.Slice(i, 8));
-
-        return true;
+        _codec.Encrypt(data);
     }
 
-    internal bool Decrypt(Span<byte> data)
+    private void Decrypt(Span<byte> data)
     {
-        if (data.Length is 0 || data.Length % 8 != 0)
-            return false;
+        if (data is not { Length: 8 })
+            throw new InvalidDataException();
 
-        for (var i = 0; i < data.Length; i += 8)
-            _codec.Decrypt(data.Slice(i, 8));
+        _codec.Decrypt(data);
 
-        return true;
     }
 
-    public override void Flush() => stream.Flush();
-
+    private readonly Queue<byte> _readBuffer = new(7);
     public override int Read(byte[] buffer, int offset, int count)
     {
         if (count == 0)
             return 0;
 
-        int aligned = (count + 7) / 8 * 8;
-        byte[] temp = new byte[aligned];
+        Span<byte> span = buffer.AsSpan(offset, count);
+        while (!span.IsEmpty && _readBuffer.Count is not 0)
+        {
+            span[0] = _readBuffer.Dequeue();
+            span = span[1..];
+        }
 
-        int read = stream.Read(temp, 0, aligned);
-        if (read == 0)
-            return 0;
+        Span<byte> temp = stackalloc byte[8];
+        while (!span.IsEmpty)
+        {
+            int size = Math.Min(span.Length, temp.Length);
+            stream.ReadExactly(temp);
+            Decrypt(temp);
+            temp[..size].CopyTo(span);
+            span = span[size..];
+            if (size is not 8)
+            {
+                temp = temp[size..];
+                while (!temp.IsEmpty)
+                {
+                    _readBuffer.Enqueue(temp[0]);
+                    temp = temp[1..];
+                }
+            }
+        }
 
-        int decryptLength = read - (read % 8);
-        if (decryptLength == 0)
-            return 0;
-
-        Decrypt(temp.AsSpan(0, decryptLength));
-
-        int toCopy = Math.Min(count, decryptLength);
-        Array.Copy(temp, 0, buffer, offset, toCopy);
-
-        return toCopy;
+        return count;
     }
 
+    private readonly Queue<byte> _writeBuffer = [];
     public override void Write(byte[] buffer, int offset, int count)
     {
-        int aligned = (count + 7) / 8 * 8;
-        Span<byte> temp = new byte[aligned];
-        buffer.AsSpan(offset, count).CopyTo(temp);
-        // 自动补0，不使用PKCS7
-
-        Encrypt(temp);
-        stream.Write(temp);
-    }
-
-    public override long Seek(long offset, SeekOrigin origin)
-        => throw new NotSupportedException("BlowfishStream does not support normal seeking");
-
-    public long UnsafeSeek(long offset, SeekOrigin origin)
-    {
-        if (!CanUnsafeSeek)
-            throw new NotSupportedException("Underlying stream does not support seeking");
-
-        long newPosition = origin switch
+        Span<byte> span;
+        if (_writeBuffer.Count is not 0)
         {
-            SeekOrigin.Begin => offset,
-            SeekOrigin.Current => Position + offset,
-            SeekOrigin.End => Length + offset,
-            _ => throw new ArgumentOutOfRangeException(nameof(origin))
-        };
+            span = Array.FastCreate<byte>(count + _writeBuffer.Count);
+            var tmp = span;
+            while (_writeBuffer.Count is not 0)
+            {
+                tmp[0] = _writeBuffer.Dequeue();
+                tmp = tmp[1..];
+            }
+        }
+        else
+        {
+            span = buffer.AsSpan(offset, count);
+        }
 
-        return stream.Seek(newPosition, SeekOrigin.Begin);
+        while (!span.IsEmpty)
+        {
+            if (span.Length is < 8)
+            {
+                while (!span.IsEmpty)
+                {
+                    _writeBuffer.Enqueue(span[0]);
+                    span = span[1..];
+                }
+
+                break;
+            }
+
+            var tmp = span[..8];
+            Encrypt(tmp);
+            stream.Write(tmp);
+
+            span = span[8..];
+        }
     }
 
-    public override void SetLength(long value) => stream.SetLength(value);
+    public override void Flush()
+    {
+        if (_writeBuffer.Count is not 0)
+        {
+            Span<byte> span = stackalloc byte[8];
+            var tmp = span;
+            while (_writeBuffer.Count is not 0)
+            {
+                tmp[0] = _writeBuffer.Dequeue();
+                tmp = tmp[1..];
+            }
+
+            Encrypt(span);
+            stream.Write(span);
+        }
+
+        stream.Flush();
+    }
+
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+    public override void SetLength(long value) => throw new NotSupportedException();
 }

@@ -2,19 +2,20 @@ using System.Text;
 
 using DotMake.CommandLine;
 
+using Shimakaze.Sdk.Engine.Cli.Resources;
 using Shimakaze.Sdk.Engine.Cli.Sixel;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 
 namespace Shimakaze.Sdk.Engine.Cli.Commands.Shp;
 
-[CliCommand(Description = "在终端中查看 SHP 的工具", Parent = typeof(ShpCommand))]
+[CliCommand(Description = nameof(Resource.Command_Shp_View_Description), Parent = typeof(ShpCommand))]
 internal sealed class ViewCommand
 {
-    [CliArgument]
+    [CliOption(Description = nameof(Resource.Command_Shp_View_Shp_Description))]
     public required FileInfo Shp { get; set; }
 
-    [CliArgument]
+    [CliOption(Description = nameof(Resource.Command_Shp_View_Palette_Description))]
     public required FileInfo Palette { get; set; }
 
     public async Task RunAsync()

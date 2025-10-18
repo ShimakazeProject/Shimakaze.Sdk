@@ -8,6 +8,7 @@ namespace Shimakaze.Sdk.Mix.Toolkit;
 
 [CliCommand(
     Description = "释放保存在MIX文件中的文件。",
+    Alias = "x",
     Parent = typeof(RootCommand))]
 internal sealed class ExtractCommand
 {
@@ -19,6 +20,9 @@ internal sealed class ExtractCommand
 
     [CliOption(Description = "文件名对照表。根据文件名对照表生成文件名")]
     public FileInfo? NameMap { get; set; } = default;
+
+    [CliOption(Description = "适用于 C&C1 / RA1 的无标记 Mix 文件")]
+    public bool NoFlag { get; set; }
 
     private Dictionary<string, string> LoadNameMap()
     {
@@ -46,7 +50,7 @@ internal sealed class ExtractCommand
         return nameMap;
     }
 
-    public void Run()
+    public async Task RunAsync()
     {
         using IndeterminateProgressBar progressBar = new("释放中...", new ProgressBarOptions()
         {
@@ -59,16 +63,15 @@ internal sealed class ExtractCommand
 
         var nameMap = LoadNameMap();
 
-        using FileStream stream = Input.OpenRead();
-        using MixReader entryReader = new(stream);
-        MixEntry[] entries = entryReader.ReadEntries();
+        await using FileStream stream = Input.OpenRead();
+        var entries = Mix.ReadMetadata(stream, out var metadata, out var tag, out var bodyOffset, NoFlag);
         initProgressBar.Finished();
 
         using ChildProgressBar extractProgressBar = progressBar.Spawn(entries.Length, "释放文件");
         IProgress<int> metadataProgress = extractProgressBar.AsProgress<int>(
             i => $"当前进度 {i}/{entries.Length}",
-            i => i / entries.Length
-            );
+            i => i / (float)entries.Length
+        );
 
         for (int i = 0; i < entries.Length; i++)
         {
@@ -76,53 +79,13 @@ internal sealed class ExtractCommand
 
             string name = entries[i].Id.ToString("X8", CultureInfo.InvariantCulture);
             if (nameMap.TryGetValue(name, out string? value))
-            {
                 name = value;
-            }
 
             using ChildProgressBar pb = extractProgressBar.Spawn(entries[i].Size, $"正在释放 \"{name}\"");
-            IProgress<int> progress = pb.AsProgress<int>(
-                i =>
-                {
-                    string unit = "B";
-                    double current = i;
-                    double max = entries[i].Size;
-                    if (current > 1024)
-                    {
-                        current /= 1024;
-                        max /= 1024;
-                        unit = "KB";
-                    }
-                    if (current > 1024)
-                    {
-                        current /= 1024;
-                        max /= 1024;
-                        unit = "MB";
-                    }
-                    if (current > 1024)
-                    {
-                        current /= 1024;
-                        max /= 1024;
-                        unit = "GB";
-                    }
+            var progress = pb.AsProgress<float>(i => $"进度 {i * 100}%", i => i);
 
-                    return $"进度 {current:F2}/{max:F2}({unit})";
-
-                },
-                i => i / entries[i].Size
-                );
-
-            using Stream output = File.Create(Path.Combine(Output.FullName, name));
-            stream.Seek(entryReader.BodyOffset, SeekOrigin.Begin);
-            stream.Seek(entries[i].Offset, SeekOrigin.Current);
-            for (int j = 0; j < entries[i].Size; j++)
-            {
-                progress.Report(j);
-                var b = stream.ReadByte();
-                if (b is -1)
-                    throw new EndOfStreamException();
-                output.WriteByte(unchecked((byte)b));
-            }
+            await using Stream output = File.Create(Path.Combine(Output.FullName, name));
+            await Mix.ReadFileAsync(stream, bodyOffset, entries[i], output, progress);
         }
     }
 }
