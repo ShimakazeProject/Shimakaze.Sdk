@@ -86,14 +86,6 @@ internal sealed class ExtractCommand
 
             await using Stream output = File.Create(Path.Combine(Output.FullName, name));
             await Mix.ReadFileAsync(stream, bodyOffset, entries[i], output, progress);
-            for (int j = 0; j < entries[i].Size; j++)
-            {
-                progress.Report(j);
-                var b = stream.ReadByte();
-                if (b is -1)
-                    throw new EndOfStreamException();
-                output.WriteByte(unchecked((byte)b));
-            }
         }
     }
 }

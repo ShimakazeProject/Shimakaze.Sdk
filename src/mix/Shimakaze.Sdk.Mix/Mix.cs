@@ -82,6 +82,7 @@ public static class Mix
 
         encryptedStream.Write(info);
         encryptedStream.Write(entries);
+        encryptedStream.Flush();
     }
 
     /// <summary>
