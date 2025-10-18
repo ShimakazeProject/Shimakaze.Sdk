@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Runtime.CompilerServices;
 
 using DotMake.CommandLine;
 
@@ -46,8 +45,7 @@ internal sealed class PackCommand
             nameMapWriter.WriteLine("");
             nameMapWriter.WriteLine("[NameMap]");
         }
-        await using FileStream fs = Output.Create();
-        await using MixWriter writer = new(fs, encrypt: Encrypt, noFlag: NoFlag);
+        await using FileStream output = Output.Create();
         IdCalculator idCalculator = IsTD
                 ? IdCalculators.TDIdCalculator
                 : IdCalculators.TSIdCalculator;
@@ -64,14 +62,29 @@ internal sealed class PackCommand
 
             nameMapWriter?.WriteLine($"{entry.Id.ToString("X8", CultureInfo.InvariantCulture)} = {file.Name.ToUpperInvariant()}");
 
-            offset += Encrypt
-                ? (entry.Size + 7) / 8 * 8 // 整数魔法
-                : entry.Size;
+            offset += entry.Size;
 
             entries.Add(entry);
         }
+        MixTag? tag = NoFlag
+            ? null
+            : MixTag.NONE;
+        if (Encrypt)
+            throw new NotSupportedException("暂时不支持加密 Mix");
 
-        writer.WriteFilesInternal(entries, Input);
-        await fs.FlushAsync();
+        MixMetadata metadata = new((short)Input.Count, offset);
+        Mix.WriteMetadata(output, metadata, entries.ToArray(), tag, []);
+        int bodyOffset = (int)output.Position;
+
+        for (int i = 0; i < Input.Count; i++)
+        {
+            MixEntry entry = entries[i];
+            FileInfo item = Input[i];
+
+            await using var fs = item.OpenRead();
+            await Mix.WriteFileAsync(output, bodyOffset, entry, fs);
+        }
+
+        await output.FlushAsync();
     }
 }
