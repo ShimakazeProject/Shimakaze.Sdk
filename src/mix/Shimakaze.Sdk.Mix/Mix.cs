@@ -44,7 +44,7 @@ public static class Mix
 
         int size = 6 + 12 * info.Files;
         bodyOffset = isEncrypted
-            ? (size + 7) / 8 * 8
+            ? 80 + (size + 7) / 8 * 8
             : size;
         if (!noFlag)
             bodyOffset += sizeof(MixTag);
