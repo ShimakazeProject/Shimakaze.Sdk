@@ -9,10 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="DotMake.CommandLine" />
-    <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
