@@ -169,85 +169,46 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
 
     private static void TrimCore(ReadOnlySpan<byte> data, ref ShapeFrameHeader metadata, out Span<byte> newData)
     {
-        var oldWidth = metadata.Width;
-        List<int> lengths = new(metadata.Height);
+        int l = metadata.Width;
+        int t = metadata.Height;
+        int r = 0;
+        int b = 0;
 
         for (ushort y = 0; y < metadata.Height; y++)
         {
             var row = data.Slice(y * metadata.Width, metadata.Width);
 
-            if (metadata is not { X: 0, Y: 0 })
+            for (int x = 0; x < row.Length; x++)
             {
-                var tmp = row.TrimStart((byte)0);
-                if (tmp.Length is not 0)
+                if (row[x] is not 0)
                 {
-                    metadata.X = unchecked((ushort)(metadata.Width - tmp.Length));
-                    metadata.Y = y;
-                    break;
-                }
-            }
-
-            row = row.TrimEnd((byte)0);
-            lengths.Add(row.Length);
-        }
-
-        metadata.Width = unchecked((ushort)(lengths.Max() - metadata.X));
-        metadata.Height = unchecked((ushort)lengths.FindLastIndex(static i => i is not 0));
-
-        using MemoryStream ms = new(metadata.Width * metadata.Height);
-        for (int y = metadata.Y; y < metadata.Height; y++)
-            ms.Write(data.Slice(y * oldWidth + metadata.X, metadata.Width));
-
-        ms.Flush();
-        ms.Seek(0, SeekOrigin.Begin);
-        newData = ms.ToArray();
-    }
-
-    private static bool IsNotZero(in byte i)
-    {
-        return i is not 0;
-    }
-
-    private static bool LengthIsNotZero(in (ushort Start, ushort End, ushort Length) i)
-    {
-        return i is not { Length: 0 };
-    }
-
-    private static (ushort Start, ushort End, ushort Length) GetDataRange<T>(Span<T> span, Checker<T> checker)
-    {
-        int start = -1;
-        ushort end = (ushort)span.Length;
-        for (int i = 0; i < end; i++)
-        {
-            if (checker(span[i]))
-            {
-                start = i;
-                break;
-            }
-        }
-
-        if (start is not -1)
-        {
-            for (ushort i = (ushort)(end - 1); i >= start; i--)
-            {
-                if (checker(span[i]))
-                {
-                    end = i;
-                    break;
+                    l = Math.Min(l, x);
+                    t = Math.Min(t, y);
+                    r = Math.Max(r, x);
+                    b = Math.Max(b, y);
                 }
             }
         }
-        if (start is not -1)
+
+        int w = r - l;
+        int h = b - t;
+
+        newData = Array.FastCreate(w * h);
+
+        for (int y = 0; y < h; y++)
         {
-            ushort length = (ushort)(end - start);
-            return ((ushort)start, end, length);
+            var row = data.Slice((y + t) * metadata.Width + l, w);
+            var target = newData.Slice(y * w, w);
+            row.CopyTo(target);
         }
-        else
+        unchecked
         {
-            return (end, 0, 0);
+            metadata.X = (ushort)l;
+            metadata.Y = (ushort)t;
+            metadata.Width = (ushort)w;
+            metadata.Height = (ushort)h;
         }
     }
-    private delegate bool Checker<T>(in T data);
 
     private string GetDebuggerDisplay()
     {
@@ -317,7 +278,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         int length = frameHeader.BodyLength;
 
 #if NETSTANDARD2_0
-        Span<byte> buffer = new byte[4096]; 
+        Span<byte> buffer = new byte[4096];
 #else
         Span<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
 #endif
