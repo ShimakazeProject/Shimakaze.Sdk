@@ -36,7 +36,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
     /// <summary>
     /// 直接获取像素数据
     /// </summary>
-    public Memory<byte> Indexes { get; } = new byte[metadata.Width * metadata.Height];
+    public Memory<byte> Indexes { get; }
 
     /// <summary>
     /// 是否为空帧
@@ -277,11 +277,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
     {
         int length = frameHeader.BodyLength;
 
-#if NETSTANDARD2_0
-        Span<byte> buffer = new byte[4096];
-#else
-        Span<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
-#endif
+        Span<byte> buffer = Array.FastCreate(4096);
         while (length > 0)
         {
             var size = Math.Min(length, buffer.Length);

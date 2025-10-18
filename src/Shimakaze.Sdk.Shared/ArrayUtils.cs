@@ -14,7 +14,7 @@ internal static class ArrayUtils
 #if NETSTANDARD
             return new T[length];
 #else
-        return GC.AllocateUninitializedArray<T>(length); 
+            return GC.AllocateUninitializedArray<T>(length);
 #endif
         }
     }
