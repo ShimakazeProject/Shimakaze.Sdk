@@ -30,7 +30,7 @@ internal sealed class ShpExtractor(ShapeImage shape, Palette palette)
     public SKColor[] CreateCanvas(bool useAlpha)
     {
         SKColor bg = useAlpha
-            ? new(0, 0, 0, 0)
+            ? SKColors.Transparent
             : GetColor(0);
 
         SKColor[] data = new SKColor[Shape.Metadata.Width * Shape.Metadata.Height];
