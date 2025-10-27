@@ -9,7 +9,7 @@ using SkiaSharp;
 namespace Shimakaze.Sdk.Engine.Cli.Commands.Shp;
 
 [CliCommand(Description = nameof(Resource.Command_Shp_Extract_Description), Parent = typeof(ShpCommand))]
-internal class ExtractCommand
+internal sealed class ExtractCommand
 {
     [CliOption(Description = nameof(Resource.Command_Shp_Extract_Shp_Description))]
     public required FileInfo Shp { get; set; }
