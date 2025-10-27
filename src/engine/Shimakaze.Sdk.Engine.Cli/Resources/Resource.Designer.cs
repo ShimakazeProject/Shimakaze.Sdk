@@ -315,6 +315,105 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         }
         
         /// <summary>
+        ///   查找类似 Shimakaze.Sdk SHP 图片转换器 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 结束索引，为空则不批量转换 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_EndIndex_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.EndIndex.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 图片编码格式 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Format_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Format.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SHP的帧索引 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Index_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Index.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 输出的图片文件或输出文件夹路径 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Output_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Output.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 将使用的调色板文件 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Palette_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Palette.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 图像质量 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Quality_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Quality.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 渲染影子 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Shadow_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Shadow.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 影子所使用的颜色 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_ShadowColor_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.ShadowColor.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SHP(TS) 文件 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Shp_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Shp.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 使用透明背景 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_Transparent_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.Transparent.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Shimakaze.Sdk SHP 查看器 的本地化字符串。
         /// </summary>
         internal static string Command_Shp_View_Description {

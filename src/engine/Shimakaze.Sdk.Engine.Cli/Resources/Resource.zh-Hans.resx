@@ -203,6 +203,39 @@
   <data name="Command.Shp.Description" xml:space="preserve">
     <value>Shimakaze.Sdk SHP 实用工具</value>
   </data>
+  <data name="Command.Shp.Extract.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk SHP 图片转换器</value>
+  </data>
+  <data name="Command.Shp.Extract.EndIndex.Description" xml:space="preserve">
+    <value>结束索引，为空则不批量转换</value>
+  </data>
+  <data name="Command.Shp.Extract.Format.Description" xml:space="preserve">
+    <value>图片编码格式</value>
+  </data>
+  <data name="Command.Shp.Extract.Index.Description" xml:space="preserve">
+    <value>SHP的帧索引</value>
+  </data>
+  <data name="Command.Shp.Extract.Output.Description" xml:space="preserve">
+    <value>输出的图片文件或输出文件夹路径</value>
+  </data>
+  <data name="Command.Shp.Extract.Palette.Description" xml:space="preserve">
+    <value>将使用的调色板文件</value>
+  </data>
+  <data name="Command.Shp.Extract.Quality.Description" xml:space="preserve">
+    <value>图像质量</value>
+  </data>
+  <data name="Command.Shp.Extract.Shadow.Description" xml:space="preserve">
+    <value>渲染影子</value>
+  </data>
+  <data name="Command.Shp.Extract.ShadowColor.Description" xml:space="preserve">
+    <value>影子所使用的颜色</value>
+  </data>
+  <data name="Command.Shp.Extract.Shp.Description" xml:space="preserve">
+    <value>SHP(TS) 文件</value>
+  </data>
+  <data name="Command.Shp.Extract.Transparent.Description" xml:space="preserve">
+    <value>使用透明背景</value>
+  </data>
   <data name="Command.Shp.View.Description" xml:space="preserve">
     <value>Shimakaze.Sdk SHP 查看器</value>
   </data>
