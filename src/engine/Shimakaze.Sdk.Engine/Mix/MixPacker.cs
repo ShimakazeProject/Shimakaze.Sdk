@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text;
 
 using Shimakaze.Sdk.Mix;
@@ -47,7 +48,7 @@ internal static class MixPacker
         if (tag.HasValue && tag.Value.HasFlag(MixTag.ENCRYPTED))
         {
             key = Array.FastCreate(56);
-            RandomNumberGeneratorPolyfill.Fill(key);
+            RandomNumberGenerator.Fill(key);
         }
 
         Sdk.Mix.Mix.WriteMetadata(output, metadata, entries, tag, key);
