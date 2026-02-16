@@ -20,7 +20,7 @@
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageVersion Include="SkiaSharp" Version="3.119.2" />
     <PackageVersion Include="System.Collections.Immutable" Version="10.0.2" />
-    <PackageVersion Include="System.IO.Hashing" Version="10.0.2" />
+    <PackageVersion Include="System.IO.Hashing" Version="10.0.3" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Text.Json" Version="10.0.2" />
     <PackageVersion Include="YamlDotNet" Version="16.3.0" />
