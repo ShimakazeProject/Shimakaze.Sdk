@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "dotnet-coverage": {
-      "version": "18.5.1",
+      "version": "18.5.2",
       "commands": [
         "dotnet-coverage"
       ],
