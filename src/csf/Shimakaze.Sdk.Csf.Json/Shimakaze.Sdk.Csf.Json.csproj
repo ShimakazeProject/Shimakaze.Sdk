@@ -7,6 +7,7 @@
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" VersionOverride="10.0.5" />
     <ProjectReference Include="..\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
   </ItemGroup>
 </Project>
