@@ -19,6 +19,9 @@ on:
       - "msbuild/**/*"
       - "src/**/*"
       - "test/**/*"
+    tags:
+      - '*'
+
   pull_request:
     branches:
       - master
