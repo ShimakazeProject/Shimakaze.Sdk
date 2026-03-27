@@ -102,21 +102,22 @@ jobs:
       discussions: write
     runs-on: ubuntu-latest
     steps:
+      - name: 签出仓库
+        uses: actions/checkout@v6
       - name: Download a Build Artifact
         uses: actions/download-artifact@v8
         with:
           name: nuget-packages
           path: artifact
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifact/*
       - name: 推送 Nuget 包
         shell: pwsh
-        continue-on-error: true
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
         run: |
           Set-Location artifact
           dotnet nuget push *.nupkg -s nuget -k $env:NUGET_TOKEN --skip-duplicate
           Set-Location ..
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifact/*
