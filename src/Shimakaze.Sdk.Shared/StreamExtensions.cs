@@ -16,8 +16,16 @@ internal static class StreamExtensions
     public static void Read<T>(this Stream stream, out T destination)
         where T : unmanaged
     {
+#if !NETCOREAPP2_1_OR_GREATER && !NETSTANDARD2_1
+        unsafe
+        {
+            fixed (T* p = &destination)
+                stream.Read(new Span<T>(p, 1));
+        }
+#else
         destination = default;
         stream.Read(MemoryMarshal.CreateSpan(ref destination, 1));
+#endif
     }
 
     /// <inheritdoc cref="Read{T}(Stream, out T)"/>
