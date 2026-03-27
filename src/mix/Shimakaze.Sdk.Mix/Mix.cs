@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 using Shimakaze.Sdk.Mix.Blowfish;
 
 namespace Shimakaze.Sdk.Mix;
@@ -16,7 +18,7 @@ public static class Mix
     /// <param name="bodyOffset">主体起始偏移点</param>
     /// <param name="noFlag">适用于 CnC1 / RA1 的旧MIX </param>
     /// <returns></returns>
-    public static MixEntry[] ReadMetadata(Stream stream, out MixMetadata info, out MixTag flag, out int bodyOffset, bool noFlag = false)
+    public static ImmutableArray<MixEntry> ReadMetadata(Stream stream, out MixMetadata info, out MixTag flag, out int bodyOffset, bool noFlag = false)
     {
         flag = MixTag.NONE;
         bool isEncrypted = false;
@@ -50,7 +52,7 @@ public static class Mix
 
         MixEntry[] entries = Array.FastCreate<MixEntry>(info.Files);
         decryptedStream.Read(entries);
-        return entries;
+        return [.. entries];
     }
 
     /// <summary>
@@ -125,7 +127,7 @@ public static class Mix
     {
         if (entry.Size != source.Length)
             throw new InvalidDataException();
-            
+
         Memory<byte> buffer = Array.FastCreate<byte>(4096);
         int work = 0;
         int offset = bodyOffset + entry.Offset;
