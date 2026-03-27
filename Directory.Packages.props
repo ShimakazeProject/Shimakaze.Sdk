@@ -2,7 +2,8 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <GitVersionTargetFramework>net9.0</GitVersionTargetFramework>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <GitVersionTargetFramework>net10.0</GitVersionTargetFramework>
     <UseProjectNamespaceForGitVersionInformation>true</UseProjectNamespaceForGitVersionInformation>
   </PropertyGroup>
   <ItemGroup>

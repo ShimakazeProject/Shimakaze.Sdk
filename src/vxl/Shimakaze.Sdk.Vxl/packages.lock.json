@@ -1,0 +1,195 @@
+{
+  "version": 2,
+  "dependencies": {
+    ".NETStandard,Version=v2.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[6.7.0, )",
+        "resolved": "6.7.0",
+        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+      },
+      "IDisposableAnalyzers": {
+        "type": "Direct",
+        "requested": "[4.0.8, )",
+        "resolved": "4.0.8",
+        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
+      },
+      "NETStandard.Library": {
+        "type": "Direct",
+        "requested": "[2.0.3, )",
+        "resolved": "2.0.3",
+        "contentHash": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "Polyfill": {
+        "type": "Direct",
+        "requested": "[9.23.0, )",
+        "resolved": "9.23.0",
+        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "nozrOKfEgfrvvswkCfxaumY68RA/x1F3ZYwtwRvva8ul91NCnUzb6MKpl5/P7u9v/nIagVL4OXXj8d007tucxw==",
+        "dependencies": {
+          "System.Memory": "4.6.3",
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2"
+        }
+      },
+      "System.Memory": {
+        "type": "Direct",
+        "requested": "[4.6.3, )",
+        "resolved": "4.6.3",
+        "contentHash": "qdcDOgnFZY40+Q9876JUHnlHu7bosOHX8XISRoH94fwk6hgaeQGSgfZd8srWRZNt5bV9ZW2TljcegDNxsf+96A==",
+        "dependencies": {
+          "System.Buffers": "4.6.1",
+          "System.Numerics.Vectors": "4.6.1",
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2"
+        }
+      },
+      "Microsoft.NETCore.Platforms": {
+        "type": "Transitive",
+        "resolved": "1.1.0",
+        "contentHash": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A=="
+      },
+      "System.Buffers": {
+        "type": "Transitive",
+        "resolved": "4.6.1",
+        "contentHash": "N8GXpmiLMtljq7gwvyS+1QvKT/W2J8sNAvx+HVg4NGmsG/H+2k/y9QI23auLJRterrzCiDH+IWAw4V/GPwsMlw=="
+      },
+      "System.Numerics.Vectors": {
+        "type": "Transitive",
+        "resolved": "4.6.1",
+        "contentHash": "sQxefTnhagrhoq2ReR0D/6K0zJcr9Hrd6kikeXsA1I8kOCboTavcUC4r7TSfpKFeE163uMuxZcyfO1mGO3EN8Q=="
+      },
+      "System.Runtime.CompilerServices.Unsafe": {
+        "type": "Transitive",
+        "resolved": "6.1.2",
+        "contentHash": "2hBr6zdbIBTDE3EhK7NSVNdX58uTK6iHW/P/Axmm9sl1xoGSLqDvMtpecn226TNwHByFokYwJmt/aQQNlO5CRw=="
+      },
+      "shimakaze.sdk.pal": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.5, )",
+          "System.Memory": "[4.6.3, )"
+        }
+      },
+      "shimakaze.sdk.vpl": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Pal": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.5, )",
+          "System.Memory": "[4.6.3, )"
+        }
+      }
+    },
+    "net10.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[6.7.0, )",
+        "resolved": "6.7.0",
+        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+      },
+      "IDisposableAnalyzers": {
+        "type": "Direct",
+        "requested": "[4.0.8, )",
+        "resolved": "4.0.8",
+        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
+      },
+      "Microsoft.NET.ILLink.Tasks": {
+        "type": "Direct",
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "A+5ZuQ0f449tM+MQrhf6R9ZX7lYpjk/ODEwLYKrnF6111rtARx8fVsm4YznUnQiKnnXfaXNBqgxmil6RW3L3SA=="
+      },
+      "Polyfill": {
+        "type": "Direct",
+        "requested": "[9.23.0, )",
+        "resolved": "9.23.0",
+        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
+      },
+      "shimakaze.sdk.pal": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.vpl": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Pal": "[1.0.0, )"
+        }
+      }
+    },
+    "net8.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[6.7.0, )",
+        "resolved": "6.7.0",
+        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+      },
+      "IDisposableAnalyzers": {
+        "type": "Direct",
+        "requested": "[4.0.8, )",
+        "resolved": "4.0.8",
+        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
+      },
+      "Microsoft.NET.ILLink.Tasks": {
+        "type": "Direct",
+        "requested": "[8.0.25, )",
+        "resolved": "8.0.25",
+        "contentHash": "sqX4nmBft05ivqKvUT4nxaN8rT3apCLt9SWFkfRrQPwra1zPwFknQAw1lleuMCKOCLvVmOWwrC2iPSm9RiXZUg=="
+      },
+      "Polyfill": {
+        "type": "Direct",
+        "requested": "[9.23.0, )",
+        "resolved": "9.23.0",
+        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
+      },
+      "shimakaze.sdk.pal": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.vpl": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Pal": "[1.0.0, )"
+        }
+      }
+    },
+    "net9.0": {
+      "GitVersion.MsBuild": {
+        "type": "Direct",
+        "requested": "[6.7.0, )",
+        "resolved": "6.7.0",
+        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+      },
+      "IDisposableAnalyzers": {
+        "type": "Direct",
+        "requested": "[4.0.8, )",
+        "resolved": "4.0.8",
+        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
+      },
+      "Microsoft.NET.ILLink.Tasks": {
+        "type": "Direct",
+        "requested": "[9.0.14, )",
+        "resolved": "9.0.14",
+        "contentHash": "+MeWjj5sGq6Oj/l0E9RPMgXDyCIPxczzCbGuvuVTZFEGiy2S/atsfoAoKUnkEin/GeGpN+HenCzRmiQKSc99eQ=="
+      },
+      "Polyfill": {
+        "type": "Direct",
+        "requested": "[9.23.0, )",
+        "resolved": "9.23.0",
+        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
+      },
+      "shimakaze.sdk.pal": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.vpl": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Pal": "[1.0.0, )"
+        }
+      }
+    }
+  }
+}

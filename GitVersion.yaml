@@ -3,9 +3,6 @@ assembly-versioning-scheme: MajorMinorPatchTag
 assembly-file-versioning-scheme: MajorMinorPatchTag
 branches:
   main:
-    source-branches:
-      - master
-      - develop
     label: 'preview'
   feature:
     regex: ^feat(ures?)?[\/-](?<BranchName>.+)
