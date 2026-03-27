@@ -20,7 +20,7 @@ on:
       - "src/**/*"
       - "test/**/*"
     tags:
-      - '*'
+      - 'v*'
 
   pull_request:
     branches:
@@ -117,6 +117,6 @@ jobs:
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
         run: |
-          Set-Location nupkg
+          Set-Location artifact
           dotnet nuget push *.nupkg -s nuget -k $env:NUGET_TOKEN --skip-duplicate
           Set-Location ..
