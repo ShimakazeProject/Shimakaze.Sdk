@@ -105,7 +105,7 @@ jobs:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v8
         with:
-          name: nuget-packages-windows-latest
+          name: nuget-packages
           path: artifact
       - name: Release
         uses: softprops/action-gh-release@v2
