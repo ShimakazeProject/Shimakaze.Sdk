@@ -18,13 +18,14 @@ internal sealed class ShpBuilder(Palette palette, int startIndex, int endIndex)
     private string _currentName = "";
     private int _currentIndex;
     private string? _iniName;
+    private bool _useShadow = true;
 
     public int Width { get; private set; }
     public int Height { get; private set; }
 
     public async IAsyncEnumerable<ShapeImageFrame> BuildAsync()
     {
-        if (_objects.Count != _shadows.Count)
+        if (_useShadow && _objects.Count != _shadows.Count)
             throw new InvalidDataException("对象帧数列和影子帧数列数量不一致");
         if (_houses.Count is not 0 && _objects.Count != _houses.Count)
             throw new InvalidDataException("启用了所属色帧数列，但对象帧数列和所属色帧数列数量不一致");
@@ -50,6 +51,9 @@ internal sealed class ShpBuilder(Palette palette, int startIndex, int endIndex)
 
             yield return frame.TrimAndCompress();
         }
+
+        if (!_useShadow)
+            yield break;
 
         foreach (var shadow in _shadows)
         {
@@ -140,6 +144,13 @@ internal sealed class ShpBuilder(Palette palette, int startIndex, int endIndex)
             {
                 var dir = line["#pragma base ".Length..].Trim();
                 _workFolder = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path)!, dir));
+                continue;
+            }
+
+            if (line.StartsWith("#pragma shadow ", StringComparison.Ordinal))
+            {
+                var shadow = line["#pragma shadow ".Length..].Trim();
+                _useShadow = !"disable".Equals(shadow, StringComparison.OrdinalIgnoreCase);
                 continue;
             }
 

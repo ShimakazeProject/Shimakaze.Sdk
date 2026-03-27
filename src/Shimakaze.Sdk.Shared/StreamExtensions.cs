@@ -13,20 +13,20 @@ internal static class StreamExtensions
     /// <typeparam name="T"> 非托管结构体 </typeparam>
     /// <param name="stream"> 流 </param>
     /// <param name="destination"> 目标结构体 </param>
-    public static unsafe void Read<T>(this Stream stream, out T destination)
+    public static void Read<T>(this Stream stream, out T destination)
         where T : unmanaged
     {
-        fixed (T* ptr = &destination)
-            stream.Read(new Span<T>(ptr, 1));
+        destination = default;
+        stream.Read(MemoryMarshal.CreateSpan(ref destination, 1));
     }
 
     /// <inheritdoc cref="Read{T}(Stream, out T)"/>
-    public static unsafe void Read<T>(this Stream stream, Span<T> destination)
+    public static void Read<T>(this Stream stream, Span<T> destination)
         where T : unmanaged
         => stream.ReadExactly(MemoryMarshal.AsBytes(destination));
 
     /// <inheritdoc cref="Read{T}(Stream, out T)"/>
-    public static unsafe void Read<T>(this Stream stream, Memory<T> destination)
+    public static void Read<T>(this Stream stream, Memory<T> destination)
         where T : unmanaged
         => stream.Read(destination.Span);
 
