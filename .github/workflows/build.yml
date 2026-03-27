@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - develop
     paths:
       - .github/workflows/build.yml      
       - .config/dotnet-tools.json
@@ -25,9 +24,8 @@ on:
   pull_request:
     branches:
       - master
-      - develop
     paths:
-      - .github/workflows/build.yml
+      - .github/workflows/build.yml      
       - .config/dotnet-tools.json
       - global.json
       - nuget.config

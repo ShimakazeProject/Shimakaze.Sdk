@@ -7,18 +7,18 @@ version: 2
 updates:
   - package-ecosystem: nuget
     directory: /
-    target-branch: develop
+    target-branch: master
     schedule:
       interval: weekly
     commit-message:
-      prefix: ':arrow_up:'
+      prefix: ':arrow_up: build:'
       include: scope
 
   - package-ecosystem: github-actions
     directory: /
-    target-branch: develop
+    target-branch: master
     schedule:
       interval: monthly
     commit-message:
-      prefix: ':arrow_up:'
+      prefix: ':arrow_up: ci:'
       include: scope
