@@ -1,4 +1,13 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/GitTools/GitVersion/refs/heads/main/schemas/6.2/GitVersion.configuration.json
 workflow: GitHubFlow/v1
 assembly-versioning-scheme: MajorMinorPatchTag
 assembly-file-versioning-scheme: MajorMinorPatchTag
+branches:
+  main:
+    source-branches:
+      - master
+      - develop
+    label: 'preview'
+  feature:
+    regex: ^feat(ures?)?[\/-](?<BranchName>.+)
+  pull-request:
+    label: pr{Number}
