@@ -28,6 +28,7 @@ public sealed record class TemplateFile(
     /// <returns></returns>
     public static TemplateFile ReadFrom(Stream stream, bool isometric = true)
     {
+        var zero = stream.Position;
         stream.Read(out TemplateFileHeader header);
         var count = header.BlockWidth * header.BlockHeight;
         var tileSize = (int)(header.BlockImageWidth * header.BlockImageHeight);
@@ -38,15 +39,22 @@ public sealed record class TemplateFile(
         stream.Read(offsets);
 
         List<TemplateTileCell> tiles = new(offsets.Length);
-        for (int i = 0; i < tiles.Count; i++)
+        for (int i = 0; i < offsets.Length; i++)
         {
+            stream.Seek(zero, SeekOrigin.Begin);
+            stream.Seek(offsets[i], SeekOrigin.Current);
+
             stream.Read(out TemplateTileCellHeader tileHeader);
             var tile = Array.FastCreate(tileSize);
             stream.ReadExactly(tile);
             var height = Array.FastCreate(tileSize);
             stream.ReadExactly(height);
-            var extra = Array.FastCreate((int)(tileHeader.ExtraWidth * tileHeader.ExtraHeight));
-            stream.ReadExactly(extra);
+            byte[] extra = [];
+            if (tileHeader.Flags.HasFlag(TemplateTileCellFlags.HasExtraData))
+            {
+                extra = Array.FastCreate((int)(tileHeader.ExtraWidth * tileHeader.ExtraHeight));
+                stream.ReadExactly(extra);
+            }
             tiles.Add(new(tileHeader, [.. tile], [.. height], [.. extra]));
         }
 

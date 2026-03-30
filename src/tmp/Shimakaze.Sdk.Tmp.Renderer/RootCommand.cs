@@ -78,19 +78,83 @@ internal sealed class RootCommand
             UsePrompt();
 
         Assert();
-
         Palette palette;
         await using (var fs = File.OpenRead(Palette))
             palette = Pal.Palette.ReadFrom(fs);
 
         TemplateFile template;
-        await using (var fs = File.OpenRead(Palette))
+        await using (var fs = File.OpenRead(Template))
             template = TemplateFile.ReadFrom(fs);
 
-        int width = (int)((template.Header.BlockWidth + template.Header.BlockHeight) * (template.Header.BlockImageWidth / 2.0));
-        int height = (int)((template.Header.BlockWidth + template.Header.BlockHeight) * (template.Header.BlockImageHeight / 2.0));
-        using SKBitmap bitmap = new(width, height, true);
-        using SKCanvas canvas = new(bitmap);
-        // TODO: 待完成绘制
+        int tileW = (int)template.Header.BlockImageWidth;
+        int tileH = (int)template.Header.BlockImageHeight;
+        int halfW = tileW / 2;
+        int halfH = tileH / 2;
+
+        // 先计算所有瓦片的边界框
+        // TileHeader.X 和 Y 是像素偏移量，不是网格坐标
+        int minX = int.MaxValue, minY = int.MaxValue;
+        int maxX = int.MinValue, maxY = int.MinValue;
+        foreach (var tile in template.Tiles)
+        {
+            int tx = tile.Header.X;
+            int ty = tile.Header.Y;
+            minX = Math.Min(minX, tx);
+            minY = Math.Min(minY, ty);
+            maxX = Math.Max(maxX, tx + tileW);
+            maxY = Math.Max(maxY, ty + tileH);
+        }
+        int pixelsWidth = maxX - minX;
+        int pixelsHeight = maxY - minY;
+        SKColor[] pixels = Array.FastCreate<SKColor>(pixelsWidth * pixelsHeight);
+
+        foreach (var tile in template.Tiles)
+        {
+            var indexes = tile.Tile.AsSpan();
+
+            // TileHeader.X 和 Y 是像素偏移量，直接使用
+            int tileX = tile.Header.X - minX;
+            int tileY = tile.Header.Y - minY;
+
+            // 绘制等距瓦片
+            int tilePos = 0;
+            int width = 4;
+            for (int y = 0; y < 29; y++)
+            {
+                // 等距瓦片最宽处为60像素，居中放置需要偏移 halfW
+                int outX = tileX + halfW - width / 2;
+                int outY = tileY + y;
+
+                for (int x = 0; x < width; x++)
+                {
+                    if (tilePos >= indexes.Length)
+                        continue;
+                    
+                    int colorIndex = indexes[tilePos];
+                    if (colorIndex < palette.Colors.Length)
+                    {
+                        DisplayColor color = palette[colorIndex];
+                        int pixelIndex = outY * pixelsWidth + (outX + x);
+                        if (pixelIndex >= 0 && pixelIndex < pixels.Length)
+                        {
+                            pixels[pixelIndex] = new SKColor(color.Red, color.Green, color.Blue);
+                        }
+                    }
+                    tilePos++;
+                }
+
+                // 前 15 行宽度增加，后 14 行宽度减少（共 29 行，底部一行是空的）
+                if (y < 14)
+                    width += 4;
+                else
+                    width -= 4;
+            }
+        }
+
+        using SKBitmap bitmap = new(pixelsWidth, pixelsHeight, SKColorType.Rgba8888, SKAlphaType.Premul);
+        bitmap.Pixels = pixels;
+
+        await using (var fs = File.Create(Output))
+            bitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
     }
 }
