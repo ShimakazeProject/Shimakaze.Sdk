@@ -44,6 +44,10 @@
     <File Path="nuget.config" />
     <File Path="ReadMe.md" />
   </Folder>
+  <Folder Name="/tmp/">
+    <Project Path="src/tmp/Shimakaze.Sdk.Tmp.Renderer/Shimakaze.Sdk.Tmp.Renderer.csproj" />
+    <Project Path="src/tmp/Shimakaze.Sdk.Tmp/Shimakaze.Sdk.Tmp.csproj" />
+  </Folder>
   <Folder Name="/vpl/">
     <Project Path="src/vpl/Shimakaze.Sdk.Vpl.Editor/Shimakaze.Sdk.Vpl.Editor.csproj" />
     <Project Path="src/vpl/Shimakaze.Sdk.Vpl/Shimakaze.Sdk.Vpl.csproj" />

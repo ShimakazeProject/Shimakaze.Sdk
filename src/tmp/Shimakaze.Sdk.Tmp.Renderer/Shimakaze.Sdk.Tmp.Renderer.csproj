@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotMake.CommandLine" />
+    <PackageReference Include="Sharprompt" />
+    <PackageReference Include="SkiaSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\pal\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Tmp\Shimakaze.Sdk.Tmp.csproj" />
+  </ItemGroup>
+
+</Project>
