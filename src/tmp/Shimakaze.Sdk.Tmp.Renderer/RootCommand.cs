@@ -110,6 +110,19 @@ internal sealed class RootCommand
             minY = Math.Min(minY, ty);
             maxX = Math.Max(maxX, tx + tileW);
             maxY = Math.Max(maxY, ty + tileH);
+
+            // 考虑 ExtraData 的边界
+            if (tile.Header.Flags.HasFlag(TemplateTileCellFlags.HasExtraData) && tile.Extra.Length > 0)
+            {
+                int extraX = tile.Header.ExtraX;
+                int extraY = tile.Header.ExtraY - tile.Header.Height * heightOffset;
+                int extraWidth = (int)tile.Header.ExtraWidth;
+                int extraHeight = (int)tile.Header.ExtraHeight;
+                minX = Math.Min(minX, extraX);
+                minY = Math.Min(minY, extraY);
+                maxX = Math.Max(maxX, extraX + extraWidth);
+                maxY = Math.Max(maxY, extraY + extraHeight);
+            }
         }
         int pixelsWidth = maxX - minX;
         int pixelsHeight = maxY - minY;
@@ -139,6 +152,13 @@ internal sealed class RootCommand
                         continue;
 
                     int colorIndex = indexes[tilePos];
+                    // 跳过透明色（索引0）
+                    if (colorIndex == 0)
+                    {
+                        tilePos++;
+                        continue;
+                    }
+
                     if (colorIndex < palette.Colors.Length)
                     {
                         DisplayColor color = palette[colorIndex];
