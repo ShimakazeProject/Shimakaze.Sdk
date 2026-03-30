@@ -91,14 +91,20 @@ internal sealed class RootCommand
         int halfW = tileW / 2;
         int halfH = tileH / 2;
 
+        // 高度偏移系数：每单位高度对应的像素偏移量
+        // 等距瓦片的视觉高度是 tileH/2 = 15，所以每级高度偏移15像素
+        int heightOffset = halfH; // 15
+
         // 先计算所有瓦片的边界框
         // TileHeader.X 和 Y 是像素偏移量，不是网格坐标
+        // 需要考虑 Header.Height 对 Y 坐标的影响
         int minX = int.MaxValue, minY = int.MaxValue;
         int maxX = int.MinValue, maxY = int.MinValue;
         foreach (var tile in template.Tiles)
         {
             int tx = tile.Header.X;
-            int ty = tile.Header.Y;
+            // 高度越高，瓦片画得越高（Y坐标越小）
+            int ty = tile.Header.Y - tile.Header.Height * heightOffset;
             minX = Math.Min(minX, tx);
             minY = Math.Min(minY, ty);
             maxX = Math.Max(maxX, tx + tileW);
@@ -113,8 +119,9 @@ internal sealed class RootCommand
             var indexes = tile.Tile.AsSpan();
 
             // TileHeader.X 和 Y 是像素偏移量，直接使用
+            // 根据 Header.Height 调整 Y 坐标，高度越高，画得越高
             int tileX = tile.Header.X - minX;
-            int tileY = tile.Header.Y - minY;
+            int tileY = tile.Header.Y - minY - tile.Header.Height * heightOffset;
 
             // 绘制等距瓦片
             int tilePos = 0;
