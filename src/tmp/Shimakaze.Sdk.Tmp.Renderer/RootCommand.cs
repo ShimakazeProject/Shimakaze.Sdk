@@ -5,6 +5,7 @@ using DotMake.CommandLine;
 using Sharprompt;
 
 using Shimakaze.Sdk.Pal;
+using Shimakaze.Sdk.Tmp;
 
 using SkiaSharp;
 
@@ -123,7 +124,7 @@ internal sealed class RootCommand
             int tileX = tile.Header.X - minX;
             int tileY = tile.Header.Y - minY - tile.Header.Height * heightOffset;
 
-            // 绘制等距瓦片
+            // 绘制等距瓦片（菱形格子本体数据）
             int tilePos = 0;
             int width = 4;
             for (int y = 0; y < 29; y++)
@@ -136,7 +137,7 @@ internal sealed class RootCommand
                 {
                     if (tilePos >= indexes.Length)
                         continue;
-                    
+
                     int colorIndex = indexes[tilePos];
                     if (colorIndex < palette.Colors.Length)
                     {
@@ -155,6 +156,44 @@ internal sealed class RootCommand
                     width += 4;
                 else
                     width -= 4;
+            }
+
+            // 绘制 Extra 数据（菱形以外的扩展数据）
+            // Extra 数据是矩形图像，需要根据 ExtraX 和 ExtraY 偏移绘制
+            if (tile.Header.Flags.HasFlag(TemplateTileCellFlags.HasExtraData) && tile.Extra.Length > 0)
+            {
+                var extraData = tile.Extra.AsSpan();
+                int extraX = tile.Header.ExtraX - minX;
+                int extraY = tile.Header.ExtraY - minY - tile.Header.Height * heightOffset;
+                int extraWidth = (int)tile.Header.ExtraWidth;
+                int extraHeight = (int)tile.Header.ExtraHeight;
+
+                for (int y = 0; y < extraHeight; y++)
+                {
+                    for (int x = 0; x < extraWidth; x++)
+                    {
+                        int extraPos = y * extraWidth + x;
+                        if (extraPos >= extraData.Length)
+                            continue;
+
+                        int colorIndex = extraData[extraPos];
+                        // 跳过透明色（索引0）
+                        if (colorIndex == 0)
+                            continue;
+
+                        if (colorIndex >= palette.Colors.Length)
+                            continue;
+
+                        DisplayColor color = palette[colorIndex];
+                        int outX = extraX + x;
+                        int outY = extraY + y;
+                        int pixelIndex = outY * pixelsWidth + outX;
+                        if (pixelIndex >= 0 && pixelIndex < pixels.Length)
+                        {
+                            pixels[pixelIndex] = new SKColor(color.Red, color.Green, color.Blue);
+                        }
+                    }
+                }
             }
         }
 
