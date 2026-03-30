@@ -115,7 +115,7 @@ public sealed class SixelWriter(TextWriter writer, bool leaveOpen = false) : IDi
 
         if (_latestSixel is not null && _latestSixel != sixel)
             Flush();
-        
+
         _repeatCounter += count;
         _latestSixel = sixel;
 

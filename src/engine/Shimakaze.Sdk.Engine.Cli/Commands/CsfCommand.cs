@@ -13,7 +13,7 @@ internal sealed class CsfCommand
     [CliArgument(Description = nameof(Resource.Command_Csf_Input_Description))]
     public required FileInfo Input { get; set; }
 
-    [CliArgument(Description =  nameof(Resource.Command_Csf_Output_Description), Required = false)]
+    [CliArgument(Description = nameof(Resource.Command_Csf_Output_Description), Required = false)]
     public FileInfo? Output { get; set; } = null;
 
     [CliOption(Description = nameof(Resource.Command_Csf_InputFormat_Description), Required = false)]

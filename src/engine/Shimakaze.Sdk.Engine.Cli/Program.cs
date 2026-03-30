@@ -12,4 +12,4 @@ CliSettings settings = new()
     Theme = CliTheme.Blue,
 };
 
-return await Cli.RunAsync<RootCommand>(args,settings);
+return await Cli.RunAsync<RootCommand>(args, settings);

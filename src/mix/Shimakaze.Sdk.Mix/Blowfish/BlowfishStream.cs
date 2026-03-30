@@ -1,4 +1,5 @@
 namespace Shimakaze.Sdk.Mix.Blowfish;
+
 internal sealed class BlowfishStream(Stream stream, ReadOnlySpan<byte> key) : Stream
 {
     private readonly Codec _codec = new(key);
