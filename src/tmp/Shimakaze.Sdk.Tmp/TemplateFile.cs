@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 namespace Shimakaze.Sdk.Tmp;
 
@@ -18,4 +18,51 @@ public sealed record class TemplateFile(
     TemplateFileHeader Header,
     ImmutableArray<uint> Offsets,
     ImmutableArray<TemplateTileCell> Tiles
-);
+)
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static TemplateFile ReadFile(Stream stream)
+    {
+        stream.Read(out TemplateFileHeader header);
+        var count = header.BlockWidth * header.BlockHeight;
+        var offsets = Array.FastCreate<uint>((int)count);
+        stream.Read(offsets);
+
+        List<TemplateTileCell> tiles = new(offsets.Length);
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            stream.Read(out TemplateTileCellHeader tileHeader);
+            var tile = Array.FastCreate(900);
+            stream.ReadExactly(tile);
+            var height = Array.FastCreate(900);
+            stream.ReadExactly(height);
+            var extra = Array.FastCreate((int)(tileHeader.ExtraWidth * tileHeader.ExtraHeight));
+            stream.ReadExactly(extra);
+            tiles.Add(new(tileHeader, [.. tile], [.. height], [.. extra]));
+        }
+
+        return new(header, [.. offsets], [.. tiles]);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="file"></param>
+    public static void WriteFile(Stream stream, in TemplateFile file)
+    {
+        stream.Write(file.Header);
+        stream.Write(file.Offsets.AsSpan());
+        foreach (var tile in file.Tiles)
+        {
+            stream.Write(tile.Header);
+            stream.Write(tile.Tile.AsSpan());
+            stream.Write(tile.Height.AsSpan());
+            stream.Write(tile.Extra.AsSpan());
+        }
+    }
+}

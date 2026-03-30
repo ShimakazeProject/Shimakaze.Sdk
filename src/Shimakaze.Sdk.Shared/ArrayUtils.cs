@@ -5,7 +5,7 @@ namespace Shimakaze.Sdk;
 /// </summary>
 internal static class ArrayUtils
 {
-    extension(Array a)
+    extension(Array)
     {
         public static byte[] FastCreate(int length) => FastCreate<byte>(length);
 
