@@ -24,11 +24,16 @@ public sealed record class TemplateFile(
     /// 
     /// </summary>
     /// <param name="stream"></param>
+    /// <param name="isometric"></param>
     /// <returns></returns>
-    public static TemplateFile ReadFile(Stream stream)
+    public static TemplateFile ReadFrom(Stream stream, bool isometric = true)
     {
         stream.Read(out TemplateFileHeader header);
         var count = header.BlockWidth * header.BlockHeight;
+        var tileSize = (int)(header.BlockImageWidth * header.BlockImageHeight);
+        if (isometric)
+            tileSize /= 2;
+
         var offsets = Array.FastCreate<uint>((int)count);
         stream.Read(offsets);
 
@@ -36,9 +41,9 @@ public sealed record class TemplateFile(
         for (int i = 0; i < tiles.Count; i++)
         {
             stream.Read(out TemplateTileCellHeader tileHeader);
-            var tile = Array.FastCreate(900);
+            var tile = Array.FastCreate(tileSize);
             stream.ReadExactly(tile);
-            var height = Array.FastCreate(900);
+            var height = Array.FastCreate(tileSize);
             stream.ReadExactly(height);
             var extra = Array.FastCreate((int)(tileHeader.ExtraWidth * tileHeader.ExtraHeight));
             stream.ReadExactly(extra);
@@ -53,7 +58,7 @@ public sealed record class TemplateFile(
     /// </summary>
     /// <param name="stream"></param>
     /// <param name="file"></param>
-    public static void WriteFile(Stream stream, in TemplateFile file)
+    public static void WriteTo(Stream stream, in TemplateFile file)
     {
         stream.Write(file.Header);
         stream.Write(file.Offsets.AsSpan());

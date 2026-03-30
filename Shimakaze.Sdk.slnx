@@ -45,6 +45,7 @@
     <File Path="ReadMe.md" />
   </Folder>
   <Folder Name="/tmp/">
+    <Project Path="src/tmp/Shimakaze.Sdk.Tmp.Renderer/Shimakaze.Sdk.Tmp.Renderer.csproj" />
     <Project Path="src/tmp/Shimakaze.Sdk.Tmp/Shimakaze.Sdk.Tmp.csproj" />
   </Folder>
   <Folder Name="/vpl/">
