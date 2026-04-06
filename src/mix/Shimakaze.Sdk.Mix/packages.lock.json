@@ -34,9 +34,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "HX4+jlB3OTAn+CiNLzuen/I7jgYLfNxDTsX3A7Ij285WYEbNwXPh1haHgeDinDum+m/pviBb8idK4JNUz1qS0Q=="
       },
       "System.Collections.Immutable": {
         "type": "Direct",
@@ -96,120 +96,6 @@
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.1.2"
         }
-      }
-    },
-    "net10.0": {
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Microsoft.Bcl.AsyncInterfaces": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
-      },
-      "Microsoft.NET.ILLink.Tasks": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "A+5ZuQ0f449tM+MQrhf6R9ZX7lYpjk/ODEwLYKrnF6111rtARx8fVsm4YznUnQiKnnXfaXNBqgxmil6RW3L3SA=="
-      },
-      "Polyfill": {
-        "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
-      },
-      "System.IO.Hashing": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
-      }
-    },
-    "net8.0": {
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Microsoft.Bcl.AsyncInterfaces": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
-      },
-      "Microsoft.NET.ILLink.Tasks": {
-        "type": "Direct",
-        "requested": "[8.0.25, )",
-        "resolved": "8.0.25",
-        "contentHash": "sqX4nmBft05ivqKvUT4nxaN8rT3apCLt9SWFkfRrQPwra1zPwFknQAw1lleuMCKOCLvVmOWwrC2iPSm9RiXZUg=="
-      },
-      "Polyfill": {
-        "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
-      },
-      "System.IO.Hashing": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
-      }
-    },
-    "net9.0": {
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Microsoft.Bcl.AsyncInterfaces": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
-      },
-      "Microsoft.NET.ILLink.Tasks": {
-        "type": "Direct",
-        "requested": "[9.0.14, )",
-        "resolved": "9.0.14",
-        "contentHash": "+MeWjj5sGq6Oj/l0E9RPMgXDyCIPxczzCbGuvuVTZFEGiy2S/atsfoAoKUnkEin/GeGpN+HenCzRmiQKSc99eQ=="
-      },
-      "Polyfill": {
-        "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
-      },
-      "System.IO.Hashing": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       }
     }
   }

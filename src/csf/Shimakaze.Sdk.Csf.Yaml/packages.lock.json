@@ -25,9 +25,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "HX4+jlB3OTAn+CiNLzuen/I7jgYLfNxDTsX3A7Ij285WYEbNwXPh1haHgeDinDum+m/pviBb8idK4JNUz1qS0Q=="
       },
       "System.Collections.Immutable": {
         "type": "Direct",
@@ -82,93 +82,6 @@
           "System.Collections.Immutable": "[10.0.5, )",
           "System.Memory": "[4.6.3, )"
         }
-      }
-    },
-    "net10.0": {
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Polyfill": {
-        "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
-      },
-      "YamlDotNet": {
-        "type": "Direct",
-        "requested": "[16.3.0, )",
-        "resolved": "16.3.0",
-        "contentHash": "SgMOdxbz8X65z8hraIs6hOEdnkH6hESTAIUa7viEngHOYaH+6q5XJmwr1+yb9vJpNQ19hCQY69xbFsLtXpobQA=="
-      },
-      "shimakaze.sdk.csf": {
-        "type": "Project"
-      }
-    },
-    "net8.0": {
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Polyfill": {
-        "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
-      },
-      "YamlDotNet": {
-        "type": "Direct",
-        "requested": "[16.3.0, )",
-        "resolved": "16.3.0",
-        "contentHash": "SgMOdxbz8X65z8hraIs6hOEdnkH6hESTAIUa7viEngHOYaH+6q5XJmwr1+yb9vJpNQ19hCQY69xbFsLtXpobQA=="
-      },
-      "shimakaze.sdk.csf": {
-        "type": "Project"
-      }
-    },
-    "net9.0": {
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Polyfill": {
-        "type": "Direct",
-        "requested": "[9.23.0, )",
-        "resolved": "9.23.0",
-        "contentHash": "YOADCfBR/n7iZrI7RNsAl+XQuC7SPR7gtNiOAw9VkKbHtc7rWHhHWYVsaxA2mP6qmm2+C++BJsX3X9Q0ZP8GBQ=="
-      },
-      "YamlDotNet": {
-        "type": "Direct",
-        "requested": "[16.3.0, )",
-        "resolved": "16.3.0",
-        "contentHash": "SgMOdxbz8X65z8hraIs6hOEdnkH6hESTAIUa7viEngHOYaH+6q5XJmwr1+yb9vJpNQ19hCQY69xbFsLtXpobQA=="
-      },
-      "shimakaze.sdk.csf": {
-        "type": "Project"
       }
     }
   }
