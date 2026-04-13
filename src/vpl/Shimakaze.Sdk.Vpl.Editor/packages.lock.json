@@ -28,9 +28,9 @@
       },
       "Sharprompt": {
         "type": "Direct",
-        "requested": "[3.0.1, )",
-        "resolved": "3.0.1",
-        "contentHash": "SUsdtFgpf0CJVSuW+6bsNNSRj5V3GzTNENCav9PGlwtAi8JueG4DDeKa2cAyM6wnLTdXRwsB/S21VBg6J6OksA=="
+        "requested": "[3.1.0, )",
+        "resolved": "3.1.0",
+        "contentHash": "CiTy2Qh6Qz0Euq0EjSGAp5N2oMItllujev5tXn3ik9zCLd4aiojWH0URPOkE6SHM26QxKeDujNXubzBQLSx29A=="
       },
       "shimakaze.sdk.pal": {
         "type": "Project"
