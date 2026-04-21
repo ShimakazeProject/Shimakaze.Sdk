@@ -4,11 +4,11 @@
     "net9.0": {
       "DotMake.CommandLine": {
         "type": "Direct",
-        "requested": "[3.1.0, )",
-        "resolved": "3.1.0",
-        "contentHash": "n9l6n2jl2vZpAWhjt+UGe8dm1t/w1hfcZoldBPSfWWj+5EBMVbMsn3jdWJTww2bdMx4yT3wix4J3GH4qi96LZw==",
+        "requested": "[3.2.0, )",
+        "resolved": "3.2.0",
+        "contentHash": "fRNx7V2NZCSomKyEKExETRqoDYOiA6LZtxmD1qJiRO6PFkvJAlqqKEnjYlYo8GkV0S2e9Xy+m9KLaz5nPLm9dA==",
         "dependencies": {
-          "System.CommandLine": "2.0.0"
+          "System.CommandLine": "[2.0.5, 3.0.0)"
         }
       },
       "GitVersion.MsBuild": {
@@ -76,8 +76,8 @@
       },
       "System.CommandLine": {
         "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "Bjklzc5NoxqAGFi7BcGlY2TWAdB06Bq3a5sfRr3ubMRU80Mf98eyq3Y2UgR6xRV0TLznZmfe5T7mUjOunRNcdA=="
+        "resolved": "2.0.5",
+        "contentHash": "2XtWAPk1G6arpe3OCFNrYYuf6iIboznxs2elJSGgd8e0euou7LfGYFon6hBEfDWNtOLr0M3+oUVgy1a5EGa41A=="
       },
       "System.Globalization": {
         "type": "Transitive",
@@ -253,21 +253,21 @@
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "[10.0.5, )",
-          "System.IO.Hashing": "[10.0.5, )"
+          "Microsoft.Bcl.AsyncInterfaces": "[10.0.6, )",
+          "System.IO.Hashing": "[10.0.6, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
+        "requested": "[10.0.6, )",
+        "resolved": "10.0.6",
+        "contentHash": "Os4eB/5WwgiBoFpOmQjEpo8sbFzbWrONvfqK52E7pl4YQoIWFlyeWdOxxxPMHNYFCDD3biT5NzDzNZCo/6kDLw=="
       },
       "System.IO.Hashing": {
         "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
+        "requested": "[10.0.6, )",
+        "resolved": "10.0.6",
+        "contentHash": "lbMLkqFekDR4DeFd26eEfrG2HlvixIfs22uk/e2+9/NJ7WxMycVVakcQpuJvvqgc9XxwEgSd/Td+dZA+TjDDwA=="
       }
     }
   }

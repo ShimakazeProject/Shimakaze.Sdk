@@ -1,305 +1,14 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0": {
-      "DotMake.CommandLine": {
-        "type": "Direct",
-        "requested": "[3.1.0, )",
-        "resolved": "3.1.0",
-        "contentHash": "n9l6n2jl2vZpAWhjt+UGe8dm1t/w1hfcZoldBPSfWWj+5EBMVbMsn3jdWJTww2bdMx4yT3wix4J3GH4qi96LZw==",
-        "dependencies": {
-          "System.CommandLine": "2.0.0"
-        }
-      },
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Microsoft.NET.ILLink.Tasks": {
-        "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "A+5ZuQ0f449tM+MQrhf6R9ZX7lYpjk/ODEwLYKrnF6111rtARx8fVsm4YznUnQiKnnXfaXNBqgxmil6RW3L3SA=="
-      },
-      "SkiaSharp.NativeAssets.macOS": {
-        "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "I2jMGQ/26KOnc6iAoR+Mxh9vSJJ2vioJyj9aJ9OL5yEZyXothXJxf4vBMqnSaiXMqiiU1scG7KqtT0CLkmMmWA=="
-      },
-      "SkiaSharp.NativeAssets.Win32": {
-        "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "uYe+da6+GXVgPKkCopzvIZ83DmC8SXXKeUAPrNcztJNsg0SjPQAxfKMOPZqmVjbzznrq/QUIjLUlJSZV/e0IPA=="
-      },
-      "System.CommandLine": {
-        "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "Bjklzc5NoxqAGFi7BcGlY2TWAdB06Bq3a5sfRr3ubMRU80Mf98eyq3Y2UgR6xRV0TLznZmfe5T7mUjOunRNcdA=="
-      },
-      "shimakaze.sdk.csf": {
-        "type": "Project"
-      },
-      "shimakaze.sdk.csf.json": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "[10.0.5, )",
-          "Shimakaze.Sdk.Csf": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.csf.xml": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.csf.yaml": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )",
-          "YamlDotNet": "[16.3.0, )"
-        }
-      },
-      "shimakaze.sdk.engine": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )",
-          "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
-          "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",
-          "Shimakaze.Sdk.Csf.Yaml": "[1.0.0, )",
-          "Shimakaze.Sdk.Mix": "[1.0.0, )",
-          "Shimakaze.Sdk.Pal": "[1.0.0, )",
-          "Shimakaze.Sdk.Shp": "[1.0.0, )",
-          "Shimakaze.Sdk.Vxl": "[1.0.0, )",
-          "SkiaSharp": "[3.119.2, )",
-          "System.IO.Hashing": "[10.0.5, )"
-        }
-      },
-      "shimakaze.sdk.mix": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "[10.0.5, )",
-          "System.IO.Hashing": "[10.0.5, )"
-        }
-      },
-      "shimakaze.sdk.pal": {
-        "type": "Project"
-      },
-      "shimakaze.sdk.shp": {
-        "type": "Project"
-      },
-      "shimakaze.sdk.vpl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Pal": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.vxl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Vpl": "[1.0.0, )"
-        }
-      },
-      "Microsoft.Bcl.AsyncInterfaces": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
-      },
-      "SkiaSharp": {
-        "type": "CentralTransitive",
-        "requested": "[3.119.2, )",
-        "resolved": "3.119.2",
-        "contentHash": "nmy2dOFWPvQKMglfpjz8+/xQQcSrL9jzul3cUyzCJVSwrmSAw+6B1sEgU7jt6NZBptwGq2k/V0kjyu2GizMFtg==",
-        "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "3.119.2",
-          "SkiaSharp.NativeAssets.macOS": "3.119.2"
-        }
-      },
-      "System.IO.Hashing": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
-      },
-      "YamlDotNet": {
-        "type": "CentralTransitive",
-        "requested": "[16.3.0, )",
-        "resolved": "16.3.0",
-        "contentHash": "SgMOdxbz8X65z8hraIs6hOEdnkH6hESTAIUa7viEngHOYaH+6q5XJmwr1+yb9vJpNQ19hCQY69xbFsLtXpobQA=="
-      }
-    },
-    "net8.0": {
-      "DotMake.CommandLine": {
-        "type": "Direct",
-        "requested": "[3.1.0, )",
-        "resolved": "3.1.0",
-        "contentHash": "n9l6n2jl2vZpAWhjt+UGe8dm1t/w1hfcZoldBPSfWWj+5EBMVbMsn3jdWJTww2bdMx4yT3wix4J3GH4qi96LZw==",
-        "dependencies": {
-          "System.CommandLine": "2.0.0"
-        }
-      },
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
-      },
-      "IDisposableAnalyzers": {
-        "type": "Direct",
-        "requested": "[4.0.8, )",
-        "resolved": "4.0.8",
-        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
-      },
-      "Microsoft.NET.ILLink.Tasks": {
-        "type": "Direct",
-        "requested": "[8.0.25, )",
-        "resolved": "8.0.25",
-        "contentHash": "sqX4nmBft05ivqKvUT4nxaN8rT3apCLt9SWFkfRrQPwra1zPwFknQAw1lleuMCKOCLvVmOWwrC2iPSm9RiXZUg=="
-      },
-      "SkiaSharp.NativeAssets.macOS": {
-        "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "I2jMGQ/26KOnc6iAoR+Mxh9vSJJ2vioJyj9aJ9OL5yEZyXothXJxf4vBMqnSaiXMqiiU1scG7KqtT0CLkmMmWA=="
-      },
-      "SkiaSharp.NativeAssets.Win32": {
-        "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "uYe+da6+GXVgPKkCopzvIZ83DmC8SXXKeUAPrNcztJNsg0SjPQAxfKMOPZqmVjbzznrq/QUIjLUlJSZV/e0IPA=="
-      },
-      "System.CommandLine": {
-        "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "Bjklzc5NoxqAGFi7BcGlY2TWAdB06Bq3a5sfRr3ubMRU80Mf98eyq3Y2UgR6xRV0TLznZmfe5T7mUjOunRNcdA=="
-      },
-      "System.IO.Pipelines": {
-        "type": "Transitive",
-        "resolved": "10.0.5",
-        "contentHash": "8/ZHN/j2y1t+7McdCf1wXku2/c7wtrGLz3WQabIoPuLAn3bHDWT6YOJYreJq8sCMPSo6c8iVYXUdLlFGX5PEqw=="
-      },
-      "System.Text.Encodings.Web": {
-        "type": "Transitive",
-        "resolved": "10.0.5",
-        "contentHash": "opvD/nKTzGKA7GVntZ9L823kN6IxgHQfuxY+VI9gv8VE1Y7CSKoi/QS1EYDQiA63MqtZsD7X6zkISd2ZQJohTQ=="
-      },
-      "shimakaze.sdk.csf": {
-        "type": "Project"
-      },
-      "shimakaze.sdk.csf.json": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "[10.0.5, )",
-          "Shimakaze.Sdk.Csf": "[1.0.0, )",
-          "System.Text.Json": "[10.0.5, )"
-        }
-      },
-      "shimakaze.sdk.csf.xml": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.csf.yaml": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )",
-          "YamlDotNet": "[16.3.0, )"
-        }
-      },
-      "shimakaze.sdk.engine": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )",
-          "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
-          "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",
-          "Shimakaze.Sdk.Csf.Yaml": "[1.0.0, )",
-          "Shimakaze.Sdk.Mix": "[1.0.0, )",
-          "Shimakaze.Sdk.Pal": "[1.0.0, )",
-          "Shimakaze.Sdk.Shp": "[1.0.0, )",
-          "Shimakaze.Sdk.Vxl": "[1.0.0, )",
-          "SkiaSharp": "[3.119.2, )",
-          "System.IO.Hashing": "[10.0.5, )"
-        }
-      },
-      "shimakaze.sdk.mix": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "[10.0.5, )",
-          "System.IO.Hashing": "[10.0.5, )"
-        }
-      },
-      "shimakaze.sdk.pal": {
-        "type": "Project"
-      },
-      "shimakaze.sdk.shp": {
-        "type": "Project"
-      },
-      "shimakaze.sdk.vpl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Pal": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.vxl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Vpl": "[1.0.0, )"
-        }
-      },
-      "Microsoft.Bcl.AsyncInterfaces": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
-      },
-      "SkiaSharp": {
-        "type": "CentralTransitive",
-        "requested": "[3.119.2, )",
-        "resolved": "3.119.2",
-        "contentHash": "nmy2dOFWPvQKMglfpjz8+/xQQcSrL9jzul3cUyzCJVSwrmSAw+6B1sEgU7jt6NZBptwGq2k/V0kjyu2GizMFtg==",
-        "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "3.119.2",
-          "SkiaSharp.NativeAssets.macOS": "3.119.2"
-        }
-      },
-      "System.IO.Hashing": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
-      },
-      "System.Text.Json": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "vW2zhkWziyfhoSXNf42mTWyilw+vfwBGOsODDsHSFtOIY6LCgfRVUyaAilLEL4Kc1fzhaxcep5pS0VWYPSDW0w==",
-        "dependencies": {
-          "System.IO.Pipelines": "10.0.5",
-          "System.Text.Encodings.Web": "10.0.5"
-        }
-      },
-      "YamlDotNet": {
-        "type": "CentralTransitive",
-        "requested": "[16.3.0, )",
-        "resolved": "16.3.0",
-        "contentHash": "SgMOdxbz8X65z8hraIs6hOEdnkH6hESTAIUa7viEngHOYaH+6q5XJmwr1+yb9vJpNQ19hCQY69xbFsLtXpobQA=="
-      }
-    },
     "net9.0": {
       "DotMake.CommandLine": {
         "type": "Direct",
-        "requested": "[3.1.0, )",
-        "resolved": "3.1.0",
-        "contentHash": "n9l6n2jl2vZpAWhjt+UGe8dm1t/w1hfcZoldBPSfWWj+5EBMVbMsn3jdWJTww2bdMx4yT3wix4J3GH4qi96LZw==",
+        "requested": "[3.2.0, )",
+        "resolved": "3.2.0",
+        "contentHash": "fRNx7V2NZCSomKyEKExETRqoDYOiA6LZtxmD1qJiRO6PFkvJAlqqKEnjYlYo8GkV0S2e9Xy+m9KLaz5nPLm9dA==",
         "dependencies": {
-          "System.CommandLine": "2.0.0"
+          "System.CommandLine": "[2.0.5, 3.0.0)"
         }
       },
       "GitVersion.MsBuild": {
@@ -332,8 +41,8 @@
       },
       "System.CommandLine": {
         "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "Bjklzc5NoxqAGFi7BcGlY2TWAdB06Bq3a5sfRr3ubMRU80Mf98eyq3Y2UgR6xRV0TLznZmfe5T7mUjOunRNcdA=="
+        "resolved": "2.0.5",
+        "contentHash": "2XtWAPk1G6arpe3OCFNrYYuf6iIboznxs2elJSGgd8e0euou7LfGYFon6hBEfDWNtOLr0M3+oUVgy1a5EGa41A=="
       },
       "System.IO.Pipelines": {
         "type": "Transitive",
@@ -366,7 +75,7 @@
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
-          "YamlDotNet": "[16.3.0, )"
+          "YamlDotNet": "[17.0.1, )"
         }
       },
       "shimakaze.sdk.engine": {
@@ -379,16 +88,15 @@
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
-          "Shimakaze.Sdk.Vxl": "[1.0.0, )",
           "SkiaSharp": "[3.119.2, )",
-          "System.IO.Hashing": "[10.0.5, )"
+          "System.IO.Hashing": "[10.0.6, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "[10.0.5, )",
-          "System.IO.Hashing": "[10.0.5, )"
+          "Microsoft.Bcl.AsyncInterfaces": "[10.0.6, )",
+          "System.IO.Hashing": "[10.0.6, )"
         }
       },
       "shimakaze.sdk.pal": {
@@ -397,23 +105,11 @@
       "shimakaze.sdk.shp": {
         "type": "Project"
       },
-      "shimakaze.sdk.vpl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Pal": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.vxl": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Vpl": "[1.0.0, )"
-        }
-      },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
+        "requested": "[10.0.6, )",
+        "resolved": "10.0.6",
+        "contentHash": "Os4eB/5WwgiBoFpOmQjEpo8sbFzbWrONvfqK52E7pl4YQoIWFlyeWdOxxxPMHNYFCDD3biT5NzDzNZCo/6kDLw=="
       },
       "SkiaSharp": {
         "type": "CentralTransitive",
@@ -427,9 +123,9 @@
       },
       "System.IO.Hashing": {
         "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
+        "requested": "[10.0.6, )",
+        "resolved": "10.0.6",
+        "contentHash": "lbMLkqFekDR4DeFd26eEfrG2HlvixIfs22uk/e2+9/NJ7WxMycVVakcQpuJvvqgc9XxwEgSd/Td+dZA+TjDDwA=="
       },
       "System.Text.Json": {
         "type": "CentralTransitive",
@@ -443,9 +139,9 @@
       },
       "YamlDotNet": {
         "type": "CentralTransitive",
-        "requested": "[16.3.0, )",
-        "resolved": "16.3.0",
-        "contentHash": "SgMOdxbz8X65z8hraIs6hOEdnkH6hESTAIUa7viEngHOYaH+6q5XJmwr1+yb9vJpNQ19hCQY69xbFsLtXpobQA=="
+        "requested": "[17.0.1, )",
+        "resolved": "17.0.1",
+        "contentHash": "qVir5fehR/W5nTJyoJUibypETXaW4iRAF9cQa0FQIC9TJ3VC0qDOwm4o/RxANewj8KzPF8WMF2abBfUgi6LC4w=="
       }
     }
   }
