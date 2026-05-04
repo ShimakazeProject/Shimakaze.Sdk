@@ -24,6 +24,6 @@
     <PackageVersion Include="System.IO.Hashing" Version="10.0.6" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Text.Json" Version="10.0.5" />
-    <PackageVersion Include="YamlDotNet" Version="17.0.1" />
+    <PackageVersion Include="YamlDotNet" Version="17.1.0" />
   </ItemGroup>
 </Project>
