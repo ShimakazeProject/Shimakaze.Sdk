@@ -31,9 +31,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[10.3.0, )",
-        "resolved": "10.3.0",
-        "contentHash": "5GDzIb+7qvrftxO+POQc2HAInFnQIw2NKdxjqmAVJ7l+P10djdmKW6dcjnHitUX59TTQZ/Ok0qcHUSasl/Cs1A=="
+        "requested": "[10.5.1, )",
+        "resolved": "10.5.1",
+        "contentHash": "DF5KHoVwE0496LDadwin55TLKtmwCXlCAxpFUYkXudIe9iJq09Dlbilxr46T0uP1g9RWHRwy1MPeKIa7b4WirA=="
       },
       "ShellProgressBar": {
         "type": "Direct",
@@ -253,21 +253,21 @@
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "[10.0.5, )",
-          "System.IO.Hashing": "[10.0.5, )"
+          "Microsoft.Bcl.AsyncInterfaces": "[10.0.7, )",
+          "System.IO.Hashing": "[10.0.6, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
+        "requested": "[10.0.7, )",
+        "resolved": "10.0.7",
+        "contentHash": "g0Xp9A+B8jCf5pNIIhFOQXPJkte3D87shfTLY+ylwfSh22U5oQH6tvvmcUuqJvt/wtwKk0WdNp2OGEczHJlJdg=="
       },
       "System.IO.Hashing": {
         "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
+        "requested": "[10.0.6, )",
+        "resolved": "10.0.6",
+        "contentHash": "lbMLkqFekDR4DeFd26eEfrG2HlvixIfs22uk/e2+9/NJ7WxMycVVakcQpuJvvqgc9XxwEgSd/Td+dZA+TjDDwA=="
       }
     }
   }

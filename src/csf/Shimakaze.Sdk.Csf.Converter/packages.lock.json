@@ -31,9 +31,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[10.3.0, )",
-        "resolved": "10.3.0",
-        "contentHash": "5GDzIb+7qvrftxO+POQc2HAInFnQIw2NKdxjqmAVJ7l+P10djdmKW6dcjnHitUX59TTQZ/Ok0qcHUSasl/Cs1A=="
+        "requested": "[10.5.1, )",
+        "resolved": "10.5.1",
+        "contentHash": "DF5KHoVwE0496LDadwin55TLKtmwCXlCAxpFUYkXudIe9iJq09Dlbilxr46T0uP1g9RWHRwy1MPeKIa7b4WirA=="
       },
       "Sharprompt": {
         "type": "Direct",
@@ -77,12 +77,12 @@
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
-          "YamlDotNet": "[16.3.0, )"
+          "YamlDotNet": "[17.1.0, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "CentralTransitive",
-        "requested": "[10.0.5, )",
+        "requested": "[10.0.7, )",
         "resolved": "10.0.5",
         "contentHash": "hQB3Hq1LlF0NkGVNyZIvwIQIY3LM7Cw1oYjNiTvdNqmzzipVAWEK1c5sj2H5aFX0udnjgPLxSYKq2fupueS8ow=="
       },
@@ -98,9 +98,9 @@
       },
       "YamlDotNet": {
         "type": "CentralTransitive",
-        "requested": "[16.3.0, )",
-        "resolved": "16.3.0",
-        "contentHash": "SgMOdxbz8X65z8hraIs6hOEdnkH6hESTAIUa7viEngHOYaH+6q5XJmwr1+yb9vJpNQ19hCQY69xbFsLtXpobQA=="
+        "requested": "[17.1.0, )",
+        "resolved": "17.1.0",
+        "contentHash": "AhsNXgeAs3Ugt653t8LC44xXDuldFfwBpWbWX9pN3e4Yg8U5Bk8jLn8eXtGv5HV2V2nHu7F46fqsPC+tpcTGAA=="
       }
     }
   }
