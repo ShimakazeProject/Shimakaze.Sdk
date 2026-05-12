@@ -4,11 +4,11 @@
     "net9.0": {
       "DotMake.CommandLine": {
         "type": "Direct",
-        "requested": "[3.1.0, )",
-        "resolved": "3.1.0",
-        "contentHash": "n9l6n2jl2vZpAWhjt+UGe8dm1t/w1hfcZoldBPSfWWj+5EBMVbMsn3jdWJTww2bdMx4yT3wix4J3GH4qi96LZw==",
+        "requested": "[3.5.0, )",
+        "resolved": "3.5.0",
+        "contentHash": "QrmOldwvKQ4rvuGP4MRZjxUxdag0az8g73cp7O99g9mxLHLRpkisyxpD1rtGLrCn/mB3+Ne/STAPh/V3lybynw==",
         "dependencies": {
-          "System.CommandLine": "2.0.0"
+          "System.CommandLine": "[2.0.7, 3.0.0)"
         }
       },
       "GitVersion.MsBuild": {
@@ -43,8 +43,8 @@
       },
       "System.CommandLine": {
         "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "Bjklzc5NoxqAGFi7BcGlY2TWAdB06Bq3a5sfRr3ubMRU80Mf98eyq3Y2UgR6xRV0TLznZmfe5T7mUjOunRNcdA=="
+        "resolved": "2.0.7",
+        "contentHash": "ih4yNLLF2Ebz85xJJBaPeddLa4d1AekYId7Y1g8oSsEaBHHd/CtyeBJ+tDvQadqeXz7i591K5ry/td+4aaHnQA=="
       },
       "System.IO.Pipelines": {
         "type": "Transitive",
