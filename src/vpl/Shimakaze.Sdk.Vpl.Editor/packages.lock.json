@@ -22,9 +22,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[10.5.1, )",
-        "resolved": "10.5.1",
-        "contentHash": "DF5KHoVwE0496LDadwin55TLKtmwCXlCAxpFUYkXudIe9iJq09Dlbilxr46T0uP1g9RWHRwy1MPeKIa7b4WirA=="
+        "requested": "[10.6.0, )",
+        "resolved": "10.6.0",
+        "contentHash": "kwXDNPxr2+Xgg2xS1FByWx3gDB6rWtieDZQoReMsf2lOeVyRvoAd5MKxIaD+9lWaBX0ugKteCKhDJ/eZf9sbRA=="
       },
       "Sharprompt": {
         "type": "Direct",
