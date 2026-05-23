@@ -71,6 +71,21 @@
           "System.Runtime.CompilerServices.Unsafe": "6.1.2"
         }
       },
+      "System.Threading.Tasks.Extensions": {
+        "type": "Direct",
+        "requested": "[4.6.3, )",
+        "resolved": "4.6.3",
+        "contentHash": "7sCiwilJLYbTZELaKnc7RecBBXWXA+xMLQWZKWawBxYjp6DBlSE3v9/UcvKBvr1vv2tTOhipiogM8rRmxlhrVA==",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2"
+        }
+      },
+      "System.ValueTuple": {
+        "type": "Direct",
+        "requested": "[4.6.2, )",
+        "resolved": "4.6.2",
+        "contentHash": "yQgmjfFximrNm9LIV3mL6T5MzjeC+epeE5rl4hXxAlYmxby7RM1dPSkIKXk9HNkl6G54h2JHOmLD46+Pey+IRg=="
+      },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
         "resolved": "1.1.0",
@@ -121,19 +136,13 @@
           "System.Runtime.CompilerServices.Unsafe": "6.1.2"
         }
       },
-      "System.Threading.Tasks.Extensions": {
-        "type": "Transitive",
-        "resolved": "4.6.3",
-        "contentHash": "7sCiwilJLYbTZELaKnc7RecBBXWXA+xMLQWZKWawBxYjp6DBlSE3v9/UcvKBvr1vv2tTOhipiogM8rRmxlhrVA==",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.1.2"
-        }
-      },
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
           "System.Collections.Immutable": "[10.0.8, )",
-          "System.Memory": "[4.6.3, )"
+          "System.Memory": "[4.6.3, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
         }
       },
       "shimakaze.sdk.csf.json": {
@@ -143,7 +152,9 @@
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.8, )",
           "System.Memory": "[4.6.3, )",
-          "System.Text.Json": "[10.0.8, )"
+          "System.Text.Json": "[10.0.8, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
         }
       },
       "shimakaze.sdk.csf.xml": {
@@ -151,7 +162,9 @@
         "dependencies": {
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.8, )",
-          "System.Memory": "[4.6.3, )"
+          "System.Memory": "[4.6.3, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
         }
       },
       "shimakaze.sdk.csf.yaml": {
@@ -160,6 +173,8 @@
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.8, )",
           "System.Memory": "[4.6.3, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )",
           "YamlDotNet": "[18.0.0, )"
         }
       },
@@ -169,21 +184,27 @@
           "Microsoft.Bcl.AsyncInterfaces": "[10.0.8, )",
           "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )",
-          "System.Memory": "[4.6.3, )"
+          "System.Memory": "[4.6.3, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
         }
       },
       "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
           "System.Collections.Immutable": "[10.0.8, )",
-          "System.Memory": "[4.6.3, )"
+          "System.Memory": "[4.6.3, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
         }
       },
       "shimakaze.sdk.shp": {
         "type": "Project",
         "dependencies": {
           "System.Collections.Immutable": "[10.0.8, )",
-          "System.Memory": "[4.6.3, )"
+          "System.Memory": "[4.6.3, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
@@ -251,6 +272,12 @@
           "SkiaSharp.NativeAssets.Win32": "3.119.2",
           "SkiaSharp.NativeAssets.macOS": "3.119.2"
         }
+      },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
       },
       "System.IO.Hashing": {
         "type": "Direct",
@@ -352,6 +379,12 @@
           "SkiaSharp.NativeAssets.macOS": "3.119.2"
         }
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "System.IO.Hashing": {
         "type": "Direct",
         "requested": "[10.0.8, )",
@@ -379,26 +412,32 @@
         "contentHash": "HvFIJXM/CMTRu6PBQmjukQZ/O32Vx5fOEYZs0kq0OD5s9vJQ19KHLWCVmnfh3gNC7pbYomm06tzOTgJBflr/nQ=="
       },
       "shimakaze.sdk.csf": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "shimakaze.sdk.csf.json": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "[10.0.8, )",
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "System.Text.Json": "[10.0.8, )"
         }
       },
       "shimakaze.sdk.csf.xml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )"
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )"
         }
       },
       "shimakaze.sdk.csf.yaml": {
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "YamlDotNet": "[18.0.0, )"
         }
       },
@@ -406,14 +445,21 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "[10.0.8, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
       },
       "shimakaze.sdk.pal": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "shimakaze.sdk.shp": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "CentralTransitive",
@@ -473,6 +519,12 @@
           "SkiaSharp.NativeAssets.macOS": "3.119.2"
         }
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "System.IO.Hashing": {
         "type": "Direct",
         "requested": "[10.0.8, )",
@@ -500,26 +552,32 @@
         "contentHash": "HvFIJXM/CMTRu6PBQmjukQZ/O32Vx5fOEYZs0kq0OD5s9vJQ19KHLWCVmnfh3gNC7pbYomm06tzOTgJBflr/nQ=="
       },
       "shimakaze.sdk.csf": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "shimakaze.sdk.csf.json": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "[10.0.8, )",
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "System.Text.Json": "[10.0.8, )"
         }
       },
       "shimakaze.sdk.csf.xml": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Csf": "[1.0.0, )"
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )"
         }
       },
       "shimakaze.sdk.csf.yaml": {
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "YamlDotNet": "[18.0.0, )"
         }
       },
@@ -527,14 +585,21 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "[10.0.8, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
       },
       "shimakaze.sdk.pal": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "shimakaze.sdk.shp": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "CentralTransitive",

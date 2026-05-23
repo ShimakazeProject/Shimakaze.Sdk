@@ -36,6 +36,12 @@
         "resolved": "10.7.0",
         "contentHash": "b0IoQCrmGlt/wDCgB2j8CkSpYTPKWMuaJNxjK0cjwdOMHFTXToB9KaXcfN9KKpiDFPqTRILdBiX9H8k9VEGCFg=="
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "Draco.JsonRpc": {
         "type": "Transitive",
         "resolved": "0.4.14-pre",
@@ -84,6 +90,12 @@
         "requested": "[10.7.0, )",
         "resolved": "10.7.0",
         "contentHash": "b0IoQCrmGlt/wDCgB2j8CkSpYTPKWMuaJNxjK0cjwdOMHFTXToB9KaXcfN9KKpiDFPqTRILdBiX9H8k9VEGCFg=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
       },
       "Draco.JsonRpc": {
         "type": "Transitive",

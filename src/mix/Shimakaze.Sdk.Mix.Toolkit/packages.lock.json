@@ -41,6 +41,12 @@
         "resolved": "5.2.0",
         "contentHash": "XwR9OG00J837mtAXlHIeaJX93di6ZqPUwQLRXTLxyjDiAsytuZDKWELjeDXpWTQCzKsq+oZVhIeK8SN3ubYTwg=="
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "System.CommandLine": {
         "type": "Transitive",
         "resolved": "2.0.7",
@@ -106,6 +112,12 @@
         "resolved": "5.2.0",
         "contentHash": "XwR9OG00J837mtAXlHIeaJX93di6ZqPUwQLRXTLxyjDiAsytuZDKWELjeDXpWTQCzKsq+oZVhIeK8SN3ubYTwg=="
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "System.CommandLine": {
         "type": "Transitive",
         "resolved": "2.0.7",
@@ -115,6 +127,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "[10.0.8, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
       },
@@ -171,6 +184,12 @@
         "resolved": "5.2.0",
         "contentHash": "XwR9OG00J837mtAXlHIeaJX93di6ZqPUwQLRXTLxyjDiAsytuZDKWELjeDXpWTQCzKsq+oZVhIeK8SN3ubYTwg=="
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "System.CommandLine": {
         "type": "Transitive",
         "resolved": "2.0.7",
@@ -180,6 +199,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "[10.0.8, )",
+          "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
       },

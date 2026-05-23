@@ -50,6 +50,21 @@
           "System.Runtime.CompilerServices.Unsafe": "6.1.2"
         }
       },
+      "System.Threading.Tasks.Extensions": {
+        "type": "Direct",
+        "requested": "[4.6.3, )",
+        "resolved": "4.6.3",
+        "contentHash": "7sCiwilJLYbTZELaKnc7RecBBXWXA+xMLQWZKWawBxYjp6DBlSE3v9/UcvKBvr1vv2tTOhipiogM8rRmxlhrVA==",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2"
+        }
+      },
+      "System.ValueTuple": {
+        "type": "Direct",
+        "requested": "[4.6.2, )",
+        "resolved": "4.6.2",
+        "contentHash": "yQgmjfFximrNm9LIV3mL6T5MzjeC+epeE5rl4hXxAlYmxby7RM1dPSkIKXk9HNkl6G54h2JHOmLD46+Pey+IRg=="
+      },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
         "resolved": "1.1.0",
@@ -95,6 +110,12 @@
         "requested": "[10.7.0, )",
         "resolved": "10.7.0",
         "contentHash": "b0IoQCrmGlt/wDCgB2j8CkSpYTPKWMuaJNxjK0cjwdOMHFTXToB9KaXcfN9KKpiDFPqTRILdBiX9H8k9VEGCFg=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
       }
     },
     "net8.0": {
@@ -121,6 +142,12 @@
         "requested": "[10.7.0, )",
         "resolved": "10.7.0",
         "contentHash": "b0IoQCrmGlt/wDCgB2j8CkSpYTPKWMuaJNxjK0cjwdOMHFTXToB9KaXcfN9KKpiDFPqTRILdBiX9H8k9VEGCFg=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
       }
     },
     "net9.0": {
@@ -147,6 +174,12 @@
         "requested": "[10.7.0, )",
         "resolved": "10.7.0",
         "contentHash": "b0IoQCrmGlt/wDCgB2j8CkSpYTPKWMuaJNxjK0cjwdOMHFTXToB9KaXcfN9KKpiDFPqTRILdBiX9H8k9VEGCFg=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
       }
     }
   }

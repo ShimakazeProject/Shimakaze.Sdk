@@ -32,6 +32,12 @@
         "resolved": "3.1.1",
         "contentHash": "Y24jwO/iV9MW096CbsihjBbgDUjpaeM38kswWdmHrDM+kgKwWa3w76j3X883TRrQXiSbsR3txroSD+L4xoI5aA=="
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "shimakaze.sdk.pal": {
         "type": "Project"
       },
@@ -73,13 +79,23 @@
         "resolved": "3.1.1",
         "contentHash": "Y24jwO/iV9MW096CbsihjBbgDUjpaeM38kswWdmHrDM+kgKwWa3w76j3X883TRrQXiSbsR3txroSD+L4xoI5aA=="
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "shimakaze.sdk.pal": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "shimakaze.sdk.vpl": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Pal": "[1.0.0, )"
+          "Shimakaze.Sdk.Pal": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )"
         }
       }
     },
@@ -114,13 +130,23 @@
         "resolved": "3.1.1",
         "contentHash": "Y24jwO/iV9MW096CbsihjBbgDUjpaeM38kswWdmHrDM+kgKwWa3w76j3X883TRrQXiSbsR3txroSD+L4xoI5aA=="
       },
+      "System.Collections.Immutable": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "rvMGYko6bcE/ZTpj1Q/EM22rcZNiQyjH+71capjjfmqG+DDncVE4kSaE5ysCv2vEFIHt8+zALWYXgIETFvcFzw=="
+      },
       "shimakaze.sdk.pal": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
       },
       "shimakaze.sdk.vpl": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Pal": "[1.0.0, )"
+          "Shimakaze.Sdk.Pal": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.8, )"
         }
       }
     }
