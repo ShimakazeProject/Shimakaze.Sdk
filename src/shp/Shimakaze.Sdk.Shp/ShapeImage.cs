@@ -59,10 +59,10 @@ public sealed class ShapeImage
     public static unsafe ShapeImage ReadFrom(Stream input)
     {
         input.Read(out ShapeFileHeader shapeFileHeader);
-        Memory<ShapeFrameHeader> shapeFrameHeaders = Array.FastCreate<ShapeFrameHeader>(shapeFileHeader.NumImages);
+        Memory<ShapeFrameHeader> shapeFrameHeaders = GC.AllocateUninitializedArray<ShapeFrameHeader>(shapeFileHeader.NumImages);
         input.Read(shapeFrameHeaders);
 
-        ShapeImageFrame[] frames = Array.FastCreate<ShapeImageFrame>(shapeFileHeader.NumImages);
+        ShapeImageFrame[] frames = GC.AllocateUninitializedArray<ShapeImageFrame>(shapeFileHeader.NumImages);
         for (int i = 0; i < shapeFrameHeaders.Length; i++)
             frames[i] ??= ShapeImageFrame.ReadFrom(input, shapeFrameHeaders.Span[i]);
 

@@ -25,7 +25,7 @@ internal static class MixPacker
         }
 
         int offset = 0;
-        var entries = Array.FastCreate<MixEntry>(files.Count);
+        var entries = GC.AllocateUninitializedArray<MixEntry>(files.Count);
         for (int i = 0; i < files.Count; i++)
         {
             var id = idCalculator(files[i].Name, fileNameEncoding);
@@ -47,7 +47,7 @@ internal static class MixPacker
         var key = Span<byte>.Empty;
         if (tag.HasValue && tag.Value.HasFlag(MixTag.ENCRYPTED))
         {
-            key = Array.FastCreate(56);
+            key = GC.AllocateUninitializedArray<byte>(56);
             RandomNumberGenerator.Fill(key);
         }
 

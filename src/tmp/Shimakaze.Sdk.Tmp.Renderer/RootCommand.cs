@@ -126,7 +126,7 @@ internal sealed class RootCommand
         }
         int pixelsWidth = maxX - minX;
         int pixelsHeight = maxY - minY;
-        SKColor[] pixels = Array.FastCreate<SKColor>(pixelsWidth * pixelsHeight);
+        SKColor[] pixels = GC.AllocateUninitializedArray<SKColor>(pixelsWidth * pixelsHeight);
 
         foreach (var tile in template.Tiles)
         {

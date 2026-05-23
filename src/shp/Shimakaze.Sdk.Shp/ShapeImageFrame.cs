@@ -193,7 +193,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         int w = r - l;
         int h = b - t;
 
-        newData = Array.FastCreate(w * h);
+        newData = GC.AllocateUninitializedArray<byte>(w * h);
 
         for (int y = 0; y < h; y++)
         {
@@ -277,7 +277,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
     {
         int length = frameHeader.BodyLength;
 
-        Span<byte> buffer = Array.FastCreate(4096);
+        Span<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
         while (length > 0)
         {
             var size = Math.Min(length, buffer.Length);

@@ -77,6 +77,11 @@ internal static class ShpMaker
         }
     }
 
+    /// <summary>
+    /// 生成阴影帧
+    /// </summary>
+    /// <param name="sha"></param>
+    /// <returns></returns>
     private static ShapeImageFrame Shadow(SKBitmap sha)
     {
         using MemoryStream output = new();
