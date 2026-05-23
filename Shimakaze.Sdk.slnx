@@ -28,7 +28,6 @@
     <Project Path="src/pcx/Shimakaze.Sdk.Pcx/Shimakaze.Sdk.Pcx.csproj" />
   </Folder>
   <Folder Name="/shp/">
-    <Project Path="src/shp/Shimakaze.Sdk.Shp.Maker/Shimakaze.Sdk.Shp.Maker.csproj" />
     <Project Path="src/shp/Shimakaze.Sdk.Shp/Shimakaze.Sdk.Shp.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
