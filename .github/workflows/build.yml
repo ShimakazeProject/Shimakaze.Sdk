@@ -56,9 +56,6 @@ jobs:
         with:
           global-json-file: ./global.json
 
-      - name: 还原本地工具
-        run: dotnet tool restore
-
       - name: 还原
         run: dotnet restore --graph --artifacts-path artifacts
 
