@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotMake.CommandLine" />
-    <PackageReference Include="Sharprompt" />
+    <PackageReference Include="Spectre.Console" />
     <PackageReference Include="SkiaSharp" />
   </ItemGroup>
 

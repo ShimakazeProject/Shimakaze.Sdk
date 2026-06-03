@@ -1,30 +1,29 @@
-using Sharprompt;
-
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Vpl;
 using Shimakaze.Sdk.Vpl.Editor;
 
-string vplPath = Prompt.Input<string>("What VPL File do you want edit?").Trim('"');
-string palPath = Prompt.Input<string>("What PAL File do you want see?").Trim('"');
+using Spectre.Console;
+
+var vplPath = await AnsiConsole.AskAsync<string>("What VPL File do you want edit?");
+vplPath = vplPath.Trim('"');
+var palPath = await AnsiConsole.AskAsync<string>("What PAL File do you want see?");
+palPath = palPath.Trim('"');
 
 VoxelPalette vpl;
 Palette pal;
 
-using (Stream vplStream = File.OpenRead(vplPath))
-{
+await using (Stream vplStream = File.OpenRead(vplPath))
     vpl = VoxelPalette.ReadFrom(vplStream);
-}
 
-using (Stream palStream = File.OpenRead(palPath))
-{
+await using (Stream palStream = File.OpenRead(palPath))
     pal = Palette.ReadFrom(palStream);
-}
 
-VplEditor editor = new(vpl, pal, (editor) =>
+VplEditor editor = new(vpl, pal, async (editor, cancellationToken) =>
 {
-    string path = Prompt.Input<string>("Where is your new VPL file save to?", vplPath);
-    using Stream fs = File.Create(path);
+    var path = await AnsiConsole.AskAsync("Where is your new VPL file save to?", vplPath, cancellationToken);
+    path = path.Trim('"');
+    await using Stream fs = File.Create(path);
     editor.Vpl.WriteTo(fs);
 });
 
-editor.Run();
+await editor.RunAsync(default);

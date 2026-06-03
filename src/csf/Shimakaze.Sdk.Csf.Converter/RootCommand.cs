@@ -2,11 +2,11 @@ using System.Diagnostics.CodeAnalysis;
 
 using DotMake.CommandLine;
 
-using Sharprompt;
-
 using Shimakaze.Sdk.Csf.Json;
 using Shimakaze.Sdk.Csf.Xml;
 using Shimakaze.Sdk.Csf.Yaml;
+
+using Spectre.Console;
 
 namespace Shimakaze.Sdk.Csf.Converter;
 
@@ -17,7 +17,7 @@ internal sealed class RootCommand
     public required FileInfo Input { get; set; }
 
     [CliArgument(Description = "输出的文件", Required = false)]
-    public FileInfo? Output { get; set; }
+    public FileInfo? Output { get; set; } = default;
 
     [CliOption(Description = "输入文件的格式", Required = false)]
     public SupportedFormat InputFormat { get; set; }
@@ -30,9 +30,11 @@ internal sealed class RootCommand
 
     public async Task RunAsync()
     {
-        InitInputFormat();
-        InitOutputFormat();
-        InitOutput();
+        CancellationToken cancellationToken = default;
+
+        await InitInputFormatAsync(cancellationToken);
+        await InitOutputFormatAsync(cancellationToken);
+        await InitOutputAsync(cancellationToken);
 
         await using FileStream ifs = Input.OpenRead();
         await using FileStream ofs = Output.Create();
@@ -45,8 +47,8 @@ internal sealed class RootCommand
                 using StreamReader sr = new(ifs);
                 return CsfYamlV1Reader.Read(sr);
             }),
-            SupportedFormat.JsonV2 => CsfJsonV2.ReadAllDataAsync(ifs),
-            SupportedFormat.JsonV1 => CsfJsonV1.ReadAllDataAsync(ifs),
+            SupportedFormat.JsonV2 => CsfJsonV2.ReadAllDataAsync(ifs, cancellationToken: cancellationToken),
+            SupportedFormat.JsonV1 => CsfJsonV1.ReadAllDataAsync(ifs, cancellationToken: cancellationToken),
             SupportedFormat.Xml => Task.Run(() =>
             {
                 using StreamReader sr = new(ifs);
@@ -76,59 +78,38 @@ internal sealed class RootCommand
 
         await writer(await reader);
     }
-
-    private void InitInputFormat()
+    public async Task InitInputFormatAsync(CancellationToken cancellationToken)
     {
         if (InputFormat is not SupportedFormat.Auto)
-        {
             return;
-        }
 
         if (Input.Name.EndsWith(".csf", StringComparison.OrdinalIgnoreCase))
-        {
             InputFormat = SupportedFormat.Csf;
-        }
         else if (Input.Name.EndsWith(".csf.yaml", StringComparison.OrdinalIgnoreCase)
             || Input.Name.EndsWith(".csf.yml", StringComparison.OrdinalIgnoreCase))
-        {
             InputFormat = SupportedFormat.Yaml;
-        }
         else if (Input.Name.EndsWith(".v2.csf.json", StringComparison.OrdinalIgnoreCase)
             || Input.Name.EndsWith(".csf.v2.json", StringComparison.OrdinalIgnoreCase))
-        {
             InputFormat = SupportedFormat.JsonV2;
-        }
         else if (Input.Name.EndsWith(".v1.csf.json", StringComparison.OrdinalIgnoreCase)
             || Input.Name.EndsWith(".csf.v1.json", StringComparison.OrdinalIgnoreCase))
-        {
             InputFormat = SupportedFormat.JsonV1;
-        }
         else if (Input.Name.EndsWith(".csf.xaml", StringComparison.OrdinalIgnoreCase)
             || Input.Name.EndsWith(".csf.xml", StringComparison.OrdinalIgnoreCase))
-        {
             InputFormat = SupportedFormat.Xml;
-        }
         else if (!Quiet)
-        {
-            InputFormat = Prompt.Select(
-                "请选择当前文件的格式",
-                Enum.GetValues<SupportedFormat>().Where(i => i is not SupportedFormat.Auto),
-                textSelector: GetSupportedFormatName);
-        }
+            InputFormat = await AnsiConsole.PromptAsync(new SelectionPrompt<SupportedFormat>()
+                    .Title("请选择当前文件的格式")
+                    .AddChoices(Enum.GetValues<SupportedFormat>().Where(i => i is not SupportedFormat.Auto))
+                    .UseConverter(GetSupportedFormatName), cancellationToken);
         else
-        {
-            Console.Error.WriteLine("无法分析出当前文件的格式");
-            Environment.Exit(1);
-        }
-
+            throw new InvalidDataException("无法分析出当前文件的格式");
     }
 
-    private void InitOutputFormat()
+    public async Task InitOutputFormatAsync(CancellationToken cancellationToken)
     {
         if (OutputFormat is not SupportedFormat.Auto)
-        {
             return;
-        }
 
         OutputFormat = InputFormat is SupportedFormat.Csf
             ? SupportedFormat.Yaml
@@ -136,30 +117,30 @@ internal sealed class RootCommand
 
         if (!Quiet)
         {
-            OutputFormat = Prompt.Select(
-                "请选择要转换的格式",
-                Enum.GetValues<SupportedFormat>().Where(i => i is not SupportedFormat.Auto && i != InputFormat),
-                defaultValue: OutputFormat,
-                textSelector: GetSupportedFormatName);
+            OutputFormat = await AnsiConsole.PromptAsync(new SelectionPrompt<SupportedFormat>()
+                    .Title("请选择要转换的格式")
+                    .AddChoices(OutputFormat)
+                    .AddChoices(Enum.GetValues<SupportedFormat>().Where(i => i is not SupportedFormat.Auto && i != InputFormat && i != OutputFormat))
+                    .UseConverter(GetSupportedFormatName), cancellationToken);
         }
     }
 
     [MemberNotNull(nameof(Output))]
-    private void InitOutput()
+    private async Task InitOutputAsync(CancellationToken cancellationToken)
     {
         if (Output is not null)
-        {
             return;
-        }
 
         string output = GetSupportedFormatExt(OutputFormat, Input.FullName);
 
+        Output = new(output);
+
         if (!Quiet)
         {
-            output = Prompt.Input<string>("请输入生成的文件的路径", output);
+            output = await AnsiConsole.AskAsync("请输入生成的文件的路径", output, cancellationToken);
+            output = output.Trim('"');
+            Output = new(output);
         }
-
-        Output = new(output);
     }
 
     private static string GetSupportedFormatExt(SupportedFormat format, string? prefix)

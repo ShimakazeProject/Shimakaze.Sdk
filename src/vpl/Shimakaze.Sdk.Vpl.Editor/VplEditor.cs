@@ -1,12 +1,12 @@
 using System.Globalization;
 
-using Sharprompt;
-
 using Shimakaze.Sdk.Pal;
+
+using Spectre.Console;
 
 namespace Shimakaze.Sdk.Vpl.Editor;
 
-internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor> saver)
+internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Func<VplEditor, CancellationToken, Task> saver)
 {
     public readonly VoxelPalette Vpl = vpl;
     private const int SIZE_OF_CELL = 3;
@@ -17,7 +17,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
     private (int X, int Y) _editing;
     private bool _isEditing;
 
-    public void Run()
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
         PrintColor();
         while (true)
@@ -116,7 +116,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
                 case ConsoleKey.Escape when !_isEditing:
                 case ConsoleKey.Q when !_isEditing:
                     Console.SetCursorPosition(0, Y_OFFSET + 16);
-                    bool isExit = Prompt.Confirm("Are you sure you want to exit? Your changed will NOT saved!", false);
+                    bool isExit = await AnsiConsole.ConfirmAsync("Are you sure you want to exit? Your changed will NOT saved!", false, cancellationToken);
                     if (isExit)
                     {
                         Environment.Exit(0);
@@ -127,7 +127,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Action<VplEditor>
 
                 case ConsoleKey.S:
                     Console.SetCursorPosition(0, Y_OFFSET + 16);
-                    saver(this);
+                    await saver(this, cancellationToken);
                     PrintColor();
                     break;
             }

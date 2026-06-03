@@ -2,12 +2,11 @@ using System.Diagnostics.CodeAnalysis;
 
 using DotMake.CommandLine;
 
-using Sharprompt;
-
 using Shimakaze.Sdk.Pal;
-using Shimakaze.Sdk.Tmp;
 
 using SkiaSharp;
+
+using Spectre.Console;
 
 namespace Shimakaze.Sdk.Tmp.Renderer;
 
@@ -15,13 +14,13 @@ namespace Shimakaze.Sdk.Tmp.Renderer;
 internal sealed class RootCommand
 {
     [CliArgument(Description = "模板文件", Required = true)]
-    public string? Template { get; set; }
+    public FileInfo? Template { get; set; }
 
     [CliArgument(Description = "参考的调色板文件", Required = true)]
-    public string? Palette { get; set; }
+    public FileInfo? Palette { get; set; }
 
     [CliArgument(Description = "输出的 BMP 文件", Required = true)]
-    public string? Output { get; set; }
+    public FileInfo? Output { get; set; }
 
     [CliOption(Description = "使用安静模式，不提示用户交互")]
     public bool Quiet { get; set; }
@@ -34,57 +33,51 @@ internal sealed class RootCommand
         ArgumentNullException.ThrowIfNull(Output);
     }
 
-    public void UsePrompt()
+    public async Task UsePromptAsync(CancellationToken cancellationToken)
     {
-        if (Template is null || !File.Exists(Template))
+        while (Template is not { Exists: true })
         {
-        Template:
-            Template = Prompt.Input<string>("请输入图像列表文件路径");
-            if (Template is null || !File.Exists(Template))
-            {
+            var tmp = await AnsiConsole.AskAsync<string>("请输入图像列表文件路径", cancellationToken);
+            tmp = tmp.Trim('"');
+            Template = new(tmp);
+            if (Template is not { Exists: true })
                 Console.Error.WriteLine("无效的图像列表文件路径");
-                goto Template;
-            }
         }
 
-        if (Palette is null || !File.Exists(Palette))
+        while (Palette is not { Exists: true })
         {
-        Palette:
-            Palette = Prompt.Input<string>("请输入参考的调色板文件路径");
-            if (Palette is null || !File.Exists(Palette))
-            {
+            var tmp = await AnsiConsole.AskAsync<string>("请输入参考的调色板文件路径", cancellationToken);
+            tmp = tmp.Trim('"');
+            Palette = new(tmp);
+            if (Palette is not { Exists: true })
                 Console.Error.WriteLine("无效的调色板文件路径");
-                goto Palette;
-            }
         }
 
-        if (Output is null)
+        while (Output is not { })
         {
-        Output:
-            Output = Prompt.Input<string>("请输入输出的 SHP(TS) 文件路径");
+            var tmp = await AnsiConsole.AskAsync<string>("请输入输出的 SHP(TS) 文件路径", cancellationToken);
+            tmp = tmp.Trim('"');
+            Output = new(tmp);
             if (Output is null)
-            {
                 Console.Error.WriteLine("无效的 SHP(TS) 文件路径");
-                goto Output;
-            }
-            if (File.Exists(Output)
-                && !Prompt.Confirm("已存在同名文件，是否覆盖？", false))
-                goto Output;
+            if (Output is { Exists: true }
+                && !await AnsiConsole.ConfirmAsync("已存在同名文件，是否覆盖？", false, cancellationToken))
+                Output = null;
         }
     }
 
     public async Task RunAsync()
     {
         if (!Quiet)
-            UsePrompt();
+            await UsePromptAsync(default);
 
         Assert();
         Palette palette;
-        await using (var fs = File.OpenRead(Palette))
+        await using (var fs = Palette.OpenRead())
             palette = Pal.Palette.ReadFrom(fs);
 
         TemplateFile template;
-        await using (var fs = File.OpenRead(Template))
+        await using (var fs = Template.OpenRead())
             template = TemplateFile.ReadFrom(fs);
 
         int tileW = (int)template.Header.BlockImageWidth;
@@ -220,7 +213,7 @@ internal sealed class RootCommand
         using SKBitmap bitmap = new(pixelsWidth, pixelsHeight, SKColorType.Rgba8888, SKAlphaType.Premul);
         bitmap.Pixels = pixels;
 
-        await using (var fs = File.Create(Output))
+        await using (var fs = Output.Create())
             bitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
     }
 }
