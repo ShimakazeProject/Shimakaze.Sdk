@@ -25,19 +25,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.8, )",
-        "resolved": "10.0.8",
-        "contentHash": "dVbSXGIFNR5nZcv2tOLoWI+a9T4jtFd77IYjuND+QVe360qWgAF7H0WtoopYhRw/+SgpGUTyrkrh+65+ClNnfw=="
-      },
-      "SkiaSharp.NativeAssets.macOS": {
-        "type": "Transitive",
-        "resolved": "3.119.4",
-        "contentHash": "fgBOWEqbY012x7gMfJU4ezgz6dfhJb30Z6YdW35h85Zoe39+a8YNbAAwL29ihPfWoppg5AjvyKNzD1oCvlqWwA=="
-      },
-      "SkiaSharp.NativeAssets.Win32": {
-        "type": "Transitive",
-        "resolved": "3.119.4",
-        "contentHash": "XOpbx/4CReO2wYsq2s6rbvdauc6dntG4Zv499sHGTJ87bwZaFXszFkwql3+FIZMc8kUPeaj3Mx2ezIJmo8a1Kg=="
+        "requested": "[10.0.9, )",
+        "resolved": "10.0.9",
+        "contentHash": "4Iw41e2h7I4t70SJcX2GCmbyKJIlA273Cfm9RJMM050/3VBejGAG1KcthP5Z2L6SQcbfbf6BhNWO26+ZG+GzMg=="
       },
       "System.CommandLine": {
         "type": "Transitive",
@@ -77,7 +67,6 @@
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
-          "SkiaSharp": "[3.119.4, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
       },
@@ -99,16 +88,6 @@
         "requested": "[10.0.8, )",
         "resolved": "10.0.8",
         "contentHash": "e+kYYRb0HmNo5FTOcjXkP0mIEFHEyygm4ea/iLWpdumsACzCH078nZMfnk6RQFmtSrnNbh654c8nNtmUSwQoow=="
-      },
-      "SkiaSharp": {
-        "type": "CentralTransitive",
-        "requested": "[3.119.4, )",
-        "resolved": "3.119.4",
-        "contentHash": "53NOSUZ1Us+91Sm0uCkIivh/k7jOowRErZT2sIWwPFN9mLUvdxnE6rS4sWo4255+Rd2MWUSF+j0NMZHD6Cke+Q==",
-        "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "3.119.4",
-          "SkiaSharp.NativeAssets.macOS": "3.119.4"
-        }
       },
       "System.IO.Hashing": {
         "type": "CentralTransitive",
@@ -147,19 +126,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[8.0.27, )",
-        "resolved": "8.0.27",
-        "contentHash": "rQi9TxifHRnXP7lVRZH05DxD2/XGbJp12q0ozcbrlBlBnyyzssFTH/2vLhtKWUp2CT1qVscTrcYTFiwTyKPKRg=="
-      },
-      "SkiaSharp.NativeAssets.macOS": {
-        "type": "Transitive",
-        "resolved": "3.119.4",
-        "contentHash": "fgBOWEqbY012x7gMfJU4ezgz6dfhJb30Z6YdW35h85Zoe39+a8YNbAAwL29ihPfWoppg5AjvyKNzD1oCvlqWwA=="
-      },
-      "SkiaSharp.NativeAssets.Win32": {
-        "type": "Transitive",
-        "resolved": "3.119.4",
-        "contentHash": "XOpbx/4CReO2wYsq2s6rbvdauc6dntG4Zv499sHGTJ87bwZaFXszFkwql3+FIZMc8kUPeaj3Mx2ezIJmo8a1Kg=="
+        "requested": "[8.0.28, )",
+        "resolved": "8.0.28",
+        "contentHash": "XMqgVjlLxLqWmEh3c49haXLQwsMNtvo6YscUaqfvEGfg1iA8hnYgkUVq3i9Zu9gKeNKMWiiZKVwZExc/qyEAsQ=="
       },
       "System.CommandLine": {
         "type": "Transitive",
@@ -216,7 +185,6 @@
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
-          "SkiaSharp": "[3.119.4, )",
           "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
@@ -246,16 +214,6 @@
         "requested": "[10.0.8, )",
         "resolved": "10.0.8",
         "contentHash": "e+kYYRb0HmNo5FTOcjXkP0mIEFHEyygm4ea/iLWpdumsACzCH078nZMfnk6RQFmtSrnNbh654c8nNtmUSwQoow=="
-      },
-      "SkiaSharp": {
-        "type": "CentralTransitive",
-        "requested": "[3.119.4, )",
-        "resolved": "3.119.4",
-        "contentHash": "53NOSUZ1Us+91Sm0uCkIivh/k7jOowRErZT2sIWwPFN9mLUvdxnE6rS4sWo4255+Rd2MWUSF+j0NMZHD6Cke+Q==",
-        "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "3.119.4",
-          "SkiaSharp.NativeAssets.macOS": "3.119.4"
-        }
       },
       "System.Collections.Immutable": {
         "type": "CentralTransitive",
@@ -310,19 +268,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[9.0.16, )",
-        "resolved": "9.0.16",
-        "contentHash": "ccPBYGLPJt8DeJTUzQ0JzOh/iuUAgnjayU63PokVywAhUOx+dzDKSPTL7AG94U/VpvNXflTT2AjsFAIF1+bXBw=="
-      },
-      "SkiaSharp.NativeAssets.macOS": {
-        "type": "Transitive",
-        "resolved": "3.119.4",
-        "contentHash": "fgBOWEqbY012x7gMfJU4ezgz6dfhJb30Z6YdW35h85Zoe39+a8YNbAAwL29ihPfWoppg5AjvyKNzD1oCvlqWwA=="
-      },
-      "SkiaSharp.NativeAssets.Win32": {
-        "type": "Transitive",
-        "resolved": "3.119.4",
-        "contentHash": "XOpbx/4CReO2wYsq2s6rbvdauc6dntG4Zv499sHGTJ87bwZaFXszFkwql3+FIZMc8kUPeaj3Mx2ezIJmo8a1Kg=="
+        "requested": "[9.0.17, )",
+        "resolved": "9.0.17",
+        "contentHash": "P5qY/hIYMlo0+QRM0W3Gd/SRf20TX+z5W5NwpdzkOk0FtgcbSTNwNcYBRNDgfThFcLpcDFslz65RcGqWOq00/w=="
       },
       "System.CommandLine": {
         "type": "Transitive",
@@ -379,7 +327,6 @@
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
-          "SkiaSharp": "[3.119.4, )",
           "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
@@ -409,16 +356,6 @@
         "requested": "[10.0.8, )",
         "resolved": "10.0.8",
         "contentHash": "e+kYYRb0HmNo5FTOcjXkP0mIEFHEyygm4ea/iLWpdumsACzCH078nZMfnk6RQFmtSrnNbh654c8nNtmUSwQoow=="
-      },
-      "SkiaSharp": {
-        "type": "CentralTransitive",
-        "requested": "[3.119.4, )",
-        "resolved": "3.119.4",
-        "contentHash": "53NOSUZ1Us+91Sm0uCkIivh/k7jOowRErZT2sIWwPFN9mLUvdxnE6rS4sWo4255+Rd2MWUSF+j0NMZHD6Cke+Q==",
-        "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "3.119.4",
-          "SkiaSharp.NativeAssets.macOS": "3.119.4"
-        }
       },
       "System.Collections.Immutable": {
         "type": "CentralTransitive",
