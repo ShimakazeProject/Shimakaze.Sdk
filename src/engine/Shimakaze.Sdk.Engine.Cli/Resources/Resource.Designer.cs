@@ -324,20 +324,20 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         }
         
         /// <summary>
-        ///   查找类似 结束索引，为空则不批量转换 的本地化字符串。
-        /// </summary>
-        internal static string Command_Shp_Extract_EndIndex_Description {
-            get {
-                return ResourceManager.GetString("Command.Shp.Extract.EndIndex.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 图片编码格式 的本地化字符串。
         /// </summary>
         internal static string Command_Shp_Extract_Format_Description {
             get {
                 return ResourceManager.GetString("Command.Shp.Extract.Format.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 帧数量。为 1 时不生成序列后缀。 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Extract_FrameCounts_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Extract.FrameCounts.Description", resourceCulture);
             }
         }
         
@@ -365,15 +365,6 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         internal static string Command_Shp_Extract_Palette_Description {
             get {
                 return ResourceManager.GetString("Command.Shp.Extract.Palette.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 图像质量 的本地化字符串。
-        /// </summary>
-        internal static string Command_Shp_Extract_Quality_Description {
-            get {
-                return ResourceManager.GetString("Command.Shp.Extract.Quality.Description", resourceCulture);
             }
         }
         

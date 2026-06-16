@@ -1,8 +1,6 @@
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 
-using SkiaSharp;
-
 namespace Shimakaze.Sdk.Engine.Shp;
 
 internal sealed class ShpExtractor(ShapeImage shape, Palette palette)
@@ -10,16 +8,16 @@ internal sealed class ShpExtractor(ShapeImage shape, Palette palette)
     public ShapeImage Shape { get; } = shape;
     public Palette Palette { get; } = palette;
 
-    private readonly Dictionary<byte, SKColor> _paletteCache = new(palette.Colors.Length);
+    private readonly Dictionary<byte, BGRA32> _paletteCache = new(palette.Colors.Length);
 
-    private static SKColor ToColor(DisplayColor color) => new(color.Red, color.Green, color.Blue, byte.MaxValue);
+    private static BGRA32 ToColor(DisplayColor color) => new(color.Blue, color.Green, color.Red, byte.MaxValue);
 
-    public void SetColor(byte index, SKColor color)
+    public void SetColor(byte index, BGRA32 color)
     {
         _paletteCache[index] = color;
     }
 
-    private SKColor GetColor(byte index)
+    private BGRA32 GetColor(byte index)
     {
         if (!_paletteCache.TryGetValue(index, out var color))
             _paletteCache[index] = color = ToColor(Palette[index]);
@@ -27,18 +25,18 @@ internal sealed class ShpExtractor(ShapeImage shape, Palette palette)
         return color;
     }
 
-    public SKColor[] CreateCanvas(bool useAlpha)
+    public BGRA32[] CreateCanvas(bool useAlpha)
     {
-        SKColor bg = useAlpha
-            ? SKColors.Transparent
+        BGRA32 bg = useAlpha
+            ? BGRA32.Transparent
             : GetColor(0);
 
-        SKColor[] data = new SKColor[Shape.Metadata.Width * Shape.Metadata.Height];
+        BGRA32[] data = GC.AllocateUninitializedArray<BGRA32>(Shape.Metadata.Width * Shape.Metadata.Height);
         data.AsSpan().Fill(bg);
         return data;
     }
 
-    public void DrawFrame(SKColor[] canvas, ShapeImageFrame frame, PaletteColor[] houseColors)
+    public void DrawFrame(BGRA32[] canvas, ShapeImageFrame frame, PaletteColor[] houseColors)
     {
         ReadOnlySpan<PaletteColor> house = houseColors;
 

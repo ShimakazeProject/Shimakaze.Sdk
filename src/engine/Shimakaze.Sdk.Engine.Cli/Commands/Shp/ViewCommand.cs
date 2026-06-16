@@ -124,7 +124,11 @@ internal sealed class ShpViewer : IDisposable
 
     private static void PrintImage(SixelWriter sixel, ShapeFileHeader fileMetadata, ShapeImageFrame frame)
     {
-        sixel.WritePixel(null, frame.Metadata.Y * frame.Width);
+        for (ushort i = 0; i < frame.Metadata.Y; i++)
+        {
+            sixel.WritePixel(null, frame.Width);
+            sixel.NewLine();
+        }
         for (int y = 0; y < frame.Metadata.Height; y++)
         {
             sixel.WritePixel(null, frame.Metadata.X);
@@ -142,7 +146,12 @@ internal sealed class ShpViewer : IDisposable
             sixel.WritePixel(null, fileMetadata.Width - frame.Metadata.Width - frame.Metadata.X);
             sixel.NewLine();
         }
-        sixel.WritePixel(null, fileMetadata.Height - frame.Metadata.Height - frame.Metadata.Y);
+        var maxY = fileMetadata.Height - frame.Metadata.Height - frame.Metadata.Y;
+        for (ushort i = 0; i < maxY; i++)
+        {
+            sixel.WritePixel(null, frame.Width);
+            sixel.NewLine();
+        }
     }
 
     private void Dispose(bool disposing)

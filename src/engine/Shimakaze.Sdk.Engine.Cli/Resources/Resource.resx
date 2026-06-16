@@ -206,8 +206,8 @@
   <data name="Command.Shp.Extract.Description" xml:space="preserve">
     <value>Shimakaze.Sdk SHP 图片转换器</value>
   </data>
-  <data name="Command.Shp.Extract.EndIndex.Description" xml:space="preserve">
-    <value>结束索引，为空则不批量转换</value>
+  <data name="Command.Shp.Extract.FrameCounts.Description" xml:space="preserve">
+    <value>帧数量。为 1 时不生成序列后缀。</value>
   </data>
   <data name="Command.Shp.Extract.Format.Description" xml:space="preserve">
     <value>图片编码格式</value>
@@ -220,9 +220,6 @@
   </data>
   <data name="Command.Shp.Extract.Palette.Description" xml:space="preserve">
     <value>将使用的调色板文件</value>
-  </data>
-  <data name="Command.Shp.Extract.Quality.Description" xml:space="preserve">
-    <value>图像质量</value>
   </data>
   <data name="Command.Shp.Extract.Shadow.Description" xml:space="preserve">
     <value>渲染影子</value>

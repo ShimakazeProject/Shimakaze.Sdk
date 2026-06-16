@@ -3,8 +3,6 @@ using System.Drawing;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 
-using SkiaSharp;
-
 namespace Shimakaze.Sdk.Engine.Shp;
 
 internal static class ShpMaker
@@ -31,12 +29,12 @@ internal static class ShpMaker
     {
         foreach (var src in frames)
         {
-            using var obj = SKBitmap.Decode(src.Object.FullName);
+            var obj = Image.Load(src.Object.FullName);
 
             ShapeImageFrame frame;
             if (src.House is { Exists: true })
             {
-                using var col = SKBitmap.Decode(src.House.FullName);
+                var col = Image.Load(src.House.FullName);
                 frame = Quantization(obj, col, palette, paletteStartIndex, paletteEndIndex);
             }
             else
@@ -56,13 +54,13 @@ internal static class ShpMaker
             Size size;
             if (src.Shadow is { Exists: true })
             {
-                using var sha = SKBitmap.Decode(src.Shadow.FullName);
+                var sha = Image.Load(src.Shadow.FullName);
                 size = new(sha.Width, sha.Height);
                 frame = Shadow(sha);
             }
             else
             {
-                using var obj = SKBitmap.Decode(src.Object.FullName);
+                var obj = Image.Load(src.Object.FullName);
                 size = new(obj.Width, obj.Height);
                 frame = new(new()
                 {
@@ -82,7 +80,7 @@ internal static class ShpMaker
     /// </summary>
     /// <param name="sha"></param>
     /// <returns></returns>
-    private static ShapeImageFrame Shadow(SKBitmap sha)
+    private static ShapeImageFrame Shadow(Image sha)
     {
         using MemoryStream output = new();
 
@@ -90,8 +88,8 @@ internal static class ShpMaker
         {
             for (int x = 0; x < sha.Width; x++)
             {
-                SKColor pixel = sha.GetPixel(x, y);
-                output.WriteByte(pixel.Alpha is 0 ? (byte)0 : (byte)1);
+                BGRA32 pixel = sha.GetPixel(x, y);
+                output.WriteByte(pixel.A is 0 ? (byte)0 : (byte)1);
             }
         }
 
@@ -117,7 +115,7 @@ internal static class ShpMaker
     /// <param name="paletteEndIndex"></param>
     /// <returns></returns>
     /// <exception cref="FormatException"></exception>
-    private static ShapeImageFrame Quantization(SKBitmap obj, SKBitmap? col, Palette palette, int paletteStartIndex, int paletteEndIndex)
+    private static ShapeImageFrame Quantization(Image obj, Image? col, Palette palette, int paletteStartIndex, int paletteEndIndex)
     {
         using MemoryStream output = new();
 
@@ -129,7 +127,7 @@ internal static class ShpMaker
 
         Func<int, int, byte> getIndex = col is null
             ? (x, y) => GetIndex(palette, obj.GetPixel(x, y), (byte)paletteStartIndex, (byte)paletteEndIndex)
-            : (x, y) => col.GetPixel(x, y) is { Alpha: not 0 } cp
+            : (x, y) => col.GetPixel(x, y) is { A: not 0 } cp
                 ? GetHouseIndex(palette, cp)
                 : GetIndex(palette, obj.GetPixel(x, y), (byte)paletteStartIndex, (byte)paletteEndIndex);
 
@@ -157,9 +155,9 @@ internal static class ShpMaker
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <returns></returns>
-    private static byte GetIndex(in Palette palette, in SKColor pixel, byte start, byte end)
+    private static byte GetIndex(in Palette palette, in BGRA32 pixel, byte start, byte end)
     {
-        if (pixel.Alpha is 0)
+        if (pixel.A is 0)
             return 0;
 
         double cdistance = double.MaxValue;
@@ -168,7 +166,7 @@ internal static class ShpMaker
         {
             DisplayColor color = palette[i];
 
-            double distance = Math.Sqrt(Math.Pow(color.Red - pixel.Red, 2) + Math.Pow(color.Green - pixel.Green, 2) + Math.Pow(color.Blue - pixel.Blue, 2));
+            double distance = Math.Sqrt(Math.Pow(color.Red - pixel.R, 2) + Math.Pow(color.Green - pixel.G, 2) + Math.Pow(color.Blue - pixel.B, 2));
             if (distance < cdistance)
             {
                 index = i;
@@ -185,9 +183,9 @@ internal static class ShpMaker
     /// <param name="palette"></param>
     /// <param name="pixel"></param>
     /// <returns></returns>
-    private static byte GetHouseIndex(in Palette palette, in SKColor pixel)
+    private static byte GetHouseIndex(in Palette palette, in BGRA32 pixel)
     {
-        if (pixel.Alpha is 0)
+        if (pixel.A is 0)
             return 0;
 
         double cdistance = double.MaxValue;
@@ -195,7 +193,7 @@ internal static class ShpMaker
         for (byte i = 16; i < 32; i++)
         {
             DisplayColor color = palette[i];
-            var gray = (color.Red - pixel.Red) + (color.Green - pixel.Green) + (color.Blue - pixel.Blue);
+            var gray = (color.Red - pixel.R) + (color.Green - pixel.G) + (color.Blue - pixel.B);
 
             double distance = Math.Sqrt(Math.Pow(gray, 2));
             if (distance < cdistance)

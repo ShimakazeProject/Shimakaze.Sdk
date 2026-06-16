@@ -1,10 +1,10 @@
+using System.Runtime.InteropServices;
+
 using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Engine.Cli.Resources;
 using Shimakaze.Sdk.Engine.Shp;
 using Shimakaze.Sdk.Shp;
-
-using SkiaSharp;
 
 namespace Shimakaze.Sdk.Engine.Cli.Commands.Shp;
 
@@ -21,16 +21,13 @@ internal sealed class ExtractCommand
     public required string Output { get; set; }
 
     [CliOption(Description = nameof(Resource.Command_Shp_Extract_Index_Description))]
-    public int Index { get; set; }
+    public int Index { get; set; } = 0;
 
-    [CliOption(Description = nameof(Resource.Command_Shp_Extract_EndIndex_Description), Required = false)]
-    public int? EndIndex { get; set; } = null;
+    [CliOption(Description = nameof(Resource.Command_Shp_Extract_FrameCounts_Description))]
+    public int FrameCounts { get; set; } = 1;
 
     [CliOption(Description = nameof(Resource.Command_Shp_Extract_Format_Description))]
-    public SKEncodedImageFormat Format { get; set; }
-
-    [CliOption(Description = nameof(Resource.Command_Shp_Extract_Quality_Description))]
-    public int Quality { get; set; } = 90;
+    public string Format { get; set; } = "webp";
 
     [CliOption(Description = nameof(Resource.Command_Shp_Extract_Transparent_Description))]
     public bool Transparent { get; set; }
@@ -53,7 +50,24 @@ internal sealed class ExtractCommand
 
         ShpExtractor extractor = new(shp, pal);
 
-        var end = EndIndex ?? Index;
+        foreach ((int i, Image image) in ParseFrames(extractor))
+        {
+            var output = Path.GetFullPath(Output);
+            if (FrameCounts is > 1)
+                output += $"{i:D4}.{Format}".ToLowerInvariant();
+
+            if (Path.GetDirectoryName(output) is { } dirpath && !Directory.Exists(dirpath))
+                Directory.CreateDirectory(dirpath);
+
+            image.SaveTo(output);
+        }
+    }
+
+    private IEnumerable<(int Index, Image Bitmap)> ParseFrames(ShpExtractor extractor)
+    {
+        var shp = extractor.Shape;
+
+        var end = Index + FrameCounts;
 
         for (int i = Index; i < end; i++)
         {
@@ -68,23 +82,8 @@ internal sealed class ExtractCommand
 
             extractor.DrawFrame(canvas, shp.Frames[i], []);
 
-            using SKBitmap bitmap = new(shp.Metadata.Width, shp.Metadata.Height, SKColorType.Rgba8888, SKAlphaType.Premul)
-            {
-                Pixels = canvas,
-            };
-
-            using var image = SKImage.FromBitmap(bitmap);
-            using var data = image.Encode(Format, Quality);
-
-            var output = Path.GetFullPath(Output);
-            if (EndIndex.HasValue)
-                output = Path.Combine(output, $"{i:D4}.{Format}".ToLowerInvariant());
-
-            if (Path.GetDirectoryName(output) is { } dirpath && !Directory.Exists(dirpath))
-                Directory.CreateDirectory(dirpath);
-
-            await using var fs = File.Create(output);
-            data.SaveTo(fs);
+            Image bitmap = new(shp.Metadata.Width, shp.Metadata.Height, ImmutableCollectionsMarshal.AsImmutableArray(canvas));
+            yield return (i, bitmap);
         }
     }
 }
