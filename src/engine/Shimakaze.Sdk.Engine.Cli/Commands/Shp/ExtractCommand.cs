@@ -48,7 +48,7 @@ internal sealed class ExtractCommand
         await using (var fs = Palette.OpenRead())
             pal = Pal.Palette.ReadFrom(fs);
 
-        ShpExtractor extractor = new(shp, pal);
+        ShpRenderer extractor = new(shp, pal);
 
         foreach ((int i, var image) in ParseFrames(extractor))
         {
@@ -63,7 +63,7 @@ internal sealed class ExtractCommand
         }
     }
 
-    private IEnumerable<(int Index, Image Bitmap)> ParseFrames(ShpExtractor extractor)
+    private IEnumerable<(int Index, Image Bitmap)> ParseFrames(ShpRenderer extractor)
     {
         var shp = extractor.Shape;
 

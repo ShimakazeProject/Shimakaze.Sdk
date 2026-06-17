@@ -2,6 +2,7 @@ using System.Text;
 
 using Shimakaze.Sdk.Engine.Cli.Components;
 using Shimakaze.Sdk.Engine.Cli.Resources;
+using Shimakaze.Sdk.Engine.Tmp;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Tmp;
 
@@ -11,7 +12,8 @@ internal sealed class TmpViewer : Application
 {
     private readonly StringBuilder _buffer;
     private readonly StringWriter _writer;
-    private readonly TmpImage _tmpImage;
+    private readonly TmpRenderer _renderer;
+    private readonly SixelImage _sixel = new();
     private bool _disposedValue;
 
     public TmpViewer(TemplateFile template, Palette palette)
@@ -19,20 +21,36 @@ internal sealed class TmpViewer : Application
         _buffer = new();
         _writer = new(_buffer);
 
-        _tmpImage = new(template, palette)
-        {
-            Center = true,
-        };
+        _renderer = new(template, palette);
+        _sixel.SetImage(_renderer.Render());
     }
 
     protected override void OnEvent(EventArgs eventArgs)
     {
-        if (eventArgs is ConsoleKeyEventArgs { KeyInfo.Key: ConsoleKey.Escape or ConsoleKey.Q })
-            Environment.Exit(0);
-
-        if (eventArgs is ConsoleKeyEventArgs { KeyInfo.Key: ConsoleKey.F5 })
-            Console.Clear();
+        if (eventArgs is ConsoleKeyEventArgs keyEventArgs)
+            OnKeyEvent(keyEventArgs.KeyInfo);
     }
+
+    private void OnKeyEvent(ConsoleKeyInfo key)
+    {
+        switch (key)
+        {
+            case { Key: ConsoleKey.F5 }:
+                Console.Clear();
+                break;
+            case { Key: ConsoleKey.Escape }:
+            case { Key: ConsoleKey.Q }:
+            case { Key: ConsoleKey.S }:
+                Environment.Exit(0);
+                break;
+            case { Key: ConsoleKey.T }:
+                Console.Clear();
+                _renderer.UseTransparent = !_renderer.UseTransparent;
+                _sixel.SetImage(_renderer.Render());
+                break;
+        }
+    }
+
 
     protected override void Update()
     {
@@ -40,7 +58,7 @@ internal sealed class TmpViewer : Application
         _buffer.Clear();
 
         _writer.Write("\e[1;1H");
-        _writer.Write(_tmpImage);
+        _writer.Write(_sixel);
         _writer.Write($"\e[{i};1H");
 
         WriteHelp(_writer);
@@ -48,11 +66,12 @@ internal sealed class TmpViewer : Application
         Console.Write(_writer);
     }
 
-    private static void WriteHelp(TextWriter writer)
+    private void WriteHelp(TextWriter writer)
     {
         string[] fields =
         [
             $"\e[30m\e[47m Escape \e[0m {Resource.TUI_ShpViewer_Exit}",
+            _renderer.UseTransparent ? $"\e[92m\e[47m T \e[0m {Resource.TUI_ShpViewer_DisableTransparent}" : $"\e[30m\e[47m T \e[0m {Resource.TUI_ShpViewer_EnableTransparent}",
         ];
 
         int t = Console.WindowWidth / fields.Length;
@@ -70,7 +89,7 @@ internal sealed class TmpViewer : Application
 
         if (disposing)
         {
-            _tmpImage.Dispose();
+            _sixel.Dispose();
             _writer.Dispose();
         }
 

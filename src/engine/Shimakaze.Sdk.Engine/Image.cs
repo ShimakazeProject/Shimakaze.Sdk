@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -42,6 +43,9 @@ internal readonly record struct BGRA32(byte B, byte G, byte R, byte A)
 
 internal sealed record class Image(int Width, int Height, ImmutableArray<BGRA32> Pixels)
 {
+    internal Image(Size size, BGRA32[] pixels) : this(size.Width, size.Height, ImmutableCollectionsMarshal.AsImmutableArray(pixels))
+    { }
+
     public BGRA32 GetPixel(int x, int y) => Pixels[(y * Width) + x];
 
     public static Image Load(string path)
