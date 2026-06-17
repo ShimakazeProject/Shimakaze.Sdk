@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Drawing;
 
 using Shimakaze.Sdk.Pal;
 
@@ -9,6 +10,13 @@ namespace Shimakaze.Sdk.Engine.Cli.Sixel;
 /// </summary>
 public static class SixelRGBExtensions
 {
+    /// <inheritdoc cref="SixelWriter.RegistColor(byte, SixelColorType, int, int, int)"/>
+    public static SixelWriter RegistColor(this SixelWriter sixel, byte index, Color color)
+    {
+        return sixel.RegistColor(index, color.R, color.G, color.B);
+    }
+
+
     /// <inheritdoc cref="SixelWriter.RegistColor(byte, SixelColorType, int, int, int)"/>
     internal static SixelWriter RegistColor(this SixelWriter sixel, int index, DisplayColor color)
     {

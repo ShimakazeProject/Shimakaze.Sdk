@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace Shimakaze.Sdk.Pal;
 
 /// <summary>
@@ -18,4 +20,10 @@ public sealed record class DisplayColor(PaletteColor Color)
     /// 蓝色
     /// </summary>
     public byte Blue => unchecked((byte)(Color.Blue << 2));
+
+    /// <summary>
+    /// 转换为 Drawing 颜色
+    /// </summary>
+    /// <returns></returns>
+    public Color ToColor() => System.Drawing.Color.FromArgb(Red, Green, Blue);
 }

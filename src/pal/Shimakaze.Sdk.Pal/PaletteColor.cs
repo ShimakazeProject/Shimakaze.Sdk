@@ -31,6 +31,11 @@ public readonly record struct PaletteColor(
     public override readonly string ToString() => $"#{Red:X2}{Green:X2}{Blue:X2}";
 
     /// <summary>
+    /// 创建一个 <see cref="DisplayColor"/> 对象
+    /// </summary>
+    public DisplayColor AsDisplay() => this;
+
+    /// <summary>
     /// 创建一个 <see cref="PaletteColor"/> 对象
     /// </summary>
     /// <param name="rgb888">0x00RRGGBB</param>
@@ -101,9 +106,7 @@ public readonly record struct PaletteColor(
         return unchecked((ushort)value);
     }
 
-    /// <summary>
-    /// 创建一个 <see cref="DisplayColor"/> 对象
-    /// </summary>
+    /// <inheritdoc cref="AsDisplay"/>
     /// <param name="color"></param>
     public static implicit operator DisplayColor(PaletteColor color) => new(color);
 }
