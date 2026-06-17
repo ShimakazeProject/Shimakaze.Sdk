@@ -27,6 +27,7 @@ internal abstract class Application : IDisposable
 
         Task updateTask = Task.CompletedTask;
         Console.Write("\e[?1049h");
+        Console.CursorVisible = false;
         while (true)
         {
             if (updateTask.IsCompleted)

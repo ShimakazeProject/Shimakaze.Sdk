@@ -430,5 +430,131 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
                 return ResourceManager.GetString("Command.Shp.View.Shp.Description", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 禁用阴影 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_DisableShadow {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.DisableShadow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 禁用透明 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_DisableTransparent {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.DisableTransparent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 启用阴影 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_EnableShadow {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.EnableShadow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 启用透明 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_EnableTransparent {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.EnableTransparent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 退出 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_Exit {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 色相减一度 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_HueDecrease {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.HueDecrease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 色相 {0}° 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_HueFormat {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.HueFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 色相加一度 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_HueIncrease {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.HueIncrease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 下一帧 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_NextFrame {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.NextFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 暂停 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_Pause {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 播放 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_Play {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 上一帧 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_PrevFrame {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.PrevFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 选择颜色 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_SelectColor {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.SelectColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 切换所属色 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_ToggleHouse {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.ToggleHouse", resourceCulture);
+            }
+        }
     }
 }

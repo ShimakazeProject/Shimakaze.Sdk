@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Timers;
 
 using Shimakaze.Sdk.Engine.Cli.Components;
+using Shimakaze.Sdk.Engine.Cli.Resources;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 
@@ -17,8 +19,9 @@ internal enum ShpViewerMode
     HouseColorPicker
 }
 
-internal class ShpViewer : Application
+internal sealed class ShpViewer : Application
 {
+    private readonly CompositeFormat _hueFormat = CompositeFormat.Parse(Resource.TUI_ShpViewer_HueFormat);
     private readonly StringBuilder _buffer;
     private readonly StringWriter _writer;
     private readonly ShpImage _shpImage;
@@ -80,12 +83,12 @@ internal class ShpViewer : Application
 
             string[] fields =
             [
-                _play ? "\e[92m\e[47m Space \e[0m 暂停" : "\e[30m\e[47m Space \e[0m 播放",
-                "\e[30m\e[47m H \e[0m 切换所属色",
-                "\e[30m\e[47m ← \e[0m 上一帧",
-                "\e[30m\e[47m → \e[0m 下一帧",
-                _shpImage.HasShadow ? "\e[92m\e[47m S \e[0m 禁用阴影" : "\e[30m\e[47m S \e[0m 启用阴影",
-                _shpImage.UseTransparent ? "\e[92m\e[47m T \e[0m 禁用透明" : "\e[30m\e[47m T \e[0m 启用透明",
+                _play ? $"\e[92m\e[47m Space \e[0m {Resource.TUI_ShpViewer_Pause}" : $"\e[30m\e[47m Space \e[0m {Resource.TUI_ShpViewer_Play}",
+                $"\e[30m\e[47m H \e[0m {Resource.TUI_ShpViewer_ToggleHouse}",
+                $"\e[30m\e[47m ← \e[0m {Resource.TUI_ShpViewer_PrevFrame}",
+                $"\e[30m\e[47m → \e[0m {Resource.TUI_ShpViewer_NextFrame}",
+                _shpImage.HasShadow ? $"\e[92m\e[47m S \e[0m {Resource.TUI_ShpViewer_DisableShadow}" : $"\e[30m\e[47m S \e[0m {Resource.TUI_ShpViewer_EnableShadow}",
+                _shpImage.UseTransparent ? $"\e[92m\e[47m T \e[0m {Resource.TUI_ShpViewer_DisableTransparent}" : $"\e[30m\e[47m T \e[0m {Resource.TUI_ShpViewer_EnableTransparent}",
             ];
 
             var t = Console.WindowWidth / fields.Length;
@@ -98,7 +101,7 @@ internal class ShpViewer : Application
         else if (_mode is ShpViewerMode.HouseColorPicker)
         {
             var c = _shpImage.HouseColor;
-            var l1 = $"色相 {_h}° \e[48;2;{c.R};{c.G};{c.B}m     \e[0m";
+            var l1 = $"{string.Format(CultureInfo.InvariantCulture, _hueFormat, _h)} \e[48;2;{c.R};{c.G};{c.B}m     \e[0m";
             var length = l1.Length - 16;
             var padding = (Console.WindowWidth - length) / 2;
             writer.Write($"\e[2K");
@@ -107,12 +110,12 @@ internal class ShpViewer : Application
 
             string[] fields =
             [
-                "\e[30m\e[47m Escape \e[0m 退出",
-                "\e[30m\e[47m Enter \e[0m 选择颜色",
-                "\e[30m\e[47m ↑ \e[0m 色相加一度",
-                "\e[30m\e[47m ↓ \e[0m 色相减一度",
-                _shpImage.HasShadow ? "\e[92m\e[47m S \e[0m 禁用阴影" : "\e[30m\e[47m S \e[0m 启用阴影",
-                _shpImage.UseTransparent ? "\e[92m\e[47m T \e[0m 禁用透明" : "\e[30m\e[47m T \e[0m 启用透明",
+                $"\e[30m\e[47m Escape \e[0m {Resource.TUI_ShpViewer_Exit}",
+                $"\e[30m\e[47m Enter \e[0m {Resource.TUI_ShpViewer_SelectColor}",
+                $"\e[30m\e[47m ↑ \e[0m {Resource.TUI_ShpViewer_HueIncrease}",
+                $"\e[30m\e[47m ↓ \e[0m {Resource.TUI_ShpViewer_HueDecrease}",
+                _shpImage.HasShadow ? $"\e[92m\e[47m S \e[0m {Resource.TUI_ShpViewer_DisableShadow}" : $"\e[30m\e[47m S \e[0m {Resource.TUI_ShpViewer_EnableShadow}",
+                _shpImage.UseTransparent ? $"\e[92m\e[47m T \e[0m {Resource.TUI_ShpViewer_DisableTransparent}" : $"\e[30m\e[47m T \e[0m {Resource.TUI_ShpViewer_EnableTransparent}",
             ];
 
             var t = Console.WindowWidth / fields.Length;
@@ -149,7 +152,7 @@ internal class ShpViewer : Application
                     break;
                 case { Key: ConsoleKey.S }:
                     _shpImage.HasShadow = !_shpImage.HasShadow;
-                  
+
 
                     break;
                 case { Key: ConsoleKey.T }:
