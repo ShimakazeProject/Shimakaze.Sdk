@@ -432,6 +432,78 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         }
         
         /// <summary>
+        ///   查找类似 Shimakaze.Sdk TMP 实用工具 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Shimakaze.Sdk TMP 图片转换器 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_Extract_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.Extract.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 输出的图片文件路径 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_Extract_Output_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.Extract.Output.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 将使用的调色板文件 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_Extract_Palette_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.Extract.Palette.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 TMP 模板文件 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_Extract_Template_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.Extract.Template.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Shimakaze.Sdk TMP 查看器 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_View_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.View.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 将使用的调色板文件 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_View_Palette_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.View.Palette.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 TMP 模板文件 的本地化字符串。
+        /// </summary>
+        internal static string Command_Tmp_View_Template_Description {
+            get {
+                return ResourceManager.GetString("Command.Tmp.View.Template.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 禁用阴影 的本地化字符串。
         /// </summary>
         internal static string TUI_ShpViewer_DisableShadow {

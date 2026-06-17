@@ -13,6 +13,7 @@
     <ProjectReference Include="..\..\mix\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
     <ProjectReference Include="..\..\pal\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
     <ProjectReference Include="..\..\shp\Shimakaze.Sdk.Shp\Shimakaze.Sdk.Shp.csproj" />
+    <ProjectReference Include="..\..\tmp\Shimakaze.Sdk.Tmp\Shimakaze.Sdk.Tmp.csproj" />
   </ItemGroup>
 
 </Project>

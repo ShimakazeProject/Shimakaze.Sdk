@@ -67,6 +67,7 @@
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
+          "Shimakaze.Sdk.Tmp": "[1.0.0, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
       },
@@ -81,6 +82,9 @@
         "type": "Project"
       },
       "shimakaze.sdk.shp": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.tmp": {
         "type": "Project"
       },
       "Microsoft.Bcl.AsyncInterfaces": {
@@ -185,6 +189,7 @@
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
+          "Shimakaze.Sdk.Tmp": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
@@ -204,6 +209,12 @@
         }
       },
       "shimakaze.sdk.shp": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
+      },
+      "shimakaze.sdk.tmp": {
         "type": "Project",
         "dependencies": {
           "System.Collections.Immutable": "[10.0.8, )"
@@ -327,6 +338,7 @@
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
+          "Shimakaze.Sdk.Tmp": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.8, )",
           "System.IO.Hashing": "[10.0.8, )"
         }
@@ -346,6 +358,12 @@
         }
       },
       "shimakaze.sdk.shp": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.8, )"
+        }
+      },
+      "shimakaze.sdk.tmp": {
         "type": "Project",
         "dependencies": {
           "System.Collections.Immutable": "[10.0.8, )"

@@ -242,6 +242,30 @@
   <data name="Command.Shp.View.Shp.Description" xml:space="preserve">
     <value>SHP(TS) 文件</value>
   </data>
+  <data name="Command.Tmp.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk TMP 实用工具</value>
+  </data>
+  <data name="Command.Tmp.Extract.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk TMP 图片转换器</value>
+  </data>
+  <data name="Command.Tmp.Extract.Output.Description" xml:space="preserve">
+    <value>输出的图片文件路径</value>
+  </data>
+  <data name="Command.Tmp.Extract.Palette.Description" xml:space="preserve">
+    <value>将使用的调色板文件</value>
+  </data>
+  <data name="Command.Tmp.Extract.Template.Description" xml:space="preserve">
+    <value>TMP 模板文件</value>
+  </data>
+  <data name="Command.Tmp.View.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk TMP 查看器</value>
+  </data>
+  <data name="Command.Tmp.View.Palette.Description" xml:space="preserve">
+    <value>将使用的调色板文件</value>
+  </data>
+  <data name="Command.Tmp.View.Template.Description" xml:space="preserve">
+    <value>TMP 模板文件</value>
+  </data>
   <data name="TUI.ShpViewer.DisableShadow" xml:space="preserve">
     <value>禁用阴影</value>
   </data>
