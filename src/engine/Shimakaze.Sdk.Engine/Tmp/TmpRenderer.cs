@@ -1,3 +1,5 @@
+using System.Drawing;
+
 using Shimakaze.Sdk.Engine.Common;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Tmp;
@@ -19,6 +21,7 @@ internal sealed class TmpRenderer : Renderer
     private readonly int _pixelsHeight;
     private readonly BGRA32[] _palette;
 
+    public override Size Size { get; }
     public TemplateFile Template { get; }
     public bool UseTransparent { get; set; }
 
@@ -39,7 +42,7 @@ internal sealed class TmpRenderer : Renderer
         foreach (var tile in Template.Tiles)
         {
             int tx = tile.Header.X;
-            int ty = tile.Header.Y - tile.Header.Height * _heightOffset;
+            int ty = tile.Header.Y - (tile.Header.Height * _heightOffset);
             minX = Math.Min(minX, tx);
             minY = Math.Min(minY, ty);
             maxX = Math.Max(maxX, tx + _tileW);
@@ -49,7 +52,7 @@ internal sealed class TmpRenderer : Renderer
             if (tile.Header.Flags.HasFlag(TemplateTileCellFlags.HasExtraData) && tile.Extra.Length > 0)
             {
                 int extraX = tile.Header.ExtraX;
-                int extraY = tile.Header.ExtraY - tile.Header.Height * _heightOffset;
+                int extraY = tile.Header.ExtraY - (tile.Header.Height * _heightOffset);
                 int extraWidth = (int)tile.Header.ExtraWidth;
                 int extraHeight = (int)tile.Header.ExtraHeight;
                 minX = Math.Min(minX, extraX);
@@ -72,28 +75,28 @@ internal sealed class TmpRenderer : Renderer
     public override BGRA32[] CreateBuffer()
     {
         var buffer = base.CreateBuffer();
-        BGRA32 bg = UseTransparent
+        var bg = UseTransparent
             ? BGRA32.Transparent
             : _palette[0];
         buffer.AsSpan().Fill(bg);
         return buffer;
     }
 
-    public override void Render(BGRA32[] canvas)
+    public override void RenderTo(BGRA32[] canvas)
     {
         foreach (var tile in Template.Tiles)
         {
             var indexes = tile.Tile.AsSpan();
 
             int tileX = tile.Header.X - _minX;
-            int tileY = tile.Header.Y - _minY - tile.Header.Height * _heightOffset;
+            int tileY = tile.Header.Y - _minY - (tile.Header.Height * _heightOffset);
 
             // 绘制等距瓦片（菱形格子本体数据）
             int tilePos = 0;
             int width = 4;
             for (int y = 0; y < 29; y++)
             {
-                int outX = tileX + _halfW - width / 2;
+                int outX = tileX + _halfW - (width / 2);
                 int outY = tileY + y;
 
                 for (int x = 0; x < width; x++)
@@ -104,7 +107,7 @@ internal sealed class TmpRenderer : Renderer
                     int colorIndex = indexes[tilePos];
                     if (colorIndex > 0 && colorIndex < _palette.Length)
                     {
-                        int pixelIndex = outY * _pixelsWidth + (outX + x);
+                        int pixelIndex = (outY * _pixelsWidth) + outX + x;
                         if (pixelIndex >= 0 && pixelIndex < canvas.Length)
                             canvas[pixelIndex] = _palette[colorIndex];
                     }
@@ -123,7 +126,7 @@ internal sealed class TmpRenderer : Renderer
             {
                 var extraData = tile.Extra.AsSpan();
                 int extraX = tile.Header.ExtraX - _minX;
-                int extraY = tile.Header.ExtraY - _minY - tile.Header.Height * _heightOffset;
+                int extraY = tile.Header.ExtraY - _minY - (tile.Header.Height * _heightOffset);
                 int extraWidth = (int)tile.Header.ExtraWidth;
                 int extraHeight = (int)tile.Header.ExtraHeight;
 
@@ -131,7 +134,7 @@ internal sealed class TmpRenderer : Renderer
                 {
                     for (int x = 0; x < extraWidth; x++)
                     {
-                        int extraPos = y * extraWidth + x;
+                        int extraPos = (y * extraWidth) + x;
                         if (extraPos >= extraData.Length)
                             continue;
 
@@ -140,7 +143,7 @@ internal sealed class TmpRenderer : Renderer
                         {
                             int outX = extraX + x;
                             int outY = extraY + y;
-                            int pixelIndex = outY * _pixelsWidth + outX;
+                            int pixelIndex = (outY * _pixelsWidth) + outX;
                             if (pixelIndex >= 0 && pixelIndex < canvas.Length)
                                 canvas[pixelIndex] = _palette[colorIndex];
                         }

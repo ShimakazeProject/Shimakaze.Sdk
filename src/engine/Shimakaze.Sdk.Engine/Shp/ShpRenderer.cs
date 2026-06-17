@@ -1,49 +1,31 @@
+using System.Drawing;
+
+using Shimakaze.Sdk.Engine.Common;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 
 namespace Shimakaze.Sdk.Engine.Shp;
 
-internal sealed class ShpRenderer(ShapeImage shape, Palette palette)
+internal sealed class ShpRenderer(ShapeImage shape, Palette palette) : FramesRenderer<ShpFrameRenderer>
 {
+    private readonly int _half = shape.Frames.Count / 2;
+
+    public Size Size { get; } = new(shape.Metadata.Width, shape.Metadata.Height);
+    public override int Count => HasShadow ? _half : Shape.Frames.Count;
+
     public ShapeImage Shape { get; } = shape;
+    public bool UseTransparent { get; set; }
+    public bool HasShadow { get; set => field = Shape.Frames.Count % 2 is 0 && value; }
+    public BGRA32[]? HouseColors { get; set; }
 
-    private readonly BGRA32[] _palette = [.. palette.Cast<DisplayColor>().Select(i => (BGRA32)i)];
+    public readonly BGRA32[] Palette = [.. palette.Cast<DisplayColor>().Select(i => (BGRA32)i)];
 
-    public void SetColor(byte index, BGRA32 color) => _palette[index] = color;
-
-    public BGRA32[] CreateCanvas(bool useAlpha)
+    public override ShpFrameRenderer GetFrame(int index)
     {
-        BGRA32 bg = useAlpha
-            ? BGRA32.Transparent
-            : _palette[0];
+        var obj = Shape.Frames[index];
+        if (HasShadow)
+            return new ShpShadowedFrameRenderer(this, obj, Shape.Frames[_half + index]);
 
-        BGRA32[] data = GC.AllocateUninitializedArray<BGRA32>(Shape.Metadata.Width * Shape.Metadata.Height);
-        data.AsSpan().Fill(bg);
-        return data;
-    }
-
-    public void DrawFrame(BGRA32[] canvas, ShapeImageFrame frame, BGRA32[] houseColors)
-    {
-        ReadOnlySpan<BGRA32> house = houseColors;
-
-        for (int y = 0; y < frame.Metadata.Height; y++)
-        {
-            var i = y + frame.Metadata.Y;
-            var span = canvas.AsSpan(i * Shape.Metadata.Width + frame.Metadata.X, frame.Metadata.Width);
-            var row = frame.Indexes.Slice((y * frame.Metadata.Width), frame.Metadata.Width).Span;
-
-            for (int j = 0; j < row.Length; j++)
-            {
-                var index = row[j];
-                if (index is 0)
-                    continue;
-
-                span[j] = index switch
-                {
-                    >= 16 and < 32 when !house.IsEmpty => house[index - 16],
-                    _ => _palette[index],
-                };
-            }
-        }
+        return new(this, obj);
     }
 }

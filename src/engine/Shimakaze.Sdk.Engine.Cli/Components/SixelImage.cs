@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Text;
 
 using Shimakaze.Sdk.Engine.Cli.Sixel;
+using Shimakaze.Sdk.Engine.Common;
 
 namespace Shimakaze.Sdk.Engine.Cli.Components;
 
@@ -59,7 +60,7 @@ internal sealed class SixelImage : IDisposable
         }
 
         // 将去重后的颜色转为 Color[]
-        Color[] palette = new Color[colorMap.Count];
+        var palette = new Color[colorMap.Count];
         foreach (var (color, index) in colorMap)
             palette[index] = Color.FromArgb(color.R, color.G, color.B);
 

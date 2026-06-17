@@ -4,16 +4,16 @@ namespace Shimakaze.Sdk.Engine.Common;
 
 internal abstract class Renderer
 {
-    public virtual Size Size { get; protected init; }
+    public abstract Size Size { get; }
 
     public virtual BGRA32[] CreateBuffer() => GC.AllocateUninitializedArray<BGRA32>(Size.Width * Size.Height);
 
-    public abstract void Render(BGRA32[] canvas);
+    public abstract void RenderTo(BGRA32[] canvas);
 
-    public Image Render()
+    public Image RenderAsImage()
     {
         var buffer = CreateBuffer();
-        Render(buffer);
+        RenderTo(buffer);
         return new(Size, buffer);
     }
 }

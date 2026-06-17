@@ -10,7 +10,7 @@ namespace Shimakaze.Sdk.Engine.Cli.Commands.Shp;
 [CliCommand(Description = nameof(Resource.Command_Shp_View_Description), Parent = typeof(ShpCommand))]
 internal sealed class ViewCommand
 {
-    [CliOption(Description = nameof(Resource.Command_Shp_View_Shp_Description))]
+    [CliOption(Description = nameof(Resource.Command_Shp_View_Shp_Description), Alias = "i", Aliases = ["input"])]
     public required FileInfo Shp { get; set; }
 
     [CliOption(Description = nameof(Resource.Command_Shp_View_Palette_Description))]

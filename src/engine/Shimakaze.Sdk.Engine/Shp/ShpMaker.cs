@@ -1,5 +1,6 @@
 using System.Drawing;
 
+using Shimakaze.Sdk.Engine.Common;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 
@@ -11,8 +12,8 @@ internal static class ShpMaker
     {
         var shpFrames = BuildFrames(frames, palette, paletteStartIndex, paletteEndIndex);
 
-        var width = shpFrames.Max(i => i.Size.Width);
-        var height = shpFrames.Max(i => i.Size.Height);
+        int width = shpFrames.Max(i => i.Size.Width);
+        int height = shpFrames.Max(i => i.Size.Height);
 
         new ShapeImage(
             new()
@@ -88,7 +89,7 @@ internal static class ShpMaker
         {
             for (int x = 0; x < sha.Width; x++)
             {
-                BGRA32 pixel = sha.GetPixel(x, y);
+                var pixel = sha.GetPixel(x, y);
                 output.WriteByte(pixel.A is 0 ? (byte)0 : (byte)1);
             }
         }
@@ -193,7 +194,7 @@ internal static class ShpMaker
         for (byte i = 16; i < 32; i++)
         {
             DisplayColor color = palette[i];
-            var gray = (color.Red - pixel.R) + (color.Green - pixel.G) + (color.Blue - pixel.B);
+            int gray = color.Red - pixel.R + (color.Green - pixel.G) + (color.Blue - pixel.B);
 
             double distance = Math.Sqrt(Math.Pow(gray, 2));
             if (distance < cdistance)

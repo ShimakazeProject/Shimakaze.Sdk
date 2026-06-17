@@ -126,27 +126,27 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         /// <summary>
         ///   查找类似 Shimakaze.Sdk MIX 内容释放工具 的本地化字符串。
         /// </summary>
-        internal static string Command_Mix_Extract_Description {
+        internal static string Command_Mix_Exports_Description {
             get {
-                return ResourceManager.GetString("Command.Mix.Extract.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Mix.Exports.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 将要被释放的 MIX 文件 的本地化字符串。
         /// </summary>
-        internal static string Command_Mix_Extract_Input_Description {
+        internal static string Command_Mix_Exports_Input_Description {
             get {
-                return ResourceManager.GetString("Command.Mix.Extract.Input.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Mix.Exports.Input.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 表示这是一个适用于 C&amp;C1 / RA1 的旧版无标记 MIX 文件 的本地化字符串。
         /// </summary>
-        internal static string Command_Mix_Extract_IsTDMode_Description {
+        internal static string Command_Mix_Exports_IsTDMode_Description {
             get {
-                return ResourceManager.GetString("Command.Mix.Extract.IsTDMode.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Mix.Exports.IsTDMode.Description", resourceCulture);
             }
         }
         
@@ -154,18 +154,18 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         ///   查找类似 文件名对照表。
         ///将根据此对照表应用文件名，不填则写文件 ID 的本地化字符串。
         /// </summary>
-        internal static string Command_Mix_Extract_NameMap_Description {
+        internal static string Command_Mix_Exports_NameMap_Description {
             get {
-                return ResourceManager.GetString("Command.Mix.Extract.NameMap.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Mix.Exports.NameMap.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 被释放的文件的存放位置 的本地化字符串。
         /// </summary>
-        internal static string Command_Mix_Extract_Output_Description {
+        internal static string Command_Mix_Exports_Output_Description {
             get {
-                return ResourceManager.GetString("Command.Mix.Extract.Output.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Mix.Exports.Output.Description", resourceCulture);
             }
         }
         
@@ -317,90 +317,90 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         /// <summary>
         ///   查找类似 Shimakaze.Sdk SHP 图片转换器 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Description {
+        internal static string Command_Shp_Exports_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 图片编码格式 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Format_Description {
+        internal static string Command_Shp_Exports_Format_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Format.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Format.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 帧数量。为 1 时不生成序列后缀。 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_FrameCounts_Description {
+        internal static string Command_Shp_Exports_FrameCounts_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.FrameCounts.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.FrameCounts.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 SHP的帧索引 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Index_Description {
+        internal static string Command_Shp_Exports_Index_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Index.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Index.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 输出的图片文件或输出文件夹路径 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Output_Description {
+        internal static string Command_Shp_Exports_Output_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Output.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Output.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 将使用的调色板文件 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Palette_Description {
+        internal static string Command_Shp_Exports_Palette_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Palette.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Palette.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 渲染影子 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Shadow_Description {
+        internal static string Command_Shp_Exports_Shadow_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Shadow.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Shadow.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 影子所使用的颜色 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_ShadowColor_Description {
+        internal static string Command_Shp_Exports_ShadowColor_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.ShadowColor.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.ShadowColor.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 SHP(TS) 文件 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Shp_Description {
+        internal static string Command_Shp_Exports_Shp_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Shp.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Shp.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 使用透明背景 的本地化字符串。
         /// </summary>
-        internal static string Command_Shp_Extract_Transparent_Description {
+        internal static string Command_Shp_Exports_Transparent_Description {
             get {
-                return ResourceManager.GetString("Command.Shp.Extract.Transparent.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Shp.Exports.Transparent.Description", resourceCulture);
             }
         }
         
@@ -443,36 +443,36 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         /// <summary>
         ///   查找类似 Shimakaze.Sdk TMP 图片转换器 的本地化字符串。
         /// </summary>
-        internal static string Command_Tmp_Extract_Description {
+        internal static string Command_Tmp_Exports_Description {
             get {
-                return ResourceManager.GetString("Command.Tmp.Extract.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Tmp.Exports.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 输出的图片文件路径 的本地化字符串。
         /// </summary>
-        internal static string Command_Tmp_Extract_Output_Description {
+        internal static string Command_Tmp_Exports_Output_Description {
             get {
-                return ResourceManager.GetString("Command.Tmp.Extract.Output.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Tmp.Exports.Output.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 将使用的调色板文件 的本地化字符串。
         /// </summary>
-        internal static string Command_Tmp_Extract_Palette_Description {
+        internal static string Command_Tmp_Exports_Palette_Description {
             get {
-                return ResourceManager.GetString("Command.Tmp.Extract.Palette.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Tmp.Exports.Palette.Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 TMP 模板文件 的本地化字符串。
         /// </summary>
-        internal static string Command_Tmp_Extract_Template_Description {
+        internal static string Command_Tmp_Exports_Template_Description {
             get {
-                return ResourceManager.GetString("Command.Tmp.Extract.Template.Description", resourceCulture);
+                return ResourceManager.GetString("Command.Tmp.Exports.Template.Description", resourceCulture);
             }
         }
         

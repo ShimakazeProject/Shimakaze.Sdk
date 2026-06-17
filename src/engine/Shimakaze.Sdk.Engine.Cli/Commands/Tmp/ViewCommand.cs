@@ -2,7 +2,6 @@ using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Engine.Cli.Resources;
 using Shimakaze.Sdk.Engine.Cli.TUI.App;
-using Shimakaze.Sdk.Engine.Tmp;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Tmp;
 

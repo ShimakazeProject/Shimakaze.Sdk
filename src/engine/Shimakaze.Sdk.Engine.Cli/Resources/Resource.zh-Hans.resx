@@ -138,20 +138,20 @@
   <data name="Command.Mix.Description" xml:space="preserve">
     <value>Shimakaze.Sdk MIX 实用工具</value>
   </data>
-  <data name="Command.Mix.Extract.Description" xml:space="preserve">
+  <data name="Command.Mix.Exports.Description" xml:space="preserve">
     <value>Shimakaze.Sdk MIX 内容释放工具</value>
   </data>
-  <data name="Command.Mix.Extract.Input.Description" xml:space="preserve">
+  <data name="Command.Mix.Exports.Input.Description" xml:space="preserve">
     <value>将要被释放的 MIX 文件</value>
   </data>
-  <data name="Command.Mix.Extract.IsTDMode.Description" xml:space="preserve">
+  <data name="Command.Mix.Exports.IsTDMode.Description" xml:space="preserve">
     <value>表示这是一个适用于 C&amp;C1 / RA1 的旧版无标记 MIX 文件</value>
   </data>
-  <data name="Command.Mix.Extract.NameMap.Description" xml:space="preserve">
+  <data name="Command.Mix.Exports.NameMap.Description" xml:space="preserve">
     <value>文件名对照表。
 将根据此对照表应用文件名，不填则写文件 ID</value>
   </data>
-  <data name="Command.Mix.Extract.Output.Description" xml:space="preserve">
+  <data name="Command.Mix.Exports.Output.Description" xml:space="preserve">
     <value>被释放的文件的存放位置</value>
   </data>
   <data name="Command.Mix.Pack.Description" xml:space="preserve">
@@ -203,34 +203,34 @@
   <data name="Command.Shp.Description" xml:space="preserve">
     <value>Shimakaze.Sdk SHP 实用工具</value>
   </data>
-  <data name="Command.Shp.Extract.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Description" xml:space="preserve">
     <value>Shimakaze.Sdk SHP 图片转换器</value>
   </data>
-  <data name="Command.Shp.Extract.Format.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Format.Description" xml:space="preserve">
     <value>图片编码格式</value>
   </data>
-  <data name="Command.Shp.Extract.FrameCounts.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.FrameCounts.Description" xml:space="preserve">
     <value>帧数量。为 1 时不生成序列后缀。</value>
   </data>
-  <data name="Command.Shp.Extract.Index.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Index.Description" xml:space="preserve">
     <value>SHP的帧索引</value>
   </data>
-  <data name="Command.Shp.Extract.Output.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Output.Description" xml:space="preserve">
     <value>输出的图片文件或输出文件夹路径</value>
   </data>
-  <data name="Command.Shp.Extract.Palette.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Palette.Description" xml:space="preserve">
     <value>将使用的调色板文件</value>
   </data>
-  <data name="Command.Shp.Extract.Shadow.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Shadow.Description" xml:space="preserve">
     <value>渲染影子</value>
   </data>
-  <data name="Command.Shp.Extract.ShadowColor.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.ShadowColor.Description" xml:space="preserve">
     <value>影子所使用的颜色</value>
   </data>
-  <data name="Command.Shp.Extract.Shp.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Shp.Description" xml:space="preserve">
     <value>SHP(TS) 文件</value>
   </data>
-  <data name="Command.Shp.Extract.Transparent.Description" xml:space="preserve">
+  <data name="Command.Shp.Exports.Transparent.Description" xml:space="preserve">
     <value>使用透明背景</value>
   </data>
   <data name="Command.Shp.View.Description" xml:space="preserve">
@@ -245,16 +245,16 @@
   <data name="Command.Tmp.Description" xml:space="preserve">
     <value>Shimakaze.Sdk TMP 实用工具</value>
   </data>
-  <data name="Command.Tmp.Extract.Description" xml:space="preserve">
+  <data name="Command.Tmp.Exports.Description" xml:space="preserve">
     <value>Shimakaze.Sdk TMP 图片转换器</value>
   </data>
-  <data name="Command.Tmp.Extract.Output.Description" xml:space="preserve">
+  <data name="Command.Tmp.Exports.Output.Description" xml:space="preserve">
     <value>输出的图片文件路径</value>
   </data>
-  <data name="Command.Tmp.Extract.Palette.Description" xml:space="preserve">
+  <data name="Command.Tmp.Exports.Palette.Description" xml:space="preserve">
     <value>将使用的调色板文件</value>
   </data>
-  <data name="Command.Tmp.Extract.Template.Description" xml:space="preserve">
+  <data name="Command.Tmp.Exports.Template.Description" xml:space="preserve">
     <value>TMP 模板文件</value>
   </data>
   <data name="Command.Tmp.View.Description" xml:space="preserve">

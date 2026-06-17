@@ -22,7 +22,7 @@ internal sealed class TmpViewer : Application
         _writer = new(_buffer);
 
         _renderer = new(template, palette);
-        _sixel.SetImage(_renderer.Render());
+        _sixel.SetImage(_renderer.RenderAsImage());
     }
 
     protected override void OnEvent(EventArgs eventArgs)
@@ -46,7 +46,7 @@ internal sealed class TmpViewer : Application
             case { Key: ConsoleKey.T }:
                 Console.Clear();
                 _renderer.UseTransparent = !_renderer.UseTransparent;
-                _sixel.SetImage(_renderer.Render());
+                _sixel.SetImage(_renderer.RenderAsImage());
                 break;
         }
     }

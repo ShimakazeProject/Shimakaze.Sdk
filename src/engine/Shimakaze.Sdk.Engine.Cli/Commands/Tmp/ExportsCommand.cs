@@ -7,16 +7,16 @@ using Shimakaze.Sdk.Tmp;
 
 namespace Shimakaze.Sdk.Engine.Cli.Commands.Tmp;
 
-[CliCommand(Description = nameof(Resource.Command_Tmp_Extract_Description), Alias = "x", Parent = typeof(TmpCommand))]
-internal sealed class ExtractCommand
+[CliCommand(Description = nameof(Resource.Command_Tmp_Exports_Description), Alias = "x", Parent = typeof(TmpCommand))]
+internal sealed class ExportsCommand
 {
-    [CliOption(Description = nameof(Resource.Command_Tmp_Extract_Template_Description), Alias = "i", Aliases = ["input"])]
+    [CliOption(Description = nameof(Resource.Command_Tmp_Exports_Template_Description), Alias = "i", Aliases = ["input"])]
     public required FileInfo Template { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Tmp_Extract_Palette_Description))]
+    [CliOption(Description = nameof(Resource.Command_Tmp_Exports_Palette_Description))]
     public required FileInfo Palette { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Tmp_Extract_Output_Description))]
+    [CliOption(Description = nameof(Resource.Command_Tmp_Exports_Output_Description))]
     public required string Output { get; set; }
 
     public async Task RunAsync()
@@ -30,7 +30,7 @@ internal sealed class ExtractCommand
             template = TemplateFile.ReadFrom(fs);
 
         TmpRenderer renderer = new(template, palette);
-        var image = renderer.Render();
+        var image = renderer.RenderAsImage();
 
         string output = Path.GetFullPath(Output);
         if (Path.GetDirectoryName(output) is { } dirpath && !Directory.Exists(dirpath))

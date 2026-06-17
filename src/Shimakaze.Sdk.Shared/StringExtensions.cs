@@ -34,7 +34,7 @@ internal static class StringExtensions
     {
         public string[] Split(char separator, StringSplitOptionsPolyfill options)
         {
-            var result = str.Split(separator, (StringSplitOptions)options.Value);
+            string[] result = str.Split(separator, (StringSplitOptions)options.Value);
             return (options.Value & 2) is not 0
                 ? [.. result.Select(x => x.Trim())]
                 : result;

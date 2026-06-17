@@ -28,8 +28,8 @@ internal static class MixPacker
         var entries = GC.AllocateUninitializedArray<MixEntry>(files.Count);
         for (int i = 0; i < files.Count; i++)
         {
-            var id = idCalculator(files[i].Name, fileNameEncoding);
-            var size = (int)files[i].Length;
+            uint id = idCalculator(files[i].Name, fileNameEncoding);
+            int size = (int)files[i].Length;
             entries[i] = new()
             {
                 Id = id,
