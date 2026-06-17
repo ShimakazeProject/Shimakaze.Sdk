@@ -34,14 +34,14 @@ internal sealed class PackCommand
         Encoding encoding;
         if ("ANSI".Equals(Encoding, StringComparison.OrdinalIgnoreCase))
             encoding = System.Text.Encoding.GetEncoding(0);
-        else if (int.TryParse(Encoding, out var codepage))
+        else if (int.TryParse(Encoding, out int codepage))
             encoding = System.Text.Encoding.GetEncoding(codepage);
         else
             encoding = System.Text.Encoding.GetEncoding(Encoding);
 
         using var nameMapWriter = NameMapOutput?.CreateText();
 
-        await using FileStream output = Output.Create();
+        await using var output = Output.Create();
 
         await MixPacker.PackAsync(output, Input, IsTDMode, encoding, nameMapWriter);
     }

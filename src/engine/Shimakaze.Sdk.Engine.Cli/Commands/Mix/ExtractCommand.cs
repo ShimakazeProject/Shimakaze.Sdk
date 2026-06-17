@@ -33,7 +33,7 @@ internal sealed class ExtractCommand
             namemap = [];
         }
 
-        await using FileStream stream = Input.OpenRead();
+        await using var stream = Input.OpenRead();
         await MixExtractor.Extract(stream, Output.FullName, namemap, IsTDMode);
     }
 }

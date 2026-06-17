@@ -146,7 +146,7 @@ internal sealed class ShpImage : IDisposable
 
         if (HasShadow)
         {
-            var i = Index + _half;
+            int i = Index + _half;
             Draw(_shp.Frames[i], indexes);
         }
         Draw(_shp.Frames[Index], indexes);
@@ -163,11 +163,11 @@ internal sealed class ShpImage : IDisposable
         {
             for (ushort x = 0; x < shapeImageFrame.Metadata.Width; x++)
             {
-                int i = y * shapeImageFrame.Metadata.Width + x;
-                var p = shapeImageFrame.Indexes.Span[i];
+                int i = (y * shapeImageFrame.Metadata.Width) + x;
+                byte p = shapeImageFrame.Indexes.Span[i];
                 if (p is not 0)
                 {
-                    int g = (shapeImageFrame.Metadata.Y + y) * _shp.Metadata.Width + shapeImageFrame.Metadata.X + x;
+                    int g = ((shapeImageFrame.Metadata.Y + y) * _shp.Metadata.Width) + shapeImageFrame.Metadata.X + x;
                     indexes[g] = p;
                 }
             }

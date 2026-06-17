@@ -39,12 +39,12 @@ internal sealed class SixelImage : IDisposable
     public override string ToString()
     {
         _buffer.Clear();
-        var width = Width;
-        var height = Height;
+        int width = Width;
+        int height = Height;
 
         if (Center)
         {
-            var l = (Console.WindowWidth - (width / CellW)) / 2;
+            int l = (Console.WindowWidth - (width / CellW)) / 2;
             _writer.Write($"\e[{l}G");
         }
 
@@ -59,7 +59,7 @@ internal sealed class SixelImage : IDisposable
         {
             for (int x = 0; x < width; x++)
             {
-                var raw = Indexes[y * Width + x];
+                short raw = Indexes[(y * Width) + x];
                 byte? index = raw is >= 0 ? (byte)raw : null;
                 _sixel.WritePixel(index, 1);
             }

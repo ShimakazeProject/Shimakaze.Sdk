@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
@@ -74,9 +73,9 @@ internal sealed class ShpViewer : Application
     {
         if (_mode is ShpViewerMode.Normal)
         {
-            var l1 = $"{(_play ? "▶" : "⏸")}  \e[32m{_shpImage.Index + 1}\e[0m / \e[32m{_shpImage.Max + 1}\e[0m";
-            var length = l1.Length - 16;
-            var padding = (Console.WindowWidth - length) / 2;
+            string l1 = $"{(_play ? "▶" : "⏸")}  \e[32m{_shpImage.Index + 1}\e[0m / \e[32m{_shpImage.Max + 1}\e[0m";
+            int length = l1.Length - 16;
+            int padding = (Console.WindowWidth - length) / 2;
             writer.Write($"\e[2K");
             writer.Write($"\e[{padding}C");
             writer.WriteLine(l1);
@@ -91,7 +90,7 @@ internal sealed class ShpViewer : Application
                 _shpImage.UseTransparent ? $"\e[92m\e[47m T \e[0m {Resource.TUI_ShpViewer_DisableTransparent}" : $"\e[30m\e[47m T \e[0m {Resource.TUI_ShpViewer_EnableTransparent}",
             ];
 
-            var t = Console.WindowWidth / fields.Length;
+            int t = Console.WindowWidth / fields.Length;
             for (int i = 0; i < fields.Length; i++)
             {
                 writer.Write($"\e[{t * i}G");
@@ -101,9 +100,9 @@ internal sealed class ShpViewer : Application
         else if (_mode is ShpViewerMode.HouseColorPicker)
         {
             var c = _shpImage.HouseColor;
-            var l1 = $"{string.Format(CultureInfo.InvariantCulture, _hueFormat, _h)} \e[48;2;{c.R};{c.G};{c.B}m     \e[0m";
-            var length = l1.Length - 16;
-            var padding = (Console.WindowWidth - length) / 2;
+            string l1 = $"{string.Format(CultureInfo.InvariantCulture, _hueFormat, _h)} \e[48;2;{c.R};{c.G};{c.B}m     \e[0m";
+            int length = l1.Length - 16;
+            int padding = (Console.WindowWidth - length) / 2;
             writer.Write($"\e[2K");
             writer.Write($"\e[{padding}C");
             writer.WriteLine(l1);
@@ -118,7 +117,7 @@ internal sealed class ShpViewer : Application
                 _shpImage.UseTransparent ? $"\e[92m\e[47m T \e[0m {Resource.TUI_ShpViewer_DisableTransparent}" : $"\e[30m\e[47m T \e[0m {Resource.TUI_ShpViewer_EnableTransparent}",
             ];
 
-            var t = Console.WindowWidth / fields.Length;
+            int t = Console.WindowWidth / fields.Length;
             for (int i = 0; i < fields.Length; i++)
             {
                 writer.Write($"\e[{t * i}G");
@@ -129,7 +128,7 @@ internal sealed class ShpViewer : Application
 
     protected override void Update()
     {
-        var i = Console.WindowHeight - 1;
+        int i = Console.WindowHeight - 1;
         _buffer.Clear();
         if (_shpImage.UseTransparent)
             _writer.Write("\e[2J");

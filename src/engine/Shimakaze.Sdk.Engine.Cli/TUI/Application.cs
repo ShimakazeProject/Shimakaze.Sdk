@@ -25,7 +25,7 @@ internal abstract class Application : IDisposable
     {
         _ = InputLoop(cancellationToken);
 
-        Task updateTask = Task.CompletedTask;
+        var updateTask = Task.CompletedTask;
         Console.Write("\e[?1049h");
         Console.CursorVisible = false;
         while (true)

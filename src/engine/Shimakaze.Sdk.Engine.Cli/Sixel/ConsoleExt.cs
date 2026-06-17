@@ -23,9 +23,9 @@ internal sealed class ConsoleExt
         if (s_cellSize != null)
             return s_cellSize.Value;
 
-        var response = GetControlSequenceResponse("[16t");
+        string response = GetControlSequenceResponse("[16t");
 
-        var parts = response.Split(';', 't');
+        string[] parts = response.Split(';', 't');
         s_cellSize = new()
         {
             Width = int.Parse(parts[2], CultureInfo.InvariantCulture),

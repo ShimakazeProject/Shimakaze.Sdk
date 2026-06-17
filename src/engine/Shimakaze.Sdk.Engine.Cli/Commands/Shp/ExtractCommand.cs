@@ -50,9 +50,9 @@ internal sealed class ExtractCommand
 
         ShpExtractor extractor = new(shp, pal);
 
-        foreach ((int i, Image image) in ParseFrames(extractor))
+        foreach ((int i, var image) in ParseFrames(extractor))
         {
-            var output = Path.GetFullPath(Output);
+            string output = Path.GetFullPath(Output);
             if (FrameCounts is > 1)
                 output += $"{i:D4}.{Format}".ToLowerInvariant();
 
@@ -67,7 +67,7 @@ internal sealed class ExtractCommand
     {
         var shp = extractor.Shape;
 
-        var end = Index + FrameCounts;
+        int end = Index + FrameCounts;
 
         for (int i = Index; i < end; i++)
         {
@@ -77,7 +77,7 @@ internal sealed class ExtractCommand
                 if (ShadowColor.HasValue)
                     extractor.SetColor(1, new(unchecked((uint)ShadowColor.Value)));
 
-                extractor.DrawFrame(canvas, shp.Frames[shp.Frames.Count / 2 + i], []);
+                extractor.DrawFrame(canvas, shp.Frames[(shp.Frames.Count / 2) + i], []);
             }
 
             extractor.DrawFrame(canvas, shp.Frames[i], []);

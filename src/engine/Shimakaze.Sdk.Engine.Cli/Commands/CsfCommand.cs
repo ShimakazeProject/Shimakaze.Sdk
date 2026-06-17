@@ -24,10 +24,8 @@ internal sealed class CsfCommand
 
     public async Task RunAsync()
     {
-        if (InputFormat is null)
-            InputFormat = CsfTool.GuessInputFormat(Input);
-        if (OutputFormat is null)
-            OutputFormat = CsfTool.GuessOutputFormat(InputFormat.Value);
+        InputFormat ??= CsfTool.GuessInputFormat(Input);
+        OutputFormat ??= CsfTool.GuessOutputFormat(InputFormat.Value);
         InitOutput(OutputFormat.Value);
 
         await using var ifs = Input.OpenRead();
@@ -43,8 +41,8 @@ internal sealed class CsfCommand
         if (Output is not null)
             return;
 
-        var path = Input.DirectoryName ?? throw new DirectoryNotFoundException();
-        var name = Input.Name.Split('.', 2).First();
+        string path = Input.DirectoryName ?? throw new DirectoryNotFoundException();
+        string name = Input.Name.Split('.', 2).First();
 
         string output = GetSupportedFormatExt(outputFormat, Path.Combine(path, name));
 

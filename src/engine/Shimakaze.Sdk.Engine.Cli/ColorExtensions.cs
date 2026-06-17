@@ -28,7 +28,7 @@ internal static class ColorExtensions
         if (delta < 1e-6) // 灰色或黑色
             h = 0;
         else if (float.Abs(max - r) < 1e-6)
-            h = 60 * (((g - b) / delta) % 6);
+            h = 60 * ((g - b) / delta % 6);
         else if (float.Abs(max - g) < 1e-6)
             h = 60 * (((b - r) / delta) + 2);
         else if (float.Abs(max - b) < 1e-6)
@@ -50,12 +50,12 @@ internal static class ColorExtensions
     public static Color HsvToRgb(float h, float s, float v)
     {
         float c = v * s;             // 色度
-        float x = c * (1 - float.Abs((h / 60) % 2 - 1));
+        float x = c * (1 - float.Abs((h / 60 % 2) - 1));
         float m = v - c;             // 亮度偏移量
 
         float r = 0, g = 0, b = 0;
 
-        if (h >= 0 && h < 60) { r = c; g = x; }
+        if (h is >= 0 and < 60) { r = c; g = x; }
         else if (h < 120) { r = x; g = c; }
         else if (h < 180) { g = c; b = x; }
         else if (h < 240) { g = x; b = c; }
