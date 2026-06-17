@@ -3,6 +3,7 @@ using System.Text;
 
 using Shimakaze.Sdk.Engine.Cli.Sixel;
 using Shimakaze.Sdk.Engine.Common;
+using Shimakaze.Sdk.Engine.Common.Pixels;
 
 namespace Shimakaze.Sdk.Engine.Cli.Components;
 

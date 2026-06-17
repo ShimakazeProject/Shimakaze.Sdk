@@ -1,6 +1,7 @@
 using System.Drawing;
 
 using Shimakaze.Sdk.Engine.Common;
+using Shimakaze.Sdk.Engine.Common.Pixels;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Tmp;
 

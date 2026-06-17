@@ -1,5 +1,7 @@
 using System.Drawing;
 
+using Shimakaze.Sdk.Engine.Common.Pixels;
+
 namespace Shimakaze.Sdk.Engine.Common;
 
 internal abstract class Renderer

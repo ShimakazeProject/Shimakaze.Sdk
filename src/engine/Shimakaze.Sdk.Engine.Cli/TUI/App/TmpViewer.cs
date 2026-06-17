@@ -13,7 +13,7 @@ internal sealed class TmpViewer : Application
     private readonly StringBuilder _buffer;
     private readonly StringWriter _writer;
     private readonly TmpRenderer _renderer;
-    private readonly SixelImage _sixel = new();
+    private readonly SixelImage _sixel = new() { Center = true };
     private bool _disposedValue;
 
     public TmpViewer(TemplateFile template, Palette palette)

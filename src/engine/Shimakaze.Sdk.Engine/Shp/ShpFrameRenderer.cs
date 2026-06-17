@@ -1,6 +1,7 @@
 using System.Drawing;
 
 using Shimakaze.Sdk.Engine.Common;
+using Shimakaze.Sdk.Engine.Common.Pixels;
 using Shimakaze.Sdk.Shp;
 
 namespace Shimakaze.Sdk.Engine.Shp;
@@ -23,8 +24,6 @@ internal class ShpFrameRenderer(ShpRenderer shpRenderer, ShapeImageFrame frame) 
 
     protected void RenderTo(ShapeImageFrame frame, BGRA32[] canvas)
     {
-        ReadOnlySpan<BGRA32> house = shpRenderer.HouseColors;
-
         for (int y = 0; y < frame.Metadata.Height; y++)
         {
             int i = y + frame.Metadata.Y;
@@ -37,11 +36,7 @@ internal class ShpFrameRenderer(ShpRenderer shpRenderer, ShapeImageFrame frame) 
                 if (index is 0)
                     continue;
 
-                span[j] = index switch
-                {
-                    >= 16 and < 32 when !house.IsEmpty => house[index - 16],
-                    _ => shpRenderer.Palette[index],
-                };
+                span[j] = shpRenderer.Palette[index];
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 
 using Shimakaze.Sdk;
+using Shimakaze.Sdk.Engine.Common.Pixels;
 
 namespace Shimakaze.Sdk.Engine.Common;
 
