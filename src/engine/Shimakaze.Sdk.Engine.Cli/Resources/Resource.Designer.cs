@@ -342,6 +342,15 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         }
         
         /// <summary>
+        ///   查找类似 所属颜色 的本地化字符串。
+        /// </summary>
+        internal static string Command_Shp_Exports_HouseColor_Description {
+            get {
+                return ResourceManager.GetString("Command.Shp.Exports.HouseColor.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 SHP的帧索引 的本地化字符串。
         /// </summary>
         internal static string Command_Shp_Exports_Index_Description {

@@ -36,6 +36,9 @@ internal sealed class ExportsCommand
     [CliOption(Description = nameof(Resource.Command_Shp_Exports_ShadowColor_Description))]
     public int? ShadowColor { get; set; }
 
+    [CliOption(Description = nameof(Resource.Command_Shp_Exports_HouseColor_Description))]
+    public int? HouseColor { get; set; }
+
     public async Task RunAsync()
     {
         ShapeImage shp;
@@ -55,6 +58,8 @@ internal sealed class ExportsCommand
             FrameCounts = renderer.Count;
         if (ShadowColor.HasValue)
             renderer.Palette[1] = new(unchecked((uint)ShadowColor.Value));
+        if (HouseColor.HasValue)
+            renderer.UpdateHouseColor(new(unchecked((uint)HouseColor.Value)));
 
         int end = Index + FrameCounts;
         for (int i = Index; i < end; i++)

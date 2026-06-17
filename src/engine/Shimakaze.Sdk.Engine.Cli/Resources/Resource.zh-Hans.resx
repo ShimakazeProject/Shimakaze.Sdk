@@ -212,6 +212,9 @@
   <data name="Command.Shp.Exports.FrameCounts.Description" xml:space="preserve">
     <value>帧数量。为 1 时不生成序列后缀。</value>
   </data>
+  <data name="Command.Shp.Exports.HouseColor.Description" xml:space="preserve">
+    <value>所属颜色</value>
+  </data>
   <data name="Command.Shp.Exports.Index.Description" xml:space="preserve">
     <value>SHP的帧索引</value>
   </data>
