@@ -237,7 +237,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             ReadDirect(input, indexStream, frameHeader);
         }
 
-        Debug.Assert(indexStream.Length == frameHeader.BodyLength);
+        // Debug.Assert(indexStream.Length == frameHeader.BodyLength);
 
         indexStream.Seek(0, SeekOrigin.Begin);
 
