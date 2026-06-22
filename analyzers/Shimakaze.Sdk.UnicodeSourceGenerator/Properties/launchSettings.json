@@ -1,0 +1,8 @@
+{
+    "profiles": {
+        "Shimakaze.Sdk.UnicodeSourceGenerator": {
+            "commandName": "DebugRoslynComponent",
+            "targetProject": "..\\..\\src\\engine\\Shimakaze.Sdk.Engine.Cli\\Shimakaze.Sdk.Engine.Cli.csproj"
+        }
+    }
+}
