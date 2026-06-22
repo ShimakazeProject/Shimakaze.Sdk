@@ -558,6 +558,15 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         }
         
         /// <summary>
+        ///   查找类似 退出所属色模式 的本地化字符串。
+        /// </summary>
+        internal static string TUI_ShpViewer_ExitHouseMode {
+            get {
+                return ResourceManager.GetString("TUI.ShpViewer.ExitHouseMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 色相减一度 的本地化字符串。
         /// </summary>
         internal static string TUI_ShpViewer_HueDecrease {

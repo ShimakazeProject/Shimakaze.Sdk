@@ -284,6 +284,9 @@
   <data name="TUI.ShpViewer.Exit" xml:space="preserve">
     <value>退出</value>
   </data>
+  <data name="TUI.ShpViewer.ExitHouseMode" xml:space="preserve">
+    <value>退出所属色模式</value>
+  </data>
   <data name="TUI.ShpViewer.HueDecrease" xml:space="preserve">
     <value>色相减一度</value>
   </data>

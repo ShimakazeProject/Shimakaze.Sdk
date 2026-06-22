@@ -1,0 +1,14 @@
+GetConsoleWindow
+GetClassName
+GetStdHandle
+GetCurrentConsoleFont
+GetConsoleFontSize
+GetDC
+CreateCompatibleDC
+CreateCompatibleBitmap
+SelectObject
+CreateDIBSection
+BI_COMPRESSION
+ReleaseDC
+BitBlt
+DeleteDC

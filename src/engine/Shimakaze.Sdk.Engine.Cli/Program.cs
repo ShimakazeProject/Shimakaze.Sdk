@@ -1,6 +1,9 @@
 using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Engine.Cli.Commands;
+using Shimakaze.Sdk.Engine.Cli.TUI;
+
+TerminalImageSupport.Detect();
 
 CliSettings settings = new()
 {

@@ -1,23 +1,17 @@
-using Shimakaze.Sdk.Pal;
-
 namespace Shimakaze.Sdk.Engine.Common.Pixels;
-internal readonly record struct BGRA32(byte B, byte G, byte R, byte A) : IRGB, IFromHSV<BGRA32>
+
+internal readonly record struct RGBA32(byte R, byte G, byte B, byte A) : IRGB, IFromHSV<RGBA32>
 {
-    internal static readonly BGRA32 Transparent = new(0, 0, 0, 0);
+    internal static readonly RGBA32 Transparent = new(0, 0, 0, 0);
 
-    public BGRA32(byte b, byte g, byte r) : this(b, g, r, byte.MaxValue)
-    {
-    }
-
-    public BGRA32(uint value) : this((byte)((value & 0xFF000000) >> 24), (byte)((value & 0x00FF0000) >> 16), (byte)((value & 0x0000FF00) >> 8), (byte)(value & 0x000000FF))
+    public RGBA32(byte r, byte g, byte b) : this(r, g, b, byte.MaxValue)
     {
     }
 
 #if !NET7_0_OR_GREATER
-    BGRA32 IFromHSV<BGRA32>.FromHSV(in HSV hsv) => FromHSV(hsv);
+    RGBA32 IFromHSV<RGBA32>.FromHSV(in HSV hsv) => FromHSV(hsv);
 #endif
-
-    public static BGRA32 FromHSV(in HSV hsv)
+    public static RGBA32 FromHSV(in HSV hsv)
     {
         float c = hsv.V * hsv.S;             // 色度
         float x = c * (1 - Math.Abs((hsv.H / 60 % 2) - 1));
@@ -36,8 +30,8 @@ internal readonly record struct BGRA32(byte B, byte G, byte R, byte A) : IRGB, I
         byte green = (byte)Math.Round((g + m) * 255);
         byte blue = (byte)Math.Round((b + m) * 255);
 
-        return new(blue, green, red);
+        return new(red, green, blue);
     }
 
-    public static implicit operator BGRA32(DisplayColor color) => new(color.Blue, color.Green, color.Red);
+    public static explicit operator RGBA32(BGRA32 c) => new(c.R, c.G, c.B, c.A);
 }

@@ -1,7 +1,7 @@
 using DotMake.CommandLine;
 
+using Shimakaze.Sdk.Engine.Cli.App;
 using Shimakaze.Sdk.Engine.Cli.Resources;
-using Shimakaze.Sdk.Engine.Cli.TUI.App;
 using Shimakaze.Sdk.Pal;
 using Shimakaze.Sdk.Shp;
 

@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/analyzers/">
+    <Project Path="analyzers/Shimakaze.Sdk.UnicodeSourceGenerator/Shimakaze.Sdk.UnicodeSourceGenerator.csproj" />
+  </Folder>
   <Folder Name="/csf/">
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Converter/Shimakaze.Sdk.Csf.Converter.csproj" />
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Json/Shimakaze.Sdk.Csf.Json.csproj" />

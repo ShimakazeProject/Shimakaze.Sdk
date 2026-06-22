@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 using Shimakaze.Sdk.Engine.Common;
 using Shimakaze.Sdk.Engine.Common.Pixels;
@@ -20,16 +21,15 @@ internal sealed class TmpRenderer : Renderer
     private readonly int _maxY;
     private readonly int _pixelsWidth;
     private readonly int _pixelsHeight;
-    private readonly BGRA32[] _palette;
+    public readonly BGRA32[] Palette;
 
     public override Size Size { get; }
     public TemplateFile Template { get; }
-    public bool UseTransparent { get; set; }
 
     public TmpRenderer(TemplateFile template, Palette palette)
     {
         Template = template;
-        _palette = [.. palette.Cast<DisplayColor>().Select(i => (BGRA32)i)];
+        Palette = [.. palette.Cast<DisplayColor>().Select(i => (BGRA32)i)];
 
         _tileW = (int)Template.Header.BlockImageWidth;
         _tileH = (int)Template.Header.BlockImageHeight;
@@ -73,17 +73,20 @@ internal sealed class TmpRenderer : Renderer
         Size = new(_pixelsWidth, _pixelsHeight);
     }
 
-    public override BGRA32[] CreateBuffer()
+    public override Image RenderAsImage()
     {
-        var buffer = base.CreateBuffer();
-        var bg = UseTransparent
-            ? BGRA32.Transparent
-            : _palette[0];
-        buffer.AsSpan().Fill(bg);
-        return buffer;
+        byte[] indexes = new byte[Size.Width * Size.Height];
+
+        RenderTo( indexes);
+        
+        return new PaletteImage(
+            Size.Width,
+            Size.Height,
+            ImmutableCollectionsMarshal.AsImmutableArray(Palette),
+            ImmutableCollectionsMarshal.AsImmutableArray(indexes));
     }
 
-    public override void RenderTo(BGRA32[] canvas)
+    private void RenderTo(byte[] canvas)
     {
         foreach (var tile in Template.Tiles)
         {
@@ -105,12 +108,12 @@ internal sealed class TmpRenderer : Renderer
                     if (tilePos >= indexes.Length)
                         continue;
 
-                    int colorIndex = indexes[tilePos];
-                    if (colorIndex > 0 && colorIndex < _palette.Length)
+                    byte colorIndex = indexes[tilePos];
+                    if (colorIndex > 0 && colorIndex < Palette.Length)
                     {
                         int pixelIndex = (outY * _pixelsWidth) + outX + x;
                         if (pixelIndex >= 0 && pixelIndex < canvas.Length)
-                            canvas[pixelIndex] = _palette[colorIndex];
+                            canvas[pixelIndex] = colorIndex;
                     }
                     tilePos++;
                 }
@@ -139,14 +142,14 @@ internal sealed class TmpRenderer : Renderer
                         if (extraPos >= extraData.Length)
                             continue;
 
-                        int colorIndex = extraData[extraPos];
-                        if (colorIndex > 0 && colorIndex < _palette.Length)
+                        byte colorIndex = extraData[extraPos];
+                        if (colorIndex > 0 && colorIndex < Palette.Length)
                         {
                             int outX = extraX + x;
                             int outY = extraY + y;
                             int pixelIndex = (outY * _pixelsWidth) + outX;
                             if (pixelIndex >= 0 && pixelIndex < canvas.Length)
-                                canvas[pixelIndex] = _palette[colorIndex];
+                                canvas[pixelIndex] = colorIndex;
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Engine.Cli.Resources;
+using Shimakaze.Sdk.Engine.Common.Pixels;
 using Shimakaze.Sdk.Engine.Shp;
 using Shimakaze.Sdk.Shp;
 
@@ -51,11 +52,12 @@ internal sealed class ExportsCommand
 
         ShpRenderer renderer = new(shp, pal)
         {
-            UseTransparent = Transparent,
             HasShadow = Shadow,
         };
         if (FrameCounts is -1)
             FrameCounts = renderer.Count;
+        if (Transparent)
+            renderer.Palette[0] = BGRA32.Transparent;
         if (ShadowColor.HasValue)
             renderer.Palette[1] = new(unchecked((uint)ShadowColor.Value));
         if (HouseColor.HasValue)
