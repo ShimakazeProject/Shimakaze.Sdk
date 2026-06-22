@@ -1,5 +1,3 @@
-using Shimakaze.Sdk.Inilyn.Models.Token;
-
 using LSPRange = Draco.Lsp.Model.Range;
 
 namespace Shimakaze.Sdk.Inilyn.Models.Syntax.Green;

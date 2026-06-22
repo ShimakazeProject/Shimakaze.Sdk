@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 namespace Shimakaze.Sdk.Csf.Json;
 
 /// <summary>
