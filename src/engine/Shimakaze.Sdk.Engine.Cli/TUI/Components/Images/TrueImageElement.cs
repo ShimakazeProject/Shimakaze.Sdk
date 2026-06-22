@@ -19,7 +19,7 @@ internal abstract class TrueImageElement : ImageElement
         return new(int.Min(minw, max.Width), int.Min(minh, max.Height));
     }
 
-    public sealed override void OnRender(TextWriter writer, Size size)
+    public override void OnRender(TextWriter writer, Size size)
     {
         if (Image is not { } image)
             return;

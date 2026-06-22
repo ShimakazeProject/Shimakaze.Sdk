@@ -163,8 +163,6 @@ internal sealed class ShpViewer(ShapeImage shp, Palette pal) : NanoFramework
     private void SwitchPlayPause()
     {
         _timer.Enabled = _play = !_timer.Enabled;
-        if (_play)
-            UseTransparent = false;
     }
 
     private void EnterHouseMode()
@@ -201,15 +199,10 @@ internal sealed class ShpViewer(ShapeImage shp, Palette pal) : NanoFramework
     private void SwitchTransparent()
     {
         UseTransparent = !UseTransparent;
-        if (UseTransparent)
-            _timer.Enabled = _play = false;
     }
 
     protected override void OnRender()
     {
-        if (UseTransparent)
-            Console.Clear();
-
         HelpBar.Title = Mode switch
         {
             ShpViewerMode.Normal => $"[ {(_play ? "⏸" : "▶")}  \e[32m{Index + 1}\e[0m / \e[32m{_renderer.Count}\e[0m ]",
