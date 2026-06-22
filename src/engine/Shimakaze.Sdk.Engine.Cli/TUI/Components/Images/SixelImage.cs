@@ -13,22 +13,21 @@ internal sealed class SixelImage : TrueImageElement
         set => base.Image = value?.ToPalette(256);
     }
 
-    public override void OnRender(TextWriter writer, Size size)
-    {
-        if (Image is not PaletteImage paletted)
-            throw new NotSupportedException();
+    //public override void OnRender(TextWriter writer, Size size)
+    //{
+    //    if (Image is not PaletteImage paletted)
+    //        throw new NotSupportedException();
 
-        if (paletted.Palette.Any(i => i.A is 0))
-        {
-            for (int i = 0; i < size.Height; i++)
-            {
-                writer.Write($"\e[{size.Width}X");
-                writer.Write($"\e[B");
-            }
-            writer.Write($"\e[{size.Height}A");
-        }
-        base.OnRender(writer, size);
-    }
+    //    writer.Write($"\e[?2026h");
+    //    for (int i = 0; i < size.Height; i++)
+    //    {
+    //        writer.Write($"\e[{size.Width}X");
+    //        writer.Write($"\e[B");
+    //    }
+    //    writer.Write($"\e[{size.Height}A");
+    //    base.OnRender(writer, size);
+    //    writer.Write($"\e[?2026l");
+    //}
 
     protected override void OnTrueRender(TextWriter writer, Size px)
     {

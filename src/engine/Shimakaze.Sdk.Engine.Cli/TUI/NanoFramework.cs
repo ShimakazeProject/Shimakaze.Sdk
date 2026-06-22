@@ -80,6 +80,9 @@ internal class NanoFramework : IDisposable
         clientSize.Height -= helpSize.Height;
 
         _buffer.Clear();
+        _writer.Write($"\e[?2026h");
+        _writer.Write("\e[3J");
+        _writer.Write("\e[2J");
         _writer.Write("\e[1;1H");
         TitleBar.OnRender(_writer, titleSize);
         _writer.Write("\e[2;1H");
@@ -87,6 +90,7 @@ internal class NanoFramework : IDisposable
         _writer.Write($"\e[{size.Height - (helpSize.Height - 1)};1H");
         HelpBar.OnRender(_writer, helpSize);
         _writer.Write("\e[1;1H");
+        _writer.Write($"\e[?2026l");
         _writer.Flush();
 
         Console.WriteLine(_writer);
