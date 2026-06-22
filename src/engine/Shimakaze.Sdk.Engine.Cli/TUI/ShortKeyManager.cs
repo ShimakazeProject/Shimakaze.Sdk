@@ -12,7 +12,7 @@ internal record NamedShortKey(ConsoleKey Key, ConsoleModifiers Modifiers, string
     public int Order { get; init; }
     public virtual string Name { get; } = Name;
 }
-internal record NamedSwitchShortKey(ConsoleKey Key, ConsoleModifiers Modifiers, Func<bool, string> GetName, Func<bool> GetStatus) : NamedShortKey(Key, Modifiers, GetName(GetStatus()))
+internal sealed record NamedSwitchShortKey(ConsoleKey Key, ConsoleModifiers Modifiers, Func<bool, string> GetName, Func<bool> GetStatus) : NamedShortKey(Key, Modifiers, GetName(GetStatus()))
 {
     public override string Name => GetName(GetStatus());
 }

@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace Shimakaze.Sdk.Engine.Cli.TUI.Components;
 
-internal class NanoTitleBar : ITUIElement
+internal sealed class NanoTitleBar : ITUIElement
 {
     public string? Left { get; set; }
     public string? Center { get; set; }

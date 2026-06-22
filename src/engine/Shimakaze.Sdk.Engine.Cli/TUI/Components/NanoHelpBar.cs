@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace Shimakaze.Sdk.Engine.Cli.TUI.Components;
 
-internal class NanoHelpBar(ShortKeyManager shortKeyManager) : ITUIElement
+internal sealed class NanoHelpBar(ShortKeyManager shortKeyManager) : ITUIElement
 {
     private int _fieldWidth;
     private int _fieldPerLine;
