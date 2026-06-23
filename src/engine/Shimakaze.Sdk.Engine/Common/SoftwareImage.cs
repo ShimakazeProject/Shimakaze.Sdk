@@ -7,14 +7,27 @@ using Shimakaze.Sdk.Engine.Common.Pixels;
 
 namespace Shimakaze.Sdk.Engine.Common;
 
-internal sealed record class SoftwareImage(int Width, int Height, ImmutableArray<BGRA32> Pixels)
+/// <summary>
+/// Represents an image backed by raw pixel data in software memory.
+/// </summary>
+/// <param name="Width">The width of the image in pixels.</param>
+/// <param name="Height">The height of the image in pixels.</param>
+/// <param name="Pixels">The raw pixel data as an immutable array of <see cref="BGRA32"/> values.</param>
+public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<BGRA32> Pixels)
     : Image(Width, Height)
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SoftwareImage"/> class from a size and pixel array.
+    /// </summary>
+    /// <param name="size">The size of the image.</param>
+    /// <param name="pixels">The raw pixel data.</param>
     internal SoftwareImage(Size size, BGRA32[] pixels) : this(size.Width, size.Height, ImmutableCollectionsMarshal.AsImmutableArray(pixels))
     { }
 
+    /// <inheritdoc />
     public override BGRA32 GetPixel(int x, int y) => Pixels[(y * Width) + x];
 
+    /// <inheritdoc />
     public override PaletteImage ToPalette(int count)
     {
         var colors = GetPalette(count);
@@ -26,8 +39,15 @@ internal sealed record class SoftwareImage(int Width, int Height, ImmutableArray
         return new(Width, Height, palette, ImmutableCollectionsMarshal.AsImmutableArray(indexes));
     }
 
+    /// <inheritdoc />
     public override SoftwareImage ToSoftware() => this;
 
+    /// <summary>
+    /// Generates a color palette from the image using ImageMagick with optional quantized colors.
+    /// </summary>
+    /// <param name="count">The maximum number of colors in the palette.</param>
+    /// <param name="pixels">Optional pixel data to use instead of the image's own pixels.</param>
+    /// <returns>An immutable array of <see cref="BGRA32"/> palette colors.</returns>
     private ImmutableArray<BGRA32> GetPalette(int count, ImmutableArray<BGRA32>? pixels = null)
     {
         ProcessStartInfo data = new()

@@ -1,21 +1,44 @@
 namespace Shimakaze.Sdk.Engine.Common.Pixels;
 
-internal interface IRGB
+/// <summary>
+/// Defines a pixel type with red, green, and blue color channels.
+/// </summary>
+public interface IRGB
 {
+    /// <summary>
+    /// Gets the red component.
+    /// </summary>
     byte R { get; }
+
+    /// <summary>
+    /// Gets the green component.
+    /// </summary>
     byte G { get; }
+
+    /// <summary>
+    /// Gets the blue component.
+    /// </summary>
     byte B { get; }
 }
 
-internal static class RGBExtensions
+/// <summary>
+/// Provides extension methods for converting RGB pixel types to HSV.
+/// </summary>
+public static class RGBExtensions
 {
+    /// <summary>
+    /// Provides extension methods for <see cref="IRGB"/> types.
+    /// </summary>
+    /// <typeparam name="TRGB">The pixel type that implements <see cref="IRGB"/>.</typeparam>
     extension<TRGB>(TRGB rgb)
         where TRGB : unmanaged, IRGB
     {
         /// <summary>
-        /// 将 RGB 转换为 HSV
+        /// Converts the RGB color to its HSV representation.
         /// </summary>
-        /// <returns>包含 H(0-360), S(0-1), V(0-1) 的元组</returns>
+        /// <returns>
+        /// An <see cref="HSV"/> value with H in the range [0, 360), S in [0, 1], and V in [0, 1].
+        /// </returns>
         public HSV ToHSV()
         {
             float r = rgb.R / 255f;
@@ -28,11 +51,11 @@ internal static class RGBExtensions
 
             float h = 0, s, v = max;
 
-            // 计算饱和度 S
+            // Compute saturation S
             s = (max == 0) ? 0 : delta / max;
 
-            // 计算色相 H
-            if (delta < 1e-6) // 灰色或黑色
+            // Compute hue H
+            if (delta < 1e-6) // Gray or black
                 h = 0;
             else if (Math.Abs(max - r) < 1e-6)
                 h = 60 * ((g - b) / delta % 6);
@@ -41,7 +64,7 @@ internal static class RGBExtensions
             else if (Math.Abs(max - b) < 1e-6)
                 h = 60 * (((r - g) / delta) + 4);
 
-            // 确保 H 在 0-360 范围内
+            // Ensure H is in the [0, 360) range
             if (h < 0) h += 360;
 
             return new(h, s, v);
