@@ -166,9 +166,9 @@ internal static class ShpMaker
         byte index = 0;
         for (byte i = start; i < end; i++)
         {
-            DisplayColor color = palette[i];
+            var color = palette[i];
 
-            double distance = Math.Sqrt(Math.Pow(color.Red - pixel.R, 2) + Math.Pow(color.Green - pixel.G, 2) + Math.Pow(color.Blue - pixel.B, 2));
+            double distance = Math.Sqrt(Math.Pow(color.ExpandedR - pixel.R, 2) + Math.Pow(color.ExpandedG - pixel.G, 2) + Math.Pow(color.ExpandedB - pixel.B, 2));
             if (distance < cdistance)
             {
                 index = i;
@@ -194,8 +194,8 @@ internal static class ShpMaker
         byte index = 0;
         for (byte i = 16; i < 32; i++)
         {
-            DisplayColor color = palette[i];
-            int gray = color.Red - pixel.R + (color.Green - pixel.G) + (color.Blue - pixel.B);
+            var color = palette[i];
+            int gray = color.ExpandedR - pixel.R + (color.ExpandedG - pixel.G) + (color.ExpandedB - pixel.B);
 
             double distance = Math.Sqrt(Math.Pow(gray, 2));
             if (distance < cdistance)

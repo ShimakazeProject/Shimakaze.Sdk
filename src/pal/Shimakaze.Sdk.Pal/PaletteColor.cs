@@ -1,112 +1,178 @@
+using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace Shimakaze.Sdk.Pal;
 
 /// <summary>
-/// 颜色
+/// Represents a palette color entry with R, G, B components.
+/// Primarily used to describe a compact 18-bit color (6 bits per channel, RGB666),
+/// but can also hold a full RGB24 color.
 /// </summary>
-/// <param name="Red">红色</param>
-/// <param name="Green">绿色</param>
-/// <param name="Blue">蓝色</param>
-[StructLayout(LayoutKind.Explicit, Pack = 1, Size = BytePerPixel)]
-public readonly record struct PaletteColor(
-    [field: FieldOffset(0)] byte Red,
-    [field: FieldOffset(1)] byte Green,
-    [field: FieldOffset(2)] byte Blue)
+/// <remarks>
+/// <see href="https://modenc.renegadeprojects.com/PAL"/>
+/// </remarks>
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public record struct PaletteColor(byte R, byte G, byte B)
 {
     /// <summary>
-    /// 色彩深度
+    /// Bits per pixel for unpacked (RGB24) format.
     /// </summary>
     public const int BitPerPixel = BytePerPixel * 8;
 
     /// <summary>
-    /// 字节每像素
+    /// Bytes per pixel (3 bytes, one per R/G/B component).
     /// </summary>
     public const int BytePerPixel = sizeof(byte) * 3;
 
     /// <summary>
-    /// 获取当前 <see cref="PaletteColor"/> 对象的 #HEX 值
+    /// Red component.
     /// </summary>
-    /// <returns></returns>
-    public override readonly string ToString() => $"#{Red:X2}{Green:X2}{Blue:X2}";
+    public byte R { readonly get; set; } = R;
+    /// <summary>
+    /// Green component.
+    /// </summary>
+    public byte G { readonly get; set; } = G;
+    /// <summary>
+    /// Blue component.
+    /// </summary>
+    public byte B { readonly get; set; } = B;
 
     /// <summary>
-    /// 创建一个 <see cref="DisplayColor"/> 对象
+    /// Red component expanded from 6-bit to 8-bit range.
+    /// When in compact 18-bit mode, left-shifts by 2; otherwise returns <see cref="R"/> as-is.
     /// </summary>
-    public DisplayColor AsDisplay() => this;
+    public readonly byte ExpandedR => IsPaletteColor ? (byte)(R << 2) : R;
+    /// <summary>
+    /// Green component expanded from 6-bit to 8-bit range.
+    /// When in compact 18-bit mode, left-shifts by 2; otherwise returns <see cref="G"/> as-is.
+    /// </summary>
+    public readonly byte ExpandedG => IsPaletteColor ? (byte)(G << 2) : G;
+    /// <summary>
+    /// Blue component expanded from 6-bit to 8-bit range.
+    /// When in compact 18-bit mode, left-shifts by 2; otherwise returns <see cref="B"/> as-is.
+    /// </summary>
+    public readonly byte ExpandedB => IsPaletteColor ? (byte)(B << 2) : B;
 
     /// <summary>
-    /// 创建一个 <see cref="PaletteColor"/> 对象
+    /// Indicates whether the color is stored in compact 18-bit (RGB666) format.
+    /// Returns <see langword="true"/> when the upper 2 bits of R, G, and B are all zero,
+    /// meaning each component only occupies the lower 6 bits (value range 0–63).
     /// </summary>
-    /// <param name="rgb888">0x00RRGGBB</param>
-    public static unsafe implicit operator PaletteColor(int rgb888) => *(PaletteColor*)&rgb888;
+    public readonly bool IsPaletteColor => (R & 0b11000000, G & 0b11000000, B & 0b11000000) is (0, 0, 0);
+
+    #region Backward compatibility (to be removed)
 
     /// <summary>
-    /// 转换为 24 位 RGB 颜色值
+    /// Gets the red component. Prefer <see cref="R"/>.
     /// </summary>
-    /// <param name="color"></param>
-    public static unsafe explicit operator int(PaletteColor color)
+    [Obsolete("Use R instead.")]
+    public readonly byte Red => R;
+
+    /// <summary>
+    /// Gets the green component. Prefer <see cref="G"/>.
+    /// </summary>
+    [Obsolete("Use G instead.")]
+    public readonly byte Green => G;
+
+    /// <summary>
+    /// Gets the blue component. Prefer <see cref="B"/>.
+    /// </summary>
+    [Obsolete("Use B instead.")]
+    public readonly byte Blue => B;
+    #endregion
+
+    /// <summary>
+    /// Masks each component to the lower 6 bits (0–63 range), enforcing compact 18-bit form.
+    /// Calls to this method guarantee <see cref="IsPaletteColor"/> returns <see langword="true"/> afterward.
+    /// </summary>
+    public void TruncateHighBits()
     {
-        int i = color.Red;
-        i <<= 8;
-        i |= color.Green;
-        i <<= 8;
-        i |= color.Blue;
-        return i;
+        R = (byte)(R & 0b00111111);
+        G = (byte)(G & 0b00111111);
+        B = (byte)(B & 0b00111111);
+        Debug.Assert(IsPaletteColor);
     }
 
     /// <summary>
-    /// 创建一个 <see cref="PaletteColor"/> 对象
+    /// Converts from RGB24 down to compact 18-bit format by right-shifting each component by 2.
+    /// No operation if already in compact form.
     /// </summary>
-    /// <param name="rgb565"></param>
-    public static unsafe implicit operator PaletteColor(short rgb565)
+    public void ConvertToPaletteColor()
     {
-        int rgb888 = 0;
-        unchecked
-        {
-            rgb888 |= (rgb565 & 0b11111000_00000000) >> 11;
-            rgb888 <<= 8;
-            rgb888 |= (rgb565 & 0b00000111_11100000) >> 5;
-            rgb888 <<= 8;
-            rgb888 |= (rgb565 & 0b00000000_00011111) >> 0;
-        }
-        return (PaletteColor)rgb888;
+        if (IsPaletteColor)
+            return;
+
+        R = (byte)(R >> 2);
+        G = (byte)(G >> 2);
+        B = (byte)(B >> 2);
+        Debug.Assert(IsPaletteColor);
     }
 
     /// <summary>
-    /// 将24位色转换为16位色
+    /// Expands from compact 18-bit format up to RGB24 by left-shifting each component by 2.
+    /// No operation if already in RGB24 form.
     /// </summary>
-    /// <param name="pixel"></param>
-    /// <returns></returns>
-    public static unsafe explicit operator ushort(PaletteColor pixel)
+    public void ExpandToRgb24()
     {
-        /*
-         * RRRRRRRR | GGGGGGGG | BBBBBBBB
-         *   >>= 1  |          |   >>= 1
-         * #RRRRRRR |   <<= 2  | #BBBBBBB
-         *   <<= 3  |          |   <<= 3
-         * RRRRR### | GGGGGG## | BBBBB###
-         * 
-         * => RRRRRGGG GGGBBBBB
-         */
-        int value = 0;
-        // ######## ######## ######## ########
-        value |= pixel.Red & 0b11111000;
-        // ######## ######## ######## RRRRR###
-        value <<= 8 - 3;
-        // ######## ######## ###RRRRR ########
-        value |= pixel.Green & 0b11111100;
-        // ######## ######## ###RRRRR GGGGGG##
-        value <<= 8 - 2;
-        // ######## #####RRR RRGGGGGG ########
-        value |= pixel.Blue & 0b11111000;
-        // ######## #####RRR RRGGGGGG BBBBB###
-        value >>= 3;
-        // ######## ######## RRRRRGGG GGGBBBBB
-        return unchecked((ushort)value);
+        if (!IsPaletteColor)
+            return;
+
+        R = (byte)(R << 2);
+        G = (byte)(G << 2);
+        B = (byte)(B << 2);
+        Debug.Assert(!IsPaletteColor);
     }
 
-    /// <inheritdoc cref="AsDisplay"/>
-    /// <param name="color"></param>
-    public static implicit operator DisplayColor(PaletteColor color) => new(color);
+    /// <summary>
+    /// Computes the bitwise complement of the color.
+    /// Each component is independently inverted: ~R, ~G, ~B.
+    /// </summary>
+    public static PaletteColor operator ~(PaletteColor color)
+        => new((byte)~color.R, (byte)~color.G, (byte)~color.B);
+
+    /// <summary>
+    /// Returns the color as a <c>#RRGGBB</c> hex string.
+    /// </summary>
+    public override readonly string ToString() => $"#{R:X2}{G:X2}{B:X2}";
+
+    /// <summary>
+    /// Converts this color to a <see cref="Color"/> value using the raw R, G, B components.
+    /// </summary>
+    public readonly Color ToColor() => Color.FromArgb(R, G, B);
+
+    /// <summary>
+    /// Creates a <see cref="PaletteColor"/> from a 24-bit RGB888 integer value.
+    /// </summary>
+    public static PaletteColor Create(int rgb888) => Create((uint)rgb888);
+
+    /// <inheritdoc cref="Create(int)"/>
+    public static PaletteColor Create(uint rgb888)
+    {
+        var r = (byte)((rgb888 & 0xFF0000) >> 16);
+        var g = (byte)((rgb888 & 0x00FF00) >> 8);
+        var b = (byte)((rgb888 & 0x0000FF) >> 0);
+        return new(r, g, b);
+    }
+
+    /// <summary>
+    /// Creates a <see cref="PaletteColor"/> from a 16-bit RGB565 integer value.
+    /// R and B are extracted from 5 bits each; G from 6 bits.
+    /// </summary>
+    public static PaletteColor Create(short rgb565) => Create((ushort)rgb565);
+
+    /// <inheritdoc cref="Create(short)"/>
+    public static PaletteColor Create(ushort rgb565)
+    {
+        var r = (byte)((rgb565 & 0b11111_000000_00000) >> 11);
+        var g = (byte)((rgb565 & 0b00000_111111_00000) >> 5);
+        var b = (byte)((rgb565 & 0b00000_000000_11111) >> 0);
+        return new(r, g, b);
+    }
+
+    /// <summary>
+    /// Creates a <see cref="PaletteColor"/> from a <see cref="Color"/> instance,
+    /// using the raw R, G, B component values.
+    /// </summary>
+    public static PaletteColor Create(Color color) => new(color.R, color.G, color.B);
 }

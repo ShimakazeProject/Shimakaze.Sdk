@@ -17,7 +17,7 @@ internal sealed class ShpRenderer(ShapeImage shape, Palette palette) : FramesRen
     public ShapeImage Shape { get; } = shape;
     public bool HasShadow { get; set => field = Shape.Frames.Count % 2 is 0 && value; }
 
-    public readonly BGRA32[] Palette = [.. palette.Cast<DisplayColor>().Select(i => (BGRA32)i)];
+    public readonly BGRA32[] Palette = [.. palette.Select(i => (BGRA32)i)];
 
     public override ShpFrameRenderer GetFrame(int index)
     {

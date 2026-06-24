@@ -29,7 +29,7 @@ internal sealed class TmpRenderer : Renderer
     public TmpRenderer(TemplateFile template, Palette palette)
     {
         Template = template;
-        Palette = [.. palette.Cast<DisplayColor>().Select(i => (BGRA32)i)];
+        Palette = [.. palette.Select(i => (BGRA32)i)];
 
         _tileW = (int)Template.Header.BlockImageWidth;
         _tileH = (int)Template.Header.BlockImageHeight;

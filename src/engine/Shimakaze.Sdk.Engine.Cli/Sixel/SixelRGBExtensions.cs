@@ -25,13 +25,13 @@ public static class SixelRGBExtensions
 
 
     /// <inheritdoc cref="SixelWriter.RegistColor(byte, SixelColorType, int, int, int)"/>
-    internal static SixelWriter RegistColor(this SixelWriter sixel, int index, DisplayColor color)
+    internal static SixelWriter RegistColor(this SixelWriter sixel, int index, PaletteColor color)
     {
         return sixel.RegistColor(
             (byte)index,
-            color.Red,
-            color.Green,
-            color.Blue);
+            color.ExpandedR,
+            color.ExpandedG,
+            color.ExpandedB);
     }
 
     /// <inheritdoc cref="SixelWriter.RegistColor(byte, SixelColorType, int, int, int)"/>

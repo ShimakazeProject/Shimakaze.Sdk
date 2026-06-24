@@ -6,8 +6,7 @@ namespace Shimakaze.Sdk.Pal;
 /// 色板
 /// </summary>
 /// <param name="Colors">色表</param>
-public record class Palette(Memory<PaletteColor> Colors)
-    : IEnumerable<PaletteColor>, IEnumerable<DisplayColor>
+public record class Palette(Memory<PaletteColor> Colors) : IEnumerable<PaletteColor>
 {
     /// <summary>
     /// 颜色数量
@@ -65,10 +64,4 @@ public record class Palette(Memory<PaletteColor> Colors)
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    IEnumerator<DisplayColor> IEnumerable<DisplayColor>.GetEnumerator()
-    {
-        for (int i = 0; i < Colors.Length; i++)
-            yield return Colors.Span[i];
-    }
 }

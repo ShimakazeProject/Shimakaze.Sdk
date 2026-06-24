@@ -39,5 +39,5 @@ internal readonly record struct BGRA32(byte B, byte G, byte R, byte A) : IRGB, I
         return new(blue, green, red);
     }
 
-    public static implicit operator BGRA32(DisplayColor color) => new(color.Blue, color.Green, color.Red);
+    public static implicit operator BGRA32(PaletteColor color) => new(color.ExpandedB, color.ExpandedG, color.ExpandedR);
 }

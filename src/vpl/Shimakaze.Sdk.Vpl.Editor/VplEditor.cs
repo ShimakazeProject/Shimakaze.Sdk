@@ -159,7 +159,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Func<VplEditor, C
                 Console.Write(_pal[Vpl[_current.Section][(y * 16) + x]].GetANSIString(true));
                 if (x == _current.X && y == _current.Y && _isEditing)
                 {
-                    Console.Write(_pal[Vpl[_current.Section][(y * 16) + x]].GetReverse().GetANSIString(false));
+                    Console.Write((~_pal[Vpl[_current.Section][(y * 16) + x]]).GetANSIString(false));
                     Console.Write(" x ");
                 }
                 else
