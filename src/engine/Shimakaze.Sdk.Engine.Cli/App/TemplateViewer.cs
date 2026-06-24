@@ -10,9 +10,9 @@ using Shimakaze.Sdk.Tmp;
 
 namespace Shimakaze.Sdk.Engine.Cli.App;
 
-internal sealed class TmpViewer(TemplateFile template, Palette palette) : NanoFramework
+internal sealed class TemplateViewer(TemplateFile template, Palette palette) : NanoFramework
 {
-    private readonly TmpRenderer _renderer = new(template, palette);
+    private readonly TemplateRenderer _renderer = new(template, palette);
     private readonly ImageElement _image = ImageElement.Create();
     private BGRA32 _pal0;
     private bool _disposedValue;
@@ -38,7 +38,7 @@ internal sealed class TmpViewer(TemplateFile template, Palette palette) : NanoFr
         ShortKeyManager.Regist(0, new ShortKey(ConsoleKey.F5, ConsoleModifiers.None), Console.Clear);
         ShortKeyManager.Regist(0, new ShortKey(ConsoleKey.Escape, ConsoleModifiers.None), Exit);
         ShortKeyManager.Regist(0, new NamedShortKey(ConsoleKey.Q, ConsoleModifiers.None, Resource.TUI_ShpViewer_Exit), Exit);
-        ShortKeyManager.Regist((int)ShpViewerMode.Normal, new NamedSwitchShortKey(ConsoleKey.T, ConsoleModifiers.None, i => i ? Resource.TUI_ShpViewer_DisableTransparent : Resource.TUI_ShpViewer_EnableTransparent, () => UseTransparent), SwitchTransparent);
+        ShortKeyManager.Regist((int)ShapeViewerMode.Normal, new NamedSwitchShortKey(ConsoleKey.T, ConsoleModifiers.None, i => i ? Resource.TUI_ShpViewer_DisableTransparent : Resource.TUI_ShpViewer_EnableTransparent, () => UseTransparent), SwitchTransparent);
     }
 
     private void Exit()

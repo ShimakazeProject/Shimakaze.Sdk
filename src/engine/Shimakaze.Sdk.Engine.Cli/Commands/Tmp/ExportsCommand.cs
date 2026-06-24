@@ -29,7 +29,7 @@ internal sealed class ExportsCommand
         await using (var fs = Template.OpenRead())
             template = TemplateFile.ReadFrom(fs);
 
-        TmpRenderer renderer = new(template, palette);
+        TemplateRenderer renderer = new(template, palette);
         var image = renderer.RenderAsImage();
 
         string output = Path.GetFullPath(Output);

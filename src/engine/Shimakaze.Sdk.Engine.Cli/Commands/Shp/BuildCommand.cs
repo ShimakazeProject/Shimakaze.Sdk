@@ -30,7 +30,7 @@ internal sealed class BuildCommand
     [CliOption(Description = nameof(Resource.Command_Shp_Build_EndIndex_Description))]
     public int EndIndex { get; set; } = 240;
 
-    private IEnumerable<ShpFrameSource> GetShpFrameSources()
+    private IEnumerable<ShapeFrameSource> GetShpFrameSources()
     {
         for (int i = 0; i < Input.Count; i++)
         {
@@ -57,7 +57,7 @@ internal sealed class BuildCommand
             palette = Pal.Palette.ReadFrom(fs);
 
         await using var output = Output.Create();
-        ShpMaker.Build(GetShpFrameSources(), output, palette, StartIndex, EndIndex);
+        ShapeMaker.Build(GetShpFrameSources(), output, palette, StartIndex, EndIndex);
         await output.FlushAsync();
     }
 }

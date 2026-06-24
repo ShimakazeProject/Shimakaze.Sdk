@@ -26,7 +26,7 @@ internal sealed class ViewCommand
         await using (var fs = Template.OpenRead())
             template = TemplateFile.ReadFrom(fs);
 
-        using TmpViewer viewer = new(template, palette);
+        using TemplateViewer viewer = new(template, palette);
         await viewer.Run();
     }
 }

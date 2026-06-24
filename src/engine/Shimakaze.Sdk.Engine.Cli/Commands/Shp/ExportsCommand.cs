@@ -50,7 +50,7 @@ internal sealed class ExportsCommand
         await using (var fs = Palette.OpenRead())
             pal = Pal.Palette.ReadFrom(fs);
 
-        ShpRenderer renderer = new(shp, pal)
+        ShapeRenderer renderer = new(shp, pal)
         {
             HasShadow = Shadow,
         };

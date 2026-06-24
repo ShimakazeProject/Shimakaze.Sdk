@@ -26,7 +26,7 @@ internal sealed class ViewCommand
         using (var fs = Shp.OpenRead())
             shp = ShapeImage.ReadFrom(fs);
 
-        using ShpViewer viewer = new(shp, palette);
+        using ShapeViewer viewer = new(shp, palette);
 
         await viewer.Run();
     }

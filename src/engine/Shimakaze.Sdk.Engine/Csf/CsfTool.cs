@@ -7,8 +7,20 @@ using Shimakaze.Sdk.Csf.Yaml;
 
 namespace Shimakaze.Sdk.Engine.Csf;
 
-internal static class CsfTool
+/// <summary>
+/// Provides utility methods for loading, saving, and format detection of CSF string table data.
+/// <br />
+/// Supports native CSF, YAML, JSON (v1/v2), and XML formats.
+/// </summary>
+public static class CsfTool
 {
+    /// <summary>
+    /// Loads <see cref="CsfData"/> from a stream in the specified format.
+    /// </summary>
+    /// <param name="input">The stream containing the serialized CSF data.</param>
+    /// <param name="format">The format of the data in the stream.</param>
+    /// <returns>The deserialized <see cref="CsfData"/>.</returns>
+    /// <exception cref="NotSupportedException">Thrown when <paramref name="format"/> is not recognized.</exception>
     public static async Task<CsfData> LoadFromAsync(Stream input, CsfFormat format) => await (format switch
     {
         CsfFormat.Csf => Task.Run(() => CsfReader.ReadAllData(input)),
@@ -27,6 +39,14 @@ internal static class CsfTool
         _ => throw new NotSupportedException(),
     });
 
+    /// <summary>
+    /// Saves <see cref="CsfData"/> to a stream in the specified format.
+    /// </summary>
+    /// <param name="csf">The CSF data to serialize.</param>
+    /// <param name="stream">The destination stream.</param>
+    /// <param name="format">The target output format.</param>
+    /// <returns>A task that represents the asynchronous save operation.</returns>
+    /// <exception cref="NotSupportedException">Thrown when <paramref name="format"/> is not recognized.</exception>
     public static async Task SaveToAsync(CsfData csf, Stream stream, CsfFormat format)
     {
         Func<CsfData, Task> writer = format switch
@@ -53,6 +73,12 @@ internal static class CsfTool
         await writer(csf);
     }
 
+    /// <summary>
+    /// Guesses the <see cref="CsfFormat"/> of a file based on its extension.
+    /// </summary>
+    /// <param name="input">The file to examine.</param>
+    /// <returns>The detected <see cref="CsfFormat"/>.</returns>
+    /// <exception cref="NotSupportedException">Thrown when the file extension does not match any known format.</exception>
     public static CsfFormat GuessInputFormat(FileInfo input)
     {
         if (input.Name.EndsWith(".csf", StringComparison.OrdinalIgnoreCase))
@@ -85,6 +111,13 @@ internal static class CsfTool
         }
     }
 
+    /// <summary>
+    /// Returns the default output format for a given input format.
+    /// <br />
+    /// Typically the inverse: CSF → YAML, anything else → CSF.
+    /// </summary>
+    /// <param name="inputFormat">The input format.</param>
+    /// <returns>The suggested output format.</returns>
     public static CsfFormat GuessOutputFormat(CsfFormat inputFormat) => inputFormat is CsfFormat.Csf ? CsfFormat.Yaml : CsfFormat.Csf;
 
 }

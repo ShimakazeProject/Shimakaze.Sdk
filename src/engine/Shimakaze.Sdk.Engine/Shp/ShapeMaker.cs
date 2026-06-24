@@ -7,9 +7,23 @@ using Shimakaze.Sdk.Shp;
 
 namespace Shimakaze.Sdk.Engine.Shp;
 
-internal static class ShpMaker
+/// <summary>
+/// Builds SHP (Shape) image files from source image frames.
+/// <br />
+/// Handles colour quantization against a palette, house-colour masking,
+/// shadow generation, and frame trimming/compression.
+/// </summary>
+public static class ShapeMaker
 {
-    public static void Build(IEnumerable<ShpFrameSource> frames, Stream output, Palette palette, int paletteStartIndex, int paletteEndIndex)
+    /// <summary>
+    /// Builds a <see cref="ShapeImage"/> from the specified source frames and writes it to the output stream.
+    /// </summary>
+    /// <param name="frames">The collection of source frame definitions.</param>
+    /// <param name="output">The destination stream for the SHP file.</param>
+    /// <param name="palette">The colour palette used for quantization.</param>
+    /// <param name="paletteStartIndex">The starting index in the palette for colour matching.</param>
+    /// <param name="paletteEndIndex">The ending index (exclusive) in the palette for colour matching.</param>
+    public static void Build(IEnumerable<ShapeFrameSource> frames, Stream output, Palette palette, int paletteStartIndex, int paletteEndIndex)
     {
         var shpFrames = BuildFrames(frames, palette, paletteStartIndex, paletteEndIndex);
 
@@ -27,7 +41,7 @@ internal static class ShpMaker
 
     }
 
-    private static IEnumerable<(ShapeImageFrame Frame, Size Size)> BuildFrames(IEnumerable<ShpFrameSource> frames, Palette palette, int paletteStartIndex, int paletteEndIndex)
+    private static IEnumerable<(ShapeImageFrame Frame, Size Size)> BuildFrames(IEnumerable<ShapeFrameSource> frames, Palette palette, int paletteStartIndex, int paletteEndIndex)
     {
         foreach (var src in frames)
         {

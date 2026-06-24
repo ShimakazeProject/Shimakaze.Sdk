@@ -2,14 +2,26 @@ using Shimakaze.Sdk.Shp;
 
 namespace Shimakaze.Sdk.Engine.Shp;
 
-internal class ShpShadowedFrameRenderer(ShpRenderer shpRenderer, ShapeImageFrame @object, ShapeImageFrame shadow) : ShpFrameRenderer(shpRenderer, @object)
+/// <summary>
+/// Renders a single SHP frame with a shadow overlay.
+/// <br />
+/// Renders the shadow frame first (only non-zero pixels), then the object frame on top.
+/// </summary>
+/// <param name="shpRenderer">The parent <see cref="ShapeRenderer"/> that owns this frame.</param>
+/// <param name="object">The object frame to render.</param>
+/// <param name="shadow">The shadow frame to render underneath the object.</param>
+#pragma warning disable CA1720 // 标识符包含类型名称
+public class ShapeShadowedFrameRenderer(ShapeRenderer shpRenderer, ShapeImageFrame @object, ShapeImageFrame shadow) : ShapeFrameRenderer(shpRenderer, @object)
+#pragma warning restore CA1720 // 标识符包含类型名称
 {
+    /// <inheritdoc/>
     protected override void RenderTo(byte[] indexes)
     {
         RenderTo(shadow, indexes);
         base.RenderTo(indexes);
     }
 
+    /// <inheritdoc/>
     protected override void RenderTo(ShapeImageFrame frame, byte[] indexes)
     {
         for (int y = 0; y < frame.Metadata.Height; y++)

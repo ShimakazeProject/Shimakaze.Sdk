@@ -8,7 +8,13 @@ using Shimakaze.Sdk.Tmp;
 
 namespace Shimakaze.Sdk.Engine.Tmp;
 
-internal sealed class TmpRenderer : Renderer
+/// <summary>
+/// Renders a <see cref="TemplateFile"/> (isometric terrain template) as a flat <see cref="PaletteImage"/>.
+/// <br />
+/// Computes the bounding box from all tiles (including extra data regions),
+/// then rasterizes each tile in isometric diamond order.
+/// </summary>
+public sealed class TemplateRenderer : Renderer
 {
     private readonly int _tileW;
     private readonly int _tileH;
@@ -21,12 +27,28 @@ internal sealed class TmpRenderer : Renderer
     private readonly int _maxY;
     private readonly int _pixelsWidth;
     private readonly int _pixelsHeight;
-    public readonly BGRA32[] Palette;
 
+    /// <summary>
+    /// The palette converted to an array of <see cref="BGRA32"/> pixels for rendering.
+    /// </summary>
+    public BGRA32[] Palette { get; }
+
+    /// <inheritdoc/>
     public override Size Size { get; }
+
+    /// <summary>
+    /// Gets the underlying <see cref="TemplateFile"/> being rendered.
+    /// </summary>
     public TemplateFile Template { get; }
 
-    public TmpRenderer(TemplateFile template, Palette palette)
+    /// <summary>
+    /// Initializes a new instance of <see cref="TemplateRenderer"/>.
+    /// <br />
+    /// Computes the bounding box and pixel dimensions from all tiles.
+    /// </summary>
+    /// <param name="template">The template file to render.</param>
+    /// <param name="palette">The colour palette for pixel lookup.</param>
+    public TemplateRenderer(TemplateFile template, Palette palette)
     {
         Template = template;
         Palette = [.. palette.Select(i => (BGRA32)i)];
@@ -73,6 +95,7 @@ internal sealed class TmpRenderer : Renderer
         Size = new(_pixelsWidth, _pixelsHeight);
     }
 
+    /// <inheritdoc/>
     public override Image RenderAsImage()
     {
         byte[] indexes = new byte[Size.Width * Size.Height];
