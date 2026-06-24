@@ -21,8 +21,7 @@
     <Project Path="src/ini/Shimakaze.Sdk.Inilyn/Shimakaze.Sdk.Inilyn.csproj" />
   </Folder>
   <Folder Name="/mix/">
-    <Project Path="src/mix/Shimakaze.Sdk.Mix.Toolkit/Shimakaze.Sdk.Mix.Toolkit.csproj" />
-    <Project Path="src/mix/Shimakaze.Sdk.Mix/Shimakaze.Sdk.Mix.csproj" />
+        <Project Path="src/mix/Shimakaze.Sdk.Mix/Shimakaze.Sdk.Mix.csproj" />
   </Folder>
   <Folder Name="/pal/">
     <Project Path="src/pal/Shimakaze.Sdk.Pal/Shimakaze.Sdk.Pal.csproj" />
