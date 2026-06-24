@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <NoWarn Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">$(NoWarn);8604</NoWarn>
+    <NoWarn Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">$(NoWarn);8600;8604;8767</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>
@@ -22,7 +22,7 @@
                       Condition="$(TargetFrameworkIdentifier) == '.NETFramework'" />
   </ItemGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <PackageReference Include="System.Collections.Immutable" />
   </ItemGroup>
 
