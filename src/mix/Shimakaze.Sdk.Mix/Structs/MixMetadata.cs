@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Shimakaze.Sdk.Mix;
+namespace Shimakaze.Sdk.Mix.Structs;
 
 /// <summary>
 /// Mix File Header

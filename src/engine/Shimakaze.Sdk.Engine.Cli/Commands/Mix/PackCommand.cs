@@ -3,7 +3,8 @@ using System.Text;
 using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Engine.Cli.Resources;
-using Shimakaze.Sdk.Engine.Mix;
+using Shimakaze.Sdk.Mix;
+using Shimakaze.Sdk.Mix.Structs;
 
 namespace Shimakaze.Sdk.Engine.Cli.Commands.Mix;
 
@@ -17,7 +18,7 @@ internal sealed class PackCommand
     public required FileInfo Output { get; set; }
 
     [CliOption(Description = nameof(Resource.Command_Mix_Pack_NameMapOutput_Description))]
-    public FileInfo? NameMapOutput { get; set; } = default;
+    public FileInfo? NameMapOutput { get; set; }
 
     [CliOption(Description = nameof(Resource.Command_Mix_Pack_IsTDMode_Description))]
     public bool IsTDMode { get; set; }
@@ -28,7 +29,7 @@ internal sealed class PackCommand
     [CliOption(Description = nameof(Resource.Command_Mix_Pack_Encoding_Description), Required = false)]
     public string Encoding { get; set; } = "ANSI";
 
-    public async Task RunAsync()
+    public void Run()
     {
         System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         Encoding encoding;
@@ -39,11 +40,29 @@ internal sealed class PackCommand
         else
             encoding = System.Text.Encoding.GetEncoding(Encoding);
 
-        using var nameMapWriter = NameMapOutput?.CreateText();
+        IdCalculator idCalc = IsTDMode ? IdCalculators.TDIdCalculator : IdCalculators.TSIdCalculator;
+        using var archive = MixArchive.Create(idCalc, encoding);
 
-        await using var output = Output.Create();
+        foreach (var file in Input)
+        {
+            var entry = archive.CreateEntry(file.Name);
+            using var entryStream = entry.Open();
+            using var fileStream = file.OpenRead();
+            fileStream.CopyTo(entryStream);
+        }
 
-        await MixPacker.PackAsync(output, Input, IsTDMode, encoding, nameMapWriter);
+        using var output = Output.Create();
+        MixTag? flag = Encrypt ? MixTag.ENCRYPTED : MixTag.NONE;
+        archive.SaveTo(output, flag);
+
+        if (NameMapOutput is not null)
+        {
+            using var writer = NameMapOutput.CreateText();
+            foreach (var entry in archive.Entries)
+            {
+                if (entry.Name is not null)
+                    writer.WriteLine($"{entry.Id:X8}\t{entry.Name}");
+            }
+        }
     }
 }
-

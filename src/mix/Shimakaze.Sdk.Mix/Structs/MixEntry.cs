@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Shimakaze.Sdk.Mix;
+namespace Shimakaze.Sdk.Mix.Structs;
 
 /// <summary>
 /// Structure that contains the information of a mix index entry.
