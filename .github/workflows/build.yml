@@ -46,7 +46,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: 签出仓库
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           lfs: true
           fetch-depth: 0
@@ -97,7 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 签出仓库
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Download a Build Artifact
         uses: actions/download-artifact@v8
         with:
