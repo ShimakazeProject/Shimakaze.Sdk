@@ -47,7 +47,7 @@ public sealed class InilynValueType(
     /// <summary>
     /// 内置类型名。
     /// </summary>
-    public static readonly IReadOnlySet<string> BuiltinNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    public static readonly ISet<string> BuiltinNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
     {
         "int", "float", "boolean", "string", "percent",
     };

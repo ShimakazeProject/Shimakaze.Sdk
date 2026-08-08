@@ -104,7 +104,7 @@ public sealed class IniParser(IReadOnlyList<IniToken> tokens)
         }
 
         // 键值对：string = string（键可以以冒号开头）
-        if (current.Type == IniTokenType.String || current.Type == IniTokenType.Colon)
+        if (current.Type == IniTokenType.Text || current.Type == IniTokenType.Colon)
         {
             return ParseKeyValueEntry(leadingTrivia);
         }
@@ -257,7 +257,7 @@ public sealed class IniParser(IReadOnlyList<IniToken> tokens)
 
         // 值（词法器将 '=' 后整行内容作为单个 String 记号，无需跳过空白）
         IniSyntaxToken value;
-        if (TryMatch(IniTokenType.String, out var valToken))
+        if (TryMatch(IniTokenType.Text, out var valToken))
         {
             value = ConvertToken(valToken);
         }
@@ -343,7 +343,7 @@ public sealed class IniParser(IReadOnlyList<IniToken> tokens)
     {
         int start = CurrentToken().Offset;
         StringBuilder builder = new();
-        while (CurrentToken().Type is IniTokenType.String or IniTokenType.Whitespace)
+        while (CurrentToken().Type is IniTokenType.Text or IniTokenType.Whitespace)
         {
             builder.Append(CurrentToken().Text);
             Advance();
@@ -374,7 +374,7 @@ public sealed class IniParser(IReadOnlyList<IniToken> tokens)
             builder.Append(':');
         }
 
-        if (TryMatch(IniTokenType.String, out var keyToken))
+        if (TryMatch(IniTokenType.Text, out var keyToken))
         {
             builder.Append(keyToken.Text);
         }
@@ -489,7 +489,7 @@ public sealed class IniParser(IReadOnlyList<IniToken> tokens)
             IniTokenType.Comment => IniSyntaxKind.CommentTrivia,
             IniTokenType.DocComment => IniSyntaxKind.DocCommentTrivia,
             IniTokenType.Whitespace => IniSyntaxKind.WhitespaceTrivia,
-            IniTokenType.String => IniSyntaxKind.StringToken,
+            IniTokenType.Text => IniSyntaxKind.StringToken,
             IniTokenType.PreprocessorDirective => IniSyntaxKind.PreprocessorDirectiveToken,
             IniTokenType.Newline => IniSyntaxKind.NewlineTrivia,
             IniTokenType.EndOfFile => IniSyntaxKind.EndOfFileToken,

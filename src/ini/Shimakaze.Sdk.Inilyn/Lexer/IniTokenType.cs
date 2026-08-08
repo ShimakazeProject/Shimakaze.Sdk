@@ -48,7 +48,7 @@ public enum IniTokenType
     /// <summary>
     /// 普通字符串：连续的非特殊、非空白、非换行字符片段。
     /// </summary>
-    String,
+    Text,
 
     /// <summary>
     /// 预处理指令：以 <c>#</c> 开头的整行（<c>#if</c>、<c>#endif</c>、<c>#region</c> 等）。

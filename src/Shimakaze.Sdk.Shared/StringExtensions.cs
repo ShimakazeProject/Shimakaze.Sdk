@@ -23,6 +23,8 @@ internal static class StringExtensions
     {
         public static readonly StringSplitOptionsPolyfill TrimEntries = new(2);
         public static implicit operator StringSplitOptionsPolyfill(StringSplitOptions options) => new((int)options);
+
+        public static StringSplitOptionsPolyfill operator |(StringSplitOptionsPolyfill a, StringSplitOptions b) => new(a.Value | (int)b);
     }
 
     extension(StringSplitOptions options)
@@ -35,6 +37,13 @@ internal static class StringExtensions
         public string[] Split(char separator, StringSplitOptionsPolyfill options)
         {
             string[] result = str.Split(separator, (StringSplitOptions)options.Value);
+            return (options.Value & 2) is not 0
+                ? [.. result.Select(x => x.Trim())]
+                : result;
+        }
+        public string[] Split(string separator, StringSplitOptionsPolyfill options)
+        {
+            string[] result = Polyfill.Split(str, separator, (StringSplitOptions)options.Value);
             return (options.Value & 2) is not 0
                 ? [.. result.Select(x => x.Trim())]
                 : result;

@@ -15,7 +15,7 @@ namespace Shimakaze.Sdk.Inilyn.Lexer;
 ///   <item><description>分隔符：<see cref="IniTokenType.EqualSign"/>（<c>=</c>）、<see cref="IniTokenType.Colon"/>（<c>:</c>）、<see cref="IniTokenType.Comma"/>（<c>,</c>）。</description></item>
 ///   <item><description>标记：<see cref="IniTokenType.Comment"/>（<c>;</c>）、<see cref="IniTokenType.DocComment"/>（<c>;;;</c>，作为单个记号）。</description></item>
 ///   <item><description><see cref="IniTokenType.Whitespace"/>：连续空白字符（空格、制表符）。</description></item>
-///   <item><description><see cref="IniTokenType.String"/>：连续的非特殊、非空白、非换行字符片段。</description></item>
+///   <item><description><see cref="IniTokenType.Text"/>：连续的非特殊、非空白、非换行字符片段。</description></item>
 ///   <item><description><see cref="IniTokenType.Newline"/>：换行符（<c>\n</c>、<c>\r\n</c> 或 <c>\r</c>）。</description></item>
 ///   <item><description><see cref="IniTokenType.EndOfFile"/>：文件结束。</description></item>
 /// </list>
@@ -47,13 +47,20 @@ public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
     /// <param name="content">INI 文本内容。</param>
     /// <returns>按出现顺序排列的 <see cref="IniToken"/> 序列，以 <see cref="IniTokenType.EndOfFile"/> 结尾。</returns>
     public static IEnumerable<IniToken> Tokenize(string content)
-        => new IniLexer(new StringReader(content));
+    {
+        using StringReader reader = new(content);
+        return new IniLexer(reader);
+    }
 
     /// <summary>
     /// 允许从字符串隐式创建词法分析器，便于 foreach 直接遍历：<c>foreach (var t in ini)</c>。
     /// </summary>
     /// <param name="content">INI 文本内容。</param>
-    public static implicit operator IniLexer(string content) => new(new StringReader(content));
+    public static implicit operator IniLexer(string content)
+    {
+        using StringReader reader = new(content);
+        return new IniLexer(reader);
+    }
 
     /// <summary>
     /// 从底层 <see cref="TextReader"/> 流式读取并进行词法分析。
@@ -86,7 +93,7 @@ public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
         if (_afterEqualSign)
         {
             _afterEqualSign = false;
-            return MakeToken(line, column, offset, IniTokenType.String, ConsumeToLineEnd());
+            return MakeToken(line, column, offset, IniTokenType.Text, ConsumeToLineEnd());
         }
 
         if (SimpleTokens.TryGetValue(_current, out var type))
@@ -107,7 +114,7 @@ public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
             '#' => ReadPreprocessorDirective(line, column, offset),
             ' ' or '\t' => MakeToken(line, column, offset, IniTokenType.Whitespace, ConsumeWhile(IsWhitespace)),
             '\r' or '\n' => MakeToken(line, column, offset, IniTokenType.Newline, ConsumeNewline()),
-            _ => MakeToken(line, column, offset, IniTokenType.String, ConsumeWhile(IsStringChar)),
+            _ => MakeToken(line, column, offset, IniTokenType.Text, ConsumeWhile(IsStringChar)),
         };
     }
 

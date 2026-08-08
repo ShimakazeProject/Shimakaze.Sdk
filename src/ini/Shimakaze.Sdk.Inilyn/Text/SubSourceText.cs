@@ -7,9 +7,6 @@ namespace Shimakaze.Sdk.Inilyn.Text;
 /// </summary>
 /// <remarks>
 /// <para>
-/// 通过 <see cref="SourceText.Substring(int, int)"/> 或 <see cref="SourceText.this[Range]"/> 创建。
-/// </para>
-/// <para>
 /// 行偏移表独立计算（惰性），但字符读取委托给所属的 <see cref="RootSourceText"/>。
 /// </para>
 /// </remarks>
@@ -47,6 +44,7 @@ public sealed class SubSourceText : SourceText
     /// <inheritdoc />
     public override ReadOnlySpan<char> Span => _root.GetSpan(_offset, _length);
 
+#if NET5_0_OR_GREATER
     /// <inheritdoc />
     public override SourceText this[Range range]
     {
@@ -55,7 +53,8 @@ public sealed class SubSourceText : SourceText
             (int start, int length) = range.GetOffsetAndLength(_length);
             return new SubSourceText(_root, _offset + start, length);
         }
-    }
+    } 
+#endif
 
     /// <inheritdoc />
     public override SourceText Substring(int start, int length)

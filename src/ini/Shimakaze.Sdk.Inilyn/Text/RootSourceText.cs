@@ -41,6 +41,7 @@ public sealed class RootSourceText : SourceText
     /// <inheritdoc />
     public override ReadOnlySpan<char> Span => _text.AsSpan();
 
+#if NET5_0_OR_GREATER
     /// <inheritdoc />
     public override SourceText this[Range range]
     {
@@ -49,7 +50,8 @@ public sealed class RootSourceText : SourceText
             (int start, int length) = range.GetOffsetAndLength(_text.Length);
             return new SubSourceText(this, start, length);
         }
-    }
+    } 
+#endif
 
     /// <inheritdoc />
     public override SourceText Substring(int start, int length)

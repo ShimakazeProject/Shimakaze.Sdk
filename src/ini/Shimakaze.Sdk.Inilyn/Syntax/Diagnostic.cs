@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Shimakaze.Sdk.Inilyn.Syntax;
 
 /// <summary>
@@ -44,7 +46,7 @@ public sealed record class Diagnostic(
         return new Diagnostic(
             descriptor.DefaultSeverity,
             descriptor.Id,
-            string.Format(descriptor.MessageFormat, messageArgs ?? []),
+            string.Format(CultureInfo.InvariantCulture, descriptor.MessageFormat, messageArgs ?? []),
             line,
             column,
             endLine,

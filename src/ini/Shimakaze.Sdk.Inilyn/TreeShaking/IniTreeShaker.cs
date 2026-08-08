@@ -12,7 +12,7 @@ public sealed class IniTreeShakerOptions
     /// <summary>
     /// 显式指定的入口节名集合。
     /// </summary>
-    public IReadOnlySet<string> EntrySections { get; init; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    public IReadOnlyCollection<string> EntrySections { get; init; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// 是否将未被任何其他节 Mixin 引用的节视为入口（默认 true）。

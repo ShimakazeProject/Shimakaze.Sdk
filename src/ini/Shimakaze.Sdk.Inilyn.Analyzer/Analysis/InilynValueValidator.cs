@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 using Shimakaze.Sdk.Inilyn.Analyzer.RuleSet;
@@ -31,7 +30,7 @@ public static partial class InilynValueValidator
         InilynRuleSet ruleSet,
         InilynResolvedValueType type,
         string value,
-        IReadOnlyDictionary<string, IReadOnlySet<string>>? externalAssets = null)
+        IReadOnlyDictionary<string, ISet<string>>? externalAssets = null)
     {
         return type.Kind switch
         {

@@ -21,7 +21,7 @@ public static class InilynAnalyzer
     public static InilynAnalysis Analyze(
         InilynRuleSet ruleSet,
         IEnumerable<InilynAnalysisInput> inputs,
-        IReadOnlyDictionary<string, IReadOnlySet<string>>? externalAssets = null)
+        IReadOnlyDictionary<string, ISet<string>>? externalAssets = null)
     {
         ArgumentNullException.ThrowIfNull(ruleSet);
         ArgumentNullException.ThrowIfNull(inputs);
@@ -40,7 +40,7 @@ public static class InilynAnalyzer
         InilynRuleSet ruleSet,
         string groupName,
         Compilation.InilynCompilationResult compilationResult,
-        IReadOnlyDictionary<string, IReadOnlySet<string>>? externalAssets = null)
+        IReadOnlyDictionary<string, ISet<string>>? externalAssets = null)
     {
         ArgumentNullException.ThrowIfNull(compilationResult);
         List<InilynAnalysisInput> inputs = [];
@@ -62,7 +62,7 @@ internal sealed class AnalyzerCore
         new SecKeyEqualityComparer();
 
     private readonly InilynRuleSet _ruleSet;
-    private readonly IReadOnlyDictionary<string, IReadOnlySet<string>>? _externalAssets;
+    private readonly IReadOnlyDictionary<string, ISet<string>>? _externalAssets;
     private readonly Dictionary<string, Dictionary<string, ParsedIniSection>> _sections = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<(string, string), string> _fileNames = new(SecKeyComparer);
     private readonly List<Diagnostic> _diagnostics = [];
@@ -73,7 +73,7 @@ internal sealed class AnalyzerCore
     public AnalyzerCore(
         InilynRuleSet ruleSet,
         IEnumerable<InilynAnalysisInput> inputs,
-        IReadOnlyDictionary<string, IReadOnlySet<string>>? externalAssets)
+        IReadOnlyDictionary<string, ISet<string>>? externalAssets)
     {
         _ruleSet = ruleSet;
         _externalAssets = externalAssets;

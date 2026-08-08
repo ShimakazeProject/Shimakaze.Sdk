@@ -15,7 +15,7 @@ public sealed class InilynEnum
     /// <summary>
     /// 合法的枚举值集合（不区分大小写）。
     /// </summary>
-    public IReadOnlySet<string> Values => _values;
+    public ISet<string> Values => _values;
 
     /// <summary>
     /// 创建一个枚举。

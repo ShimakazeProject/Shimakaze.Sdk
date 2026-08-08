@@ -8,10 +8,6 @@ namespace Shimakaze.Sdk.Inilyn.Text;
 /// 底层由字符串承载完整内容；实例表示一个「窗口」（起始偏移 + 长度），
 /// 切片操作返回新的 <see cref="SubSourceText"/> 视图，不复制字符。
 /// </para>
-/// <para>
-/// <see cref="Substring(int, int)"/> 和 <see cref="this[Range]"/> 均直接创建新视图，
-/// 彼此独立调用，避免递归导致的栈溢出。
-/// </para>
 /// </remarks>
 public abstract class SourceText : IEquatable<SourceText>
 {
@@ -41,17 +37,19 @@ public abstract class SourceText : IEquatable<SourceText>
     /// </summary>
     public abstract ReadOnlySpan<char> Span { get; }
 
+#if NET5_0_OR_GREATER
     /// <summary>
     /// 按 Range 取子区间，返回新的 <see cref="SourceText"/> 视图。
     /// </summary>
     /// <param name="range">区间。</param>
-    public abstract SourceText this[Range range] { get; }
+    public abstract SourceText this[Range range] { get; } 
+#endif
 
     /// <summary>
     /// 从 <paramref name="start"/> 位置提取指定长度文本，返回新的 <see cref="SourceText"/> 视图。
     /// </summary>
     /// <remarks>
-    /// 该方法直接创建 <see cref="SubSourceText"/>，不调用 <see cref="this[Range]"/>，避免递归。
+    /// 该方法直接创建 <see cref="SubSourceText"/>。
     /// </remarks>
     /// <param name="start">起始位置。</param>
     /// <param name="length">长度。</param>
