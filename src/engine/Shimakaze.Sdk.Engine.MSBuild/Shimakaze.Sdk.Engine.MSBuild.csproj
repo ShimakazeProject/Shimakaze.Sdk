@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <BuildOutputTargetFolder>build\tools</BuildOutputTargetFolder>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.csproj" />
+    <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn.Analyzer\Shimakaze.Sdk.Inilyn.Analyzer.csproj" />
+  </ItemGroup>
+
+</Project>

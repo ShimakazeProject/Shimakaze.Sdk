@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\analyzers\Shimakaze.Sdk.UnicodeSourceGenerator\Shimakaze.Sdk.UnicodeSourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.csproj" />
+    <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn.Analyzer\Shimakaze.Sdk.Inilyn.Analyzer.csproj" />
     <ProjectReference Include="..\Shimakaze.Sdk.Engine\Shimakaze.Sdk.Engine.csproj" />
   </ItemGroup>
 

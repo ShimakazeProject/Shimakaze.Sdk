@@ -100,6 +100,15 @@
           "System.IO.Hashing": "[10.0.9, )"
         }
       },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )"
+        }
+      },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
@@ -250,6 +259,20 @@
           "Shimakaze.Sdk.Tmp": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.9, )",
           "System.IO.Hashing": "[10.0.9, )"
+        }
+      },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.9, )",
+          "System.Text.Json": "[10.0.9, )"
+        }
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.9, )"
         }
       },
       "shimakaze.sdk.mix": {
@@ -428,6 +451,20 @@
           "Shimakaze.Sdk.Tmp": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.9, )",
           "System.IO.Hashing": "[10.0.9, )"
+        }
+      },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.9, )",
+          "System.Text.Json": "[10.0.9, )"
+        }
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.9, )"
         }
       },
       "shimakaze.sdk.mix": {

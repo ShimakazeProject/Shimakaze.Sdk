@@ -11,6 +11,7 @@
   </Folder>
   <Folder Name="/engine/">
     <Project Path="src/engine/Shimakaze.Sdk.Engine.Cli/Shimakaze.Sdk.Engine.Cli.csproj" />
+    <Project Path="src/engine/Shimakaze.Sdk.Engine.MSBuild/Shimakaze.Sdk.Engine.MSBuild.csproj" />
     <Project Path="src/engine/Shimakaze.Sdk.Engine/Shimakaze.Sdk.Engine.csproj" />
   </Folder>
   <Folder Name="/hva/">

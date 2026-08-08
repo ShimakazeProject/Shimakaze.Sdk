@@ -115,6 +115,150 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         }
         
         /// <summary>
+        ///   查找类似 Shimakaze.Sdk INI 编译与分析工具 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 编译 INI 文件（可选：编译后交给分析器校验） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 输入的 INI 文件路径 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_Input_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.Input.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 输出路径（文件或目录） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_Output_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.Output.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 输出 SourceMap 文件路径 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_SourceMap_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.SourceMap.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 显示详细输出 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_Verbose_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.Verbose.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 停用 TreeShaking（保留所有节） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_NoTreeShaking_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.NoTreeShaking.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则文件（平台配置，如 vanilla.xml；可多个，按顺序合并） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_Rules_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.Rules.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 外部资源清单文件（如 shp.txt；文件名前缀决定种类） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_Assets_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.Assets.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 编译产物的规则组名（默认 Rule） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Compile_Group_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Compile.Group.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 分析已编译的 INI 文件 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Analyze_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Analyze.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则文件（平台配置，如 vanilla.xml；可多个，按顺序合并） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Analyze_Rules_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Analyze.Rules.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 待分析的 INI 文件路径 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Analyze_Input_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Analyze.Input.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 每个输入文件的规则组名（按位置与输入配对；不足时沿用最后一个或 Rule） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Analyze_Group_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Analyze.Group.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 外部资源清单文件（如 shp.txt；文件名前缀决定种类） 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Analyze_Assets_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Analyze.Assets.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 显示详细输出 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ini_Analyze_Verbose_Description {
+            get {
+                return ResourceManager.GetString("Command.Ini.Analyze.Verbose.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Shimakaze.Sdk MIX 实用工具 的本地化字符串。
         /// </summary>
         internal static string Command_Mix_Description {
