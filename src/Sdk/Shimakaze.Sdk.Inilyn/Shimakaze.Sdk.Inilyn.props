@@ -1,0 +1,43 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Inilyn 模块的 props（Inilyn 编译/分析）。
+    本文件在 Sdk.props 中被导入，声明编译与分析所需的全部属性默认值，
+    以及默认的分析规则集（随 SDK 分发）。使用方项目可在导入 SDK 后覆盖。
+  -->
+
+  <!--
+    InilynCompile          是否在构建时编译 INI（默认 true）。
+    InilynAnalyze          编译后是否执行跨组分析（默认 true）。
+    InilynAnalyzeFatal     分析错误是否阻断构建（默认 false：错误降级为警告）。
+    InilynEnableTreeShaking 编译时是否启用 TreeShaking（默认 true）。
+    InilynOutputDirectory  编译输出目录，默认复用 $(OutputPath)。
+  -->
+  <PropertyGroup>
+    <InilynCompile Condition="'$(InilynCompile)' == ''">true</InilynCompile>
+    <InilynAnalyze Condition="'$(InilynAnalyze)' == ''">true</InilynAnalyze>
+    <InilynAnalyzeFatal Condition="'$(InilynAnalyzeFatal)' == ''">false</InilynAnalyzeFatal>
+    <InilynEnableTreeShaking Condition="'$(InilynEnableTreeShaking)' == ''">true</InilynEnableTreeShaking>
+    <InilynOutputDirectory Condition="'$(InilynOutputDirectory)' == ''">$(OutputPath)</InilynOutputDirectory>
+  </PropertyGroup>
+
+  <!--
+    UseDefaultRuleGroup 是否启用默认 RuleGroup → 输出文件名映射（默认 true）。
+    UseDefaultInclude   是否按扩展名自动收集 Inilyn 输入文件（默认 true）。
+  -->
+  <PropertyGroup>
+    <UseDefaultRuleGroup Condition="'$(UseDefaultRuleGroup)' == ''">true</UseDefaultRuleGroup>
+    <UseDefaultInclude Condition="'$(UseDefaultInclude)' == ''">true</UseDefaultInclude>
+  </PropertyGroup>
+
+  <!--
+    默认分析输入：
+    InilynRuleFile  分析器规则文件（多个按声明顺序合并；移除该项即跳过分析）。
+                    默认使用 SDK 随附的 vanilla 平台配置（可 Remove 后自行追加）。
+    InilynAssetFile 外部资源清单（如 shp.txt；文件名前缀决定资源种类），默认为空。
+  -->
+  <ItemGroup>
+    <InilynRuleFile Include="$(MSBuildThisFileDirectory)Rules\vanilla\vanilla.xml" />
+  </ItemGroup>
+
+</Project>

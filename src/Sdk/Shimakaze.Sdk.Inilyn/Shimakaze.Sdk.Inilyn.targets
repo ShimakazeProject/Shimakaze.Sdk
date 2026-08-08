@@ -1,0 +1,74 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Inilyn 模块的 targets（Inilyn 编译/分析）。
+    本文件在 Sdk.targets 中被导入，负责：
+      1. 声明默认的 RuleGroup 映射与 Inilyn 输入收集；
+      2. 注册 Inilyn MSBuild 任务（按运行时选择 Core/Desktop 程序集）；
+      3. 定义 InilynCompile 目标：编译与分析由单个任务一次完成。
+  -->
+
+  <!--
+    默认 RuleGroup → 输出文件名映射。
+    每个 InilynRuleGroup 对应一组输出（如 rule → rulesmd.ini），使用方项目可追加或 Remove 覆盖。
+  -->
+  <ItemGroup Condition="'$(UseDefaultRuleGroup)' == 'true'">
+    <InilynRuleGroup Include="ai" OutputFileName="aimd.ini" />
+    <InilynRuleGroup Include="art" OutputFileName="artmd.ini" />
+    <InilynRuleGroup Include="eva" OutputFileName="evamd.ini" />
+    <InilynRuleGroup Include="rule" OutputFileName="rulesmd.ini" />
+    <InilynRuleGroup Include="sound" OutputFileName="soundmd.ini" />
+    <InilynRuleGroup Include="theme" OutputFileName="thememd.ini" />
+    <InilynRuleGroup Include="ui" OutputFileName="uimd.ini" />
+  </ItemGroup>
+
+  <!--
+    默认 Inilyn 输入收集：递归项目目录下所有指定扩展名的文件，并按扩展名归入对应 RuleGroup。
+  -->
+  <ItemGroup Condition="'$(UseDefaultInclude)' == 'true'">
+    <Inilyn Include="$(MSBuildProjectDirectory)\**\*.ai" RuleGroup="ai" />
+    <Inilyn Include="$(MSBuildProjectDirectory)\**\*.art" RuleGroup="art" />
+    <Inilyn Include="$(MSBuildProjectDirectory)\**\*.eva" RuleGroup="eva" />
+    <Inilyn Include="$(MSBuildProjectDirectory)\**\*.rule" RuleGroup="rule" />
+    <Inilyn Include="$(MSBuildProjectDirectory)\**\*.sound" RuleGroup="sound" />
+    <Inilyn Include="$(MSBuildProjectDirectory)\**\*.theme" RuleGroup="theme" />
+    <Inilyn Include="$(MSBuildProjectDirectory)\**\*.ui" RuleGroup="ui" />
+  </ItemGroup>
+
+  <!--
+    按运行时选择 Inilyn MSBuild 任务程序集：
+    Full（.NET Framework 版 MSBuild）优先 Tasks\Desktop，其余（Core）使用 Tasks\Core。
+    仅当对应程序集存在时才选中，否则回退到 Core。程序集路径相对本模块目录定位。
+  -->
+  <PropertyGroup>
+    <InilynTasksDir Condition="'$(InilynTasksDir)' == '' and '$(MSBuildRuntimeType)' == 'Full' and Exists('$(MSBuildThisFileDirectory)Tasks\Desktop\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Desktop</InilynTasksDir>
+    <InilynTasksDir Condition="'$(InilynTasksDir)' == '' and Exists('$(MSBuildThisFileDirectory)Tasks\Core\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Core</InilynTasksDir>
+  </PropertyGroup>
+
+  <UsingTask TaskName="InilynBuildTask"
+    AssemblyFile="$(InilynTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"
+    Condition="'$(InilynTasksDir)' != ''" />
+
+  <!--
+    编译与分析（单个任务一次完成）：
+    InilynBuildTask 内部按 Files 的 RuleGroup 元数据与 RuleGroups 映射分组编译，
+    再用 InilynRuleFile / InilynAssetFile 对全部编译产物做跨组分析。
+    无需 MSBuild 批处理或递归，分组逻辑由任务承担。
+  -->
+  <Target Name="InilynCompile"
+    BeforeTargets="CoreCompile"
+    Condition="'$(InilynCompile)' == 'true' AND '@(Inilyn)' != '' AND '@(InilynRuleGroup)' != ''">
+
+    <InilynBuildTask
+      Files="@(Inilyn)"
+      RuleGroups="@(InilynRuleGroup)"
+      OutputDirectory="$(InilynOutputDirectory)"
+      EnableTreeShaking="$(InilynEnableTreeShaking)"
+      RuleFiles="@(InilynRuleFile)"
+      AssetFiles="@(InilynAssetFile)"
+      Analyze="$(InilynAnalyze)"
+      AnalyzeFatal="$(InilynAnalyzeFatal)" />
+
+  </Target>
+
+</Project>

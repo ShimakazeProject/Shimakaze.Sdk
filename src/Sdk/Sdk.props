@@ -1,0 +1,126 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Inilyn 的 Sdk.props。
+    本文件在项目评估的最早期被导入，负责声明 SDK 的基础属性（纯打包、无编译）
+    以及各功能模块的默认配置。后续的模块（Inilyn 编译、游戏复制）通过
+    Build\ 下的子文件导入，便于按需裁剪。
+  -->
+
+  <!--
+    记录本文件在 MSBuildAllProjects 中，供旧版 MSBuild（非 Current）做“最新”检查。
+    在 Current 版本上 MSBuild 会自动跟踪导入文件，因此无需追加。
+  -->
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildToolsVersion)' != 'Current'">$(MSBuildAllProjects);$(MsBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <!--
+    检测托管语言目标（C#/VB/F#）是否已被导入。
+    该标记取自 .NET SDK：若项目本身是 .csproj/.vbproj/.fsproj，语言目标会自行导入，
+    Sdk.targets 中便不再需要引入 Microsoft.Managed.targets。
+  -->
+  <PropertyGroup>
+    <ManagedLanguageTargetsGotImported Condition="'$(MSBuildProjectExtension)' == '.csproj'">true</ManagedLanguageTargetsGotImported>
+    <ManagedLanguageTargetsGotImported Condition="'$(MSBuildProjectExtension)' == '.vbproj'">true</ManagedLanguageTargetsGotImported>
+    <ManagedLanguageTargetsGotImported Condition="'$(MSBuildProjectExtension)' == '.fsproj'">true</ManagedLanguageTargetsGotImported>
+  </PropertyGroup>
+
+  <!--
+    扩展点：在使用方项目的任何属性声明之前，导入自定义的 props。
+    可通过设置 $(CustomBeforeInilynSdkProps) 指向一个文件来覆盖或追加 SDK 默认属性。
+  -->
+  <Import Project="$(CustomBeforeInilynSdkProps)" Condition="'$(CustomBeforeInilynSdkProps)' != '' And Exists('$(CustomBeforeInilynSdkProps)')" />
+
+  <!--
+    本 SDK 为纯打包型项目，不编译任何程序集。参照 Microsoft.Build.NoTargets
+    禁用编译管线的相关默认行为，避免生成空程序集、依赖文件等无意义产物。
+  -->
+  <PropertyGroup>
+    <!--
+      NuGet 还原需要目标框架以生成资产文件；纯打包项目没有真实的框架约束，
+      这里给一个默认值（可在使用方项目中覆盖）。
+    -->
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net10.0</TargetFramework>
+
+    <!-- 不自动收集 Compile / EmbeddedResource 项（没有源代码可编译）。 -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+
+    <!--
+      始终以 PackageReference 风格还原。这样即便项目里没有任何 PackageReference 项，
+      也能得到正确的还原结果（参照 NoTargets）。
+    -->
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+
+    <!-- 不隐式引用框架引用程序集；不编译就不需要引用程序集，也省去定位目标包。 -->
+    <DisableImplicitFrameworkReferences Condition="'$(DisableImplicitFrameworkReferences)' == ''">true</DisableImplicitFrameworkReferences>
+
+    <!-- 不向发布目录复制构建输出与符号（不存在这些产物）。 -->
+    <CopyBuildOutputToPublishDirectory Condition="'$(CopyBuildOutputToPublishDirectory)' == ''">false</CopyBuildOutputToPublishDirectory>
+    <CopyOutputSymbolsToPublishDirectory Condition="'$(CopyOutputSymbolsToPublishDirectory)' == ''">false</CopyOutputSymbolsToPublishDirectory>
+
+    <!-- 不生成依赖文件（deps.json）与程序集信息。 -->
+    <GenerateDependencyFile Condition="'$(GenerateDependencyFile)' == ''">false</GenerateDependencyFile>
+    <GenerateAssemblyInfo Condition="'$(GenerateAssemblyInfo)' == ''">false</GenerateAssemblyInfo>
+
+    <!-- 不生成 MSBuild 编辑器配置文件。 -->
+    <GenerateMSBuildEditorConfigFile Condition="'$(GenerateMSBuildEditorConfigFile)' == ''">false</GenerateMSBuildEditorConfigFile>
+
+    <!-- 不打印“复制未构建的产品”的高优先级消息（没有产品可复制）。 -->
+    <SkipCopyBuildProduct Condition="'$(SkipCopyBuildProduct)' == ''">true</SkipCopyBuildProduct>
+
+    <!-- 不自动引入引用程序集包。 -->
+    <AutomaticallyUseReferenceAssemblyPackages Condition="'$(AutomaticallyUseReferenceAssemblyPackages)' == ''">false</AutomaticallyUseReferenceAssemblyPackages>
+
+    <!-- 不链接标准库（无编译）。 -->
+    <NoCompilerStandardLib Condition="'$(NoCompilerStandardLib)' == ''">false</NoCompilerStandardLib>
+    <NoStdLib Condition="'$(NoStdLib)' == ''">true</NoStdLib>
+
+    <!-- 禁用 Visual Studio 的快速最新检查，交由 MSBuild 判断增量。 -->
+    <DisableFastUpToDateCheck Condition="'$(DisableFastUpToDateCheck)' == ''">true</DisableFastUpToDateCheck>
+
+    <!-- 纯打包项目无需进入解决方案文件（不在 VS 中构建）。 -->
+    <IncludeInSolutionFile>false</IncludeInSolutionFile>
+
+    <!-- 输出路径不追加目标框架子目录（否则会在 dist 下多出 net10.0 一层）。 -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!--
+    Inilyn SDK 自有属性：
+    ShimakazeSdkPath    SDK 根目录（供使用方项目引用 SDK 内资源）。
+    OutputPath          输出目录，默认项目根下的 dist；可被使用方覆盖。
+    VanillaGamePathDefault 原版游戏的兜底路径；真实值由 CopyVanillaGame.targets
+                        按注册表 installpath 解析。
+    CopyVanillaGame     是否把原版游戏文件复制到输出目录。
+  -->
+  <PropertyGroup>
+    <ShimakazeSdkPath Condition="'$(ShimakazeSdkPath)' == ''">$(MSBuildThisFileDirectory)</ShimakazeSdkPath>
+    <OutputPath>$(MSBuildProjectDirectory)\dist\</OutputPath>
+    <VanillaGamePathDefault>$(MSBuildProjectDirectory)\game</VanillaGamePathDefault>
+    <CopyVanillaGame Condition="'$(CopyVanillaGame)' == ''">false</CopyVanillaGame>
+  </PropertyGroup>
+
+  <!-- Inilyn 编译/分析模块的属性与默认收集（见 Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.props）。 -->
+  <Import Project="Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.props" />
+
+  <!--
+    导入 .NET SDK 的 props，获得标准 Build / CopyFilesToOutputDirectory 管线
+    （CopyToOutputDirectory 元数据由此生效）。
+  -->
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' " />
+
+  <!--
+    空目标：纯打包项目不产生资源，补齐语言目标中缺失的 CreateManifestResourceNames，
+    避免 PrepareResources 链路报“目标不存在”。
+  -->
+  <Target Name="CreateManifestResourceNames" />
+
+  <!-- 扩展点：在使用方项目的所有属性声明之后，导入自定义的 props。 -->
+  <Import Project="$(CustomAfterInilynSdkProps)" Condition="'$(CustomAfterInilynSdkProps)' != '' And Exists('$(CustomAfterInilynSdkProps)')" />
+
+  <!-- For CPS/VS support：允许后续目标按需重定义（空实现）。 -->
+  <Target Name="CompileDesignTime" />
+
+</Project>

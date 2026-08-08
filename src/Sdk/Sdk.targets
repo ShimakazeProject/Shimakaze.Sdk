@@ -1,0 +1,102 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Inilyn 的 Sdk.targets。
+    本文件在项目评估的最末期被导入，负责提供构建所需的（空）目标，
+    以及挂载各功能模块（Inilyn 编译、游戏复制）的导入。
+  -->
+
+  <!--
+    SDK 只为 .csproj/.vbproj/.fsproj 设置 LanguageTargets；对 .proj 等其它扩展名，
+    .NET SDK 不会设置，因此这里兜底到 Microsoft.Common.targets。
+    注意：该属性无法在这里设置之后立即被本 SDK 使用，因为 .NET SDK 导入时可能已覆盖；
+    此兜底仅对 SDK 不会设置的扩展名生效（命令行构建正常，VS 中可能无法加载）。
+  -->
+  <PropertyGroup>
+    <LanguageTargets Condition=" '$(LanguageTargets)' == '' And '$(MSBuildProjectExtension)' != '.csproj' And '$(MSBuildProjectExtension)' != '.vbproj' And '$(MSBuildProjectExtension)' != '.fsproj' ">$(MSBuildToolsPath)\Microsoft.Common.targets</LanguageTargets>
+    <MSBuildAllProjects Condition="'$(MSBuildToolsVersion)' != 'Current'">$(MSBuildAllProjects);$(MsBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <!-- 扩展点：在导入 .NET SDK 目标之前，导入自定义的 targets。 -->
+  <Import Project="$(CustomBeforeInilynSdk)" Condition="'$(CustomBeforeInilynSdk)' != '' and Exists('$(CustomBeforeInilynSdk)')" />
+
+  <!-- 打包时不包含构建输出；纯打包项目不产出程序集。 -->
+  <PropertyGroup>
+    <IncludeBuildOutput Condition="'$(IncludeBuildOutput)' == ''">false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <!-- 导入 .NET SDK 的目标，获得标准构建管线。 -->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition=" '$(CommonTargetsPath)' == '' " />
+
+  <!--
+    覆盖 CoreBuildDependsOn，去掉编译/资源/清单等“产出程序集”的步骤。
+    保留 PrepareForRun：它仍会通过 CopyFilesToOutputDirectory 触发 CopyToOutputDirectory，
+    使游戏/组件/资源等 None 项得以复制到输出目录。
+  -->
+  <PropertyGroup>
+    <CoreBuildDependsOn>
+      BuildOnlySettings;
+      PrepareForBuild;
+      PreBuildEvent;
+      ResolveReferences;
+      Compile;
+      GetTargetPath;
+      PrepareForRun;
+      IncrementalClean;
+      PostBuildEvent
+    </CoreBuildDependsOn>
+
+    <!-- 不产出调试符号与引用程序集。 -->
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <!--
+    清空 IDE 与 NuGet 读取的输出组项：纯打包项目不存在这些产物，
+    保留它们会导致 VS/打包工具误认为有程序集输出。
+  -->
+  <ItemGroup>
+    <BuiltProjectOutputGroupKeyOutput Remove="@(BuiltProjectOutputGroupKeyOutput)" />
+    <DebugSymbolsProjectOutputGroupOutput Remove="@(DebugSymbolsProjectOutputGroupOutput)" />
+    <IntermediateAssembly Remove="@(IntermediateAssembly)" />
+    <IntermediateRefAssembly Remove="@(IntermediateRefAssembly)" />
+    <Reference Remove="mscorlib" />
+  </ItemGroup>
+
+  <!-- 空目标：不生成附属程序集、不暴露目标路径、不解析框架引用程序集。 -->
+  <Target Name="ComputeIntermediateSatelliteAssemblies" />
+  <Target Name="GetTargetPath" />
+  <Target Name="GetTargetPathWithTargetPlatformMoniker" />
+  <Target Name="GetFrameworkPaths" DependsOnTargets="$(GetFrameworkPathsDependsOn)" />
+  <Target Name="GetReferenceAssemblyPaths" DependsOnTargets="$(GetReferenceAssemblyPathsDependsOn)" />
+
+  <!-- Inilyn 编译与分析：UsingTask 与编译/分析目标见 Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.targets。 -->
+  <Import Project="Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.targets" />
+
+  <!-- 原版游戏复制：注册表解析与 VanillaGameAsset 复制见 CopyVanillaGame.targets。 -->
+  <Import Project="CopyVanillaGame.targets" />
+
+  <!-- 扩展点：在导入 .NET SDK 目标之后，导入自定义的 targets。 -->
+  <Import Project="$(CustomAfterInilynSdk)" Condition="'$(CustomAfterInilynSdk)' != '' and Exists('$(CustomAfterInilynSdk)')" />
+
+  <!--
+    当托管语言目标未导入时，引入 Microsoft.Managed.targets 以补齐 16.0+ MSBuild 所需的
+    通用任务（参照 NoTargets）。
+  -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Managed.targets" Condition="'$(MSBuildAssemblyVersion)' >= '16.0' And '$(ManagedLanguageTargetsGotImported)' != 'true'" />
+
+  <!--
+    覆盖 CoreCompile 为空操作（保留扩展点 TargetsTriggeredByCompilation），
+    使“编译”这一步在纯打包项目中不产生任何输出。
+  -->
+  <Target Name="CoreCompile"
+          DependsOnTargets="$(CoreCompileDependsOn)">
+    <CallTarget Targets="$(TargetsTriggeredByCompilation)" Condition="'$(TargetsTriggeredByCompilation)' != ''" />
+  </Target>
+
+  <!-- 空目标：不需要生成编译输入与依赖缓存。 -->
+  <Target Name="_GenerateCompileInputs" />
+  <Target Name="_GenerateCompileDependencyCache" />
+
+</Project>

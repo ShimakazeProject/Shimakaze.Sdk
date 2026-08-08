@@ -1,0 +1,88 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    原版游戏复制模块。
+    本文件在 Sdk.targets 中被导入，由 $(CopyVanillaGame) 门控：
+      1. 用内联任务从注册表读取 Yuri's Revenge 的安装路径（installpath）；
+      2. 解析出 VanillaGamePath（若 installpath 指向可执行文件则取其目录）；
+      3. 把 VanillaGamePath 下的文件以 VanillaGameAsset 收集，汇入 None 后
+         由 CopyToOutputDirectory 管线复制（保留目录结构）。
+  -->
+
+  <!--
+    内联任务：读取注册表字符串值。
+    之所以用反射调用 Microsoft.Win32.Registry，是因为 MSBuild 的 $(Registry:...) 语法
+    无法处理键名中带撇号的情况（如 "Yuri's Revenge"），而直接引用该程序集会因
+    RoslynCodeTaskFactory 解析引用失败而报错。
+  -->
+  <UsingTask TaskName="ReadRegistryValue"
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Key ParameterType="System.String" Required="true" />
+      <ValueName ParameterType="System.String" Required="true" />
+      <Result Output="true" ParameterType="System.String" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        var type = System.Type.GetType("Microsoft.Win32.Registry, Microsoft.Win32.Registry");
+        if (type is not null)
+        {
+            var value = type.GetMethod("GetValue")?.Invoke(null, new object[] { Key, ValueName, null });
+            Result = value as string;
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <!--
+    解析 VanillaGamePath：
+      1. 用户已在 $(VanillaGamePath) 显式指定则直接使用；
+      2. 否则读取注册表 installpath；
+      3. installpath 若是目录则取之，若是文件（如 ...\RA2MD.EXE）则取其所在目录；
+      4. 以上均不可用时回退到 $(VanillaGamePathDefault)（项目根下的 game）。
+    注册表键路径按进程位数选择：WOW6432Node 仅在 64 位进程可见；
+    32 位进程读取 SOFTWARE 会被系统自动重定向到 WOW6432Node。
+  -->
+  <Target Name="InilynResolveVanillaGamePath"
+          BeforeTargets="AssignTargetPaths"
+          Condition="'$(CopyVanillaGame)' == 'true'">
+
+    <PropertyGroup>
+      <_WestwoodRegistryPath Condition="'$([System.Environment]::Is64BitProcess)' == 'True'">HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Westwood\Yuri's Revenge</_WestwoodRegistryPath>
+      <_WestwoodRegistryPath Condition="'$([System.Environment]::Is64BitProcess)' != 'True'">HKEY_LOCAL_MACHINE\SOFTWARE\Westwood\Yuri's Revenge</_WestwoodRegistryPath>
+    </PropertyGroup>
+
+    <ReadRegistryValue
+      Key="$(_WestwoodRegistryPath)"
+      ValueName="installpath"
+      Condition="'$(VanillaGamePath)' == ''">
+      <Output TaskParameter="Result" PropertyName="_WestwoodYuriInstallPath" />
+    </ReadRegistryValue>
+
+    <PropertyGroup>
+      <VanillaGamePath Condition="'$(VanillaGamePath)' == '' and $([System.IO.Directory]::Exists('$(_WestwoodYuriInstallPath)'))">$(_WestwoodYuriInstallPath)</VanillaGamePath>
+      <VanillaGamePath Condition="'$(VanillaGamePath)' == '' and $([System.IO.File]::Exists('$(_WestwoodYuriInstallPath)'))">$([System.IO.Path]::GetDirectoryName('$(_WestwoodYuriInstallPath)'))</VanillaGamePath>
+      <VanillaGamePath Condition="'$(VanillaGamePath)' == ''">$(VanillaGamePathDefault)</VanillaGamePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <VanillaGameAsset Include="$(VanillaGamePath)\**\*" Condition="Exists('$(VanillaGamePath)')" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    把 VanillaGameAsset 汇入 None 并标记 CopyToOutputDirectory=PreserveNewest，
+    由标准管线复制到输出目录；Link 保留相对目录结构。
+  -->
+  <Target Name="InilynCollectVanillaGame"
+          DependsOnTargets="InilynResolveVanillaGamePath"
+          BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <None Include="@(VanillaGameAsset)"
+            CopyToOutputDirectory="PreserveNewest"
+            Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
