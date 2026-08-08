@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.0": {
       "GitVersion.MsBuild": {
         "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+        "requested": "[6.8.2, )",
+        "resolved": "6.8.2",
+        "contentHash": "eTd8jUiogUXpVssFyDWWdMrPr5Cdc57tWaQ3Cv/eMIhnumOHZhDkc/wcy8hYU8aH7NS4VT2w/pHjVITDSTXMGw=="
       },
       "IDisposableAnalyzers": {
         "type": "Direct",
@@ -25,15 +25,15 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[10.10.0, )",
-        "resolved": "10.10.0",
-        "contentHash": "iV7KATnwKaeS2lbl1XBYP3ZcOtDGuuhuWIWLXWX5T9kD57i6z7zZqvMePAiMQP38N1lpODi3PHCAThaJETTnvQ=="
+        "requested": "[11.0.2, )",
+        "resolved": "11.0.2",
+        "contentHash": "exAGxO6+Qfx6+Th5RHatdsGKyZ117AYzIhnS/RKNpm5Ip9h8LbPQnPrq7xHkaIFb8dmF19BBVeaANFLw0ZxX2w=="
       },
       "System.Collections.Immutable": {
         "type": "Direct",
-        "requested": "[10.0.9, )",
-        "resolved": "10.0.9",
-        "contentHash": "ci6tokGOzXpemLiZeMrSlA8xKdU43cIO0spbHH+vLaoFMA+fI8CHI3Np3D78jC7EZZrC9jiHDj0VlVK962hzsw==",
+        "requested": "[10.0.10, )",
+        "resolved": "10.0.10",
+        "contentHash": "Ih5zrydoDc1H5I0eNP6f4Lzw3cjsPMN4Nikd86kbyi66y0flkM9GfjVo62aUbcxeTbypzBCFAFQ+/6RF2jRORg==",
         "dependencies": {
           "System.Memory": "4.6.3",
           "System.Runtime.CompilerServices.Unsafe": "6.1.2"
@@ -88,7 +88,7 @@
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
-          "System.Collections.Immutable": "[10.0.9, )",
+          "System.Collections.Immutable": "[10.0.10, )",
           "System.Memory": "[4.6.3, )",
           "System.Threading.Tasks.Extensions": "[4.6.3, )",
           "System.ValueTuple": "[4.6.2, )"
@@ -98,9 +98,9 @@
     "net10.0": {
       "GitVersion.MsBuild": {
         "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+        "requested": "[6.8.2, )",
+        "resolved": "6.8.2",
+        "contentHash": "eTd8jUiogUXpVssFyDWWdMrPr5Cdc57tWaQ3Cv/eMIhnumOHZhDkc/wcy8hYU8aH7NS4VT2w/pHjVITDSTXMGw=="
       },
       "IDisposableAnalyzers": {
         "type": "Direct",
@@ -116,9 +116,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[10.10.0, )",
-        "resolved": "10.10.0",
-        "contentHash": "iV7KATnwKaeS2lbl1XBYP3ZcOtDGuuhuWIWLXWX5T9kD57i6z7zZqvMePAiMQP38N1lpODi3PHCAThaJETTnvQ=="
+        "requested": "[11.0.2, )",
+        "resolved": "11.0.2",
+        "contentHash": "exAGxO6+Qfx6+Th5RHatdsGKyZ117AYzIhnS/RKNpm5Ip9h8LbPQnPrq7xHkaIFb8dmF19BBVeaANFLw0ZxX2w=="
       },
       "shimakaze.sdk.csf": {
         "type": "Project"
@@ -127,9 +127,9 @@
     "net8.0": {
       "GitVersion.MsBuild": {
         "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+        "requested": "[6.8.2, )",
+        "resolved": "6.8.2",
+        "contentHash": "eTd8jUiogUXpVssFyDWWdMrPr5Cdc57tWaQ3Cv/eMIhnumOHZhDkc/wcy8hYU8aH7NS4VT2w/pHjVITDSTXMGw=="
       },
       "IDisposableAnalyzers": {
         "type": "Direct",
@@ -145,29 +145,29 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[10.10.0, )",
-        "resolved": "10.10.0",
-        "contentHash": "iV7KATnwKaeS2lbl1XBYP3ZcOtDGuuhuWIWLXWX5T9kD57i6z7zZqvMePAiMQP38N1lpODi3PHCAThaJETTnvQ=="
+        "requested": "[11.0.2, )",
+        "resolved": "11.0.2",
+        "contentHash": "exAGxO6+Qfx6+Th5RHatdsGKyZ117AYzIhnS/RKNpm5Ip9h8LbPQnPrq7xHkaIFb8dmF19BBVeaANFLw0ZxX2w=="
       },
       "System.Collections.Immutable": {
         "type": "Direct",
-        "requested": "[10.0.9, )",
-        "resolved": "10.0.9",
-        "contentHash": "ci6tokGOzXpemLiZeMrSlA8xKdU43cIO0spbHH+vLaoFMA+fI8CHI3Np3D78jC7EZZrC9jiHDj0VlVK962hzsw=="
+        "requested": "[10.0.10, )",
+        "resolved": "10.0.10",
+        "contentHash": "Ih5zrydoDc1H5I0eNP6f4Lzw3cjsPMN4Nikd86kbyi66y0flkM9GfjVo62aUbcxeTbypzBCFAFQ+/6RF2jRORg=="
       },
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
-          "System.Collections.Immutable": "[10.0.9, )"
+          "System.Collections.Immutable": "[10.0.10, )"
         }
       }
     },
     "net9.0": {
       "GitVersion.MsBuild": {
         "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "0W5NHnfnogX0pfidRcJfqzfb8Yc/avBfq1qVuaHiHIjbtsjKHt9IFtt18p/ttCCeJlJe9fQliQ3pSkZQcibXlw=="
+        "requested": "[6.8.2, )",
+        "resolved": "6.8.2",
+        "contentHash": "eTd8jUiogUXpVssFyDWWdMrPr5Cdc57tWaQ3Cv/eMIhnumOHZhDkc/wcy8hYU8aH7NS4VT2w/pHjVITDSTXMGw=="
       },
       "IDisposableAnalyzers": {
         "type": "Direct",
@@ -183,20 +183,20 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[10.10.0, )",
-        "resolved": "10.10.0",
-        "contentHash": "iV7KATnwKaeS2lbl1XBYP3ZcOtDGuuhuWIWLXWX5T9kD57i6z7zZqvMePAiMQP38N1lpODi3PHCAThaJETTnvQ=="
+        "requested": "[11.0.2, )",
+        "resolved": "11.0.2",
+        "contentHash": "exAGxO6+Qfx6+Th5RHatdsGKyZ117AYzIhnS/RKNpm5Ip9h8LbPQnPrq7xHkaIFb8dmF19BBVeaANFLw0ZxX2w=="
       },
       "System.Collections.Immutable": {
         "type": "Direct",
-        "requested": "[10.0.9, )",
-        "resolved": "10.0.9",
-        "contentHash": "ci6tokGOzXpemLiZeMrSlA8xKdU43cIO0spbHH+vLaoFMA+fI8CHI3Np3D78jC7EZZrC9jiHDj0VlVK962hzsw=="
+        "requested": "[10.0.10, )",
+        "resolved": "10.0.10",
+        "contentHash": "Ih5zrydoDc1H5I0eNP6f4Lzw3cjsPMN4Nikd86kbyi66y0flkM9GfjVo62aUbcxeTbypzBCFAFQ+/6RF2jRORg=="
       },
       "shimakaze.sdk.csf": {
         "type": "Project",
         "dependencies": {
-          "System.Collections.Immutable": "[10.0.9, )"
+          "System.Collections.Immutable": "[10.0.10, )"
         }
       }
     }
