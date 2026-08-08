@@ -1,4 +1,0 @@
-Code,Severity,Summary
-INI1001,Error,节名未结束: 在 "{text}" 中缺少 ']'。
-INI1002,Error,节名未开始: 在 "{text}" 中缺少 '['。
-INI1003,Error,不符合 INI 格式的内容: "{text}"。

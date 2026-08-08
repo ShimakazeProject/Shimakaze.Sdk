@@ -1,408 +1,216 @@
-using Draco.Lsp.Model;
-
 namespace Shimakaze.Sdk.Inilyn.Text;
 
 /// <summary>
-/// 源文本
+/// 不可变源代码文本的抽象基类。
 /// </summary>
-public abstract class SourceText(int[] lineIndexes, DocumentUri uri)
+/// <remarks>
+/// <para>
+/// 底层由字符串承载完整内容；实例表示一个「窗口」（起始偏移 + 长度），
+/// 切片操作返回新的 <see cref="SubSourceText"/> 视图，不复制字符。
+/// </para>
+/// <para>
+/// <see cref="Substring(int, int)"/> 和 <see cref="this[Range]"/> 均直接创建新视图，
+/// 彼此独立调用，避免递归导致的栈溢出。
+/// </para>
+/// </remarks>
+public abstract class SourceText : IEquatable<SourceText>
 {
     /// <summary>
-    /// 文档Uri
+    /// 关联的文件名；若不存在则为 <see langword="null"/>。
     /// </summary>
-    public DocumentUri Uri { get; } = uri;
+    public abstract string? FileName { get; }
 
     /// <summary>
-    /// 获取根文本
-    /// </summary>
-    public abstract SourceText Root { get; }
-
-    /// <summary>
-    /// 获取文本长度
+    /// 文本总长度（字符数）。
     /// </summary>
     public abstract int Length { get; }
 
     /// <summary>
-    /// 获取行数
+    /// 文本是否为空。
     /// </summary>
-    public int LineCount => lineIndexes.Length;
+    public virtual bool IsEmpty => Length == 0;
 
     /// <summary>
-    /// 获取相对于 <see cref="Root"/> 的起始索引
+    /// 获取指定位置（从 0 开始）的字符。
     /// </summary>
-    public abstract int StartIndex { get; }
+    /// <param name="index">字符位置。</param>
+    public abstract char this[int index] { get; }
 
     /// <summary>
-    /// 获取相对于 <see cref="Root"/> 的结束索引
+    /// 整个窗口的只读字符视图（不复制）。
     /// </summary>
-    public abstract int EndIndex { get; }
+    public abstract ReadOnlySpan<char> Span { get; }
 
     /// <summary>
-    /// 是否为空白内容
+    /// 按 Range 取子区间，返回新的 <see cref="SourceText"/> 视图。
     /// </summary>
-    public bool IsWhiteSpace
-    {
-        get
-        {
-            for (int i = 0; i < Length; i++)
-            {
-                if (!char.IsWhiteSpace(this[i]))
-                    return false;
-            }
-
-            return true;
-        }
-    }
+    /// <param name="range">区间。</param>
+    public abstract SourceText this[Range range] { get; }
 
     /// <summary>
-    /// 是否为空内容
-    /// </summary>
-    public bool IsEmpty => Length is 0;
-
-    /// <summary>
-    /// 获取指定字符
-    /// </summary>
-    /// <param name="index">以 <c>0</c> 为基础的字符索引</param>
-    /// <returns></returns>
-    public abstract char this[Index index] { get; }
-
-    /// <summary>
-    /// 获取指定范围的文本
-    /// </summary>
-    /// <param name="range">以 <c>0</c> 为基础的字符索引范围</param>
-    /// <returns></returns>
-    public SourceText this[System.Range range] => new SubSourceText(this, range);
-
-    /// <summary>
-    /// 从 <paramref name="content"/> 和 <paramref name="uri"/> 创建 <see cref="SourceText"/>
+    /// 从 <paramref name="start"/> 位置提取指定长度文本，返回新的 <see cref="SourceText"/> 视图。
     /// </summary>
     /// <remarks>
-    /// 此 API 用于给不在文件系统中的代码使用
+    /// 该方法直接创建 <see cref="SubSourceText"/>，不调用 <see cref="this[Range]"/>，避免递归。
     /// </remarks>
-    /// <param name="content">代码原文</param>
-    /// <param name="uri">URI</param>
-    /// <returns></returns>
-    public static SourceText Create(string content, DocumentUri uri) => new FullSourceText(content, uri);
+    /// <param name="start">起始位置。</param>
+    /// <param name="length">长度。</param>
+    public abstract SourceText Substring(int start, int length);
 
     /// <summary>
-    /// 从 <paramref name="uri"/> 创建 <see cref="SourceText"/>
+    /// 从 <paramref name="start"/> 位置提取到末尾，返回新的 <see cref="SourceText"/> 视图。
     /// </summary>
-    /// <param name="uri">URI</param>
-    /// <returns></returns>
-    public static SourceText Create(DocumentUri uri)
+    /// <param name="start">起始位置。</param>
+    public abstract SourceText Substring(int start);
+
+    /// <summary>
+    /// 是否包含给定字符。
+    /// </summary>
+    /// <param name="value">要查找的字符。</param>
+    public bool Contains(char value) => Span.IndexOf(value) >= 0;
+
+    /// <summary>
+    /// 是否包含给定子字符串。
+    /// </summary>
+    /// <param name="value">要查找的子字符串。</param>
+    public bool Contains(string value) => Span.IndexOf(value) >= 0;
+
+    /// <summary>
+    /// 是否以给定值开头。
+    /// </summary>
+    /// <param name="value">前缀。</param>
+    public bool StartsWith(char value) => Span.Length > 0 && Span[0] == value;
+
+    /// <summary>
+    /// 是否以给定值开头。
+    /// </summary>
+    /// <param name="value">前缀。</param>
+    public bool StartsWith(string value) => Span.StartsWith(value);
+
+    /// <summary>
+    /// 是否以给定值结尾。
+    /// </summary>
+    /// <param name="value">后缀。</param>
+    public bool EndsWith(char value) => Span.Length > 0 && Span[^1] == value;
+
+    /// <summary>
+    /// 是否以给定值结尾。
+    /// </summary>
+    /// <param name="value">后缀。</param>
+    public bool EndsWith(string value) => Span.EndsWith(value);
+
+    /// <summary>
+    /// 查找第一个匹配字符的位置；未找到返回 -1。
+    /// </summary>
+    /// <param name="value">要查找的字符。</param>
+    public int IndexOf(char value) => Span.IndexOf(value);
+
+    /// <summary>
+    /// 查找第一个匹配子字符串的位置；未找到返回 -1。
+    /// </summary>
+    /// <param name="value">要查找的子字符串。</param>
+    public int IndexOf(string value) => Span.IndexOf(value);
+
+    /// <summary>
+    /// 查找最后一个匹配字符的位置；未找到返回 -1。
+    /// </summary>
+    /// <param name="value">要查找的字符。</param>
+    public int LastIndexOf(char value) => Span.LastIndexOf(value);
+
+    /// <summary>
+    /// 查找最后一个匹配子字符串的位置；未找到返回 -1。
+    /// </summary>
+    /// <param name="value">要查找的子字符串。</param>
+    public int LastIndexOf(string value) => Span.LastIndexOf(value);
+
+    /// <summary>
+    /// 文本中某位置所在的 1 起始行号。
+    /// </summary>
+    /// <param name="position">文本位置。</param>
+    /// <returns>行号（1 起始）。</returns>
+    public abstract int GetLineNumber(int position);
+
+    /// <summary>
+    /// 获取指定行号（0 起始）对应的行。
+    /// </summary>
+    /// <param name="lineNumber">0 起始行号。</param>
+    public abstract TextLine GetLine(int lineNumber);
+
+    /// <summary>
+    /// 文本包含的行数。
+    /// </summary>
+    public abstract int LineCount { get; }
+
+    /// <summary>
+    /// 按行拆分得到的全部行。
+    /// </summary>
+    public abstract IEnumerable<TextLine> Lines { get; }
+
+    /// <summary>
+    /// 从 <paramref name="startLine"/> 行（0 起始）开始，连续取 <paramref name="count"/> 行。
+    /// </summary>
+    /// <param name="startLine">起始行号（0 起始）。</param>
+    /// <param name="count">要取的行数。</param>
+    public abstract SourceText GetLines(int startLine, int count);
+
+    /// <summary>
+    /// 获取整行的文本（含换行符）作为 <see cref="SourceText"/> 视图。
+    /// </summary>
+    /// <param name="lineNumber">0 起始行号。</param>
+    public SourceText GetLineText(int lineNumber) => GetLine(lineNumber).FullText;
+
+    /// <summary>
+    /// 获取指定位置的行号和列号。
+    /// </summary>
+    /// <param name="position">文本位置（0-based）。</param>
+    /// <returns>行号（1-based）和列号（1-based）。</returns>
+    public (int Line, int Column) GetPosition(int position)
     {
-        if (uri.ToUri() is not { IsFile: true } link)
-            throw new ArgumentException("uri 不是一个文件 Uri", nameof(uri));
-
-        var content = File.ReadAllText(link.LocalPath);
-
-        return new FullSourceText(content, uri);
+        int line = GetLineNumber(position);
+        var lineInfo = GetLine(line - 1);
+        int column = position - lineInfo.Start + 1;
+        return (line, column);
     }
 
     /// <summary>
-    /// 从 <paramref name="path"/> 创建 <see cref="SourceText"/>
+    /// 从字符串创建 <see cref="RootSourceText"/>。
     /// </summary>
-    /// <param name="path">文件路径</param>
-    /// <returns></returns>
-    public static SourceText Create(string path) => Create(new DocumentUri(path));
+    /// <param name="text">文本内容。</param>
+    /// <param name="fileName">关联的文件名，可为 <see langword="null"/>。</param>
+    public static SourceText Create(string text, string? fileName = null)
+        => new RootSourceText(text, fileName);
 
     /// <summary>
-    /// 从 <paramref name="uri"/> 创建 <see cref="SourceText"/>
+    /// 允许从字符串隐式转换为 <see cref="RootSourceText"/>。
     /// </summary>
-    /// <param name="uri"></param>
-    /// <returns></returns>
-    public static SourceText Create(Uri uri) => Create(DocumentUri.From(uri));
+    /// <param name="text">文本内容。</param>
+    public static implicit operator SourceText(string text) => new RootSourceText(text, null);
 
     /// <summary>
-    /// 获取 <paramref name="index"/> 位置
+    /// 允许将 <see cref="SourceText"/> 隐式转换为底层字符串。
     /// </summary>
-    /// <param name="index"></param>
-    /// <returns></returns>
-    public Position GetPosition(Index index)
-    {
-        var p = index.GetOffset(Length);
-        var a = lineIndexes.FirstOrDefault(i => i >= p);
-        return unchecked(new()
-        {
-            Line = (uint)Array.IndexOf(lineIndexes, a),
-            Character = (uint)(p - a),
-        });
-    }
+    /// <param name="source">源代码文本。</param>
+    public static implicit operator string(SourceText source) => source.ToString();
 
-    /// <summary>
-    /// 获取 <paramref name="range"/> 范围
-    /// </summary>
-    /// <param name="range"></param>
-    /// <returns></returns>
-    public Draco.Lsp.Model.Range GetRange(System.Range range) => new()
-    {
-        Start = GetPosition(range.Start),
-        End = GetPosition(range.End),
-    };
-
-    /// <summary>
-    /// 获取指定行的文本
-    /// </summary>
-    /// <param name="lineIndex">以 <c>0</c> 为基础的行号</param>
-    /// <returns></returns>
-    public SourceText GetLine(Index lineIndex)
-    {
-        int l = lineIndex.GetOffset(LineCount);
-        int startIndex = lineIndexes[l];
-        int endIndex = l + 1 < LineCount
-            ? lineIndexes[l + 1]
-            : Length;
-        return new SubSourceText(this, startIndex..endIndex);
-    }
-
-    /// <summary>
-    /// 获取指定行范围的所有文本
-    /// </summary>
-    /// <param name="lineRange">以 <c>0</c> 为基础的行号范围</param>
-    /// <returns></returns>
-    public SourceText GetLines(System.Range lineRange)
-    {
-        int startLine = lineRange.Start.GetOffset(LineCount);
-        int startIndex = lineIndexes[startLine];
-
-        var endLine = lineRange.End.GetOffset(LineCount);
-        int endIndex = endLine + 1 < LineCount
-            ? lineIndexes[endLine + 1]
-            : Length;
-
-        return new SubSourceText(this, startIndex..endIndex);
-    }
-
-    /// <summary>
-    /// 获取文本内容
-    /// </summary>
-    /// <returns></returns>
+    /// <inheritdoc />
     public abstract override string ToString();
 
-    /// <summary>
-    /// 获取文本内容
-    /// </summary>
-    /// <returns></returns>
-    public abstract ReadOnlySpan<char> AsSpan();
+    /// <inheritdoc />
+    public abstract bool Equals(SourceText? other);
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj) => Equals(obj as SourceText);
+
+    /// <inheritdoc />
+    public abstract override int GetHashCode();
 
     /// <summary>
-    /// 去除首尾空格
+    /// 判断两个 <see cref="SourceText"/> 是否相等。
     /// </summary>
-    /// <returns></returns>
-    public SourceText Trim()
-    {
-        int start = 0;
-        int end = 0;
-        for (int i = 0; i < Length; i++)
-        {
-            if (!char.IsWhiteSpace(this[i]))
-            {
-                start = i;
-                break;
-            }
-        }
-        for (int i = Length - 1; i >= 0; i--)
-        {
-            if (!char.IsWhiteSpace(this[i]))
-            {
-                end = i;
-                break;
-            }
-        }
-        return this[start..end];
-    }
+    public static bool operator ==(SourceText? left, SourceText? right) => Equals(left, right);
 
     /// <summary>
-    /// 去除首空格
+    /// 判断两个 <see cref="SourceText"/> 是否不相等。
     /// </summary>
-    /// <returns></returns>
-    public SourceText TrimStart()
-    {
-        int start = 0;
-        for (int i = 0; i < Length; i++)
-        {
-            if (!char.IsWhiteSpace(this[i]))
-            {
-                start = i;
-                break;
-            }
-        }
-        return this[start..];
-    }
-
-    /// <summary>
-    /// 去除尾空格
-    /// </summary>
-    /// <returns></returns>
-    public SourceText TrimEnd()
-    {
-        int end = 0;
-        for (int i = Length - 1; i >= 0; i--)
-        {
-            if (!char.IsWhiteSpace(this[i]))
-            {
-                end = i;
-                break;
-            }
-        }
-        return this[..end];
-    }
-
-    /// <summary>
-    /// 判断两个文本是否相等
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    public sealed override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(this, obj))
-            return true;
-
-        if (obj is not SourceText other)
-            return false;
-
-        return ToString() == other.ToString();
-    }
-
-    /// <summary>
-    /// 获取哈希值
-    /// </summary>
-    /// <returns></returns>
-    public sealed override int GetHashCode() => ToString().GetHashCode();
-
-    /// <summary>
-    /// 判断两个文本是否相等
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static bool operator ==(SourceText? left, SourceText? right)
-    {
-        if (ReferenceEquals(left, right))
-            return true;
-        if (left is null || right is null)
-            return false;
-
-        return left.ToString() == right.ToString();
-    }
-
-    /// <summary>
-    /// 判断两个文本是否不相等
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
-    public static bool operator !=(SourceText? left, SourceText? right)
-    {
-        if (ReferenceEquals(left, right))
-            return false;
-
-        if (left is null || right is null)
-            return true;
-
-        return left.ToString() != right.ToString();
-    }
-
-    /// <summary>
-    /// 转换成字符串
-    /// </summary>
-    /// <param name="text"></param>
-    public static implicit operator string(SourceText text) => text.ToString();
-
-    internal static int[] CalculateLineStarts(ReadOnlySpan<char> text)
-    {
-        List<int> lineStarts = [0];
-        for (int i = 0; i < text.Length; i++)
-        {
-            switch (text[i])
-            {
-                // CRLF
-                case '\r' when text.Length > i + 2 && text[i + 1] is '\n':
-                    i++;
-                    lineStarts.Add(i + 1);
-                    break;
-                case '\r': // CR
-                case '\n': // LF
-                    lineStarts.Add(i + 1);
-                    break;
-            }
-        }
-        return [.. lineStarts];
-    }
-
-    /// <summary>
-    /// 判断是否以<paramref name="chars"/>开头
-    /// </summary>
-    /// <param name="chars"></param>
-    /// <param name="comparisonType"></param>
-    /// <returns></returns>
-    /// <exception cref="NotSupportedException"></exception>
-    public bool StartsWith(ReadOnlySpan<char> chars, StringComparison comparisonType = StringComparison.Ordinal)
-    {
-        if (chars.Length > Length)
-            return false;
-
-        switch (comparisonType)
-        {
-            case StringComparison.Ordinal:
-                for (int i = 0; i < chars.Length; i++)
-                {
-                    if (this[i] != chars[i])
-                        return false;
-                }
-                return true;
-            case StringComparison.OrdinalIgnoreCase:
-                for (int i = 0; i < chars.Length; i++)
-                {
-                    char a = this[i];
-                    char b = chars[i];
-                    if (a is >= 'a' and <= 'z')
-                        a -= ' ';
-                    if (b is >= 'a' and <= 'z')
-                        b -= ' ';
-
-                    if (a != b)
-                        return false;
-                }
-                return true;
-            case StringComparison.CurrentCulture:
-            case StringComparison.CurrentCultureIgnoreCase:
-            case StringComparison.InvariantCulture:
-            case StringComparison.InvariantCultureIgnoreCase:
-            default:
-                throw new NotSupportedException();
-        }
-    }
-
-    /// <summary>
-    /// 查找<paramref name="character"/>在字符串中的位置
-    /// </summary>
-    /// <param name="character"></param>
-    /// <param name="startIndex"></param>
-    /// <returns></returns>
-    public int IndexOf(char character, int startIndex = 0)
-    {
-        for (int i = startIndex; i < Length; i++)
-        {
-            if (this[i] == character)
-                return i;
-        }
-        return -1;
-    }
-
-    /// <summary>
-    /// 查找<paramref name="character"/>在字符串中最后出现的位置
-    /// </summary>
-    /// <param name="character"></param>
-    /// <param name="startIndex"></param>
-    /// <returns></returns>
-    public int LastIndexOf(char character, int? startIndex = null)
-    {
-        for (int i = int.Min(startIndex ?? int.MaxValue, Length - 1); i >= 0; i--)
-        {
-            if (this[i] == character)
-                return i;
-        }
-        return -1;
-    }
+    public static bool operator !=(SourceText? left, SourceText? right) => !Equals(left, right);
 }

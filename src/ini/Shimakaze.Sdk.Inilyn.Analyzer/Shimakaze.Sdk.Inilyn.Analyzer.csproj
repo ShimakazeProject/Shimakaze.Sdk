@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.csproj" />
+  </ItemGroup>
+
+</Project>

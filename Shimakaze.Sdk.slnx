@@ -17,7 +17,7 @@
     <Project Path="src/hva/Shimakaze.Sdk.Hva/Shimakaze.Sdk.Hva.csproj" />
   </Folder>
   <Folder Name="/ini/">
-    <Project Path="src/ini/Shimakaze.Sdk.Inilyn.Generators/Shimakaze.Sdk.Inilyn.Generators.csproj" />
+    <Project Path="src/ini/Shimakaze.Sdk.Inilyn.Analyzer/Shimakaze.Sdk.Inilyn.Analyzer.csproj" />
     <Project Path="src/ini/Shimakaze.Sdk.Inilyn/Shimakaze.Sdk.Inilyn.csproj" />
   </Folder>
   <Folder Name="/mix/">

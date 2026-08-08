@@ -3,57 +3,51 @@ using System.Runtime.CompilerServices;
 namespace Shimakaze.Sdk.Inilyn.Text;
 
 /// <summary>
-/// 对 <see cref="RootSourceText"/> 的子区间视图，不持有任何字符副本。
+/// 最顶级的源代码文本，拥有底层字符串的所有权。
 /// </summary>
 /// <remarks>
-/// <para>
-/// 通过 <see cref="SourceText.Substring(int, int)"/> 或 <see cref="SourceText.this[Range]"/> 创建。
-/// </para>
-/// <para>
-/// 行偏移表独立计算（惰性），但字符读取委托给所属的 <see cref="RootSourceText"/>。
-/// </para>
+/// 由 <see cref="SourceText.Create(string, string?)"/> 或隐式字符串转换创建。
+/// 负责惰性计算行偏移表。
 /// </remarks>
-public sealed class SubSourceText : SourceText
+public sealed class RootSourceText : SourceText
 {
-    private readonly RootSourceText _root;
-    private readonly int _offset;
-    private readonly int _length;
+    private readonly string _text;
+    private readonly string? _fileName;
 
     private int[]? _lineStartOffsets;
     private int _lineCount;
 
     /// <summary>
-    /// 创建一个子区间视图。
+    /// 使用完整文本及可选文件名创建 <see cref="RootSourceText"/>。
     /// </summary>
-    /// <param name="root">所属的根源文本。</param>
-    /// <param name="offset">起始偏移量（相对于根文本）。</param>
-    /// <param name="length">字符长度。</param>
-    internal SubSourceText(RootSourceText root, int offset, int length)
+    /// <param name="text">完整文本内容。</param>
+    /// <param name="fileName">关联的文件名，可为 <see langword="null"/>。</param>
+    internal RootSourceText(string text, string? fileName)
     {
-        _root = root;
-        _offset = offset;
-        _length = length;
+        ArgumentNullException.ThrowIfNull(text);
+        _text = text;
+        _fileName = fileName;
     }
 
     /// <inheritdoc />
-    public override string? FileName => _root.FileName;
+    public override string? FileName => _fileName;
 
     /// <inheritdoc />
-    public override int Length => _length;
+    public override int Length => _text.Length;
 
     /// <inheritdoc />
-    public override char this[int index] => _root.GetChar(_offset + index);
+    public override char this[int index] => _text[index];
 
     /// <inheritdoc />
-    public override ReadOnlySpan<char> Span => _root.GetSpan(_offset, _length);
+    public override ReadOnlySpan<char> Span => _text.AsSpan();
 
     /// <inheritdoc />
     public override SourceText this[Range range]
     {
         get
         {
-            (int start, int length) = range.GetOffsetAndLength(_length);
-            return new SubSourceText(_root, _offset + start, length);
+            (int start, int length) = range.GetOffsetAndLength(_text.Length);
+            return new SubSourceText(this, start, length);
         }
     }
 
@@ -62,16 +56,16 @@ public sealed class SubSourceText : SourceText
     {
         ArgumentOutOfRangeException.ThrowIfNegative(start);
         ArgumentOutOfRangeException.ThrowIfNegative(length);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(start + length, _length);
-        return new SubSourceText(_root, _offset + start, length);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(start + length, _text.Length);
+        return new SubSourceText(this, start, length);
     }
 
     /// <inheritdoc />
     public override SourceText Substring(int start)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(start);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(start, _length);
-        return new SubSourceText(_root, _offset + start, _length - start);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(start, _text.Length);
+        return new SubSourceText(this, start, _text.Length - start);
     }
 
     /// <inheritdoc />
@@ -91,7 +85,8 @@ public sealed class SubSourceText : SourceText
     /// <inheritdoc />
     public override int GetLineNumber(int position)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(position, _length);
+        EnsureLineInfo();
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(position, _text.Length);
         return GetLineNumberCore(position) + 1;
     }
 
@@ -112,7 +107,7 @@ public sealed class SubSourceText : SourceText
 
         ArgumentOutOfRangeException.ThrowIfNegative(count);
         if (count == 0)
-            return new SubSourceText(_root, _offset, 0);
+            return new SubSourceText(this, 0, 0);
 
         int lastLine = startLine + count - 1;
         if (lastLine >= _lineCount)
@@ -120,11 +115,11 @@ public sealed class SubSourceText : SourceText
 
         int start = GetLineCore(startLine).Start;
         int end = GetLineCore(lastLine).EndIncludingBreak;
-        return new SubSourceText(_root, _offset + start, end - start);
+        return new SubSourceText(this, start, end - start);
     }
 
     /// <inheritdoc />
-    public override string ToString() => _root.GetSpan(_offset, _length).ToString();
+    public override string ToString() => _text;
 
     /// <inheritdoc />
     public override bool Equals(SourceText? other)
@@ -135,16 +130,28 @@ public sealed class SubSourceText : SourceText
         if (ReferenceEquals(this, other))
             return true;
 
-        if (other is not SubSourceText sub)
+        if (other is not RootSourceText root)
             return false;
 
-        return ReferenceEquals(_root, sub._root)
-            && _offset == sub._offset
-            && _length == sub._length;
+        return _text.Equals(root._text, StringComparison.Ordinal)
+            && _fileName == root._fileName;
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => HashCode.Combine(_root, _offset, _length);
+    public override int GetHashCode() => HashCode.Combine(_text, _fileName);
+
+    /// <summary>
+    /// 内部获取字符（供 <see cref="SubSourceText"/> 读取底层字符）。
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal char GetChar(int index) => _text[index];
+
+    /// <summary>
+    /// 内部获取子字符串的 Span（供 <see cref="SubSourceText"/> 使用）。
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal ReadOnlySpan<char> GetSpan(int start, int length)
+        => _text.AsSpan(start, length);
 
     private int EnsureLineInfo()
     {
@@ -157,7 +164,7 @@ public sealed class SubSourceText : SourceText
             offsets = _lineStartOffsets;
             if (offsets is null)
             {
-                offsets = ComputeLineStarts(_root.GetSpan(_offset, _length));
+                offsets = ComputeLineStarts(_text.AsSpan());
                 _lineStartOffsets = offsets;
                 _lineCount = offsets.Length;
             }
@@ -188,8 +195,8 @@ public sealed class SubSourceText : SourceText
     {
         int[] offsets = _lineStartOffsets ?? throw new InvalidOperationException();
         int start = offsets[lineNumber];
-        int endIncludingBreak = lineNumber + 1 < _lineCount ? offsets[lineNumber + 1] : _length;
-        return new TextLine(_root, lineNumber, _offset + start, _offset + endIncludingBreak);
+        int endIncludingBreak = lineNumber + 1 < _lineCount ? offsets[lineNumber + 1] : _text.Length;
+        return new TextLine(this, lineNumber, start, endIncludingBreak);
     }
 
     private static int[] ComputeLineStarts(ReadOnlySpan<char> text)
