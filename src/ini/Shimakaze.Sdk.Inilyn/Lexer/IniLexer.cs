@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Text;
 
+using Shimakaze.Sdk.Inilyn.Text;
+
 namespace Shimakaze.Sdk.Inilyn.Lexer;
 
 /// <summary>
@@ -8,7 +10,7 @@ namespace Shimakaze.Sdk.Inilyn.Lexer;
 /// </summary>
 /// <remarks>
 /// <para>
-/// 该分析器基于 <see cref="TextReader"/> 流式读取，将输入拆分为最小记号序列：
+/// 该分析器基于 <see cref="SourceText"/> 索引式读取，将输入拆分为最小记号序列：
 /// </para>
 /// <list type="bullet">
 ///   <item><description>方括号：<see cref="IniTokenType.LeftBracket"/>（<c>[</c>）、<see cref="IniTokenType.RightBracket"/>（<c>]</c>）。</description></item>
@@ -20,8 +22,8 @@ namespace Shimakaze.Sdk.Inilyn.Lexer;
 ///   <item><description><see cref="IniTokenType.EndOfFile"/>：文件结束。</description></item>
 /// </list>
 /// </remarks>
-/// <param name="reader">要分析的源文本读取器。</param>
-public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
+/// <param name="source">要分析的源文本。</param>
+public sealed class IniLexer(SourceText source) : IEnumerable<IniToken>
 {
     /// <summary>分隔符到记号类型的映射（单字符记号）。</summary>
     private static readonly Dictionary<int, IniTokenType> SimpleTokens = new()
@@ -33,48 +35,39 @@ public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
         [','] = IniTokenType.Comma,
     };
 
-    private readonly TextReader _reader = reader ?? throw new ArgumentNullException(nameof(reader));
-    private readonly Queue<int> _pushedBack = new();
+    private readonly SourceText _source = source ?? throw new ArgumentNullException(nameof(source));
+    private int _position;
     private int _current;
     private int _line = 1;
     private int _column = 1;
-    private int _offset;
     private bool _afterEqualSign;
 
     /// <summary>
-    /// 对给定的 INI 字符串内容进行词法分析。
+    /// 对给定的 <see cref="SourceText"/> 内容进行词法分析。
     /// </summary>
-    /// <param name="content">INI 文本内容。</param>
+    /// <param name="source">INI 源文本。</param>
     /// <returns>按出现顺序排列的 <see cref="IniToken"/> 序列，以 <see cref="IniTokenType.EndOfFile"/> 结尾。</returns>
-    public static IEnumerable<IniToken> Tokenize(string content)
-    {
-        using StringReader reader = new(content);
-        return new IniLexer(reader);
-    }
+    public static IEnumerable<IniToken> Tokenize(SourceText source) => new IniLexer(source);
 
     /// <summary>
-    /// 允许从字符串隐式创建词法分析器，便于 foreach 直接遍历：<c>foreach (var t in ini)</c>。
+    /// 允许从 <see cref="SourceText"/> 隐式创建词法分析器，便于 foreach 直接遍历：<c>foreach (var t in source)</c>。
     /// </summary>
-    /// <param name="content">INI 文本内容。</param>
-    public static implicit operator IniLexer(string content)
-    {
-        using StringReader reader = new(content);
-        return new IniLexer(reader);
-    }
+    /// <param name="source">INI 源文本。</param>
+    public static implicit operator IniLexer(SourceText source) => new(source);
 
     /// <summary>
-    /// 从底层 <see cref="TextReader"/> 流式读取并进行词法分析。
+    /// 从底层 <see cref="SourceText"/> 索引式读取并进行词法分析。
     /// </summary>
     /// <returns>按出现顺序排列的 <see cref="IniToken"/> 序列，以 <see cref="IniTokenType.EndOfFile"/> 结尾。</returns>
     public IEnumerable<IniToken> Tokenize()
     {
-        _current = _reader.Read();
+        _current = Peek(0);
         while (_current != -1)
         {
             yield return ReadToken();
         }
 
-        yield return MakeToken(_line, _column, _offset, IniTokenType.EndOfFile, string.Empty);
+        yield return MakeToken(_line, _column, _position, IniTokenType.EndOfFile, string.Empty);
     }
 
     /// <inheritdoc />
@@ -87,7 +80,7 @@ public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
     {
         int line = _line;
         int column = _column;
-        int offset = _offset;
+        int offset = _position;
 
         // 等号右侧：读取整行作为值
         if (_afterEqualSign)
@@ -101,9 +94,7 @@ public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
             char text = (char)_current;
             Advance();
             // 等号后面进入值模式
-            if (_current == -1 && type == IniTokenType.EqualSign)
-                _afterEqualSign = true;
-            else if (type == IniTokenType.EqualSign)
+            if (type == IniTokenType.EqualSign)
                 _afterEqualSign = true;
             return MakeToken(line, column, offset, type, text.ToString());
         }
@@ -187,18 +178,17 @@ public sealed class IniLexer(TextReader reader) : IEnumerable<IniToken>
             _column++;
         }
 
-        _offset++;
-        _current = _pushedBack.Count > 0 ? _pushedBack.Dequeue() : _reader.Read();
+        _position++;
+        _current = Peek(0);
     }
 
+    /// <summary>
+    /// 前瞻读取：返回距当前位置 <paramref name="ahead"/> 个字符后的字符（0 为当前字符），越界返回 -1。
+    /// </summary>
     private int Peek(int ahead)
     {
-        while (_pushedBack.Count < ahead)
-        {
-            _pushedBack.Enqueue(_reader.Read());
-        }
-
-        return _pushedBack.ElementAt(ahead - 1);
+        int index = _position + ahead;
+        return index < _source.Length ? _source[index] : -1;
     }
 
     private string ConsumeWhile(Func<int, bool> predicate)

@@ -50,7 +50,7 @@ public sealed class IniParser(IReadOnlyList<IniToken> tokens)
     /// <returns>语法树。</returns>
     public static IniSyntaxTree Parse(Text.SourceText sourceText)
     {
-        List<IniToken> tokens = [.. IniLexer.Tokenize(sourceText.ToString())];
+        List<IniToken> tokens = [.. IniLexer.Tokenize(sourceText)];
         IniParser parser = new(tokens);
         var tree = parser.Parse();
         return new IniSyntaxTree(sourceText, tree.Root, tree.Diagnostics);
