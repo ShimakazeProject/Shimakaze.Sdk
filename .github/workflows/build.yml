@@ -5,39 +5,39 @@ on:
     branches:
       - master
     paths:
-      - .github/workflows/build.yml      
-      - .config/dotnet-tools.json
+      - .editorconfig
+      - .github/workflows/build.yml
+      - "*.sln"
+      - "*.slnx"
+      - "**/*.cs"
+      - "**/*.csproj"
+      - "**/*.props"
+      - "**/*.targets"
+      - "**/dotnet-tools.json"
+      - "**/packages.lock.json"
+      - GitVersion.yaml
       - global.json
       - nuget.config
-      - Shimakaze.Sdk.sln
-      - Directory.Build.props
-      - Directory.Build.targets
-      - Directory.Packages.props
-      - "app/**/*"
-      - "lib/**/*"
-      - "msbuild/**/*"
-      - "src/**/*"
-      - "test/**/*"
     tags:
-      - 'v*'
+      - "v*"
 
   pull_request:
     branches:
       - master
     paths:
-      - .github/workflows/build.yml      
-      - .config/dotnet-tools.json
+      - .editorconfig
+      - .github/workflows/build.yml
+      - "*.sln"
+      - "*.slnx"
+      - "**/*.cs"
+      - "**/*.csproj"
+      - "**/*.props"
+      - "**/*.targets"
+      - "**/dotnet-tools.json"
+      - "**/packages.lock.json"
+      - GitVersion.yaml
       - global.json
       - nuget.config
-      - Shimakaze.Sdk.sln
-      - Directory.Build.props
-      - Directory.Build.targets
-      - Directory.Packages.props
-      - "app/**/*"
-      - "lib/**/*"
-      - "msbuild/**/*"
-      - "src/**/*"
-      - "test/**/*"
   merge_group:
 
 jobs:
@@ -55,6 +55,33 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
+
+      - name: 初始化 GitVersion
+        uses: gittools/actions/gitversion/setup@v4
+        with:
+          versionSpec: "6.8.x"
+          nugetConfigPath: "${{ github.workspace }}/nuget.config"
+
+      - name: 计算版本 Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v4
+
+      - name: 生成版本文件
+        shell: pwsh
+        run: |-
+          "<Project>" > Directory.Version.props
+          "  <PropertyGroup>" >> Directory.Version.props
+          "    <Version>${{ steps.gitversion.outputs.semVer }}</Version>" >> Directory.Version.props
+          "    <VersionPrefix>${{ steps.gitversion.outputs.majorMinorPatch }}</VersionPrefix>" >> Directory.Version.props
+          "    <VersionSuffix>${{ steps.gitversion.outputs.preReleaseTag }}</VersionSuffix>" >> Directory.Version.props
+          "    <PackageVersion>${{ steps.gitversion.outputs.fullSemVer }}</PackageVersion>" >> Directory.Version.props
+          "    <InformationalVersion>${{ steps.gitversion.outputs.informationalVersion }}</InformationalVersion>" >> Directory.Version.props
+          "    <AssemblyVersion>${{ steps.gitversion.outputs.assemblySemVer }}</AssemblyVersion>" >> Directory.Version.props
+          "    <FileVersion>${{ steps.gitversion.outputs.assemblySemFileVer }}</FileVersion>" >> Directory.Version.props
+          "    <RepositoryBranch>${{ steps.gitversion.outputs.branchName }}</RepositoryBranch>" >> Directory.Version.props
+          "    <RepositoryCommit>${{ steps.gitversion.outputs.sha }}</RepositoryCommit>" >> Directory.Version.props
+          "  </PropertyGroup>" >> Directory.Version.props
+          "</Project>" >> Directory.Version.props
 
       - name: 还原
         run: dotnet restore --graph --artifacts-path artifacts
@@ -100,7 +127,7 @@ jobs:
       - name: 签出仓库
         uses: actions/checkout@v7
         with:
-          sparse-checkout: ''
+          sparse-checkout: "."
 
       - name: 配置 .Net 环境
         uses: actions/setup-dotnet@v5

@@ -3,7 +3,7 @@ assembly-versioning-scheme: MajorMinorPatchTag
 assembly-file-versioning-scheme: MajorMinorPatchTag
 branches:
   main:
-    label: 'preview'
+    label: "preview"
   feature:
     regex: ^feat(ures?)?[\/-](?<BranchName>.+)
   pull-request:

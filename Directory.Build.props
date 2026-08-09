@@ -43,4 +43,6 @@
     <NoWarn>$(NoWarn);CA1711</NoWarn>
   </PropertyGroup>
 
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Version.props" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Version.props')" />
+
 </Project>
