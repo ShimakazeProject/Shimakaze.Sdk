@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using Microsoft.Build.Framework;
 
+using Shimakaze.Sdk.Engine.Ini;
 using Shimakaze.Sdk.Inilyn;
 
 using Shimakaze.Sdk.Inilyn.Analyzer.Analysis;
@@ -144,14 +145,10 @@ public class InilynBuildTask : Task
             }
 
             string outputPath = Path.Combine(OutputDirectory, outputFileName);
-            StringBuilder merged = new();
-            foreach (var kvp in result.OutputFiles)
-            {
-                merged.AppendLine(kvp.Value);
-            }
+            string merged = IniTool.MergeOutputFiles(result.OutputFiles);
 
             // 无 BOM 的 UTF-8，与游戏原生 INI 编码保持一致
-            File.WriteAllText(outputPath, merged.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            File.WriteAllText(outputPath, merged, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
             Log.LogMessage(MessageImportance.Normal, "已生成：{0}", outputPath);
 
             string sourceMapPath = outputPath + ".map.json";
@@ -204,7 +201,7 @@ public class InilynBuildTask : Task
             return;
         }
 
-        var analysis = InilynAnalyzer.Analyze(ruleSet, inputs, assets);
+        var analysis = IniTool.Analyze(ruleSet, inputs, assets);
         Log.ReportDiagnostics(analysis.Diagnostics, notError: !AnalyzeFatal);
 
         Log.LogMessage(MessageImportance.Normal, "分析完成：{0} 节，{1} 节可被 TreeShaking 移除。",
@@ -212,31 +209,5 @@ public class InilynBuildTask : Task
     }
 
     private Dictionary<string, ISet<string>>? LoadAssets()
-    {
-        Dictionary<string, ISet<string>>? assets = null;
-
-        foreach (string assetPath in AssetFiles)
-        {
-            if (string.IsNullOrWhiteSpace(assetPath) || !File.Exists(assetPath))
-            {
-                continue;
-            }
-
-            string kind = Path.GetFileNameWithoutExtension(assetPath).ToUpperInvariant();
-            HashSet<string> values = new(StringComparer.OrdinalIgnoreCase);
-            foreach (string raw in File.ReadAllLines(assetPath))
-            {
-                string v = raw.Trim();
-                if (v.Length > 0 && v[0] != '#')
-                {
-                    values.Add(v);
-                }
-            }
-
-            assets ??= new Dictionary<string, ISet<string>>(StringComparer.OrdinalIgnoreCase);
-            assets[kind] = values;
-        }
-
-        return assets;
-    }
+        => IniTool.LoadAssets(AssetFiles);
 }

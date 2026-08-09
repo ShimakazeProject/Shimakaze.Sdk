@@ -4,6 +4,7 @@ using System.Text.Json;
 using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Engine.Cli.Resources;
+using Shimakaze.Sdk.Engine.Ini;
 using Shimakaze.Sdk.Inilyn;
 using Shimakaze.Sdk.Inilyn.Analyzer.Analysis;
 using Shimakaze.Sdk.Inilyn.Analyzer.RuleSet;
@@ -109,13 +110,9 @@ internal sealed class CompileCommand
         UTF8Encoding utf8NoBom = new(encoderShouldEmitUTF8Identifier: false);
         if (Output?.Extension.Length > 0 && result.OutputFiles.Count > 1)
         {
-            StringBuilder merged = new();
-            foreach (var (_, content) in result.OutputFiles)
-            {
-                merged.AppendLine(content);
-            }
+            string merged = IniTool.MergeOutputFiles(result.OutputFiles);
 
-            await File.WriteAllTextAsync(Output.FullName, merged.ToString(), utf8NoBom);
+            await File.WriteAllTextAsync(Output.FullName, merged, utf8NoBom);
 
             if (Verbose)
             {

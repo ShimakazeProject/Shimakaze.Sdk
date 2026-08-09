@@ -1,3 +1,4 @@
+using Shimakaze.Sdk.Engine.Ini;
 using Shimakaze.Sdk.Inilyn.Analyzer.Analysis;
 using Shimakaze.Sdk.Inilyn.Analyzer.RuleSet;
 using Shimakaze.Sdk.Inilyn.Syntax;
@@ -30,33 +31,7 @@ internal static class IniCliHelper
     }
 
     public static Dictionary<string, ISet<string>>? LoadAssets(IEnumerable<FileInfo> assetFiles)
-    {
-        Dictionary<string, ISet<string>>? assets = null;
-        foreach (var file in assetFiles)
-        {
-            if (!file.Exists)
-            {
-                Console.Error.WriteLine($"错误：资源清单不存在 - {file.FullName}");
-                continue;
-            }
-
-            string kind = Path.GetFileNameWithoutExtension(file.Name).ToUpperInvariant();
-            HashSet<string> values = new(StringComparer.OrdinalIgnoreCase);
-            foreach (string raw in File.ReadAllLines(file.FullName))
-            {
-                string v = raw.Trim();
-                if (v.Length > 0 && !v.StartsWith('#'))
-                {
-                    values.Add(v);
-                }
-            }
-
-            assets ??= new Dictionary<string, ISet<string>>(StringComparer.OrdinalIgnoreCase);
-            assets[kind] = values;
-        }
-
-        return assets;
-    }
+        => IniTool.LoadAssets(assetFiles.Select(static f => f.FullName), msg => Console.Error.WriteLine($"错误：{msg}"));
 
     public static bool RunAnalysis(
         InilynRuleSet ruleSet,
@@ -64,7 +39,7 @@ internal static class IniCliHelper
         IReadOnlyDictionary<string, ISet<string>>? assets,
         bool verbose)
     {
-        var analysis = InilynAnalyzer.Analyze(ruleSet, inputs, assets);
+        var analysis = IniTool.Analyze(ruleSet, inputs, assets);
         ReportDiagnostics(analysis.Diagnostics, verbose);
 
         if (verbose)

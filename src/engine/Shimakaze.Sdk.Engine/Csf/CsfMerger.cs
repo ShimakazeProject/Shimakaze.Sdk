@@ -1,4 +1,6 @@
-namespace Shimakaze.Sdk.Csf;
+using Shimakaze.Sdk.Csf;
+
+namespace Shimakaze.Sdk.Engine.Csf;
 
 /// <summary>
 /// CSF 合并工具。

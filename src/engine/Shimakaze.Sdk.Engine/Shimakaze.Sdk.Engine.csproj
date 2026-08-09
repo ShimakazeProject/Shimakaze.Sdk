@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Shimakaze.Sdk.Engine.Cli" />
+    <InternalsVisibleTo Include="Shimakaze.Sdk.Engine.Tui" />
   </ItemGroup>
 
   <ItemGroup>
@@ -10,6 +11,8 @@
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+    <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.csproj" />
+    <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn.Analyzer\Shimakaze.Sdk.Inilyn.Analyzer.csproj" />
     <ProjectReference Include="..\..\mix\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
     <ProjectReference Include="..\..\pal\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
     <ProjectReference Include="..\..\shp\Shimakaze.Sdk.Shp\Shimakaze.Sdk.Shp.csproj" />

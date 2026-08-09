@@ -4,6 +4,7 @@ using Shimakaze.Sdk.Csf;
 using Shimakaze.Sdk.Csf.Json;
 using Shimakaze.Sdk.Csf.Xml;
 using Shimakaze.Sdk.Csf.Yaml;
+using Shimakaze.Sdk.Engine.Csf;
 
 using Task = Microsoft.Build.Utilities.Task;
 

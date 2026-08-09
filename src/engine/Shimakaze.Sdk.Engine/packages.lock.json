@@ -151,6 +151,26 @@
           "YamlDotNet": "[18.1.0, )"
         }
       },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.10, )",
+          "System.Memory": "[4.6.3, )",
+          "System.Text.Json": "[10.0.10, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
+        }
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.10, )",
+          "System.Memory": "[4.6.3, )",
+          "System.Threading.Tasks.Extensions": "[4.6.3, )",
+          "System.ValueTuple": "[4.6.2, )"
+        }
+      },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
@@ -268,6 +288,15 @@
           "YamlDotNet": "[18.1.0, )"
         }
       },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )"
+        }
+      },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
@@ -366,6 +395,20 @@
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.10, )",
           "YamlDotNet": "[18.1.0, )"
+        }
+      },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.10, )",
+          "System.Text.Json": "[10.0.10, )"
+        }
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.10, )"
         }
       },
       "shimakaze.sdk.mix": {
@@ -486,6 +529,20 @@
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "System.Collections.Immutable": "[10.0.10, )",
           "YamlDotNet": "[18.1.0, )"
+        }
+      },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project",
+        "dependencies": {
+          "System.Collections.Immutable": "[10.0.10, )",
+          "System.Text.Json": "[10.0.10, )"
+        }
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )",
+          "System.Collections.Immutable": "[10.0.10, )"
         }
       },
       "shimakaze.sdk.mix": {
