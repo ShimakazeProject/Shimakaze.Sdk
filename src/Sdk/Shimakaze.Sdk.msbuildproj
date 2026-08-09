@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.7.134">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <IsInherit>true</IsInherit>
+    <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageTags>MSBuild;MSBuildSdk</PackageTags>
+    <Description>Shimakaze 的 RA2/YR 模组构建 MSBuild SDK。</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="**\*.props" 
+          Exclude="bin\**\*;obj\**\*"
+          CopyToOutputDirectory="PreserveNewest"
+          Pack="true"
+          PackagePath="Sdk\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="**\*.targets" 
+          Exclude="bin\**\*;obj\**\*"
+          CopyToOutputDirectory="PreserveNewest"
+          Pack="true"
+          PackagePath="Sdk\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\engine\Shimakaze.Sdk.Engine.MSBuild\Shimakaze.Sdk.Engine.MSBuild.csproj"
+                      ReferenceOutputAssembly="false"
+                      SetTargetFramework="TargetFramework=netstandard2.0"
+                      OutputItemType="_EngineOutput" />
+  </ItemGroup>
+
+  <Target Name="CollectEngineOutputForCopy" BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <_Engine Include="%(_EngineOutput.RelativeDir)\**\*" />
+      <None Include="@(_Engine)"
+            CopyToOutputDirectory="PreserveNewest"
+            Link="Tasks\%(RecursiveDir)%(Filename)%(Extension)"
+            Pack="true"
+            PackagePath="Sdk\Tasks\%(RecursiveDir)%(Filename)%(Extension)" />
+      <_Engine Remove="@(_Engine)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

@@ -29,13 +29,13 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition=" '$(CommonTargetsPath)' == '' " />
 
   <!--
-    共享任务程序集目录（Shimakaze.Sdk.Engine.MSBuild.dll 承载 Inilyn / Csf 等全部 MSBuild 任务）：
-    Full（.NET Framework 版 MSBuild）优先 Tasks\Desktop，其余（Core）使用 Tasks\Core。
-    仅当对应程序集存在时才选中，否则回退到 Core。路径相对 SDK 根目录定位。
+    共享任务程序集目录（Shimakaze.Sdk.Engine.MSBuild.dll 承载 Inilyn / Csf 等全部 MSBuild 任务）。
+    任务程序集以 netstandard2.0 构建，可同时被完整版 MSBuild（.NET Framework 4.7.2+）
+    与 dotnet build（.NET Core / .NET 5+）加载，因此不再区分 Core / Desktop，
+    统一使用 Tasks 目录。路径相对 SDK 根目录定位。
   -->
   <PropertyGroup>
-    <ShimakazeSdkTasksDir Condition="'$(ShimakazeSdkTasksDir)' == '' and '$(MSBuildRuntimeType)' == 'Full' and Exists('$(MSBuildThisFileDirectory)Tasks\Desktop\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Desktop</ShimakazeSdkTasksDir>
-    <ShimakazeSdkTasksDir Condition="'$(ShimakazeSdkTasksDir)' == '' and Exists('$(MSBuildThisFileDirectory)Tasks\Core\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Core</ShimakazeSdkTasksDir>
+    <ShimakazeSdkTasksDir Condition="'$(ShimakazeSdkTasksDir)' == ''">$(MSBuildThisFileDirectory)Tasks</ShimakazeSdkTasksDir>
   </PropertyGroup>
 
   <!--
