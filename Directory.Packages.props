@@ -8,7 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.8" />
-    <GlobalPackageReference Include="GitVersion.MsBuild" Version="6.8.2" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="DotMake.CommandLine" Version="3.5.0" />

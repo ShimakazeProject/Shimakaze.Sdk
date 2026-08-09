@@ -11,12 +11,6 @@
           "System.CommandLine": "[2.0.7, 3.0.0)"
         }
       },
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.8.2, )",
-        "resolved": "6.8.2",
-        "contentHash": "eTd8jUiogUXpVssFyDWWdMrPr5Cdc57tWaQ3Cv/eMIhnumOHZhDkc/wcy8hYU8aH7NS4VT2w/pHjVITDSTXMGw=="
-      },
       "IDisposableAnalyzers": {
         "type": "Direct",
         "requested": "[4.0.8, )",
@@ -153,12 +147,6 @@
         "dependencies": {
           "System.CommandLine": "[2.0.7, 3.0.0)"
         }
-      },
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.8.2, )",
-        "resolved": "6.8.2",
-        "contentHash": "eTd8jUiogUXpVssFyDWWdMrPr5Cdc57tWaQ3Cv/eMIhnumOHZhDkc/wcy8hYU8aH7NS4VT2w/pHjVITDSTXMGw=="
       },
       "IDisposableAnalyzers": {
         "type": "Direct",
@@ -345,12 +333,6 @@
         "dependencies": {
           "System.CommandLine": "[2.0.7, 3.0.0)"
         }
-      },
-      "GitVersion.MsBuild": {
-        "type": "Direct",
-        "requested": "[6.8.2, )",
-        "resolved": "6.8.2",
-        "contentHash": "eTd8jUiogUXpVssFyDWWdMrPr5Cdc57tWaQ3Cv/eMIhnumOHZhDkc/wcy8hYU8aH7NS4VT2w/pHjVITDSTXMGw=="
       },
       "IDisposableAnalyzers": {
         "type": "Direct",
