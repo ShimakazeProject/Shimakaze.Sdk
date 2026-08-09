@@ -56,7 +56,7 @@ public sealed class ShapeImage
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    public static unsafe ShapeImage ReadFrom(Stream input)
+    public static ShapeImage ReadFrom(Stream input)
     {
         input.Read(out ShapeFileHeader shapeFileHeader);
         Memory<ShapeFrameHeader> shapeFrameHeaders = GC.AllocateUninitializedArray<ShapeFrameHeader>(shapeFileHeader.NumImages);
