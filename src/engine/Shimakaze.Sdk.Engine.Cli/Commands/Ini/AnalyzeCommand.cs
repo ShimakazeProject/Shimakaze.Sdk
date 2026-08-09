@@ -9,19 +9,19 @@ namespace Shimakaze.Sdk.Engine.Cli.Commands.Ini;
 [CliCommand(Description = nameof(Resource.Command_Ini_Analyze_Description), Parent = typeof(IniCommand))]
 internal sealed class AnalyzeCommand
 {
-    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Rules_Description), Alias = "r", Aliases = ["rules"], Required = true, AllowMultipleArgumentsPerToken = true)]
+    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Rules_Description), Alias = "r", Required = true, AllowMultipleArgumentsPerToken = true)]
     public required List<FileInfo> Rules { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Input_Description), Alias = "i", Aliases = ["input"], Required = true, AllowMultipleArgumentsPerToken = true)]
+    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Input_Description), Alias = "i", Required = true, AllowMultipleArgumentsPerToken = true)]
     public required List<FileInfo> Input { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Group_Description), Alias = "g", Aliases = ["group"], AllowMultipleArgumentsPerToken = true)]
+    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Group_Description), Alias = "g", AllowMultipleArgumentsPerToken = true)]
     public List<string>? Group { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Assets_Description), Alias = "a", Aliases = ["assets"], AllowMultipleArgumentsPerToken = true)]
+    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Assets_Description), Alias = "a", AllowMultipleArgumentsPerToken = true)]
     public List<FileInfo>? Assets { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Verbose_Description), Alias = "v", Aliases = ["verbose"])]
+    [CliOption(Description = nameof(Resource.Command_Ini_Analyze_Verbose_Description), Alias = "v")]
     public bool Verbose { get; set; }
 
     public async Task<int> RunAsync()

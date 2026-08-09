@@ -16,28 +16,28 @@ namespace Shimakaze.Sdk.Engine.Cli.Commands.Ini;
 [CliCommand(Description = nameof(Resource.Command_Ini_Compile_Description), Parent = typeof(IniCommand))]
 internal sealed class CompileCommand
 {
-    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Input_Description), Alias = "i", Aliases = ["input"], Required = true, AllowMultipleArgumentsPerToken = true)]
+    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Input_Description), Alias = "i", Required = true, AllowMultipleArgumentsPerToken = true)]
     public required List<FileInfo> Input { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Output_Description), Alias = "o", Aliases = ["output"])]
+    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Output_Description), Alias = "o")]
     public FileInfo? Output { get; set; }
 
     [CliOption(Description = nameof(Resource.Command_Ini_Compile_SourceMap_Description), Alias = "s", Aliases = ["sourcemap"])]
     public FileInfo? SourceMap { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Verbose_Description), Alias = "v", Aliases = ["verbose"])]
+    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Verbose_Description), Alias = "v")]
     public bool Verbose { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Compile_NoTreeShaking_Description), Aliases = ["no-tree-shaking"])]
+    [CliOption(Description = nameof(Resource.Command_Ini_Compile_NoTreeShaking_Description))]
     public bool NoTreeShaking { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Rules_Description), Alias = "r", Aliases = ["rules"], AllowMultipleArgumentsPerToken = true)]
+    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Rules_Description), Alias = "r", AllowMultipleArgumentsPerToken = true)]
     public List<FileInfo>? Rules { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Assets_Description), Alias = "a", Aliases = ["assets"], AllowMultipleArgumentsPerToken = true)]
+    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Assets_Description), Alias = "a", AllowMultipleArgumentsPerToken = true)]
     public List<FileInfo>? Assets { get; set; }
 
-    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Group_Description), Alias = "g", Aliases = ["group"])]
+    [CliOption(Description = nameof(Resource.Command_Ini_Compile_Group_Description), Alias = "g")]
     public string? Group { get; set; }
 
     public async Task<int> RunAsync()
