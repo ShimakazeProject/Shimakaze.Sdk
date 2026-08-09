@@ -57,7 +57,7 @@ internal sealed class ExportsCommand
         if (FrameCounts is -1)
             FrameCounts = renderer.Count;
         if (Transparent)
-            renderer.Palette[0] = BGRA32.Transparent;
+            renderer.Palette[0] = RGBA32.Transparent;
         if (ShadowColor.HasValue)
             renderer.Palette[1] = new(unchecked((uint)ShadowColor.Value));
         if (HouseColor.HasValue)

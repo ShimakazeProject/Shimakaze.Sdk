@@ -19,8 +19,8 @@ public abstract record class Image(int Width, int Height)
     /// </summary>
     /// <param name="x">The x-coordinate of the pixel.</param>
     /// <param name="y">The y-coordinate of the pixel.</param>
-    /// <returns>The <see cref="BGRA32"/> color value at the specified pixel.</returns>
-    public abstract BGRA32 GetPixel(int x, int y);
+    /// <returns>The <see cref="RGBA32"/> color value at the specified pixel.</returns>
+    public abstract RGBA32 GetPixel(int x, int y);
 
     /// <summary>
     /// Loads an image from the specified file path using ImageMagick.
@@ -42,7 +42,7 @@ public abstract record class Image(int Width, int Height)
         ProcessStartInfo data = new()
         {
             FileName = "magick",
-            Arguments = $"\"{path}\" -depth 8 BGRA:-",
+            Arguments = $"\"{path}\" -depth 8 RGBA:-",
             RedirectStandardOutput = true,
             UseShellExecute = false,
             CreateNoWindow = true,
@@ -68,7 +68,7 @@ public abstract record class Image(int Width, int Height)
         int w = int.Parse(output[0], CultureInfo.InvariantCulture);
         int h = int.Parse(output[1], CultureInfo.InvariantCulture);
 
-        var pixels = MemoryMarshal.Cast<byte, BGRA32>(ms.GetBuffer()).ToArray();
+        var pixels = MemoryMarshal.Cast<byte, RGBA32>(ms.GetBuffer()).ToArray();
 
         return new(w, h, ImmutableCollectionsMarshal.AsImmutableArray(pixels));
     }
@@ -86,7 +86,7 @@ public abstract record class Image(int Width, int Height)
         ProcessStartInfo data = new()
         {
             FileName = "magick",
-            Arguments = $"-size {Width}x{Height} -depth 8 BGRA:- {arguments} \"{path}\"",
+            Arguments = $"-size {Width}x{Height} -depth 8 RGBA:- {arguments} \"{path}\"",
             RedirectStandardInput = true,
             UseShellExecute = false,
             CreateNoWindow = true,

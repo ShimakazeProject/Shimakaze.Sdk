@@ -26,6 +26,14 @@ public readonly record struct RGBA32(byte R, byte G, byte B, byte A) : IRGB, IFr
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RGBA32"/> struct from a packed 32-bit unsigned integer.
+    /// </summary>
+    /// <param name="value">The packed color value in RGBA byte order (R in MSB, A in LSB).</param>
+    public RGBA32(uint value) : this((byte)((value & 0xFF000000) >> 24), (byte)((value & 0x00FF0000) >> 16), (byte)((value & 0x0000FF00) >> 8), (byte)(value & 0x000000FF))
+    {
+    }
+
 #if !NET7_0_OR_GREATER
     RGBA32 IFromHSV<RGBA32>.FromHSV(in HSV hsv) => FromHSV(hsv);
 #endif
@@ -70,10 +78,4 @@ public readonly record struct RGBA32(byte R, byte G, byte B, byte A) : IRGB, IFr
     /// </summary>
     /// <param name="color">The palette color to convert.</param>
     public static implicit operator RGBA32(PaletteColor color) => new(color.ExpandedR, color.ExpandedG, color.ExpandedB);
-
-    /// <summary>
-    /// Explicitly converts a <see cref="BGRA32"/> to an <see cref="RGBA32"/> by swapping the red and blue channels.
-    /// </summary>
-    /// <param name="c">The BGRA color to convert.</param>
-    public static explicit operator RGBA32(BGRA32 c) => new(c.R, c.G, c.B, c.A);
 }

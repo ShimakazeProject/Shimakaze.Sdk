@@ -10,13 +10,13 @@ namespace Shimakaze.Sdk.Engine.Common;
 /// </summary>
 /// <param name="Width">The width of the image in pixels.</param>
 /// <param name="Height">The height of the image in pixels.</param>
-/// <param name="Palette">The color palette as an array of <see cref="BGRA32"/> values.</param>
+/// <param name="Palette">The color palette as an array of <see cref="RGBA32"/> values.</param>
 /// <param name="Indexes">The palette index for each pixel.</param>
-public sealed record class PaletteImage(int Width, int Height, ImmutableArray<BGRA32> Palette, ImmutableArray<byte> Indexes)
+public sealed record class PaletteImage(int Width, int Height, ImmutableArray<RGBA32> Palette, ImmutableArray<byte> Indexes)
     : Image(Width, Height)
 {
     /// <inheritdoc />
-    public override BGRA32 GetPixel(int x, int y) => Palette[Indexes[(y * Width) + x]];
+    public override RGBA32 GetPixel(int x, int y) => Palette[Indexes[(y * Width) + x]];
 
     /// <inheritdoc />
     public override PaletteImage ToPalette(int count)
@@ -30,7 +30,7 @@ public sealed record class PaletteImage(int Width, int Height, ImmutableArray<BG
     /// <inheritdoc />
     public override SoftwareImage ToSoftware()
     {
-        BGRA32[] pixels = GC.AllocateUninitializedArray<BGRA32>(Indexes.Length);
+        RGBA32[] pixels = GC.AllocateUninitializedArray<RGBA32>(Indexes.Length);
         for (int i = 0; i < Indexes.Length; i++)
             pixels[i] = Palette[Indexes[i]];
 

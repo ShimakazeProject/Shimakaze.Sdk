@@ -45,9 +45,9 @@ public sealed class ShapeRenderer(ShapeImage shape, Palette palette) : FramesRen
     public bool HasShadow { get; set => field = Shape.Frames.Count % 2 is 0 && value; }
 
     /// <summary>
-    /// The palette converted to an array of <see cref="BGRA32"/> pixels for rendering.
+    /// The palette converted to an array of <see cref="RGBA32"/> pixels for rendering.
     /// </summary>
-    public BGRA32[] Palette { get; } = [.. palette.Select(i => (BGRA32)i)];
+    public RGBA32[] Palette { get; } = [.. palette.Select(i => (RGBA32)i)];
 
     /// <inheritdoc/>
     public override ShapeFrameRenderer GetFrame(int index)
@@ -65,7 +65,7 @@ public sealed class ShapeRenderer(ShapeImage shape, Palette palette) : FramesRen
     /// Preserves the saturation and value of each palette entry while replacing the hue.
     /// </summary>
     /// <param name="color">The new house colour.</param>
-    public void UpdateHouseColor(BGRA32 color)
+    public void UpdateHouseColor(RGBA32 color)
     {
         UpdateHouse(16, color);
         UpdateHouse(17, color);
@@ -85,10 +85,10 @@ public sealed class ShapeRenderer(ShapeImage shape, Palette palette) : FramesRen
         UpdateHouse(31, color);
     }
 
-    private void UpdateHouse(int index, BGRA32 color)
+    private void UpdateHouse(int index, RGBA32 color)
     {
         var (h, _, _) = color.ToHSV();
         var (_, s, v) = Palette[index].ToHSV();
-        Palette[index] = BGRA32.FromHSV(new(h, s, v));
+        Palette[index] = RGBA32.FromHSV(new(h, s, v));
     }
 }

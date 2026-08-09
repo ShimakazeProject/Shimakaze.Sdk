@@ -29,9 +29,9 @@ public sealed class TemplateRenderer : Renderer
     private readonly int _pixelsHeight;
 
     /// <summary>
-    /// The palette converted to an array of <see cref="BGRA32"/> pixels for rendering.
+    /// The palette converted to an array of <see cref="RGBA32"/> pixels for rendering.
     /// </summary>
-    public BGRA32[] Palette { get; }
+    public RGBA32[] Palette { get; }
 
     /// <inheritdoc/>
     public override Size Size { get; }
@@ -51,7 +51,7 @@ public sealed class TemplateRenderer : Renderer
     public TemplateRenderer(TemplateFile template, Palette palette)
     {
         Template = template;
-        Palette = [.. palette.Select(i => (BGRA32)i)];
+        Palette = [.. palette.Select(i => (RGBA32)i)];
 
         _tileW = (int)Template.Header.BlockImageWidth;
         _tileH = (int)Template.Header.BlockImageHeight;

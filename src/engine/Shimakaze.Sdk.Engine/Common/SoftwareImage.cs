@@ -12,8 +12,8 @@ namespace Shimakaze.Sdk.Engine.Common;
 /// </summary>
 /// <param name="Width">The width of the image in pixels.</param>
 /// <param name="Height">The height of the image in pixels.</param>
-/// <param name="Pixels">The raw pixel data as an immutable array of <see cref="BGRA32"/> values.</param>
-public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<BGRA32> Pixels)
+/// <param name="Pixels">The raw pixel data as an immutable array of <see cref="RGBA32"/> values.</param>
+public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<RGBA32> Pixels)
     : Image(Width, Height)
 {
     /// <summary>
@@ -21,11 +21,11 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<B
     /// </summary>
     /// <param name="size">The size of the image.</param>
     /// <param name="pixels">The raw pixel data.</param>
-    internal SoftwareImage(Size size, BGRA32[] pixels) : this(size.Width, size.Height, ImmutableCollectionsMarshal.AsImmutableArray(pixels))
+    internal SoftwareImage(Size size, RGBA32[] pixels) : this(size.Width, size.Height, ImmutableCollectionsMarshal.AsImmutableArray(pixels))
     { }
 
     /// <inheritdoc />
-    public override BGRA32 GetPixel(int x, int y) => Pixels[(y * Width) + x];
+    public override RGBA32 GetPixel(int x, int y) => Pixels[(y * Width) + x];
 
     /// <inheritdoc />
     public override PaletteImage ToPalette(int count)
@@ -47,13 +47,13 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<B
     /// </summary>
     /// <param name="count">The maximum number of colors in the palette.</param>
     /// <param name="pixels">Optional pixel data to use instead of the image's own pixels.</param>
-    /// <returns>An immutable array of <see cref="BGRA32"/> palette colors.</returns>
-    private ImmutableArray<BGRA32> GetPalette(int count, ImmutableArray<BGRA32>? pixels = null)
+    /// <returns>An immutable array of <see cref="RGBA32"/> palette colors.</returns>
+    private ImmutableArray<RGBA32> GetPalette(int count, ImmutableArray<RGBA32>? pixels = null)
     {
         ProcessStartInfo data = new()
         {
             FileName = "magick",
-            Arguments = $"-size {Width}x{Height} -depth 8 BGRA:- -colors {count} {(pixels is not null ? "-unique-colors" : string.Empty)} BGRA:-",
+            Arguments = $"-size {Width}x{Height} -depth 8 RGBA:- -colors {count} {(pixels is not null ? "-unique-colors" : string.Empty)} RGBA:-",
             RedirectStandardInput = true,
             UseShellExecute = false,
             CreateNoWindow = true,
@@ -74,7 +74,7 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<B
 
         Debug.Assert(pData.ExitCode is 0);
 
-        var result = MemoryMarshal.Cast<byte, BGRA32>(ms.GetBuffer()).ToArray();
+        var result = MemoryMarshal.Cast<byte, RGBA32>(ms.GetBuffer()).ToArray();
 
         return ImmutableCollectionsMarshal.AsImmutableArray(result);
     }

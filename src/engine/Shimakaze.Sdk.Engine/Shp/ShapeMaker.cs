@@ -171,7 +171,7 @@ public static class ShapeMaker
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <returns></returns>
-    private static byte GetIndex(in Palette palette, in BGRA32 pixel, byte start, byte end)
+    private static byte GetIndex(in Palette palette, in RGBA32 pixel, byte start, byte end)
     {
         if (pixel.A is 0)
             return 0;
@@ -199,7 +199,7 @@ public static class ShapeMaker
     /// <param name="palette"></param>
     /// <param name="pixel"></param>
     /// <returns></returns>
-    private static byte GetHouseIndex(in Palette palette, in BGRA32 pixel)
+    private static byte GetHouseIndex(in Palette palette, in RGBA32 pixel)
     {
         if (pixel.A is 0)
             return 0;
