@@ -5,12 +5,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>true</IsPackable>
     <IsInherit>true</IsInherit>
-    <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageTags>MSBuild;MSBuildSdk</PackageTags>
     <Description>Shimakaze 的 RA2/YR 模组构建 MSBuild SDK。</Description>
+    <PackageTags>MSBuild MSBuildSdk notargets notarget</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageType>MSBuildSdk</PackageType>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>
