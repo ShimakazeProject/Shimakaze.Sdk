@@ -6,6 +6,7 @@
     <BuildOutputTargetFolder>build\tools</BuildOutputTargetFolder>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.csproj" />
     <ProjectReference Include="..\..\ini\Shimakaze.Sdk.Inilyn.Analyzer\Shimakaze.Sdk.Inilyn.Analyzer.csproj" />
+    <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+    <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
+    <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
+    <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
   </ItemGroup>
 
 </Project>

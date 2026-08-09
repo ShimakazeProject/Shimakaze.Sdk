@@ -36,18 +36,12 @@
   </ItemGroup>
 
   <!--
-    按运行时选择 Inilyn MSBuild 任务程序集：
-    Full（.NET Framework 版 MSBuild）优先 Tasks\Desktop，其余（Core）使用 Tasks\Core。
-    仅当对应程序集存在时才选中，否则回退到 Core。程序集路径相对本模块目录定位。
+    注册 InilynBuildTask。任务程序集 Shimakaze.Sdk.Engine.MSBuild.dll 承载全部引擎
+    MSBuild 任务（Inilyn / Csf），目录由 Sdk.targets 中的 $(ShimakazeSdkTasksDir) 解析。
   -->
-  <PropertyGroup>
-    <InilynTasksDir Condition="'$(InilynTasksDir)' == '' and '$(MSBuildRuntimeType)' == 'Full' and Exists('$(MSBuildThisFileDirectory)Tasks\Desktop\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Desktop</InilynTasksDir>
-    <InilynTasksDir Condition="'$(InilynTasksDir)' == '' and Exists('$(MSBuildThisFileDirectory)Tasks\Core\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Core</InilynTasksDir>
-  </PropertyGroup>
-
   <UsingTask TaskName="InilynBuildTask"
-    AssemblyFile="$(InilynTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"
-    Condition="'$(InilynTasksDir)' != ''" />
+    AssemblyFile="$(ShimakazeSdkTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"
+    Condition="'$(ShimakazeSdkTasksDir)' != ''" />
 
   <!--
     编译与分析（单个任务一次完成）：

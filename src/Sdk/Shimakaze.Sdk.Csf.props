@@ -1,0 +1,18 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Csf 模块的 props（CSF 编译/合并）。
+    本文件在 Sdk.props 中被导入，声明 CSF 编译所需的属性默认值。
+    使用方项目可在导入 SDK 后覆盖。
+  -->
+
+  <!--
+    CsfCompile        是否在构建时编译并合并 CSF（默认 true）。
+    OutputCsfFileName 最终 CSF 输出文件名（默认 ra2md.csf）。
+  -->
+  <PropertyGroup>
+    <CsfCompile Condition="'$(CsfCompile)' == ''">true</CsfCompile>
+    <OutputCsfFileName Condition="'$(OutputCsfFileName)' == ''">ra2md.csf</OutputCsfFileName>
+  </PropertyGroup>
+
+</Project>

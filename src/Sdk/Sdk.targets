@@ -29,6 +29,16 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition=" '$(CommonTargetsPath)' == '' " />
 
   <!--
+    共享任务程序集目录（Shimakaze.Sdk.Engine.MSBuild.dll 承载 Inilyn / Csf 等全部 MSBuild 任务）：
+    Full（.NET Framework 版 MSBuild）优先 Tasks\Desktop，其余（Core）使用 Tasks\Core。
+    仅当对应程序集存在时才选中，否则回退到 Core。路径相对 SDK 根目录定位。
+  -->
+  <PropertyGroup>
+    <ShimakazeSdkTasksDir Condition="'$(ShimakazeSdkTasksDir)' == '' and '$(MSBuildRuntimeType)' == 'Full' and Exists('$(MSBuildThisFileDirectory)Tasks\Desktop\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Desktop</ShimakazeSdkTasksDir>
+    <ShimakazeSdkTasksDir Condition="'$(ShimakazeSdkTasksDir)' == '' and Exists('$(MSBuildThisFileDirectory)Tasks\Core\Shimakaze.Sdk.Engine.MSBuild.dll')">$(MSBuildThisFileDirectory)Tasks\Core</ShimakazeSdkTasksDir>
+  </PropertyGroup>
+
+  <!--
     覆盖 CoreBuildDependsOn，去掉编译/资源/清单等“产出程序集”的步骤。
     保留 PrepareForRun：它仍会通过 CopyFilesToOutputDirectory 触发 CopyToOutputDirectory，
     使游戏/组件/资源等 None 项得以复制到输出目录。
@@ -71,8 +81,11 @@
   <Target Name="GetFrameworkPaths" DependsOnTargets="$(GetFrameworkPathsDependsOn)" />
   <Target Name="GetReferenceAssemblyPaths" DependsOnTargets="$(GetReferenceAssemblyPathsDependsOn)" />
 
-  <!-- Inilyn 编译与分析：UsingTask 与编译/分析目标见 Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.targets。 -->
-  <Import Project="Shimakaze.Sdk.Inilyn\Shimakaze.Sdk.Inilyn.targets" />
+  <!-- Inilyn 编译与分析：UsingTask 与编译/分析目标见 Shimakaze.Sdk.Inilyn.targets。 -->
+  <Import Project="Shimakaze.Sdk.Inilyn.targets" />
+
+  <!-- Csf 编译与合并：UsingTask 与编译/合并目标见 Shimakaze.Sdk.Csf.targets。 -->
+  <Import Project="Shimakaze.Sdk.Csf.targets" />
 
   <!-- 原版游戏复制：注册表解析与 VanillaGameAsset 复制见 CopyVanillaGame.targets。 -->
   <Import Project="CopyVanillaGame.targets" />

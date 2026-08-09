@@ -1,0 +1,58 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Csf 模块的 targets（CSF 编译/合并）。
+    本文件在 Sdk.targets 中被导入，负责：
+      1. 解析编译中间目录与最终输出目录的默认值；
+      2. 注册 Csf MSBuild 任务（与 Inilyn 共用引擎任务程序集）；
+      3. 定义 CsfBuild 目标：将各 CsfResource 源编译到 obj 目录，
+         再合并为最终的 CSF 输出。
+  -->
+
+  <!--
+    输出目录与中间目录默认值放在 targets 中计算：
+    $(OutputPath) 与 $(IntermediateOutputPath) 在 .NET SDK 目标导入后才可用，
+    因此这里能反映使用方项目最终的覆盖值。
+    CsfOutputDirectory      最终 CSF 输出目录，默认复用 $(OutputPath)。
+    CsfIntermediateDirectory 编译中间目录，默认位于 obj 下。
+  -->
+  <PropertyGroup>
+    <CsfOutputDirectory Condition="'$(CsfOutputDirectory)' == ''">$(OutputPath)</CsfOutputDirectory>
+    <CsfIntermediateDirectory Condition="'$(CsfIntermediateDirectory)' == ''">$(IntermediateOutputPath)csf\</CsfIntermediateDirectory>
+  </PropertyGroup>
+
+  <!--
+    拼接最终输出路径：确保输出目录以分隔符结尾。
+  -->
+  <PropertyGroup>
+    <CsfOutputFile>$(CsfOutputDirectory)$(OutputCsfFileName)</CsfOutputFile>
+    <CsfOutputFile Condition="!HasTrailingSlash('$(CsfOutputDirectory)')">$(CsfOutputDirectory)\$(OutputCsfFileName)</CsfOutputFile>
+  </PropertyGroup>
+
+  <!--
+    注册 CsfBuildTask。任务程序集与 Inilyn 共用 Shimakaze.Sdk.Engine.MSBuild.dll，
+    目录由 Sdk.targets 中的 $(ShimakazeSdkTasksDir) 解析。
+  -->
+  <UsingTask TaskName="CsfBuildTask"
+    AssemblyFile="$(ShimakazeSdkTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"
+    Condition="'$(ShimakazeSdkTasksDir)' != ''" />
+
+  <!--
+    编译并合并 CSF：
+    CsfBuildTask 内部按 Sources 的声明顺序逐个编译各 CsfResource 源
+    （Format 元数据决定解析方式：Csf / YamlV1 / XmlV1 / JsonV1 / JsonV2），
+    写入中间目录后合并输出。
+  -->
+  <Target Name="CsfBuild"
+    BeforeTargets="CoreCompile"
+    Condition="'$(CsfCompile)' == 'true' AND '@(CsfResource)' != ''">
+
+    <CsfBuildTask
+      Sources="@(CsfResource)"
+      ProjectDirectory="$(MSBuildProjectDirectory)"
+      IntermediateDirectory="$(CsfIntermediateDirectory)"
+      OutputFile="$(CsfOutputFile)" />
+
+  </Target>
+
+</Project>
