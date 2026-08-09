@@ -27,6 +27,8 @@
     <PackageVersion Include="System.Text.Json" Version="10.0.10" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageVersion Include="System.ValueTuple" Version="4.6.2" />
+    <PackageVersion Include="XenoAtom.Terminal.UI" Version="3.9.0" />
+    <PackageVersion Include="XenoAtom.Terminal.UI.Graphics" Version="3.9.0" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>
 </Project>

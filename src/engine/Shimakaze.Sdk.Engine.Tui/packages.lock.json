@@ -1,0 +1,195 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0": {
+      "DotMake.CommandLine": {
+        "type": "Direct",
+        "requested": "[3.5.0, )",
+        "resolved": "3.5.0",
+        "contentHash": "QrmOldwvKQ4rvuGP4MRZjxUxdag0az8g73cp7O99g9mxLHLRpkisyxpD1rtGLrCn/mB3+Ne/STAPh/V3lybynw==",
+        "dependencies": {
+          "System.CommandLine": "[2.0.7, 3.0.0)"
+        }
+      },
+      "IDisposableAnalyzers": {
+        "type": "Direct",
+        "requested": "[4.0.8, )",
+        "resolved": "4.0.8",
+        "contentHash": "vNi4NMG0CcJyjXxiNDcQ21FwV/whM9o9OEZKD+oP7tuxAqFEzX/x5OhC3OZJqW/w+8GOtCmJPBquYgMWgz0rfQ=="
+      },
+      "Microsoft.NET.ILLink.Tasks": {
+        "type": "Direct",
+        "requested": "[10.0.9, )",
+        "resolved": "10.0.9",
+        "contentHash": "4Iw41e2h7I4t70SJcX2GCmbyKJIlA273Cfm9RJMM050/3VBejGAG1KcthP5Z2L6SQcbfbf6BhNWO26+ZG+GzMg=="
+      },
+      "XenoAtom.Terminal.UI": {
+        "type": "Direct",
+        "requested": "[3.9.0, )",
+        "resolved": "3.9.0",
+        "contentHash": "OQ18w32TvJHqm0AVcTMYv0GRz+gcS7Le6oCxcILBiGsN+2N/13D0e0SoToCfZdt8xBfLB+8hVG+geZySW6c82w==",
+        "dependencies": {
+          "XenoAtom.Ansi": "1.7.0",
+          "XenoAtom.Terminal": "2.2.0"
+        }
+      },
+      "XenoAtom.Terminal.UI.Graphics": {
+        "type": "Direct",
+        "requested": "[3.9.0, )",
+        "resolved": "3.9.0",
+        "contentHash": "kXl+637wQoanlh0wGdpPHmUw229bNUa9YS6TO9xYqHXiKsJsVRX0aJL63pAqCHLevaoz5ncFziiONKv3SNOvMA==",
+        "dependencies": {
+          "XenoAtom.Ansi": "1.7.0",
+          "XenoAtom.Terminal": "2.2.0",
+          "XenoAtom.Terminal.Graphics": "2.2.0",
+          "XenoAtom.Terminal.UI": "3.9.0"
+        }
+      },
+      "SkiaSharp": {
+        "type": "Transitive",
+        "resolved": "3.119.2",
+        "contentHash": "nmy2dOFWPvQKMglfpjz8+/xQQcSrL9jzul3cUyzCJVSwrmSAw+6B1sEgU7jt6NZBptwGq2k/V0kjyu2GizMFtg==",
+        "dependencies": {
+          "SkiaSharp.NativeAssets.Win32": "3.119.2",
+          "SkiaSharp.NativeAssets.macOS": "3.119.2"
+        }
+      },
+      "SkiaSharp.NativeAssets.Linux": {
+        "type": "Transitive",
+        "resolved": "3.119.2",
+        "contentHash": "9WzxSyG/s9Id506j0Ht+Bi5ucOpWKPzd1XXr9TD4fuCafHHy2swRSlbZtC3IDQAsvCH63OerkDJajj43uSv5og=="
+      },
+      "SkiaSharp.NativeAssets.macOS": {
+        "type": "Transitive",
+        "resolved": "3.119.2",
+        "contentHash": "I2jMGQ/26KOnc6iAoR+Mxh9vSJJ2vioJyj9aJ9OL5yEZyXothXJxf4vBMqnSaiXMqiiU1scG7KqtT0CLkmMmWA=="
+      },
+      "SkiaSharp.NativeAssets.Win32": {
+        "type": "Transitive",
+        "resolved": "3.119.2",
+        "contentHash": "uYe+da6+GXVgPKkCopzvIZ83DmC8SXXKeUAPrNcztJNsg0SjPQAxfKMOPZqmVjbzznrq/QUIjLUlJSZV/e0IPA=="
+      },
+      "System.CommandLine": {
+        "type": "Transitive",
+        "resolved": "2.0.7",
+        "contentHash": "ih4yNLLF2Ebz85xJJBaPeddLa4d1AekYId7Y1g8oSsEaBHHd/CtyeBJ+tDvQadqeXz7i591K5ry/td+4aaHnQA=="
+      },
+      "Wcwidth": {
+        "type": "Transitive",
+        "resolved": "4.0.1",
+        "contentHash": "PMU8u3pGf9nUkee39KMrB8qqId7u7kyGWaZpOh9E4Mal3xChq+relS/hHQOicGAswyzi7F5DjXjac0mTnRBX8Q=="
+      },
+      "XenoAtom.Ansi": {
+        "type": "Transitive",
+        "resolved": "1.7.0",
+        "contentHash": "I6SZPpSrt5YoKRYQuzf93WZq6/lnEgAGrx25FYG4g/T+FjMSyTLN7xVhkgAvzIzqVYvnR0KwFBmnoSMLbjt6ig==",
+        "dependencies": {
+          "Wcwidth": "4.0.1"
+        }
+      },
+      "XenoAtom.Terminal": {
+        "type": "Transitive",
+        "resolved": "2.2.0",
+        "contentHash": "J3oOWIoJm24pAN2zsSesy8eyv6nUQyjmW6OFqmbH596HyaEOErQPKdQMEIPNqQT7QymipcbHm6qEAfREuomfkA==",
+        "dependencies": {
+          "XenoAtom.Ansi": "1.7.0"
+        }
+      },
+      "XenoAtom.Terminal.Graphics": {
+        "type": "Transitive",
+        "resolved": "2.2.0",
+        "contentHash": "QLfYYruezrvNBI2YpuhLKTgZ/P9NEpJWnmJQxxLJXOBr7QaL9mPP/Rdryh8iKJmD2ii2xGz8rjh5BvOiTQRE5g==",
+        "dependencies": {
+          "SkiaSharp": "3.119.2",
+          "SkiaSharp.NativeAssets.Linux": "3.119.2",
+          "SkiaSharp.NativeAssets.Win32": "3.119.2",
+          "SkiaSharp.NativeAssets.macOS": "3.119.2",
+          "XenoAtom.Ansi": "1.7.0",
+          "XenoAtom.Terminal": "2.2.0"
+        }
+      },
+      "shimakaze.sdk.csf": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.csf.json": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "[10.0.10, )",
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
+        }
+      },
+      "shimakaze.sdk.csf.xml": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Csf": "[1.0.0, )"
+        }
+      },
+      "shimakaze.sdk.csf.yaml": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "YamlDotNet": "[18.1.0, )"
+        }
+      },
+      "shimakaze.sdk.engine": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Csf": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",
+          "Shimakaze.Sdk.Csf.Yaml": "[1.0.0, )",
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )",
+          "Shimakaze.Sdk.Inilyn.Analyzer": "[1.0.0, )",
+          "Shimakaze.Sdk.Mix": "[1.0.0, )",
+          "Shimakaze.Sdk.Pal": "[1.0.0, )",
+          "Shimakaze.Sdk.Shp": "[1.0.0, )",
+          "Shimakaze.Sdk.Tmp": "[1.0.0, )",
+          "System.IO.Hashing": "[10.0.10, )"
+        }
+      },
+      "shimakaze.sdk.inilyn": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.inilyn.analyzer": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Inilyn": "[1.0.0, )"
+        }
+      },
+      "shimakaze.sdk.mix": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "[10.0.10, )",
+          "System.IO.Hashing": "[10.0.10, )"
+        }
+      },
+      "shimakaze.sdk.pal": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.shp": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.tmp": {
+        "type": "Project"
+      },
+      "Microsoft.Bcl.AsyncInterfaces": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.10, )",
+        "resolved": "10.0.10",
+        "contentHash": "TFI6OKYE1XZz4SGuTSH70c6SBdPpFktXsoa1gCxTr3mKrhmXirnvaS0tKz+J3ZWICEAmMpEGn59nO4ICtUpQXA=="
+      },
+      "System.IO.Hashing": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.10, )",
+        "resolved": "10.0.10",
+        "contentHash": "eE839zyWZD/UBZYzP2lu9fhHX6RWe63/jz3Jxf+JumzO/db+Vc2s7CMiDwxk9ti2NTUft2tdRx31Rw2OjKbecA=="
+      },
+      "YamlDotNet": {
+        "type": "CentralTransitive",
+        "requested": "[18.1.0, )",
+        "resolved": "18.1.0",
+        "contentHash": "5K+9KFg2TdTl7VXv88Qzi/0lqK6JFoNP3lRuImPYGRV7K/QYklDyTrj4+A+KAki1JsQi6qKY+hDyY7d6WRqjrw=="
+      }
+    }
+  }
+}

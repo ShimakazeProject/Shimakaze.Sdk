@@ -1,5 +1,4 @@
 <Solution>
-  </Folder>
   <Folder Name="/csf/">
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Converter/Shimakaze.Sdk.Csf.Converter.csproj" />
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Json/Shimakaze.Sdk.Csf.Json.csproj" />
@@ -10,14 +9,19 @@
   <Folder Name="/engine/">
     <Project Path="src/engine/Shimakaze.Sdk.Engine.Cli/Shimakaze.Sdk.Engine.Cli.csproj" />
     <Project Path="src/engine/Shimakaze.Sdk.Engine.MSBuild/Shimakaze.Sdk.Engine.MSBuild.csproj" />
+    <Project Path="src/engine/Shimakaze.Sdk.Engine.Tui/Shimakaze.Sdk.Engine.Tui.csproj" />
     <Project Path="src/engine/Shimakaze.Sdk.Engine/Shimakaze.Sdk.Engine.csproj" />
   </Folder>
   <Folder Name="/hva/">
     <Project Path="src/hva/Shimakaze.Sdk.Hva/Shimakaze.Sdk.Hva.csproj" />
   </Folder>
   <Folder Name="/ini/">
+    <Project Path="src/ini/Shimakaze.Sdk.Ini/Shimakaze.Sdk.Ini.csproj" />
     <Project Path="src/ini/Shimakaze.Sdk.Inilyn.Analyzer/Shimakaze.Sdk.Inilyn.Analyzer.csproj" />
     <Project Path="src/ini/Shimakaze.Sdk.Inilyn/Shimakaze.Sdk.Inilyn.csproj" />
+  </Folder>
+  <Folder Name="/map/">
+    <Project Path="src/map/Shimakaze.Sdk.Map/Shimakaze.Sdk.Map.csproj" />
   </Folder>
   <Folder Name="/mix/">
         <Project Path="src/mix/Shimakaze.Sdk.Mix/Shimakaze.Sdk.Mix.csproj" />
