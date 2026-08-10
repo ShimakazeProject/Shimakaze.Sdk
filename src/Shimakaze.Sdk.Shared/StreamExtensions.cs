@@ -51,7 +51,16 @@ internal static class StreamExtensions
     /// <inheritdoc cref="Write{T}(Stream, in T)"/>
     public static void Write<T>(this Stream stream, ReadOnlySpan<T> source)
         where T : unmanaged
-        => stream.Write(MemoryMarshal.AsBytes(source));
+    {
+#if NETSTANDARD2_0
+        // netstandard2.0 的 Stream 没有 Write(ReadOnlySpan<byte>) 实例方法，
+        // 直接调用会重新绑定到本扩展方法自身，造成无限递归。此处退回经典 byte[] API。
+        byte[] buffer = MemoryMarshal.AsBytes(source).ToArray();
+        stream.Write(buffer, 0, buffer.Length);
+#else
+        stream.Write(MemoryMarshal.AsBytes(source));
+#endif
+    }
 
     /// <inheritdoc cref="Write{T}(Stream, ReadOnlySpan{T})"/>
     public static void Write<T>(this Stream stream, Span<T> source)
