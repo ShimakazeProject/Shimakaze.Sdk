@@ -6,20 +6,6 @@
     <TargetFrameworks>$(ToolTargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(IsRoslynComponent)' == 'true' ">
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <IsAotCompatible>False</IsAotCompatible>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(IsRoslynComponent)' == 'true' ">
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Include="$(IconPath)" Link="logo.png" Condition=" '$(IconPath)' != '' " Pack="True" PackagePath="\" />
     <None Include="$(ReadmeFile)" Link="ReadMe.md" Condition=" '$(ReadmeFile)' != '' " Pack="True" PackagePath="\" />

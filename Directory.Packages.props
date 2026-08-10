@@ -3,21 +3,15 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <GitVersionTargetFramework>net10.0</GitVersionTargetFramework>
-    <UseProjectNamespaceForGitVersionInformation>true</UseProjectNamespaceForGitVersionInformation>
   </PropertyGroup>
   <ItemGroup>
     <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.8" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="DotMake.CommandLine" Version="3.5.0" />
-    <PackageVersion Include="Draco.Lsp" Version="0.4.14-pre" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="18.8.2" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" />
-    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.298" />
     <PackageVersion Include="Polyfill" Version="11.0.2" />
-    <PackageVersion Include="ShellProgressBar" Version="5.2.0" />
     <PackageVersion Include="Shimakaze.GeneratedRegex" Version="0.0.1" />
     <PackageVersion Include="Spectre.Console" Version="0.57.2" />
     <PackageVersion Include="System.Collections.Immutable" Version="10.0.10" />
