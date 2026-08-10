@@ -1,10 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Shimakaze.Sdk</PackageId>
+    <Description>Shimakaze 的 RA2/YR 模组构建 MSBuild SDK。</Description>
+    <PackageTags>MSBuild MSBuildSdk notargets notarget</PackageTags>
+    <PackageType>MSBuildSdk</PackageType>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <BuildOutputTargetFolder>build\tools</BuildOutputTargetFolder>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <NoWarn>$(NoWarn);CS1591;NU5100</NoWarn>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
@@ -16,5 +28,28 @@
   <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Engine\Shimakaze.Sdk.Engine.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Sdk\**\*" />
+    <None Remove="build\**\*" />
+    <None Remove="buildMultiTargeting\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Sdk\**\*" Pack="true" PackagePath="Sdk\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="build\**\*" Pack="true" PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="buildMultiTargeting\**\*" Pack="true" PackagePath="buildMultiTargeting\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Target Name="PackTasksDependencies">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(TargetDir)*"
+                            Exclude="$(TargetDir)$(TargetFileName);$(TargetDir)$(TargetName).xml;$(TargetDir)$(TargetName).pdb;$(TargetDir)$(TargetName).deps.json" />
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);PackTasksDependencies</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
 
 </Project>

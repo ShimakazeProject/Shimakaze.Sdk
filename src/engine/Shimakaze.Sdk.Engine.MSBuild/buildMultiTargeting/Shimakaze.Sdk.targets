@@ -1,0 +1,11 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    buildMultiTargeting 的 targets 入口。
+    本文件仅重定向到核心的 build\Shimakaze.Sdk.targets，
+    用于多目标（multi-targeting）项目中以 PackageReference 方式引用该包时自动导入。
+  -->
+
+  <Import Project="$(MSBuildThisFileDirectory)..\build\Shimakaze.Sdk.targets" />
+
+</Project>

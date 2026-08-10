@@ -2,7 +2,7 @@
 
   <!--
     Shimakaze.Sdk.Csf 模块的 props（CSF 编译/合并）。
-    本文件在 Sdk.props 中被导入，声明 CSF 编译所需的属性默认值。
+    本文件在 Shimakaze.Sdk.props 中被导入，声明 CSF 编译所需的属性默认值。
     使用方项目可在导入 SDK 后覆盖。
   -->
 

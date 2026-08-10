@@ -2,7 +2,7 @@
 
   <!--
     Shimakaze.Sdk.Inilyn 模块的 targets（Inilyn 编译/分析）。
-    本文件在 Sdk.targets 中被导入，负责：
+    本文件在 Shimakaze.Sdk.targets 中被导入，负责：
       1. 声明默认的 RuleGroup 映射与 Inilyn 输入收集；
       2. 注册 Inilyn MSBuild 任务（按运行时选择 Core/Desktop 程序集）；
       3. 定义 InilynCompile 目标：编译与分析由单个任务一次完成。
@@ -37,7 +37,7 @@
 
   <!--
     注册 InilynBuildTask。任务程序集 Shimakaze.Sdk.Engine.MSBuild.dll 承载全部引擎
-    MSBuild 任务（Inilyn / Csf），目录由 Sdk.targets 中的 $(ShimakazeSdkTasksDir) 解析。
+    MSBuild 任务（Inilyn / Csf），目录由 Shimakaze.Sdk.targets 中的 $(ShimakazeSdkTasksDir) 解析。
   -->
   <UsingTask TaskName="InilynBuildTask"
     AssemblyFile="$(ShimakazeSdkTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"

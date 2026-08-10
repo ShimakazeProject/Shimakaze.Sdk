@@ -1,0 +1,33 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Tasks.targets
+    根据当前 MSBuild 宿主的 .NET 运行时版本，选择任务程序集所在目录 $(ShimakazeSdkTasksDir)。
+    包内 tasks\ 下按目标框架提供多份任务程序集（Shimakaze.Sdk.Engine.MSBuild.dll 及其依赖）：
+
+      tasks\net10.0\        适用于 .NET 10+ 的 dotnet build（MSBuild 运行于 .NET 10+）
+      tasks\net9.0\         适用于 .NET 9 的 dotnet build
+      tasks\net8.0\         适用于 .NET 8 的 dotnet build
+      tasks\netstandard2.0\ 兜底：.NET Framework 完整版 MSBuild、.NET 8 以下的 dotnet build
+
+    判定依据是宿主运行时版本（Environment.Version，如 .NET 10 返回 10.0.x），而非 MSBuild
+    程序集版本——自 .NET 10 起 MSBuild 与 .NET 运行时版本号已解耦（如 MSBuild 18.x 运行于
+    .NET 10 上），不能拿 $(MSBuildVersion) 当作运行时版本使用。
+  -->
+
+  <!--
+    按运行时版本从高到低依次尝试；条件包含“尚未赋值”的守卫，保证只命中最高可用的一档。
+    完整版 MSBuild（.NET Framework）的 MSBuildRuntimeType 为 Full、Environment.Version 主版本为 4，
+    不会命中任何 Core 分支，最终落到 netstandard2.0。
+  -->
+  <PropertyGroup Condition="'$(ShimakazeSdkTasksDir)' == '' And '$(MSBuildRuntimeType)' == 'Core'">
+    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major) >= 8">$(MSBuildThisFileDirectory)..\tasks\net8.0</ShimakazeSdkTasksDir>
+    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major) >= 9">$(MSBuildThisFileDirectory)..\tasks\net9.0</ShimakazeSdkTasksDir>
+    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major) >= 10">$(MSBuildThisFileDirectory)..\tasks\net10.0</ShimakazeSdkTasksDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ShimakazeSdkTasksDir)' == ''">
+    <ShimakazeSdkTasksDir>$(MSBuildThisFileDirectory)..\tasks\netstandard2.0</ShimakazeSdkTasksDir>
+  </PropertyGroup>
+
+</Project>

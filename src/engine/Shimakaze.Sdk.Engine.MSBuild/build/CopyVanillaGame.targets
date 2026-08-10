@@ -2,7 +2,7 @@
 
   <!--
     原版游戏复制模块。
-    本文件在 Sdk.targets 中被导入，由 $(CopyVanillaGame) 门控：
+    本文件在 Shimakaze.Sdk.targets 中被导入，由 $(CopyVanillaGame) 门控：
       1. 用内联任务从注册表读取 Yuri's Revenge 的安装路径（installpath）；
       2. 解析出 VanillaGamePath（若 installpath 指向可执行文件则取其目录）；
       3. 把 VanillaGamePath 下的文件以 VanillaGameAsset 收集，汇入 None 后

@@ -2,7 +2,7 @@
 
   <!--
     Shimakaze.Sdk.Inilyn 模块的 props（Inilyn 编译/分析）。
-    本文件在 Sdk.props 中被导入，声明编译与分析所需的全部属性默认值，
+    本文件在 Shimakaze.Sdk.props 中被导入，声明编译与分析所需的全部属性默认值，
     以及默认的分析规则集（随 SDK 分发）。使用方项目可在导入 SDK 后覆盖。
   -->
 

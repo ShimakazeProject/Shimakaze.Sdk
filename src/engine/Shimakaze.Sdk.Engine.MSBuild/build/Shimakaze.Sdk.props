@@ -1,10 +1,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!--
-    Shimakaze.Sdk 的 Sdk.props。
+    Shimakaze.Sdk 的核心 props（build\Shimakaze.Sdk.props）。
     本文件在项目评估的最早期被导入，负责声明 SDK 的基础属性（纯打包、无编译）
     以及各功能模块的默认配置。后续的模块（Inilyn 编译、Csf 编译、游戏复制）
     通过本目录下的分模块 props/targets 导入，便于按需裁剪。
+    Sdk\Sdk.props 与 buildMultiTargeting\Shimakaze.Sdk.props 仅重定向到本文件。
   -->
 
   <!--
@@ -111,8 +112,10 @@
   <!--
     导入 .NET SDK 的 props，获得标准 Build / CopyFilesToOutputDirectory 管线
     （CopyToOutputDirectory 元数据由此生效）。
+    使用方项目本身已是 Microsoft.NET.Sdk（或以 PackageReference 引用本包时，
+    该标志在 nuget.g.props 导入本文件之前就已被 SDK 设置），此时跳过避免重复导入。
   -->
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' " />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(UsingMicrosoftNETSdk)' != 'true' " />
 
   <!--
     空目标：纯打包项目不产生资源，补齐语言目标中缺失的 CreateManifestResourceNames，

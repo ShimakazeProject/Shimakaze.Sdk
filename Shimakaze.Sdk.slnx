@@ -58,5 +58,4 @@
   <Folder Name="/vxl/">
     <Project Path="src/vxl/Shimakaze.Sdk.Vxl/Shimakaze.Sdk.Vxl.csproj" />
   </Folder>
-  <Project Path="src/Shimakaze.Sdk/Shimakaze.Sdk.msbuildproj" Type="13b669be-bb05-4ddf-9536-439f39a36129" />
 </Solution>

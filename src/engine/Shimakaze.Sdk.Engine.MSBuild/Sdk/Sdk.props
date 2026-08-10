@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk 的 Sdk.props 入口。
+    本文件仅重定向到核心的 build\Shimakaze.Sdk.props（build 文件夹作为核心 SDK），
+    供以 Sdk="Shimakaze.Sdk" 方式使用该包时加载。
+  -->
+
+  <Import Project="$(MSBuildThisFileDirectory)..\build\Shimakaze.Sdk.props" />
+
+</Project>

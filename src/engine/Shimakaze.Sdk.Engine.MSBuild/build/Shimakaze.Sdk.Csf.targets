@@ -2,7 +2,7 @@
 
   <!--
     Shimakaze.Sdk.Csf 模块的 targets（CSF 编译/合并）。
-    本文件在 Sdk.targets 中被导入，负责：
+    本文件在 Shimakaze.Sdk.targets 中被导入，负责：
       1. 解析编译中间目录与最终输出目录的默认值；
       2. 注册 Csf MSBuild 任务（与 Inilyn 共用引擎任务程序集）；
       3. 定义 CsfBuild 目标：将各 CsfResource 源编译到 obj 目录，
@@ -31,7 +31,7 @@
 
   <!--
     注册 CsfBuildTask。任务程序集与 Inilyn 共用 Shimakaze.Sdk.Engine.MSBuild.dll，
-    目录由 Sdk.targets 中的 $(ShimakazeSdkTasksDir) 解析。
+    目录由 Shimakaze.Sdk.targets 中的 $(ShimakazeSdkTasksDir) 解析。
   -->
   <UsingTask TaskName="CsfBuildTask"
     AssemblyFile="$(ShimakazeSdkTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"
