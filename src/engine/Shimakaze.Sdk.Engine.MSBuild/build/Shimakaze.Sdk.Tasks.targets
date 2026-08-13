@@ -21,9 +21,9 @@
     不会命中任何 Core 分支，最终落到 netstandard2.0。
   -->
   <PropertyGroup Condition="'$(ShimakazeSdkTasksDir)' == '' And '$(MSBuildRuntimeType)' == 'Core'">
-    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major) >= 8">$(MSBuildThisFileDirectory)..\tasks\net8.0</ShimakazeSdkTasksDir>
-    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major) >= 9">$(MSBuildThisFileDirectory)..\tasks\net9.0</ShimakazeSdkTasksDir>
-    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major) >= 10">$(MSBuildThisFileDirectory)..\tasks\net10.0</ShimakazeSdkTasksDir>
+    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major)' >= '8'">$(MSBuildThisFileDirectory)..\tasks\net8.0</ShimakazeSdkTasksDir>
+    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major)' >= '9'">$(MSBuildThisFileDirectory)..\tasks\net9.0</ShimakazeSdkTasksDir>
+    <ShimakazeSdkTasksDir Condition="'$([System.Environment]::Version.Major)' >= '10'">$(MSBuildThisFileDirectory)..\tasks\net10.0</ShimakazeSdkTasksDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ShimakazeSdkTasksDir)' == ''">

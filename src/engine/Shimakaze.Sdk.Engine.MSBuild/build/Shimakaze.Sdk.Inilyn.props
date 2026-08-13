@@ -32,12 +32,8 @@
 
   <!--
     默认分析输入：
-    InilynRuleFile  分析器规则文件（多个按声明顺序合并；移除该项即跳过分析）。
-                    默认使用 SDK 随附的 vanilla 平台配置（可 Remove 后自行追加）。
+    InilynRuleFile  分析器规则文件（多个按声明顺序合并；在项目中自行添加）。
     InilynAssetFile 外部资源清单（如 shp.txt；文件名前缀决定资源种类），默认为空。
   -->
-  <ItemGroup>
-    <InilynRuleFile Include="$(MSBuildThisFileDirectory)Rules\vanilla\vanilla.xml" />
-  </ItemGroup>
 
 </Project>
