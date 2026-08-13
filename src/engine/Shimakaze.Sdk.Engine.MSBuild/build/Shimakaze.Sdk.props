@@ -92,14 +92,11 @@
     Inilyn SDK 自有属性：
     ShimakazeSdkPath    SDK 根目录（供使用方项目引用 SDK 内资源）。
     OutputPath          输出目录，默认项目根下的 dist；可被使用方覆盖。
-    VanillaGamePathDefault 原版游戏的兜底路径；真实值由 CopyVanillaGame.targets
-                        按注册表 installpath 解析。
     CopyVanillaGame     是否把原版游戏文件复制到输出目录。
   -->
   <PropertyGroup>
     <ShimakazeSdkPath Condition="'$(ShimakazeSdkPath)' == ''">$(MSBuildThisFileDirectory)</ShimakazeSdkPath>
     <OutputPath>$(MSBuildProjectDirectory)\dist\</OutputPath>
-    <VanillaGamePathDefault>$(MSBuildProjectDirectory)\game</VanillaGamePathDefault>
     <CopyVanillaGame Condition="'$(CopyVanillaGame)' == ''">false</CopyVanillaGame>
   </PropertyGroup>
 
