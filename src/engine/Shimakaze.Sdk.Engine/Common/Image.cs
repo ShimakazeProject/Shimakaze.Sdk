@@ -1,6 +1,8 @@
-using System.Diagnostics;
-using System.Globalization;
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
+
+using StbImageSharp;
 
 using Shimakaze.Sdk;
 using Shimakaze.Sdk.Engine.Common.Pixels;
@@ -23,86 +25,55 @@ public abstract record class Image(int Width, int Height)
     public abstract RGBA32 GetPixel(int x, int y);
 
     /// <summary>
-    /// Loads an image from the specified file path using ImageMagick.
+    /// Loads an image from the specified file path using StbImageSharp.
     /// </summary>
     /// <param name="path">The file path of the image to load.</param>
     /// <returns>A <see cref="SoftwareImage"/> instance containing the loaded image data.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when ImageMagick cannot be started.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the image cannot be loaded.</exception>
     public static SoftwareImage Load(string path)
     {
-        ProcessStartInfo info = new()
+        var bytes = File.ReadAllBytes(path);
+        var result = ImageResult.FromMemory(bytes, ColorComponents.RedGreenBlueAlpha);
+        
+        if (result.Data == null)
         {
-            FileName = "magick",
-            Arguments = $"identify -format \"%w:%h\" \"{path}\"",
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
+            throw new InvalidOperationException($"Failed to load image from {path}");
+        }
 
-        ProcessStartInfo data = new()
+        var pixels = new RGBA32[result.Width * result.Height];
+        for (int i = 0; i < result.Data.Length; i += 4)
         {
-            FileName = "magick",
-            Arguments = $"\"{path}\" -depth 8 RGBA:-",
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
+            int index = i / 4;
+            pixels[index] = new RGBA32(result.Data[i], result.Data[i + 1], result.Data[i + 2], result.Data[i + 3]);
+        }
 
-        using var pInfo = Process.Start(info) ?? throw new InvalidOperationException("Cannot start magick");
-        Debug.WriteLine(pInfo.StartInfo.Arguments);
-
-        using var pData = Process.Start(data) ?? throw new InvalidOperationException("Cannot start magick");
-        Debug.WriteLine(pData.StartInfo.Arguments);
-
-        using MemoryStream ms = new();
-
-        string[] output = pInfo.StandardOutput.ReadToEnd().Split(':', 2);
-        pData.StandardOutput.BaseStream.CopyTo(ms);
-
-        pInfo.WaitForExit();
-        Debug.Assert(pInfo.ExitCode is 0);
-
-        pData.WaitForExit();
-        Debug.Assert(pData.ExitCode is 0);
-
-        int w = int.Parse(output[0], CultureInfo.InvariantCulture);
-        int h = int.Parse(output[1], CultureInfo.InvariantCulture);
-
-        var pixels = MemoryMarshal.Cast<byte, RGBA32>(ms.GetBuffer()).ToArray();
-
-        return new(w, h, ImmutableCollectionsMarshal.AsImmutableArray(pixels));
+        return new SoftwareImage(result.Width, result.Height, pixels);
     }
 
     /// <summary>
-    /// Saves the image to the specified file path using ImageMagick.
+    /// Saves the image to the specified file path as PNG using StbImageWriteSharp.
     /// </summary>
     /// <param name="path">The destination file path for the image.</param>
-    /// <param name="arguments">Additional arguments to pass to ImageMagick.</param>
-    /// <exception cref="InvalidOperationException">Thrown when ImageMagick cannot be started.</exception>
+    /// <param name="arguments">Additional arguments (not used with StbImageWriteSharp).</param>
+    /// <exception cref="InvalidOperationException">Thrown when the image cannot be saved.</exception>
     public void SaveTo(string path, string arguments = "")
     {
         var image = ToSoftware();
-
-        ProcessStartInfo data = new()
+        var bytes = new byte[image.Width * image.Height * 4];
+        
+        for (int i = 0; i < image.Pixels.Length; i++)
         {
-            FileName = "magick",
-            Arguments = $"-size {Width}x{Height} -depth 8 RGBA:- {arguments} \"{path}\"",
-            RedirectStandardInput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
+            var pixel = image.Pixels[i];
+            int offset = i * 4;
+            bytes[offset] = pixel.R;
+            bytes[offset + 1] = pixel.G;
+            bytes[offset + 2] = pixel.B;
+            bytes[offset + 3] = pixel.A;
+        }
 
-        using var pData = Process.Start(data) ?? throw new InvalidOperationException("Cannot start magick");
-        Debug.WriteLine(pData.StartInfo.Arguments);
-
-        var stream = pData.StandardInput.BaseStream;
-        stream.Write(image.Pixels.AsSpan());
-        stream.Flush();
-        stream.Close();
-
-        pData.WaitForExit();
-
-        Debug.Assert(pData.ExitCode is 0);
+        using var stream = File.OpenWrite(path);
+        var writer = new StbImageWriteSharp.ImageWriter();
+        writer.WritePng(bytes, image.Width, image.Height, StbImageWriteSharp.ColorComponents.RedGreenBlueAlpha, stream);
     }
 
     /// <summary>

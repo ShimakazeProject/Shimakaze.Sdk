@@ -6,6 +6,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="StbImageSharp" />
+    <PackageReference Include="StbImageWriteSharp" />
     <PackageReference Include="System.IO.Hashing" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Json\Shimakaze.Sdk.Csf.Json.csproj" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
