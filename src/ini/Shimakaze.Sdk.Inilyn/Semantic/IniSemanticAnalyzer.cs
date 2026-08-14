@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 using Shimakaze.Sdk.Inilyn.Symbols;
 using Shimakaze.Sdk.Inilyn.Syntax;
 using Shimakaze.Sdk.Inilyn.Syntax.Nodes;
@@ -129,18 +131,47 @@ public sealed class IniSemanticAnalyzer
     {
         List<IniSemanticSection> result = [];
 
+        // 递归展开 Mixin：缓存已展开结果避免重复计算；inProgress 用于打断循环引用时的无限递归
+        Dictionary<IniSectionSymbol, List<IniSemanticKeyValue>> cache = new(ReferenceComparer<IniSectionSymbol>.Instance);
+        HashSet<IniSectionSymbol> inProgress = new(ReferenceComparer<IniSectionSymbol>.Instance);
+
         foreach (var section in symbolTable.Sections.Values)
+        {
+            result.Add(new IniSemanticSection(section.Name, ExpandMixin(symbolTable, section, cache, inProgress)));
+        }
+
+        return result;
+    }
+
+    private static List<IniSemanticKeyValue> ExpandMixin(
+        IniSymbolTable symbolTable,
+        IniSectionSymbol section,
+        Dictionary<IniSectionSymbol, List<IniSemanticKeyValue>> cache,
+        HashSet<IniSectionSymbol> inProgress)
+    {
+        if (cache.TryGetValue(section, out var cached))
+        {
+            return cached;
+        }
+
+        if (!inProgress.Add(section))
+        {
+            // 循环引用：返回空列表打断递归（具体诊断已由 DetectCircularReferences 报告）
+            return [];
+        }
+
+        try
         {
             List<IniSemanticKeyValue> keyValues = [];
 
-            // 从左到右处理 Mixin 引用（浅拷贝合并，后者覆盖前者）
+            // 从左到右递归展开 Mixin 引用（后者覆盖前者，传递继承祖父节内容）
             foreach (var mixinRef in section.MixinRefs)
             {
                 if (symbolTable.Sections.TryGetValue(mixinRef.ReferencedSection, out var referenced))
                 {
-                    foreach (var key in referenced.Keys.Values)
+                    foreach (var key in ExpandMixin(symbolTable, referenced, cache, inProgress))
                     {
-                        keyValues.Add(new IniSemanticKeyValue(key.Name, GetKeyValueText(key), mixinRef.ReferencedSection));
+                        keyValues.Add(new IniSemanticKeyValue(key.Key, key.Value, mixinRef.ReferencedSection));
                     }
                 }
             }
@@ -153,10 +184,14 @@ public sealed class IniSemanticAnalyzer
                 keyValues.Add(new IniSemanticKeyValue(key.Name, GetKeyValueText(key)));
             }
 
-            result.Add(new IniSemanticSection(section.Name, keyValues));
+            List<IniSemanticKeyValue> frozen = [.. keyValues];
+            cache[section] = frozen;
+            return frozen;
         }
-
-        return result;
+        finally
+        {
+            inProgress.Remove(section);
+        }
     }
 
     private static List<IniSemanticKeyValue> FlattenGlobalKeys(IniSymbolTable symbolTable)
@@ -179,5 +214,17 @@ public sealed class IniSemanticAnalyzer
         }
 
         return string.Empty;
+    }
+
+    /// <summary>
+    /// 基于引用相等性的比较器（netstandard2.0 无 <see cref="ReferenceEqualityComparer"/>）。
+    /// </summary>
+    private sealed class ReferenceComparer<T> : IEqualityComparer<T> where T : class
+    {
+        public static readonly ReferenceComparer<T> Instance = new();
+
+        public bool Equals(T? x, T? y) => ReferenceEquals(x, y);
+
+        public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
     }
 }
