@@ -84,19 +84,19 @@
     <!-- 纯打包项目无需进入解决方案文件（不在 VS 中构建）。 -->
     <IncludeInSolutionFile>false</IncludeInSolutionFile>
 
-    <!-- 输出路径不追加目标框架子目录（否则会在 dist 下多出 net10.0 一层）。 -->
+    <!-- 输出路径不追加目标框架子目录（否则会在 bin 下多出 net10.0 一层）。 -->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <!--
     Inilyn SDK 自有属性：
     ShimakazeSdkPath    SDK 根目录（供使用方项目引用 SDK 内资源）。
-    OutputPath          输出目录，默认项目根下的 dist；可被使用方覆盖。
+    OutputPath          输出目录，默认项目根下的 bin；可被使用方覆盖。
     CopyVanillaGame     是否把原版游戏文件复制到输出目录。
   -->
   <PropertyGroup>
     <ShimakazeSdkPath Condition="'$(ShimakazeSdkPath)' == ''">$(MSBuildThisFileDirectory)</ShimakazeSdkPath>
-    <OutputPath>$(MSBuildProjectDirectory)\dist\</OutputPath>
+    <OutputPath>$(MSBuildProjectDirectory)\bin\</OutputPath>
     <CopyVanillaGame Condition="'$(CopyVanillaGame)' == ''">false</CopyVanillaGame>
   </PropertyGroup>
 
