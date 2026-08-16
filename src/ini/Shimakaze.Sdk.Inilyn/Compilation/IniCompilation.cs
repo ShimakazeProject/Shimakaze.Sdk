@@ -17,8 +17,9 @@ namespace Shimakaze.Sdk.Inilyn.Compilation;
 /// 编排完整的编译管线：SourceText → Lexer → Parser → SymbolBuilder → SemanticAnalyzer → TreeShaking → CodeGeneration。
 /// </para>
 /// <para>
-/// 支持多文件编译。每个文件独立解析和符号化后，合并为全局符号表进行语义分析，
-/// 再按文件独立进行 TreeShaking 和代码生成。
+/// 支持多文件编译。每个文件独立解析和符号化后，跨文件整理依赖树、检测循环引用，
+/// 再分别针对每个文件 Mixin 展开（可跨文件引用），随后按文件名排序合并节，
+/// 最后统一进行 TreeShaking 和代码生成。
 /// </para>
 /// </remarks>
 public sealed class IniCompilation
@@ -59,10 +60,16 @@ public sealed class IniCompilation
         Dictionary<string, string> outputFiles = new(StringComparer.OrdinalIgnoreCase);
         SourceMap sourceMap = new();
 
+        // 0. 排序：基准文件（Base=True）置于最前，其余按文件名排序，保证跨文件合并顺序稳定
+        var orderedFiles = _files
+            .OrderBy(f => f.IsBase ? 0 : 1)
+            .ThenBy(f => f.FileName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
         // 1. 每个文件独立：SourceText → Lexer → Parser → SymbolBuilder
         Dictionary<InilynFile, (IniSymbolTable Table, IniSyntaxTree SyntaxTree)> perFileResults = [];
 
-        foreach (var file in _files)
+        foreach (var file in orderedFiles)
         {
             var result = BuildSymbolsForFile(file);
             perFileResults[file] = (result.Table, result.SyntaxTree);
@@ -70,7 +77,7 @@ public sealed class IniCompilation
         }
 
         // 2. 从所有文件的语法树生成 SourceMap
-        foreach (var file in _files)
+        foreach (var file in orderedFiles)
         {
             if (perFileResults.TryGetValue(file, out var fileResult))
             {
@@ -78,32 +85,33 @@ public sealed class IniCompilation
             }
         }
 
-        // 3. 合并所有文件的符号表到全局符号表
-        var globalSymbolTable = MergeSymbolTables(perFileResults.Values.Select(r => r.Table));
+        // 3. 跨文件语义分析：先检测循环引用，再分别针对每个文件 Mixin 展开（可跨文件引用）
+        //    得到每个文件的内存 INI 文档（Mixin 已展开，list）
+        var documents = IniSemanticAnalyzer.AnalyzeFiles(
+            orderedFiles.Select(f => perFileResults[f].Table).ToList());
 
-        // 4. 全局语义分析
-        var globalModel = IniSemanticAnalyzer.Analyze(globalSymbolTable);
-        allDiagnostics.AddRange(globalModel.Diagnostics);
-
-        // 5. 代码生成（合并所有节到单个模型）
-        IniSemanticModel combinedModel = new()
+        // 4. 创建最终工作区，将文档按文件名顺序逐个合并
+        IniWorkspace workspace = new();
+        foreach (var document in documents)
         {
-            Sections = [.. globalModel.Sections],
-            GlobalKeys = [.. globalModel.GlobalKeys],
-            Diagnostics = globalModel.Diagnostics,
-        };
+            allDiagnostics.AddRange(document.Diagnostics);
+            workspace.Merge(document);
+        }
 
+        var combinedModel = workspace.ToModel();
+
+        // 4. TreeShaking（默认启用，可通过选项停用）
         var outputModel = combinedModel;
 
-        // 6. TreeShaking（默认启用，可通过选项停用）
         if (_options.EnableTreeShaking)
         {
+            var globalSymbolTable = MergeSymbolTables(orderedFiles.Select(f => perFileResults[f].Table));
             outputModel = IniTreeShaker.Shake(combinedModel, globalSymbolTable);
             allDiagnostics.AddRange(outputModel.Diagnostics.Where(d => d.Code == Diagnostics.SectionRemoved.Id));
         }
 
-        var output = IniCodeGenerator.Generate(outputModel, _files[0].FileName);
-        outputFiles[_files[0].FileName] = output.ToString();
+        var output = IniCodeGenerator.Generate(outputModel, orderedFiles[0].FileName);
+        outputFiles[orderedFiles[0].FileName] = output.ToString();
 
         return new InilynCompilationResult
         {
@@ -209,42 +217,6 @@ public sealed class IniCompilation
         }
 
         return merged;
-    }
-
-    private static IniSemanticModel FilterModelByFile(IniSemanticModel globalModel, IniSymbolTable fileSymbolTable)
-    {
-        // 筛选出属于当前文件的节
-        HashSet<string> fileSectionNames = new(StringComparer.OrdinalIgnoreCase);
-        foreach (var section in fileSymbolTable.Sections.Values)
-        {
-            fileSectionNames.Add(section.Name);
-        }
-
-        List<IniSemanticSection> fileSections = [];
-        foreach (var section in globalModel.Sections)
-        {
-            if (fileSectionNames.Contains(section.Name))
-            {
-                fileSections.Add(section);
-            }
-        }
-
-        // 筛选出属于当前文件的全局键
-        List<IniSemanticKeyValue> fileGlobalKeys = [];
-        foreach (var kv in globalModel.GlobalKeys)
-        {
-            if (fileSymbolTable.GlobalKeys.ContainsKey(kv.Key))
-            {
-                fileGlobalKeys.Add(kv);
-            }
-        }
-
-        return new IniSemanticModel
-        {
-            Sections = fileSections,
-            GlobalKeys = fileGlobalKeys,
-            Diagnostics = globalModel.Diagnostics,
-        };
     }
 
     private readonly record struct FileBuildResult(IniSymbolTable Table, IniSyntaxTree SyntaxTree, IReadOnlyList<Diagnostic> Diagnostics);

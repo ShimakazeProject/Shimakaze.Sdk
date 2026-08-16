@@ -24,7 +24,8 @@ public sealed class IniTreeShakerOptions
 /// INI TreeShaking 工具。
 /// </summary>
 /// <remarks>
-/// 根据入口节分析引用关系，移除未被任何入口节可达的节。
+/// 被 Mixin 引用的节（如 <c>:[Base1]</c> 的 <c>Base1</c>）内容已内联到引用方，
+/// 不再作为独立节保留，除非被键/规则显式指定为入口。
 /// </remarks>
 public sealed class IniTreeShaker
 {
@@ -32,7 +33,7 @@ public sealed class IniTreeShaker
     /// 对语义模型执行 TreeShaking。
     /// </summary>
     /// <param name="model">展平后的语义模型。</param>
-    /// <param name="symbolTable">符号表（用于 Mixin 引用关系分析）。</param>
+    /// <param name="symbolTable">符号表（用于识别被 Mixin 引用的节）。</param>
     /// <param name="options">配置选项。</param>
     /// <returns>精简后的语义模型。</returns>
     public static IniSemanticModel Shake(
@@ -42,22 +43,20 @@ public sealed class IniTreeShaker
     {
         options ??= new IniTreeShakerOptions();
 
-        // 1. 构建引用图：被引用的节 → 引用它的节
-        var referencedBy = BuildReferenceGraph(symbolTable);
+        // 1. 收集被 Mixin 引用的节。这些节的内容已内联到引用方，
+        //    不再作为独立节保留，除非被显式入口（键/规则）指定。
+        var mixinTargets = CollectMixinTargets(symbolTable);
 
         // 2. 确定入口节
-        var entrySections = DetermineEntrySections(symbolTable, options, referencedBy);
+        var entrySections = DetermineEntrySections(symbolTable, options, mixinTargets);
 
-        // 3. 从入口节 BFS，标记可达节
-        var reachable = BFS(entrySections, symbolTable);
-
-        // 4. 移除不可达节
+        // 3. 仅保留入口节（不因 Mixin 引用而保留目标节）
         List<IniSemanticSection> keptSections = [];
         List<Diagnostic> diagnostics = [.. model.Diagnostics];
 
         foreach (var section in model.Sections)
         {
-            if (reachable.Contains(section.Name))
+            if (entrySections.Contains(section.Name))
             {
                 keptSections.Add(section);
             }
@@ -75,47 +74,40 @@ public sealed class IniTreeShaker
         };
     }
 
-    private static Dictionary<string, HashSet<string>> BuildReferenceGraph(IniSymbolTable symbolTable)
+    private static HashSet<string> CollectMixinTargets(IniSymbolTable symbolTable)
     {
-        // referencedBy[target] = { source1, source2, ... } 表示 target 被哪些节引用
-        Dictionary<string, HashSet<string>> referencedBy = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> targets = new(StringComparer.OrdinalIgnoreCase);
 
         foreach (var section in symbolTable.Sections.Values)
         {
             foreach (var mixinRef in section.MixinRefs)
             {
-                if (!referencedBy.TryGetValue(mixinRef.ReferencedSection, out var sources))
-                {
-                    sources = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                    referencedBy[mixinRef.ReferencedSection] = sources;
-                }
-
-                sources.Add(section.Name);
+                targets.Add(mixinRef.ReferencedSection);
             }
         }
 
-        return referencedBy;
+        return targets;
     }
 
     private static HashSet<string> DetermineEntrySections(
         IniSymbolTable symbolTable,
         IniTreeShakerOptions options,
-        Dictionary<string, HashSet<string>> referencedBy)
+        HashSet<string> mixinTargets)
     {
         HashSet<string> entries = new(StringComparer.OrdinalIgnoreCase);
 
-        // 添加用户显式指定的入口
+        // 添加用户显式指定的入口（被键/规则指定的节）
         foreach (string entry in options.EntrySections)
         {
             entries.Add(entry);
         }
 
-        // 将未被任何其他节引用的节视为入口
+        // 将未被其他节引用的节视为入口；但被 Mixin 引用的节内容已内联，不作为独立入口
         if (options.TreatStandaloneSectionsAsEntries)
         {
             foreach (var section in symbolTable.Sections.Values)
             {
-                if (!referencedBy.ContainsKey(section.Name))
+                if (!mixinTargets.Contains(section.Name))
                 {
                     entries.Add(section.Name);
                 }
@@ -123,39 +115,5 @@ public sealed class IniTreeShaker
         }
 
         return entries;
-    }
-
-    private static HashSet<string> BFS(HashSet<string> entrySections, IniSymbolTable symbolTable)
-    {
-        HashSet<string> reachable = new(StringComparer.OrdinalIgnoreCase);
-        Queue<string> queue = new();
-
-        foreach (string entry in entrySections)
-        {
-            if (symbolTable.Sections.ContainsKey(entry) && reachable.Add(entry))
-            {
-                queue.Enqueue(entry);
-            }
-        }
-
-        while (queue.Count > 0)
-        {
-            string current = queue.Dequeue();
-
-            if (!symbolTable.Sections.TryGetValue(current, out var section))
-            {
-                continue;
-            }
-
-            foreach (var mixinRef in section.MixinRefs)
-            {
-                if (reachable.Add(mixinRef.ReferencedSection))
-                {
-                    queue.Enqueue(mixinRef.ReferencedSection);
-                }
-            }
-        }
-
-        return reachable;
     }
 }

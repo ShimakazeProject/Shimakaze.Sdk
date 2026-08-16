@@ -10,15 +10,16 @@
     InilynCompile          是否在构建时编译 INI（默认 true）。
     InilynAnalyze          编译后是否执行跨组分析（默认 true）。
     InilynAnalyzeFatal     分析错误是否阻断构建（默认 false：错误降级为警告）。
-    InilynEnableTreeShaking 编译时是否启用 TreeShaking（默认 true）。
+    InilynEnableTreeShaking 编译时是否启用 TreeShaking（默认 false；暂不启用）。
     InilynOutputDirectory  编译输出目录，默认复用 $(OutputPath)。
+                           该默认值依赖于使用方设置的 OutputPath，需在 .targets 中延迟求值，
+                           因此此处不声明（见 Shimakaze.Sdk.Inilyn.targets）。
   -->
   <PropertyGroup>
     <InilynCompile Condition="'$(InilynCompile)' == ''">true</InilynCompile>
     <InilynAnalyze Condition="'$(InilynAnalyze)' == ''">true</InilynAnalyze>
     <InilynAnalyzeFatal Condition="'$(InilynAnalyzeFatal)' == ''">false</InilynAnalyzeFatal>
-    <InilynEnableTreeShaking Condition="'$(InilynEnableTreeShaking)' == ''">true</InilynEnableTreeShaking>
-    <InilynOutputDirectory Condition="'$(InilynOutputDirectory)' == ''">$(OutputPath)</InilynOutputDirectory>
+    <InilynEnableTreeShaking Condition="'$(InilynEnableTreeShaking)' == ''">false</InilynEnableTreeShaking>
   </PropertyGroup>
 
   <!--

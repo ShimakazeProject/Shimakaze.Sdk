@@ -96,7 +96,7 @@
   -->
   <PropertyGroup>
     <ShimakazeSdkPath Condition="'$(ShimakazeSdkPath)' == ''">$(MSBuildThisFileDirectory)</ShimakazeSdkPath>
-    <OutputPath>$(MSBuildProjectDirectory)\bin\</OutputPath>
+    <OutputPath Condition="'$(OutputPath)' == ''">$(MSBuildProjectDirectory)\bin\</OutputPath>
     <CopyVanillaGame Condition="'$(CopyVanillaGame)' == ''">false</CopyVanillaGame>
   </PropertyGroup>
 

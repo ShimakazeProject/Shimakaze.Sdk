@@ -52,9 +52,9 @@ public class InilynBuildTask : Task
     public string OutputDirectory { get; set; } = ".";
 
     /// <summary>
-    /// 是否启用 TreeShaking（默认 true）。
+    /// 是否启用 TreeShaking（默认 false；暂不启用）。
     /// </summary>
-    public bool EnableTreeShaking { get; set; } = true;
+    public bool EnableTreeShaking { get; set; } = false;
 
     /// <summary>
     /// 分析器规则文件（如 vanilla.xml；多个按声明顺序合并）。
@@ -123,7 +123,8 @@ public class InilynBuildTask : Task
                     continue;
                 }
 
-                inputFiles.Add(InilynFile.Create(filePath));
+                bool isBase = string.Equals(item.GetMetadata("Base"), "True", StringComparison.OrdinalIgnoreCase);
+                inputFiles.Add(InilynFile.Create(filePath, isBase));
             }
 
             if (inputFiles.Count == 0)

@@ -23,6 +23,15 @@
   </ItemGroup>
 
   <!--
+    默认 Inilyn 输出目录：复用使用方最终设置的 $(OutputPath)。
+    .targets 在使用方项目主体之后导入，此处求值的 OutputPath 已是用户覆盖后的值；
+    若用户显式设置 InilynOutputDirectory 则保持不变。
+  -->
+  <PropertyGroup>
+    <InilynOutputDirectory Condition="'$(InilynOutputDirectory)' == ''">$(OutputPath)</InilynOutputDirectory>
+  </PropertyGroup>
+
+  <!--
     默认 Inilyn 输入收集：递归项目目录下所有指定扩展名的文件，并按扩展名归入对应 RuleGroup。
   -->
   <ItemGroup Condition="'$(UseDefaultInclude)' == 'true'">

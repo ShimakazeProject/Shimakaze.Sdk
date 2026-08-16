@@ -79,7 +79,8 @@ internal sealed class CompileCommand
 
         IniCompilationOptions options = new()
         {
-            EnableTreeShaking = !NoTreeShaking,
+            // TreeShaking 功能存在问题，暂不启用
+            EnableTreeShaking = false,
         };
 
         IniCompilation compilation = IniCompilation.Create(files, options);

@@ -6,7 +6,7 @@ namespace Shimakaze.Sdk.Inilyn.Compilation;
 public sealed class IniCompilationOptions
 {
     /// <summary>
-    /// 是否启用 TreeShaking（默认 true）。
+    /// 是否启用 TreeShaking（默认 false；暂不启用）。
     /// </summary>
-    public bool EnableTreeShaking { get; init; } = true;
+    public bool EnableTreeShaking { get; init; } = false;
 }

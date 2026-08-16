@@ -51,7 +51,7 @@ public static class Diagnostics
 
     /// <summary>INI104: Mixin 循环引用。</summary>
     public static readonly DiagnosticDescriptor MixinCircularReference = new(
-        "INI104", "Mixin 循环引用", "Mixin 循环引用 '{0}'", "Semantic", DiagnosticSeverity.Error);
+        "INI104", "Mixin 循环引用", "检测到 Mixin 循环引用: {0}", "Semantic", DiagnosticSeverity.Error);
 
     // ── TreeShaking ──
 
