@@ -7,9 +7,7 @@ using Shimakaze.Sdk.Engine.Cli.Resources;
 using Shimakaze.Sdk.Engine.Ini;
 using Shimakaze.Sdk.Inilyn;
 using Shimakaze.Sdk.Inilyn.Analyzer.Analysis;
-using Shimakaze.Sdk.Inilyn.Analyzer.RuleSet;
 using Shimakaze.Sdk.Inilyn.Compilation;
-using Shimakaze.Sdk.Inilyn.Syntax;
 
 namespace Shimakaze.Sdk.Engine.Cli.Commands.Ini;
 

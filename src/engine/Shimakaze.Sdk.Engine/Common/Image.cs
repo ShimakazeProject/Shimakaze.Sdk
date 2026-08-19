@@ -1,10 +1,5 @@
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-
 using StbImageSharp;
 
-using Shimakaze.Sdk;
 using Shimakaze.Sdk.Engine.Common.Pixels;
 
 namespace Shimakaze.Sdk.Engine.Common;

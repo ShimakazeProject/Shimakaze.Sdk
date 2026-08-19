@@ -2,7 +2,6 @@ using DotMake.CommandLine;
 
 using Shimakaze.Sdk.Engine.Cli.Resources;
 using Shimakaze.Sdk.Inilyn.Analyzer.Analysis;
-using Shimakaze.Sdk.Inilyn.Analyzer.RuleSet;
 
 namespace Shimakaze.Sdk.Engine.Cli.Commands.Ini;
 

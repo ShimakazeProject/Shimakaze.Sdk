@@ -9,7 +9,6 @@ using XenoAtom.Terminal.UI.Commands;
 using XenoAtom.Terminal.UI.Controls;
 using XenoAtom.Terminal.UI.Geometry;
 using XenoAtom.Terminal.UI.Graphics;
-using XenoAtom.Terminal.UI.Input;
 using XenoAtom.Terminal.UI.Styling;
 
 namespace Shimakaze.Sdk.Engine.Tui.Viewers;

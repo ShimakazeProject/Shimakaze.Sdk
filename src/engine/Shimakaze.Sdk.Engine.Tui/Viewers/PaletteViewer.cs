@@ -1,5 +1,3 @@
-using System.Text;
-
 using Shimakaze.Sdk.Pal;
 
 using XenoAtom.Terminal;

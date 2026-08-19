@@ -1,5 +1,3 @@
-using System.Text;
-
 using XenoAtom.Ansi;
 using XenoAtom.Terminal;
 using XenoAtom.Terminal.UI;
