@@ -171,8 +171,10 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
     {
         int l = metadata.Width;
         int t = metadata.Height;
-        int r = 0;
-        int b = 0;
+        int r = -1;
+        int b = -1;
+
+        bool hasData = false;
 
         for (ushort y = 0; y < metadata.Height; y++)
         {
@@ -180,8 +182,10 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
 
             for (int x = 0; x < row.Length; x++)
             {
-                if (row[x] is not 0)
+                if (row[x] != 0)
                 {
+                    hasData = true;
+
                     l = Math.Min(l, x);
                     t = Math.Min(t, y);
                     r = Math.Max(r, x);
@@ -190,8 +194,20 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             }
         }
 
-        int w = r - l;
-        int h = b - t;
+        if (!hasData)
+        {
+            newData = [];
+
+            metadata.X = 0;
+            metadata.Y = 0;
+            metadata.Width = 0;
+            metadata.Height = 0;
+
+            return;
+        }
+
+        int w = r - l + 1;
+        int h = b - t + 1;
 
         newData = GC.AllocateUninitializedArray<byte>(w * h);
 
@@ -201,6 +217,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             var target = newData.Slice(y * w, w);
             row.CopyTo(target);
         }
+
         unchecked
         {
             metadata.X = (ushort)l;
