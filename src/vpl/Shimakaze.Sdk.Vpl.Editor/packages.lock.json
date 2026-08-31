@@ -16,9 +16,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[11.0.2, )",
-        "resolved": "11.0.2",
-        "contentHash": "exAGxO6+Qfx6+Th5RHatdsGKyZ117AYzIhnS/RKNpm5Ip9h8LbPQnPrq7xHkaIFb8dmF19BBVeaANFLw0ZxX2w=="
+        "requested": "[11.2.0, )",
+        "resolved": "11.2.0",
+        "contentHash": "3dDzS+dsKI9Qlb0lm0svPk/hFx1CuX2RHM0jHenTGuNI0jTw8fsXi3u4r/PI8sTf5PGKZKS4TaWQVybuiKSbVQ=="
       },
       "Spectre.Console": {
         "type": "Direct",
@@ -59,9 +59,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[11.0.2, )",
-        "resolved": "11.0.2",
-        "contentHash": "exAGxO6+Qfx6+Th5RHatdsGKyZ117AYzIhnS/RKNpm5Ip9h8LbPQnPrq7xHkaIFb8dmF19BBVeaANFLw0ZxX2w=="
+        "requested": "[11.2.0, )",
+        "resolved": "11.2.0",
+        "contentHash": "3dDzS+dsKI9Qlb0lm0svPk/hFx1CuX2RHM0jHenTGuNI0jTw8fsXi3u4r/PI8sTf5PGKZKS4TaWQVybuiKSbVQ=="
       },
       "Spectre.Console": {
         "type": "Direct",
@@ -74,9 +74,9 @@
       },
       "System.Collections.Immutable": {
         "type": "Direct",
-        "requested": "[10.0.10, )",
-        "resolved": "10.0.10",
-        "contentHash": "Ih5zrydoDc1H5I0eNP6f4Lzw3cjsPMN4Nikd86kbyi66y0flkM9GfjVo62aUbcxeTbypzBCFAFQ+/6RF2jRORg=="
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "BQY956wwWSjRDoOspL6L1JscbFoSgJK606mO3PYalBHIZRV+Sc2xokvR/NHLlpUEfju6EbW5GbKbNpVYQ65cLw=="
       },
       "Spectre.Console.Ansi": {
         "type": "Transitive",
@@ -86,14 +86,14 @@
       "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
-          "System.Collections.Immutable": "[10.0.10, )"
+          "System.Collections.Immutable": "[10.0.11, )"
         }
       },
       "shimakaze.sdk.vpl": {
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
-          "System.Collections.Immutable": "[10.0.10, )"
+          "System.Collections.Immutable": "[10.0.11, )"
         }
       }
     },
@@ -112,9 +112,9 @@
       },
       "Polyfill": {
         "type": "Direct",
-        "requested": "[11.0.2, )",
-        "resolved": "11.0.2",
-        "contentHash": "exAGxO6+Qfx6+Th5RHatdsGKyZ117AYzIhnS/RKNpm5Ip9h8LbPQnPrq7xHkaIFb8dmF19BBVeaANFLw0ZxX2w=="
+        "requested": "[11.2.0, )",
+        "resolved": "11.2.0",
+        "contentHash": "3dDzS+dsKI9Qlb0lm0svPk/hFx1CuX2RHM0jHenTGuNI0jTw8fsXi3u4r/PI8sTf5PGKZKS4TaWQVybuiKSbVQ=="
       },
       "Spectre.Console": {
         "type": "Direct",
@@ -127,9 +127,9 @@
       },
       "System.Collections.Immutable": {
         "type": "Direct",
-        "requested": "[10.0.10, )",
-        "resolved": "10.0.10",
-        "contentHash": "Ih5zrydoDc1H5I0eNP6f4Lzw3cjsPMN4Nikd86kbyi66y0flkM9GfjVo62aUbcxeTbypzBCFAFQ+/6RF2jRORg=="
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "BQY956wwWSjRDoOspL6L1JscbFoSgJK606mO3PYalBHIZRV+Sc2xokvR/NHLlpUEfju6EbW5GbKbNpVYQ65cLw=="
       },
       "Spectre.Console.Ansi": {
         "type": "Transitive",
@@ -139,14 +139,14 @@
       "shimakaze.sdk.pal": {
         "type": "Project",
         "dependencies": {
-          "System.Collections.Immutable": "[10.0.10, )"
+          "System.Collections.Immutable": "[10.0.11, )"
         }
       },
       "shimakaze.sdk.vpl": {
         "type": "Project",
         "dependencies": {
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
-          "System.Collections.Immutable": "[10.0.10, )"
+          "System.Collections.Immutable": "[10.0.11, )"
         }
       }
     }
