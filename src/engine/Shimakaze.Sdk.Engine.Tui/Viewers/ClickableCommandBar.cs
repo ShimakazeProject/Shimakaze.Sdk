@@ -18,7 +18,7 @@ internal sealed class ClickableCommandBar : Visual
 {
     private readonly IReadOnlyList<Command> _commands;
     private readonly MarkupTextParser _markupParser = new();
-    private readonly Dictionary<Command, Rectangle> _bounds = new();
+    private readonly Dictionary<Command, Rectangle> _bounds = [];
     private readonly State<int> _hoverVersion = new(0);
     private Command? _hoveredCommand;
     private Command? _pressedCommand;
@@ -40,11 +40,11 @@ internal sealed class ClickableCommandBar : Visual
     {
         var entries = CollectEntries();
         var markupStyles = GetTheme().GetMarkupStyles();
-        var separatorWidth = TerminalTextUtility.GetWidth(GetStyle<CommandBarStyle>().Separator.AsSpan());
-        var contentWidth = MeasureContentWidth(entries, markupStyles, separatorWidth);
-        var availableWidth = constraints.IsWidthBounded ? Math.Max(1, constraints.MaxWidth) : Math.Max(1, contentWidth);
-        var width = Math.Min(contentWidth, availableWidth);
-        var height = MeasureWrappedHeight(entries, markupStyles, separatorWidth, availableWidth);
+        int separatorWidth = TerminalTextUtility.GetWidth(GetStyle<CommandBarStyle>().Separator.AsSpan());
+        int contentWidth = MeasureContentWidth(entries, markupStyles, separatorWidth);
+        int availableWidth = constraints.IsWidthBounded ? Math.Max(1, constraints.MaxWidth) : Math.Max(1, contentWidth);
+        int width = Math.Min(contentWidth, availableWidth);
+        int height = MeasureWrappedHeight(entries, markupStyles, separatorWidth, availableWidth);
         var natural = constraints.Clamp(new(width, height));
         return SizeHints.Flex(min: new(0, 1), natural: natural, max: natural, growX: 0, growY: 0, shrinkX: 1, shrinkY: 0);
     }
@@ -63,11 +63,11 @@ internal sealed class ClickableCommandBar : Visual
         var commandBarStyle = GetStyle<CommandBarStyle>();
         var styles = commandBarStyle.Resolve(theme);
         var markupStyles = theme.GetMarkupStyles();
-        var separatorWidth = TerminalTextUtility.GetWidth(commandBarStyle.Separator.AsSpan());
+        int separatorWidth = TerminalTextUtility.GetWidth(commandBarStyle.Separator.AsSpan());
 
-        for (var y = rect.Y; y < rect.Bottom; y++)
+        for (int y = rect.Y; y < rect.Bottom; y++)
         {
-            for (var x = rect.X; x < rect.Right; x++)
+            for (int x = rect.X; x < rect.Right; x++)
             {
                 buffer.SetCell(x, y, new(' '), styles.BarStyle);
             }
@@ -75,14 +75,14 @@ internal sealed class ClickableCommandBar : Visual
 
         var entries = CollectEntries();
         _bounds.Clear();
-        var row = rect.Y;
-        var xCursor = rect.X;
-        var hasEntry = false;
+        int row = rect.Y;
+        int xCursor = rect.X;
+        bool hasEntry = false;
 
         foreach (var cmd in entries)
         {
-            var keyText = GetKeyText(in cmd);
-            var entryWidth = keyText.Length == 0 ? 0 : MeasureEntryWidth(in cmd, markupStyles);
+            string keyText = GetKeyText(in cmd);
+            int entryWidth = keyText.Length == 0 ? 0 : MeasureEntryWidth(in cmd, markupStyles);
             if (entryWidth == 0)
             {
                 continue;
@@ -98,13 +98,13 @@ internal sealed class ClickableCommandBar : Visual
                 }
             }
 
-            var startX = xCursor;
+            int startX = xCursor;
             if (hasEntry && xCursor > rect.X)
             {
                 xCursor = WriteRunes(buffer, rect, xCursor, row, commandBarStyle.Separator, styles.LabelStyle);
             }
 
-            var hovered = ReferenceEquals(_hoveredCommand, cmd);
+            bool hovered = ReferenceEquals(_hoveredCommand, cmd);
             xCursor = WriteKeycap(buffer, rect, xCursor, row, keyText, styles.KeyStyle, commandBarStyle);
             xCursor = WriteRunes(buffer, rect, xCursor, row, " ", styles.LabelStyle);
             xCursor = WriteMarkup(buffer, rect, xCursor, row, cmd.LabelMarkup, hovered ? styles.KeyStyle : styles.LabelStyle, markupStyles);
@@ -167,7 +167,7 @@ internal sealed class ClickableCommandBar : Visual
 
     private List<Command> CollectEntries()
     {
-        List<Command> result = new();
+        List<Command> result = [];
         foreach (var command in _commands)
         {
             if ((command.Presentation & CommandPresentation.CommandBar) == 0)
@@ -189,11 +189,11 @@ internal sealed class ClickableCommandBar : Visual
 
     private int MeasureContentWidth(List<Command> entries, Dictionary<string, AnsiStyle> markupStyles, int separatorWidth)
     {
-        var width = 0;
-        var hasEntry = false;
+        int width = 0;
+        bool hasEntry = false;
         foreach (var command in entries)
         {
-            var entryWidth = MeasureEntryWidth(in command, markupStyles);
+            int entryWidth = MeasureEntryWidth(in command, markupStyles);
             if (entryWidth == 0)
             {
                 continue;
@@ -213,18 +213,18 @@ internal sealed class ClickableCommandBar : Visual
 
     private int MeasureWrappedHeight(List<Command> entries, Dictionary<string, AnsiStyle> markupStyles, int separatorWidth, int availableWidth)
     {
-        var lineCount = 1;
-        var x = 0;
-        var hasEntry = false;
+        int lineCount = 1;
+        int x = 0;
+        bool hasEntry = false;
         foreach (var command in entries)
         {
-            var entryWidth = MeasureEntryWidth(in command, markupStyles);
+            int entryWidth = MeasureEntryWidth(in command, markupStyles);
             if (entryWidth == 0)
             {
                 continue;
             }
 
-            var leadingWidth = hasEntry ? separatorWidth : 0;
+            int leadingWidth = hasEntry ? separatorWidth : 0;
             if (x > 0 && x + leadingWidth + entryWidth > availableWidth)
             {
                 lineCount++;
@@ -241,13 +241,13 @@ internal sealed class ClickableCommandBar : Visual
 
     private int MeasureEntryWidth(in Command command, Dictionary<string, AnsiStyle> markupStyles)
     {
-        var keyText = GetKeyText(in command);
+        string keyText = GetKeyText(in command);
         if (keyText.Length == 0)
         {
             return 0;
         }
 
-        var plain = _markupParser.Parse(command.LabelMarkup, out _, markupStyles);
+        string plain = _markupParser.Parse(command.LabelMarkup, out _, markupStyles);
         return 1 + TerminalTextUtility.GetWidth(keyText.AsSpan()) + 1 + 1 + TerminalTextUtility.GetWidth(plain.AsSpan());
     }
 
@@ -291,7 +291,7 @@ internal sealed class ClickableCommandBar : Visual
             return x;
         }
 
-        var max = rect.Right;
+        int max = rect.Right;
         foreach (var rune in text.EnumerateRunes())
         {
             if (x >= max)
@@ -313,17 +313,17 @@ internal sealed class ClickableCommandBar : Visual
             return x;
         }
 
-        var plain = _markupParser.Parse(labelMarkup, out var runs, markupStyles);
+        string plain = _markupParser.Parse(labelMarkup, out var runs, markupStyles);
         if (plain.Length == 0)
         {
             return x;
         }
 
-        for (var i = 0; i < runs.Length && x < rect.Right; i++)
+        for (int i = 0; i < runs.Length && x < rect.Right; i++)
         {
             var run = runs[i];
-            var start = run.Start;
-            var end = Math.Min(run.Start + run.Length, plain.Length);
+            int start = run.Start;
+            int end = Math.Min(run.Start + run.Length, plain.Length);
             if (end <= start)
             {
                 continue;

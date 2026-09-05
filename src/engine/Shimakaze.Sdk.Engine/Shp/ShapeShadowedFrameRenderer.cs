@@ -10,9 +10,7 @@ namespace Shimakaze.Sdk.Engine.Shp;
 /// <param name="shpRenderer">The parent <see cref="ShapeRenderer"/> that owns this frame.</param>
 /// <param name="object">The object frame to render.</param>
 /// <param name="shadow">The shadow frame to render underneath the object.</param>
-#pragma warning disable CA1720 // 标识符包含类型名称
 public class ShapeShadowedFrameRenderer(ShapeRenderer shpRenderer, ShapeImageFrame @object, ShapeImageFrame shadow) : ShapeFrameRenderer(shpRenderer, @object)
-#pragma warning restore CA1720 // 标识符包含类型名称
 {
     /// <inheritdoc/>
     protected override void RenderTo(byte[] indexes)
@@ -29,7 +27,7 @@ public class ShapeShadowedFrameRenderer(ShapeRenderer shpRenderer, ShapeImageFra
             int i = y + frame.Metadata.Y;
             var span = indexes.AsSpan((i * Size.Width) + frame.Metadata.X, frame.Metadata.Width);
             var row = frame.Indexes.Slice(y * frame.Metadata.Width, frame.Metadata.Width).Span;
-            for (var j = 0; j < row.Length; j++)
+            for (int j = 0; j < row.Length; j++)
             {
                 if (row[j] is byte b and not 0)
                     span[j] = b;

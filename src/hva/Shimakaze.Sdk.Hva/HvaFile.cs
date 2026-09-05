@@ -63,7 +63,7 @@ public record class HvaFile(HvaHeader Header, Memory<HvaSectionName> SectionName
 
         for (int i = 0; i < Frames.Length; i++)
         {
-            HvaFrame item = Frames[i];
+            var item = Frames[i];
             stream.Write<HvaMatrix>(item.Matrices);
         }
     }

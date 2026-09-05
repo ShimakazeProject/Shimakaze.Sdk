@@ -30,7 +30,7 @@ public sealed record class PaletteImage(int Width, int Height, ImmutableArray<RG
     /// <inheritdoc />
     public override SoftwareImage ToSoftware()
     {
-        RGBA32[] pixels = GC.AllocateUninitializedArray<RGBA32>(Indexes.Length);
+        var pixels = GC.AllocateUninitializedArray<RGBA32>(Indexes.Length);
         for (int i = 0; i < Indexes.Length; i++)
             pixels[i] = Palette[Indexes[i]];
 

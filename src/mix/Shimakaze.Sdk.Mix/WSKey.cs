@@ -12,7 +12,7 @@ internal static class WSKey
 
     private static BigIntegerPolyfill ToBigIntegerPolyfill(ReadOnlySpan<byte> base64)
     {
-        var len = Base64.GetMaxDecodedFromUtf8Length(base64.Length);
+        int len = Base64.GetMaxDecodedFromUtf8Length(base64.Length);
         Span<byte> data = stackalloc byte[len];
         var status = Base64.DecodeFromUtf8(base64, data, out _, out len);
         Debug.Assert(status is OperationStatus.Done);
@@ -66,13 +66,13 @@ internal static class WSKey
         var modulus = Modulus.Value;
         var exponent = PrivateKeyExponent.Value;
 
-        var split = modulus.GetByteCount() - 1;
+        int split = modulus.GetByteCount() - 1;
 
         BigIntegerPolyfill part1 = new(input[..split], isUnsigned: true, isBigEndian: true);
         BigIntegerPolyfill part2 = new(input[split..], isUnsigned: true, isBigEndian: true);
 
-        BigIntegerPolyfill cipher1 = BigIntegerPolyfill.ModPow(part1, exponent, modulus);
-        BigIntegerPolyfill cipher2 = BigIntegerPolyfill.ModPow(part2, exponent, modulus);
+        var cipher1 = BigIntegerPolyfill.ModPow(part1, exponent, modulus);
+        var cipher2 = BigIntegerPolyfill.ModPow(part2, exponent, modulus);
 
         cipher1.TryWriteBytes(encrypted, out int written1, isUnsigned: true, isBigEndian: false);
         cipher2.TryWriteBytes(encrypted[written1..], out int written2, isUnsigned: true, isBigEndian: false);

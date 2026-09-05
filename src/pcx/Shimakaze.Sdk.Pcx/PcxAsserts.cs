@@ -1,8 +1,5 @@
-using System.Diagnostics;
-
 namespace Shimakaze.Sdk.Pcx;
 
-[StackTraceHidden]
 internal static class PcxAsserts
 {
     public static void IsPCX(in PcxHeader header)

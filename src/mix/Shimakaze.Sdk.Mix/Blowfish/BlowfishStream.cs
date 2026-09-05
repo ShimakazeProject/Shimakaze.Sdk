@@ -1,6 +1,6 @@
 namespace Shimakaze.Sdk.Mix.Blowfish;
 
-internal sealed class BlowfishStream(Stream stream, ReadOnlySpan<byte> key) : Stream
+internal sealed class BlowfishStream(Stream stream, ReadOnlySpan<byte> key, bool leaveOpen) : Stream
 {
     private readonly Codec _codec = new(key);
 
@@ -38,7 +38,7 @@ internal sealed class BlowfishStream(Stream stream, ReadOnlySpan<byte> key) : St
         if (count == 0)
             return 0;
 
-        Span<byte> span = buffer.AsSpan(offset, count);
+        var span = buffer.AsSpan(offset, count);
         while (!span.IsEmpty && _readBuffer.Count is not 0)
         {
             span[0] = _readBuffer.Dequeue();
@@ -129,4 +129,15 @@ internal sealed class BlowfishStream(Stream stream, ReadOnlySpan<byte> key) : St
     public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
     public override void SetLength(long value) => throw new NotSupportedException();
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (!leaveOpen)
+                stream.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
 }

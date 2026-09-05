@@ -19,7 +19,7 @@ public sealed class ShapeImage
     public ShapeImage(ShapeFileHeader metadata, IReadOnlyList<ShapeImageFrame> frames)
     {
         _metadata = metadata;
-        ref ShapeFileHeader a = ref _metadata;
+        ref var a = ref _metadata;
         a.NumImages = (ushort)frames.Count;
         Frames = frames;
     }
@@ -46,10 +46,7 @@ public sealed class ShapeImage
     public ShapeImageFrame RootFrame => Frames[0];
 
 
-    private string GetDebuggerDisplay()
-    {
-        return Metadata.ToString();
-    }
+    private string GetDebuggerDisplay() => Metadata.ToString();
 
     /// <summary>
     /// 从流中读取SHP图像
@@ -62,7 +59,7 @@ public sealed class ShapeImage
         Memory<ShapeFrameHeader> shapeFrameHeaders = GC.AllocateUninitializedArray<ShapeFrameHeader>(shapeFileHeader.NumImages);
         input.Read(shapeFrameHeaders);
 
-        ShapeImageFrame[] frames = GC.AllocateUninitializedArray<ShapeImageFrame>(shapeFileHeader.NumImages);
+        var frames = GC.AllocateUninitializedArray<ShapeImageFrame>(shapeFileHeader.NumImages);
         for (int i = 0; i < shapeFrameHeaders.Length; i++)
             frames[i] ??= ShapeImageFrame.ReadFrom(input, shapeFrameHeaders.Span[i]);
 

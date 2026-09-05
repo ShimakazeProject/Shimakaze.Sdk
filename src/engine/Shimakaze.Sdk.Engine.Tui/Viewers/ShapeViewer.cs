@@ -117,8 +117,8 @@ internal sealed class ShapeViewer : ViewerBase, IDisposable
             .HorizontalAlignment(Align.Center)
             .VerticalAlignment(Align.Center);
 
-        List<Command> commands = new()
-        {
+        List<Command> commands =
+        [
             new()
             {
                 Id = "shp.togglePlay",
@@ -191,7 +191,7 @@ internal sealed class ShapeViewer : ViewerBase, IDisposable
                 Presentation = CommandPresentation.CommandBar,
                 Execute = _ => Quit = true,
             },
-        };
+        ];
 
         var root = new DockLayout
         {

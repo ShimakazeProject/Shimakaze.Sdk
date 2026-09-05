@@ -18,6 +18,7 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
     private readonly bool _hasNoFlag;
     private readonly MixArchiveMode _mode;
     private readonly List<MixArchiveEntry> _entries = [];
+    private readonly List<MemoryStream> _ms = [];
     internal readonly Encoding? Encoding;
     internal readonly IdCalculator IdCalculator;
 
@@ -88,28 +89,31 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
 
     private void Initialize()
     {
-        MixTag flag = MixTag.NONE;
+        var flag = MixTag.NONE;
         bool isEncrypted = false;
-        Stream decryptedStream = _stream;
-        if (!_hasNoFlag)
+
+        using var decryptedStream = new Func<BlowfishStream?>(() =>
         {
+            if (_hasNoFlag)
+                return null;
+
             _stream.Read(out flag);
-            if (flag.HasFlag(MixTag.ENCRYPTED))
-            {
-                isEncrypted = true;
-                Span<byte> keySource = stackalloc byte[80];
-                _stream.ReadExactly(keySource);
+            if (!flag.HasFlag(MixTag.ENCRYPTED))
+                return null;
 
-                Span<byte> key = stackalloc byte[56];
-                WSKey.Decrypt(keySource, key);
+            isEncrypted = true;
+            Span<byte> keySource = stackalloc byte[80];
+            _stream.ReadExactly(keySource);
 
-#pragma warning disable IDISP001 // Dispose created
-                decryptedStream = new BlowfishStream(_stream, key);
-#pragma warning restore IDISP001 // Dispose created
-            }
-        }
+            Span<byte> key = stackalloc byte[56];
+            WSKey.Decrypt(keySource, key);
 
-        decryptedStream.Read(out MixMetadata info);
+            return new BlowfishStream(_stream, key, true);
+        })();
+
+        var stream = decryptedStream ?? _stream;
+
+        stream.Read(out MixMetadata info);
 
         int flagSize = _hasNoFlag ? 0 : sizeof(MixTag);
         int keySize = isEncrypted ? 80 : 0;
@@ -121,8 +125,8 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
 
         int bodyOffset = flagSize + keySize + tableAligned;
 
-        MixEntry[] entries = GC.AllocateUninitializedArray<MixEntry>(info.Files);
-        decryptedStream.Read(entries);
+        var entries = GC.AllocateUninitializedArray<MixEntry>(info.Files);
+        stream.Read(entries);
         _entries.Clear();
         _entries.EnsureCapacity(entries.Length);
         foreach (ref readonly var item in entries.AsSpan())
@@ -142,7 +146,9 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
     public MixArchiveEntry CreateEntry(string? name)
     {
         //_modified = true;
-        MixArchiveEntry entry = new(this, name);
+        MemoryStream ms = new();
+        _ms.Add(ms);
+        MixArchiveEntry entry = new(this, ms, name);
         _entries.Add(entry);
         return entry;
     }
@@ -152,11 +158,9 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
     /// </summary>
     /// <param name="entry">The entry to remove.</param>
     /// <returns><see langword="true"/> if the entry was successfully removed; otherwise, <see langword="false"/>.</returns>
-    public bool DeleteEntry(MixArchiveEntry entry)
-    {
+    public bool DeleteEntry(MixArchiveEntry entry) =>
         //_modified = true;
-        return _entries.Remove(entry);
-    }
+        _entries.Remove(entry);
 
     /// <summary>
     /// Writes the entire archive to the specified destination stream.
@@ -176,14 +180,14 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
     public void SaveTo(
         Stream destination,
         MixTag? flag = MixTag.NONE,
-        ReadOnlySpan<byte> key = default,
+        ReadOnlyMemory<byte> key = default,
         bool alignBody4 = false)
     {
         int count = _entries.Count;
         if (count > short.MaxValue)
             throw new InvalidOperationException("Archive contains too many entries.");
 
-        Span<MixEntry> entries = count <= 128 ? stackalloc MixEntry[count] : new MixEntry[count];
+        var entries = count <= 128 ? stackalloc MixEntry[count] : new MixEntry[count];
 
         int bodySize = 0;
 
@@ -245,7 +249,7 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
         if (count > short.MaxValue)
             throw new InvalidOperationException("Archive contains too many entries.");
 
-        MixEntry[] entries = GC.AllocateUninitializedArray<MixEntry>(count);
+        var entries = GC.AllocateUninitializedArray<MixEntry>(count);
 
         int bodySize = 0;
 
@@ -292,23 +296,24 @@ public sealed class MixArchive : IDisposable, IAsyncDisposable
 
     private static int Align4(int v) => (v + 3) & ~3;
 
-    private static void WriteHeader(Stream destination, in MixMetadata metadata, ReadOnlySpan<MixEntry> entries, MixTag? flag, ReadOnlySpan<byte> key)
+    private static void WriteHeader(Stream destination, in MixMetadata metadata, ReadOnlySpan<MixEntry> entries, MixTag? flag, ReadOnlyMemory<byte> key)
     {
-        Stream headerStream = destination;
-        if (flag is not null)
+        using var encryptedStream = new Func<BlowfishStream?>(() =>
         {
+            if (flag is null)
+                return null;
+
             destination.Write(flag.Value);
-            if (flag.Value.HasFlag(MixTag.ENCRYPTED))
-            {
-                if (key.IsEmpty)
-                    throw new ArgumentException("Key cannot be empty.", nameof(key));
+            if (!flag.Value.HasFlag(MixTag.ENCRYPTED))
+                return null;
 
-#pragma warning disable IDISP001 // Dispose created
-                headerStream = new BlowfishStream(destination, key);
-#pragma warning restore IDISP001 // Dispose created
-            }
-        }
+            if (key.IsEmpty)
+                throw new ArgumentException("Key cannot be empty.", nameof(key));
 
+            return new BlowfishStream(destination, key.Span, true);
+        })();
+
+        var headerStream = encryptedStream ?? destination;
         headerStream.Write(metadata);
         headerStream.Write(entries);
         headerStream.Flush();

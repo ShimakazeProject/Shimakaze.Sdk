@@ -99,8 +99,8 @@ internal sealed class PaletteViewer(Palette palette, FileInfo? file) : ViewerBas
             .HorizontalAlignment(Align.Stretch)
             .VerticalAlignment(Align.Stretch);
 
-        List<Command> commands = new()
-        {
+        List<Command> commands =
+        [
             new()
             {
                 Id = "pal.up",
@@ -164,7 +164,7 @@ internal sealed class PaletteViewer(Palette palette, FileInfo? file) : ViewerBas
                 Presentation = CommandPresentation.CommandBar,
                 Execute = _ => Quit = true,
             },
-        };
+        ];
 
         var root = new DockLayout
         {

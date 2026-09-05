@@ -8,4 +8,3 @@ namespace Shimakaze.Sdk.Engine.Cli.Commands.Mix;
 internal sealed class MixCommand
 {
 }
-

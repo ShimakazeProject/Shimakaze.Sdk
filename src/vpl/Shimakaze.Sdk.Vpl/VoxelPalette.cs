@@ -40,7 +40,7 @@ public sealed record class VoxelPalette(VoxelPaletteHeader Header, Palette Palet
     public static VoxelPalette ReadFrom(Stream stream)
     {
         stream.Read(out VoxelPaletteHeader header);
-        Palette palette = Palette.ReadFrom(stream);
+        var palette = Palette.ReadFrom(stream);
         Memory<VoxelPaletteSection> sections = new VoxelPaletteSection[header.SectionCount];
         stream.Read(sections);
         return new(header, palette, sections);
@@ -54,6 +54,6 @@ public sealed record class VoxelPalette(VoxelPaletteHeader Header, Palette Palet
     {
         stream.Write(Header);
         Palette.WriteTo(stream);
-        stream.Write(Sections);
+        stream.Write(Sections.Span);
     }
 }

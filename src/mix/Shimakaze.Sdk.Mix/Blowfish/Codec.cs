@@ -25,49 +25,49 @@ public sealed class Codec
         if (key is { IsEmpty: true } or { Length: < 8 or > 448 })
             throw new ArgumentException("invalid key length; not in <8, 448>", nameof(key));
 
-        var j = 0;
-        for (var i = 0; i < 18; i++)
+        int j = 0;
+        for (int i = 0; i < 18; i++)
         {
-            var d1 = key[j % key.Length];
-            var d2 = key[(j + 1) % key.Length];
-            var d3 = key[(j + 2) % key.Length];
-            var d4 = key[(j + 3) % key.Length];
-            var d = (uint)(((d1 * 256 + d2) * 256 + d3) * 256 + d4);
+            byte d1 = key[j % key.Length];
+            byte d2 = key[(j + 1) % key.Length];
+            byte d3 = key[(j + 2) % key.Length];
+            byte d4 = key[(j + 3) % key.Length];
+            uint d = (uint)(((d1 * 256 + d2) * 256 + d3) * 256 + d4);
             _p[i] ^= d;
             j = (j + 4) % key.Length;
         }
 
         uint xl = 0;
         uint xr = 0;
-        for (var i = 0; i < 18; i += 2)
+        for (int i = 0; i < 18; i += 2)
         {
             Encipher(ref xl, ref xr);
             _p[i] = xl;
             _p[i + 1] = xr;
         }
 
-        for (var i = 0; i < 256; i += 2)
+        for (int i = 0; i < 256; i += 2)
         {
             Encipher(ref xl, ref xr);
             _s0[i] = xl;
             _s0[i + 1] = xr;
         }
 
-        for (var i = 0; i < 256; i += 2)
+        for (int i = 0; i < 256; i += 2)
         {
             Encipher(ref xl, ref xr);
             _s1[i] = xl;
             _s1[i + 1] = xr;
         }
 
-        for (var i = 0; i < 256; i += 2)
+        for (int i = 0; i < 256; i += 2)
         {
             Encipher(ref xl, ref xr);
             _s2[i] = xl;
             _s2[i + 1] = xr;
         }
 
-        for (var i = 0; i < 256; i += 2)
+        for (int i = 0; i < 256; i += 2)
         {
             Encipher(ref xl, ref xr);
             _s3[i] = xl;
@@ -78,7 +78,7 @@ public sealed class Codec
     private void Encipher(ref uint xl, ref uint xr)
     {
         xl ^= _p[0];
-        for (var i = 0; i < 16; i += 2)
+        for (int i = 0; i < 16; i += 2)
         {
             xr = Round(xr, xl, i + 1);
             xl = Round(xl, xr, i + 2);
@@ -91,7 +91,7 @@ public sealed class Codec
     private void Decipher(ref uint xl, ref uint xr)
     {
         xl ^= _p[17];
-        for (var i = 16; i > 0; i -= 2)
+        for (int i = 16; i > 0; i -= 2)
         {
             xr = Round(xr, xl, i);
             xl = Round(xl, xr, i - 1);
@@ -103,7 +103,7 @@ public sealed class Codec
 
     private uint Round(uint a, uint b, int n)
     {
-        var x = _s0[b >> 24];
+        uint x = _s0[b >> 24];
         x += _s1[b >> 16 & 0xFF];
         x ^= _s2[b >> 8 & 0xFF];
         x += _s3[b & 0xFF];
@@ -118,8 +118,8 @@ public sealed class Codec
     /// <param name="block">only first 8 bytes are encrypted</param>
     public void Encrypt(Span<byte> block)
     {
-        var xl = (uint)(block[0] << 24 | block[1] << 16 | block[2] << 8 | block[3]);
-        var xr = (uint)(block[4] << 24 | block[5] << 16 | block[6] << 8 | block[7]);
+        uint xl = (uint)(block[0] << 24 | block[1] << 16 | block[2] << 8 | block[3]);
+        uint xr = (uint)(block[4] << 24 | block[5] << 16 | block[6] << 8 | block[7]);
         Encipher(ref xl, ref xr);
         block[0] = (byte)(xl >> 24);
         block[1] = (byte)(xl >> 16);
@@ -138,8 +138,8 @@ public sealed class Codec
     /// <param name="block">only first 8 bytes are decrypted</param>
     public void Decrypt(Span<byte> block)
     {
-        var xl = (uint)(block[0] << 24 | block[1] << 16 | block[2] << 8 | block[3]);
-        var xr = (uint)(block[4] << 24 | block[5] << 16 | block[6] << 8 | block[7]);
+        uint xl = (uint)(block[0] << 24 | block[1] << 16 | block[2] << 8 | block[3]);
+        uint xr = (uint)(block[4] << 24 | block[5] << 16 | block[6] << 8 | block[7]);
         Decipher(ref xl, ref xr);
         block[0] = (byte)(xl >> 24);
         block[1] = (byte)(xl >> 16);

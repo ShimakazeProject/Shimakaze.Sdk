@@ -8,14 +8,10 @@ namespace Shimakaze.Sdk.Mix;
 /// An entry can be backed by an in-memory <see cref="MemoryStream"/> (created via
 /// <see cref="MixArchive.CreateEntry"/>) or a sub-range of a source stream (read from an existing archive).
 /// </summary>
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public sealed class MixArchiveEntry
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
-    private readonly bool _inMemory;
-#pragma warning disable IDISP008 // Don't assign member with injected and created disposables
+    private readonly bool _writeable;
     private readonly Stream _stream;
-#pragma warning restore IDISP008 // Don't assign member with injected and created disposables
     private readonly long _offset;
     private string? _name;
 
@@ -53,10 +49,10 @@ public sealed class MixArchiveEntry
     /// </summary>
     public int Size { get; }
 
-    internal MixArchiveEntry(MixArchive archive, string? name)
+    internal MixArchiveEntry(MixArchive archive, Stream stream, string? name)
     {
-        _inMemory = true;
-        _stream = new MemoryStream();
+        _writeable = true;
+        _stream = stream;
         _offset = 0;
         Id = 0;
         Size = 0;
@@ -66,7 +62,7 @@ public sealed class MixArchiveEntry
 
     internal MixArchiveEntry(MixArchive archive, Stream stream, long baseOffset, string? name, in MixEntry entry)
     {
-        _inMemory = false;
+        _writeable = false;
         _stream = stream;
         _name = name;
         _offset = baseOffset + entry.Offset;
@@ -76,7 +72,7 @@ public sealed class MixArchiveEntry
     }
 
     /// <summary>
-    /// Opens a <see cref="Stream"/> for reading the data of this entry.
+    /// Opens a <see cref="_stream"/> for reading the data of this entry.
     /// <br />
     /// For in-memory entries, returns a wrapped <see cref="MemoryStream"/> that can be read and written.
     /// <br />
@@ -85,7 +81,7 @@ public sealed class MixArchiveEntry
     /// <returns>A readable stream positioned at the beginning of the entry data.</returns>
     public Stream Open()
     {
-        if (_inMemory)
+        if (_writeable)
             return new StreamWrap(_stream);
 
         return new SubReadStream(_stream, _offset, Size)
@@ -94,11 +90,11 @@ public sealed class MixArchiveEntry
         };
     }
 
-    internal int GetDataSize() => _inMemory ? (int)_stream.Length : Size;
+    internal int GetDataSize() => _writeable ? (int)_stream.Length : Size;
 
     internal void WriteDataTo(Stream destination)
     {
-        if (_inMemory)
+        if (_writeable)
         {
             _stream.Position = 0;
             _stream.CopyTo(destination);
@@ -120,7 +116,7 @@ public sealed class MixArchiveEntry
 
     internal async Task WriteDataToAsync(Stream destination, CancellationToken cancellationToken)
     {
-        if (_inMemory)
+        if (_writeable)
         {
             _stream.Position = 0;
             await _stream.CopyToAsync(destination, cancellationToken).ConfigureAwait(false);
@@ -140,6 +136,7 @@ public sealed class MixArchiveEntry
         }
     }
 }
+
 /// <summary>
 /// A read-only <see cref="Stream"/> that represents a fixed sub-range of another stream.
 /// </summary>
@@ -184,8 +181,6 @@ file sealed class SubReadStream(Stream stream, long start, long length) : Stream
         return _stream.Read(buffer, offset, count);
     }
 
-
-#if NET5_0_OR_GREATER
     public override int Read(Span<byte> buffer)
     {
         long remaining = _length - Position;
@@ -197,7 +192,6 @@ file sealed class SubReadStream(Stream stream, long start, long length) : Stream
 
         return _stream.Read(buffer);
     }
-#endif
 
     public override long Seek(long offset, SeekOrigin origin)
     {
@@ -247,9 +241,7 @@ file sealed class StreamWrap(Stream inner) : Stream
 
     public override int Read(byte[] buffer, int offset, int count) => inner.Read(buffer, offset, count);
 
-#if NET5_0_OR_GREATER
     public override int Read(Span<byte> buffer) => inner.Read(buffer);
-#endif
 
     public override long Seek(long offset, SeekOrigin origin) => inner.Seek(offset, origin);
 

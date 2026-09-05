@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.InteropServices;
 
 namespace Shimakaze.Sdk.Pal;
 
@@ -42,7 +43,7 @@ public record class Palette(Memory<PaletteColor> Colors) : IEnumerable<PaletteCo
     public static Palette ReadFrom(Stream stream, int length = DefaultColorCount)
     {
         Palette palette = new(length);
-        stream.Read(palette.Colors);
+        stream.ReadExactly(MemoryMarshal.Cast<PaletteColor, byte>(palette.Colors.Span));
         return palette;
     }
 
@@ -51,7 +52,7 @@ public record class Palette(Memory<PaletteColor> Colors) : IEnumerable<PaletteCo
     /// </summary>
     /// <param name="stream"></param>
     public void WriteTo(Stream stream)
-        => stream.Write(Colors);
+        => stream.Write(MemoryMarshal.AsBytes(Colors.Span));
 
     /// <summary>
     /// 获取所有颜色

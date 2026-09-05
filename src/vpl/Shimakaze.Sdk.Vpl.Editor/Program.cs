@@ -4,9 +4,9 @@ using Shimakaze.Sdk.Vpl.Editor;
 
 using Spectre.Console;
 
-var vplPath = await AnsiConsole.AskAsync<string>("What VPL File do you want edit?");
+string vplPath = await AnsiConsole.AskAsync<string>("What VPL File do you want edit?");
 vplPath = vplPath.Trim('"');
-var palPath = await AnsiConsole.AskAsync<string>("What PAL File do you want see?");
+string palPath = await AnsiConsole.AskAsync<string>("What PAL File do you want see?");
 palPath = palPath.Trim('"');
 
 VoxelPalette vpl;
@@ -20,7 +20,7 @@ await using (Stream palStream = File.OpenRead(palPath))
 
 VplEditor editor = new(vpl, pal, async (editor, cancellationToken) =>
 {
-    var path = await AnsiConsole.AskAsync("Where is your new VPL file save to?", vplPath, cancellationToken);
+    string path = await AnsiConsole.AskAsync("Where is your new VPL file save to?", vplPath, cancellationToken);
     path = path.Trim('"');
     await using Stream fs = File.Create(path);
     editor.Vpl.WriteTo(fs);

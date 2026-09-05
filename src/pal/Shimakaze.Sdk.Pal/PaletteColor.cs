@@ -149,9 +149,9 @@ public record struct PaletteColor(byte R, byte G, byte B)
     /// <inheritdoc cref="Create(int)"/>
     public static PaletteColor Create(uint rgb888)
     {
-        var r = (byte)((rgb888 & 0xFF0000) >> 16);
-        var g = (byte)((rgb888 & 0x00FF00) >> 8);
-        var b = (byte)((rgb888 & 0x0000FF) >> 0);
+        byte r = (byte)((rgb888 & 0xFF0000) >> 16);
+        byte g = (byte)((rgb888 & 0x00FF00) >> 8);
+        byte b = (byte)((rgb888 & 0x0000FF) >> 0);
         return new(r, g, b);
     }
 
@@ -164,9 +164,9 @@ public record struct PaletteColor(byte R, byte G, byte B)
     /// <inheritdoc cref="Create(short)"/>
     public static PaletteColor Create(ushort rgb565)
     {
-        var r = (byte)((rgb565 & 0b11111_000000_00000) >> 11);
-        var g = (byte)((rgb565 & 0b00000_111111_00000) >> 5);
-        var b = (byte)((rgb565 & 0b00000_000000_11111) >> 0);
+        byte r = (byte)((rgb565 & 0b11111_000000_00000) >> 11);
+        byte g = (byte)((rgb565 & 0b00000_111111_00000) >> 5);
+        byte b = (byte)((rgb565 & 0b00000_000000_11111) >> 0);
         return new(r, g, b);
     }
 

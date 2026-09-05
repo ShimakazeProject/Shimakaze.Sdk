@@ -40,7 +40,7 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<R
     {
         var colors = GetPalette(count);
         var palette = GetPalette(count, colors);
-        var indexes = GC.AllocateUninitializedArray<byte>(colors.Length);
+        byte[] indexes = GC.AllocateUninitializedArray<byte>(colors.Length);
         for (int i = 0; i < colors.Length; i++)
             indexes[i] = (byte)palette.IndexOf(colors[i]);
 
@@ -60,7 +60,7 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<R
     {
         var sourcePixels = pixels ?? Pixels;
         var uniqueColors = sourcePixels.Distinct().ToArray();
-        
+
         if (uniqueColors.Length <= count)
         {
             return ImmutableCollectionsMarshal.AsImmutableArray(uniqueColors);
@@ -75,13 +75,13 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<R
     private static ImmutableArray<RGBA32> MedianCutQuantize(RGBA32[] colors, int count)
     {
         var boxes = new List<ColorBox> { new(colors) };
-        
+
         while (boxes.Count < count)
         {
             var largestBox = boxes.OrderByDescending(b => b.Volume).First();
             if (largestBox.Volume == 0 || largestBox.Colors.Length <= 1)
                 break;
-            
+
             boxes.Remove(largestBox);
             var (box1, box2) = largestBox.Split();
             boxes.Add(box1);
@@ -108,7 +108,7 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<R
         public int MaxA { get; } = colors.Max(c => c.A);
 
         public int Volume => (MaxR - MinR) * (MaxG - MinG) * (MaxB - MinB) * (MaxA - MinA);
-        
+
         public RGBA32 AverageColor
         {
             get
@@ -132,9 +132,9 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<R
             int rangeG = MaxG - MinG;
             int rangeB = MaxB - MinB;
             int rangeA = MaxA - MinA;
-            
+
             int maxRange = Math.Max(Math.Max(rangeR, rangeG), Math.Max(rangeB, rangeA));
-            
+
             var sortedColors = maxRange switch
             {
                 var r when r == rangeR => Colors.OrderBy(c => c.R).ToArray(),
@@ -142,13 +142,13 @@ public sealed record class SoftwareImage(int Width, int Height, ImmutableArray<R
                 var b when b == rangeB => Colors.OrderBy(c => c.B).ToArray(),
                 _ => Colors.OrderBy(c => c.A).ToArray(),
             };
-            
+
             int mid = sortedColors.Length / 2;
             var box1Colors = new RGBA32[mid];
             var box2Colors = new RGBA32[sortedColors.Length - mid];
             Array.Copy(sortedColors, 0, box1Colors, 0, mid);
             Array.Copy(sortedColors, mid, box2Colors, 0, sortedColors.Length - mid);
-            
+
             return (new ColorBox(box1Colors), new ColorBox(box2Colors));
         }
     }

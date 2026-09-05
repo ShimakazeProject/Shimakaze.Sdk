@@ -33,11 +33,11 @@ public sealed record class VoxelSpanSegment(byte SkipCount, byte NumVoxels, Memo
     /// <exception cref="FormatException"></exception>
     public static VoxelSpanSegment ReadFrom(Stream stream)
     {
-        var skipCount = stream.ReadByte();
+        int skipCount = stream.ReadByte();
         if (skipCount is -1)
             throw new EndOfStreamException();
 
-        var numVoxels = stream.ReadByte();
+        int numVoxels = stream.ReadByte();
         if (skipCount is -1)
             throw new EndOfStreamException();
 
@@ -45,7 +45,7 @@ public sealed record class VoxelSpanSegment(byte SkipCount, byte NumVoxels, Memo
         if (numVoxels is > 0)
             stream.Read(voxels);
 
-        var numVoxels2 = stream.ReadByte();
+        int numVoxels2 = stream.ReadByte();
         if (numVoxels2 is -1)
             throw new EndOfStreamException();
 
@@ -63,7 +63,7 @@ public sealed record class VoxelSpanSegment(byte SkipCount, byte NumVoxels, Memo
     {
         stream.WriteByte(SkipCount);
         stream.WriteByte(NumVoxels);
-        stream.Write(Voxels);
+        stream.Write(Voxels.Span);
         stream.WriteByte(NumVoxels2);
     }
 }

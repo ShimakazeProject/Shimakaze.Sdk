@@ -31,7 +31,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Func<VplEditor, C
                 Console.SetCursorPosition(X_SECTION_OFFSET + (_current.X * SIZE_OF_CELL), Y_OFFSET + _current.Y);
             }
 
-            ConsoleKeyInfo key = Console.ReadKey(true);
+            var key = Console.ReadKey(true);
             switch (key.Key)
             {
                 case ConsoleKey.Tab when !_isEditing && key.Modifiers is ConsoleModifiers.Shift && _current.Section > 0:
@@ -99,7 +99,7 @@ internal sealed class VplEditor(VoxelPalette vpl, Palette pal, Func<VplEditor, C
                 case ConsoleKey.Spacebar when _isEditing:
                     index = (byte)((_editing.Y * 16) + _editing.X);
                     {
-                        VoxelPaletteSection tmp = Vpl[_current.Section];
+                        var tmp = Vpl[_current.Section];
                         tmp[(_current.Y * 16) + _current.X] = index;
                         Vpl[_current.Section] = tmp;
                     }

@@ -40,7 +40,7 @@ internal sealed class ExportsCommand
                 if (sep < 0)
                     continue;
 
-                ReadOnlySpan<char> idPart = line.AsSpan(0, sep);
+                var idPart = line.AsSpan(0, sep);
                 if (uint.TryParse(idPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint id))
                     nameMap[id] = line[(sep + 1)..];
             }

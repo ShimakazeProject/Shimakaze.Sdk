@@ -105,8 +105,8 @@ internal sealed class TemplateViewer : ViewerBase, IDisposable
             .HorizontalAlignment(Align.Stretch)
             .VerticalAlignment(Align.Stretch);
 
-        List<Command> commands = new()
-        {
+        List<Command> commands =
+        [
             new()
             {
                 Id = "tmp.quit",
@@ -116,7 +116,7 @@ internal sealed class TemplateViewer : ViewerBase, IDisposable
                 Presentation = CommandPresentation.CommandBar,
                 Execute = _ => Quit = true,
             },
-        };
+        ];
 
         var root = new DockLayout
         {

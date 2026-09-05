@@ -11,7 +11,7 @@ namespace Shimakaze.Sdk.Engine.Tui.Viewers;
 /// </summary>
 internal sealed class SoftwareImageSource : TerminalImageSource, ITerminalRealtimeImageSource
 {
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
     private byte[] _bytes = [];
     private int _width = 1;
     private int _height = 1;
@@ -38,7 +38,7 @@ internal sealed class SoftwareImageSource : TerminalImageSource, ITerminalRealti
             _width = image.Width;
             _height = image.Height;
             _bytes = MemoryMarshal.AsBytes(image.Pixels.AsSpan()).ToArray();
-            var v = Interlocked.Increment(ref _version);
+            long v = Interlocked.Increment(ref _version);
             args = new(v, TimeSpan.Zero);
         }
 

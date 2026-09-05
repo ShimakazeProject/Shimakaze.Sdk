@@ -50,7 +50,7 @@ public static class IdCalculators
     {
         encoding ??= Encoding.GetEncoding(0);
         name = name.ToUpperInvariant();
-        var data = encoding.GetBytes(name);
+        byte[] data = encoding.GetBytes(name);
         int i = 0;
         uint id = 0;
         int l = data.Length;

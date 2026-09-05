@@ -75,7 +75,7 @@ public sealed record class VoxelFile(VoxelHeader Header, Palette Palette, Memory
                 List<VoxelSpanSegment> sections = [];
                 for (byte z = 0; z < sectionTailers.Span[i].Size.Z;)
                 {
-                    VoxelSpanSegment voxelSpanSegment = VoxelSpanSegment.ReadFrom(stream);
+                    var voxelSpanSegment = VoxelSpanSegment.ReadFrom(stream);
                     z += voxelSpanSegment.SkipCount;
                     z += voxelSpanSegment.NumVoxels;
 
@@ -103,18 +103,18 @@ public sealed record class VoxelFile(VoxelHeader Header, Palette Palette, Memory
 
         value.Palette.WriteTo(stream);
 
-        stream.Write(value.SectionHeaders);
+        stream.Write((ReadOnlyMemory<SectionHeader>)value.SectionHeaders);
 
         for (int i = 0; i < value.SectionData.Length; i++)
         {
             long data = limbDataOffset + value.SectionTailers.Span[i].SpanDataOffset;
-            stream.Write(value.SectionData[i].SpanStart);
-            stream.Write(value.SectionData[i].SpanEnd);
+            stream.Write((ReadOnlyMemory<int>)value.SectionData[i].SpanStart);
+            stream.Write((ReadOnlyMemory<int>)value.SectionData[i].SpanEnd);
 
             for (int j = 0; j < value.SectionData[i].Voxel.Length; j++)
             {
                 stream.Seek(data + value.SectionData[i].SpanStart.Span[j], SeekOrigin.Begin);
-                foreach (VoxelSpanSegment span in value.SectionData[i].Voxel[j].Sections)
+                foreach (var span in value.SectionData[i].Voxel[j].Sections)
                     span.WriteTo(stream);
             }
         }

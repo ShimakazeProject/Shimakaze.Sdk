@@ -1,6 +1,6 @@
-using StbImageSharp;
-
 using Shimakaze.Sdk.Engine.Common.Pixels;
+
+using StbImageSharp;
 
 namespace Shimakaze.Sdk.Engine.Common;
 
@@ -27,9 +27,9 @@ public abstract record class Image(int Width, int Height)
     /// <exception cref="InvalidOperationException">Thrown when the image cannot be loaded.</exception>
     public static SoftwareImage Load(string path)
     {
-        var bytes = File.ReadAllBytes(path);
+        byte[] bytes = File.ReadAllBytes(path);
         var result = ImageResult.FromMemory(bytes, ColorComponents.RedGreenBlueAlpha);
-        
+
         if (result.Data == null)
         {
             throw new InvalidOperationException($"Failed to load image from {path}");
@@ -54,8 +54,8 @@ public abstract record class Image(int Width, int Height)
     public void SaveTo(string path, string arguments = "")
     {
         var image = ToSoftware();
-        var bytes = new byte[image.Width * image.Height * 4];
-        
+        byte[] bytes = new byte[image.Width * image.Height * 4];
+
         for (int i = 0; i < image.Pixels.Length; i++)
         {
             var pixel = image.Pixels[i];

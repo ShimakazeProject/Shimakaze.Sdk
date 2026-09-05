@@ -148,8 +148,12 @@ public static class ShapeMaker
                 : GetIndex(palette, obj.GetPixel(x, y), (byte)paletteStartIndex, (byte)paletteEndIndex);
 
         for (int y = 0; y < obj.Height; y++)
+        {
             for (int x = 0; x < obj.Width; x++)
+            {
                 output.WriteByte(getIndex(x, y));
+            }
+        }
 
         output.Seek(0, SeekOrigin.Begin);
 

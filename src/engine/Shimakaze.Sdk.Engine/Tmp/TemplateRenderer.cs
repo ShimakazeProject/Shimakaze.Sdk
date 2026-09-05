@@ -23,8 +23,6 @@ public sealed class TemplateRenderer : Renderer
     private readonly int _heightOffset;
     private readonly int _minX;
     private readonly int _minY;
-    private readonly int _maxX;
-    private readonly int _maxY;
     private readonly int _pixelsWidth;
     private readonly int _pixelsHeight;
 
@@ -87,8 +85,6 @@ public sealed class TemplateRenderer : Renderer
 
         _minX = minX;
         _minY = minY;
-        _maxX = maxX;
-        _maxY = maxY;
         _pixelsWidth = maxX - minX;
         _pixelsHeight = maxY - minY;
 
@@ -100,8 +96,8 @@ public sealed class TemplateRenderer : Renderer
     {
         byte[] indexes = new byte[Size.Width * Size.Height];
 
-        RenderTo( indexes);
-        
+        RenderTo(indexes);
+
         return new PaletteImage(
             Size.Width,
             Size.Height,

@@ -47,7 +47,7 @@ public class PcxRLEStream(Stream baseStream, bool leaveOpen = false) : Stream
         {
             if (_readCount is 0)
             {
-                var flag = baseStream.ReadByte();
+                int flag = baseStream.ReadByte();
 
                 if (flag is -1)
                     return i; // End of stream
@@ -63,14 +63,14 @@ public class PcxRLEStream(Stream baseStream, bool leaveOpen = false) : Stream
                 if (_readCount is 0)
                     throw new InvalidDataException("RLE size cannot be 0.");
 
-                var b = baseStream.ReadByte();
+                int b = baseStream.ReadByte();
                 if (b is -1)
                     return i; // End of stream
 
                 _readByte = (byte)b;
             }
 
-            var end = i + _readCount;
+            int end = i + _readCount;
             while (i < end)
             {
                 span[i] = _readByte;

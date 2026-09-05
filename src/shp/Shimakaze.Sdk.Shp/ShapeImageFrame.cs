@@ -52,7 +52,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         if (IsEmpty)
             return;
 
-        stream.Write(Indexes);
+        stream.Write(Indexes.Span);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             throw new InvalidOperationException();
         }
 
-        ShapeFrameHeader metadata = Metadata;
+        var metadata = Metadata;
         TrimCore(Indexes.Span, ref metadata, out var data);
         CompressCore(data, ref metadata, out data);
 
@@ -85,7 +85,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
             throw new InvalidOperationException();
         }
 
-        ShapeFrameHeader metadata = Metadata;
+        var metadata = Metadata;
         CompressCore(Indexes.Span, ref metadata, out var data);
 
         return new(metadata, data.ToArray());
@@ -162,7 +162,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         if (Metadata.CompressionType.HasFlag(ShapeFrameCompressionType.Scanline))
             throw new InvalidOperationException();
 
-        ShapeFrameHeader metadata = Metadata;
+        var metadata = Metadata;
         TrimCore(Indexes.Span, ref metadata, out var data);
         return new(metadata, data.ToArray());
     }
@@ -227,10 +227,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         }
     }
 
-    private string GetDebuggerDisplay()
-    {
-        return Metadata.ToString();
-    }
+    private string GetDebuggerDisplay() => Metadata.ToString();
 
     /// <summary>
     /// 从流中读取
@@ -268,12 +265,12 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
 
         for (int j = 0; j < length; j++)
         {
-            var b = input.ReadByte();
+            int b = input.ReadByte();
             if (b is -1)
                 throw new EndOfStreamException();
             if (b is 0)
             {
-                var count = input.ReadByte();
+                int count = input.ReadByte();
                 if (count is -1)
                     throw new EndOfStreamException();
                 j++;
@@ -297,7 +294,7 @@ public sealed class ShapeImageFrame(ShapeFrameHeader metadata)
         Span<byte> buffer = GC.AllocateUninitializedArray<byte>(4096);
         while (length > 0)
         {
-            var size = Math.Min(length, buffer.Length);
+            int size = Math.Min(length, buffer.Length);
             input.ReadExactly(buffer[..size]);
             output.Write(buffer[..size]);
             length -= size;
