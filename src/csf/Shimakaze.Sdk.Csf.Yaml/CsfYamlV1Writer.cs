@@ -1,7 +1,3 @@
-using Shimakaze.Sdk.Csf.Yaml.Converter.V1;
-
-using YamlDotNet.Serialization;
-
 namespace Shimakaze.Sdk.Csf.Yaml;
 
 /// <summary>
@@ -14,16 +10,19 @@ public static class CsfYamlV1Writer
     /// </summary>
     /// <param name="writer"></param>
     /// <param name="value"></param>
-    /// <param name="builder"></param>
-    public static void Write(TextWriter writer, CsfData value, Func<SerializerBuilder, SerializerBuilder>? builder = null)
-    {
-        builder ??= i => i;
+    /// <param name="options"></param>
+    public static void Write(TextWriter writer, CsfData value, YamlSerializerOptions? options = default)
+        => YamlSerializer.Serialize(writer, value, options);
 
-        builder(new())
-            .WithTypeConverter(new CsfValueConverter())
-            .WithTypeConverter(new CsfLabelConverter())
-            .WithTypeConverter(new CsfDataConverter())
-            .Build()
-            .Serialize(writer, value);
+    /// <summary>
+    /// 写入到文本流
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="value"></param>
+    /// <param name="options"></param>
+    public static void Write(Stream stream, CsfData value, YamlSerializerOptions? options = default)
+    {
+        using StreamWriter writer = new(stream, leaveOpen: true);
+        Write(writer, value, options);
     }
 }

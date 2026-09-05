@@ -1,9 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <IsTrimmable>False</IsTrimmable>
-    <IsAotCompatible>False</IsAotCompatible>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <PackageReference Include="Vecc.YamlDotNet.Analyzers.StaticGenerator" />
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
