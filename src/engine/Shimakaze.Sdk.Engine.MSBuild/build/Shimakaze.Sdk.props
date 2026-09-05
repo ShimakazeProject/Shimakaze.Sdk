@@ -103,9 +103,6 @@
   <!-- Inilyn 编译/分析模块的属性与默认收集（见 Shimakaze.Sdk.Inilyn.props）。 -->
   <Import Project="Shimakaze.Sdk.Inilyn.props" />
 
-  <!-- Csf 编译/合并模块的属性（见 Shimakaze.Sdk.Csf.props）。 -->
-  <Import Project="Shimakaze.Sdk.Csf.props" />
-
   <!--
     导入 .NET SDK 的 props，获得标准 Build / CopyFilesToOutputDirectory 管线
     （CopyToOutputDirectory 元数据由此生效）。

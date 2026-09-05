@@ -1,4 +1,4 @@
-using System.Text;
+using System.Text.Json;
 
 using Shimakaze.Sdk.Csf;
 using Shimakaze.Sdk.Csf.Json;
@@ -15,29 +15,109 @@ namespace Shimakaze.Sdk.Engine.Csf;
 public static class CsfTool
 {
     /// <summary>
+    /// Loads <see cref="CsfData"/> from a native CSF binary stream.
+    /// </summary>
+    /// <param name="input">The stream containing the native CSF binary data.</param>
+    /// <returns>The deserialized <see cref="CsfData"/>.</returns>
+    public static CsfData LoadFromCsf(Stream input)
+        => CsfReader.ReadAllData(input);
+
+    /// <summary>
+    /// Loads <see cref="CsfData"/> from a YAML stream.
+    /// </summary>
+    /// <param name="input">The stream containing the YAML data.</param>
+    /// <returns>The deserialized <see cref="CsfData"/>.</returns>
+    public static CsfData LoadFromYaml(Stream input)
+        => CsfYamlV1Reader.Read(input);
+
+    /// <summary>
+    /// Loads <see cref="CsfData"/> from a JSON v2 stream.
+    /// </summary>
+    /// <param name="input">The stream containing the JSON v2 data.</param>
+    /// <returns>The deserialized <see cref="CsfData"/>.</returns>
+    /// <exception cref="JsonException"></exception>
+    public static CsfData LoadFromJsonV2(Stream input)
+        => JsonSerializer.Deserialize(input, CsfJsonV2JsonSerializerContext.Default.CsfData)
+            ?? throw new JsonException("Failed to deserialize JSON v2 data.");
+
+    /// <summary>
+    /// Loads <see cref="CsfData"/> from a JSON v1 stream.
+    /// </summary>
+    /// <param name="input">The stream containing the JSON v1 data.</param>
+    /// <returns>The deserialized <see cref="CsfData"/>.</returns>
+    /// <exception cref="JsonException"></exception>
+    public static CsfData LoadFromJsonV1(Stream input)
+        => JsonSerializer.Deserialize(input, CsfJsonV1JsonSerializerContext.Default.CsfData)
+            ?? throw new JsonException("Failed to deserialize JSON v1 data.");
+
+    /// <summary>
+    /// Loads <see cref="CsfData"/> from an XML stream.
+    /// </summary>
+    /// <param name="input">The stream containing the XML data.</param>
+    /// <returns>The deserialized <see cref="CsfData"/>.</returns>
+    public static CsfData LoadFromXml(Stream input)
+        => CsfXmlV1Reader.Read(input);
+
+    /// <summary>
     /// Loads <see cref="CsfData"/> from a stream in the specified format.
     /// </summary>
     /// <param name="input">The stream containing the serialized CSF data.</param>
     /// <param name="format">The format of the data in the stream.</param>
     /// <returns>The deserialized <see cref="CsfData"/>.</returns>
     /// <exception cref="NotSupportedException">Thrown when <paramref name="format"/> is not recognized.</exception>
-    public static async Task<CsfData> LoadFromAsync(Stream input, CsfFormat format) => await (format switch
+    public static CsfData LoadFrom(Stream input, CsfFormat format)
     {
-        CsfFormat.Csf => Task.Run(() => CsfReader.ReadAllData(input)),
-        CsfFormat.Yaml => Task.Run(() =>
+        Func<Stream, CsfData> func = format switch
         {
-            using StreamReader sr = new(input, Encoding.UTF8, true, 128, true);
-            return CsfYamlV1Reader.Read(sr);
-        }),
-        CsfFormat.JsonV2 => CsfJsonV2.ReadAllDataAsync(input),
-        CsfFormat.JsonV1 => CsfJsonV1.ReadAllDataAsync(input),
-        CsfFormat.Xml => Task.Run(() =>
-        {
-            using StreamReader sr = new(input, Encoding.UTF8, true, 128, true);
-            return CsfXmlV1Reader.Read(sr);
-        }),
-        _ => throw new NotSupportedException(),
-    });
+            CsfFormat.Csf => LoadFromCsf,
+            CsfFormat.Yaml => LoadFromYaml,
+            CsfFormat.JsonV2 => LoadFromJsonV2,
+            CsfFormat.JsonV1 => LoadFromJsonV1,
+            CsfFormat.Xml => LoadFromXml,
+            _ => throw new NotSupportedException(),
+        };
+        return func(input);
+    }
+
+    /// <summary>
+    /// Saves <see cref="CsfData"/> to a stream in native CSF binary format.
+    /// </summary>
+    /// <param name="csf">The CSF data to serialize.</param>
+    /// <param name="stream">The destination stream.</param>
+    public static void SaveToCsf(CsfData csf, Stream stream)
+        => CsfWriter.WriteAllData(stream, csf);
+
+    /// <summary>
+    /// Saves <see cref="CsfData"/> to a stream in YAML format.
+    /// </summary>
+    /// <param name="csf">The CSF data to serialize.</param>
+    /// <param name="stream">The destination stream.</param>
+    public static void SaveToYaml(CsfData csf, Stream stream)
+        => CsfYamlV1Writer.Write(stream, csf);
+
+    /// <summary>
+    /// Saves <see cref="CsfData"/> to a stream in JSON v2 format.
+    /// </summary>
+    /// <param name="csf">The CSF data to serialize.</param>
+    /// <param name="stream">The destination stream.</param>
+    public static void SaveToJsonV2(CsfData csf, Stream stream)
+        => JsonSerializer.Serialize(stream, csf, CsfJsonV2JsonSerializerContext.Default.CsfData);
+
+    /// <summary>
+    /// Saves <see cref="CsfData"/> to a stream in JSON v1 format.
+    /// </summary>
+    /// <param name="csf">The CSF data to serialize.</param>
+    /// <param name="stream">The destination stream.</param>
+    public static void SaveToJsonV1(CsfData csf, Stream stream)
+        => JsonSerializer.Serialize(stream, csf, CsfJsonV1JsonSerializerContext.Default.CsfData);
+
+    /// <summary>
+    /// Saves <see cref="CsfData"/> to a stream in XML format.
+    /// </summary>
+    /// <param name="csf">The CSF data to serialize.</param>
+    /// <param name="stream">The destination stream.</param>
+    public static void SaveToXml(CsfData csf, Stream stream)
+        => CsfXmlV1Writer.Write(stream, csf);
 
     /// <summary>
     /// Saves <see cref="CsfData"/> to a stream in the specified format.
@@ -45,32 +125,20 @@ public static class CsfTool
     /// <param name="csf">The CSF data to serialize.</param>
     /// <param name="stream">The destination stream.</param>
     /// <param name="format">The target output format.</param>
-    /// <returns>A task that represents the asynchronous save operation.</returns>
     /// <exception cref="NotSupportedException">Thrown when <paramref name="format"/> is not recognized.</exception>
-    public static async Task SaveToAsync(CsfData csf, Stream stream, CsfFormat format)
+    public static void SaveTo(CsfData csf, Stream stream, CsfFormat format)
     {
-        Func<CsfData, Task> writer = format switch
+        Action<CsfData, Stream> func = format switch
         {
-            CsfFormat.Yaml => async csf => await Task.Run(async () =>
-            {
-                await Task.Yield();
-                using StreamWriter sw = new(stream, Encoding.UTF8, 128, true);
-                CsfYamlV1Writer.Write(sw, csf);
-            }),
-            CsfFormat.JsonV2 => async csf => await CsfJsonV2.WriteAllDataAsync(stream, csf),
-            CsfFormat.JsonV1 => async csf => await CsfJsonV1.WriteAllDataAsync(stream, csf),
-            CsfFormat.Xml => async csf =>
-            {
-                await Task.Yield();
-                using StreamWriter sw = new(stream, Encoding.UTF8, 128, true);
-                CsfXmlV1Writer.Write(sw, csf);
-            }
-            ,
-            CsfFormat.Csf => async csf => await Task.Run(() => CsfWriter.WriteAllData(stream, csf)),
-            _ => throw new NotSupportedException()
+            CsfFormat.Csf => SaveToCsf,
+            CsfFormat.Yaml => SaveToYaml,
+            CsfFormat.JsonV2 => SaveToJsonV2,
+            CsfFormat.JsonV1 => SaveToJsonV1,
+            CsfFormat.Xml => SaveToXml,
+            _ => throw new NotSupportedException(),
         };
 
-        await writer(csf);
+        func(csf, stream);
     }
 
     /// <summary>
@@ -119,5 +187,4 @@ public static class CsfTool
     /// <param name="inputFormat">The input format.</param>
     /// <returns>The suggested output format.</returns>
     public static CsfFormat GuessOutputFormat(CsfFormat inputFormat) => inputFormat is CsfFormat.Csf ? CsfFormat.Yaml : CsfFormat.Csf;
-
 }

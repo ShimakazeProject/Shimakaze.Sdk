@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageId>Shimakaze.Sdk</PackageId>
     <Description>Shimakaze 的 RA2/YR 模组构建 MSBuild SDK。</Description>
     <PackageTags>MSBuild MSBuildSdk notargets notarget</PackageTags>

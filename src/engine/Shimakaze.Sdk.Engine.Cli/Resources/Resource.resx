@@ -117,71 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Command.Csf.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.Description" xml:space="preserve">
     <value>Shimakaze.Sdk CSF 格式转换工具</value>
   </data>
-  <data name="Command.Csf.Input.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.Input.Description" xml:space="preserve">
     <value>将要被转换的字符串表文件</value>
   </data>
-  <data name="Command.Csf.InputFormat.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.InputFormat.Description" xml:space="preserve">
     <value>转换前的字符串表文件格式</value>
   </data>
-  <data name="Command.Csf.Output.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.Output.Description" xml:space="preserve">
     <value>转换后的字符串表文件保存路径</value>
   </data>
-  <data name="Command.Csf.OutputFormat.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.OutputFormat.Description" xml:space="preserve">
     <value>转换后的字符串表文件格式</value>
+  </data>
+  <data name="Command.Csf.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk CSF 实用工具</value>
+  </data>
+  <data name="Command.Csf.Merge.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk CSF 合并工具</value>
+  </data>
+  <data name="Command.Csf.Merge.Input.Description" xml:space="preserve">
+    <value>将要被合并的字符串表文件</value>
+  </data>
+  <data name="Command.Csf.Merge.InputFormat.Description" xml:space="preserve">
+    <value>合并后的字符串表文件保存路径</value>
+  </data>
+  <data name="Command.Csf.Merge.Output.Description" xml:space="preserve">
+    <value>合并前的字符串表文件格式（按顺序匹配）</value>
+  </data>
+  <data name="Command.Csf.Merge.OutputFormat.Description" xml:space="preserve">
+    <value>合并后的字符串表文件格式</value>
   </data>
   <data name="Command.Description" xml:space="preserve">
     <value>Shimakaze.Sdk 实用工具集</value>
-  </data>
-  <data name="Command.Ini.Description" xml:space="preserve">
-    <value>Shimakaze.Sdk INI 编译与分析工具</value>
-  </data>
-  <data name="Command.Ini.Compile.Description" xml:space="preserve">
-    <value>编译 INI 文件（可选：编译后交给分析器校验）</value>
-  </data>
-  <data name="Command.Ini.Compile.Input.Description" xml:space="preserve">
-    <value>输入的 INI 文件路径</value>
-  </data>
-  <data name="Command.Ini.Compile.Output.Description" xml:space="preserve">
-    <value>输出路径（文件或目录）</value>
-  </data>
-  <data name="Command.Ini.Compile.SourceMap.Description" xml:space="preserve">
-    <value>输出 SourceMap 文件路径</value>
-  </data>
-  <data name="Command.Ini.Compile.Verbose.Description" xml:space="preserve">
-    <value>显示详细输出</value>
-  </data>
-  <data name="Command.Ini.Compile.NoTreeShaking.Description" xml:space="preserve">
-    <value>停用 TreeShaking（保留所有节）</value>
-  </data>
-  <data name="Command.Ini.Compile.Rules.Description" xml:space="preserve">
-    <value>规则文件（平台配置，如 vanilla.xml；可多个，按顺序合并）</value>
-  </data>
-  <data name="Command.Ini.Compile.Assets.Description" xml:space="preserve">
-    <value>外部资源清单文件（如 shp.txt；文件名前缀决定种类）</value>
-  </data>
-  <data name="Command.Ini.Compile.Group.Description" xml:space="preserve">
-    <value>编译产物的规则组名（默认 Rule）</value>
-  </data>
-  <data name="Command.Ini.Analyze.Description" xml:space="preserve">
-    <value>分析已编译的 INI 文件</value>
-  </data>
-  <data name="Command.Ini.Analyze.Rules.Description" xml:space="preserve">
-    <value>规则文件（平台配置，如 vanilla.xml；可多个，按顺序合并）</value>
-  </data>
-  <data name="Command.Ini.Analyze.Input.Description" xml:space="preserve">
-    <value>待分析的 INI 文件路径</value>
-  </data>
-  <data name="Command.Ini.Analyze.Group.Description" xml:space="preserve">
-    <value>每个输入文件的规则组名（按位置与输入配对；不足时沿用最后一个或 Rule）</value>
-  </data>
-  <data name="Command.Ini.Analyze.Assets.Description" xml:space="preserve">
-    <value>外部资源清单文件（如 shp.txt；文件名前缀决定种类）</value>
-  </data>
-  <data name="Command.Ini.Analyze.Verbose.Description" xml:space="preserve">
-    <value>显示详细输出</value>
   </data>
   <data name="Command.Mix.Description" xml:space="preserve">
     <value>Shimakaze.Sdk MIX 实用工具</value>

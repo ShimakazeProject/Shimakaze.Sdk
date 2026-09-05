@@ -117,20 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Command.Csf.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.Description" xml:space="preserve">
     <value>Shimakaze.Sdk CSF 格式转换工具</value>
   </data>
-  <data name="Command.Csf.Input.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.Input.Description" xml:space="preserve">
     <value>将要被转换的字符串表文件</value>
   </data>
-  <data name="Command.Csf.InputFormat.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.InputFormat.Description" xml:space="preserve">
     <value>转换前的字符串表文件格式</value>
   </data>
-  <data name="Command.Csf.Output.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.Output.Description" xml:space="preserve">
     <value>转换后的字符串表文件保存路径</value>
   </data>
-  <data name="Command.Csf.OutputFormat.Description" xml:space="preserve">
+  <data name="Command.Csf.Build.OutputFormat.Description" xml:space="preserve">
     <value>转换后的字符串表文件格式</value>
+  </data>
+  <data name="Command.Csf.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk CSF 实用工具</value>
+  </data>
+  <data name="Command.Csf.Merge.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk CSF 合并工具</value>
+  </data>
+  <data name="Command.Csf.Merge.Input.Description" xml:space="preserve">
+    <value>将要被合并的字符串表文件</value>
+  </data>
+  <data name="Command.Csf.Merge.InputFormat.Description" xml:space="preserve">
+    <value>合并后的字符串表文件保存路径</value>
+  </data>
+  <data name="Command.Csf.Merge.Output.Description" xml:space="preserve">
+    <value>合并前的字符串表文件格式（按顺序匹配）</value>
+  </data>
+  <data name="Command.Csf.Merge.OutputFormat.Description" xml:space="preserve">
+    <value>合并后的字符串表文件格式</value>
   </data>
   <data name="Command.Description" xml:space="preserve">
     <value>Shimakaze.Sdk 实用工具集</value>

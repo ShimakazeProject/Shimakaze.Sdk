@@ -1,18 +1,26 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!--
-    Shimakaze.Sdk.Csf 模块的 props（CSF 编译/合并）。
-    本文件在 Shimakaze.Sdk.props 中被导入，声明 CSF 编译所需的属性默认值。
-    使用方项目可在导入 SDK 后覆盖。
-  -->
-
-  <!--
-    CsfCompile        是否在构建时编译并合并 CSF（默认 true）。
-    OutputCsfFileName 最终 CSF 输出文件名（默认 ra2md.csf）。
-  -->
   <PropertyGroup>
     <CsfCompile Condition="'$(CsfCompile)' == ''">true</CsfCompile>
+    <ImportDefaultCsfItems Condition="'$(ImportDefaultCsfItems)' == ''">true</ImportDefaultCsfItems>
     <OutputCsfFileName Condition="'$(OutputCsfFileName)' == ''">ra2md.csf</OutputCsfFileName>
+    <OutputCsfFormat Condition="'$(OutputCsfFormat)' == ''">Csf</OutputCsfFormat>
+    <CsfOutputPath Condition="'$(CsfOutputPath)' == ''">$(OutputPath)</CsfOutputPath>
+    <CsfIntermediateOutputPath Condition="'$(CsfIntermediateOutputPath)' == ''">$(IntermediateOutputPath)csf\</CsfIntermediateOutputPath>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(ImportDefaultCsfItems)' == 'true'">
+    <CsfResource Include="**\*.csf" Format="Csf" Destination="$(OutputCsfFileName)" />
+    <CsfResource Include="**\*.yaml" Format="Yaml" Destination="$(OutputCsfFileName)" />
+    <CsfResource Include="**\*.yml" Format="Yaml" Destination="$(OutputCsfFileName)" />
+    <CsfResource Include="**\*.xml" Format="Xml" Destination="$(OutputCsfFileName)" />
+    <CsfResource Include="**\*.v1.json" Format="JsonV1" Destination="$(OutputCsfFileName)" />
+    <CsfResource Include="**\*.v2.json" Format="JsonV2" Destination="$(OutputCsfFileName)" />
+    <CsfResource Include="**\*.json" Format="JsonV2" Destination="$(OutputCsfFileName)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(ImportDefaultCsfItems)' == 'true'">
+    <CsfResourceDestination Include="$(OutputCsfFileName)" Format="$(OutputCsfFormat)" />
+  </ItemGroup>
 
 </Project>
