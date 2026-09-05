@@ -25,15 +25,7 @@ public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : IDisposab
     /// 写入元数据
     /// </summary>
     /// <param name="metadata"></param>
-    public void WriteMetadata(CsfMetadata metadata)
-    {
-        stream.Write(metadata.Identifier);
-        stream.Write(metadata.Version);
-        stream.Write(metadata.LabelCount);
-        stream.Write(metadata.StringCount);
-        stream.Write(metadata.Unknown);
-        stream.Write(metadata.Language);
-    }
+    public void WriteMetadata(CsfMetadata metadata) => stream.Write(metadata);
 
     /// <summary>
     /// 写入一个标签
@@ -88,16 +80,16 @@ public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : IDisposab
     /// <param name="disposing"></param>
     private void Dispose(bool disposing)
     {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                if (!leaveOpen)
-                    stream.Dispose();
-            }
+        if (_disposedValue)
+            return;
 
-            _disposedValue = true;
+        if (disposing)
+        {
+            if (!leaveOpen)
+                stream.Dispose();
         }
+
+        _disposedValue = true;
     }
 
     // ~CsfWriter()
@@ -107,10 +99,7 @@ public sealed class CsfWriter(Stream stream, bool leaveOpen = false) : IDisposab
     // }
 
     /// <inheritdoc/>
-    public void Dispose()
-    {
+    public void Dispose() =>
         // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
-        Dispose(disposing: true);
-        // GC.SuppressFinalize(this);
-    }
+        Dispose(disposing: true);// GC.SuppressFinalize(this);
 }

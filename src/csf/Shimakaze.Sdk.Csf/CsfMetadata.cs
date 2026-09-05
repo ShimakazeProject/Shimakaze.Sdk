@@ -3,7 +3,7 @@ namespace Shimakaze.Sdk.Csf;
 /// <summary>
 /// CSF 文件元数据
 /// </summary>
-public record class CsfMetadata
+public record struct CsfMetadata()
 {
     /// <summary>
     /// CSF 文件的魔术头，它永远是“CSF ”，即<br />
@@ -41,4 +41,16 @@ public record class CsfMetadata
     /// 使用的语言。
     /// </summary>
     public CsfLanguage Language { get; set; } = CsfLanguage.ENUS;
+
+    /// <summary>
+    /// Modifies the metadata using the provided delegate.
+    /// </summary>
+    /// <param name="metadata"></param>
+    public delegate void ModifyDelegate(ref CsfMetadata metadata);
+
+    /// <summary>
+    /// Modifies the metadata using the provided delegate.
+    /// </summary>
+    /// <param name="modify"></param>
+    public void Modify(ModifyDelegate modify) => modify(ref this);
 }

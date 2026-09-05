@@ -3,19 +3,19 @@ using System.Collections;
 namespace Shimakaze.Sdk.Csf;
 
 /// <summary>
-/// CSF 文件
+/// 表示一个 CSF 文件
 /// </summary>
 public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList<CsfLabel>
 {
     /// <summary>
-    /// 
+    /// 初始化一个新的 CSF 文件实例
     /// </summary>
     public CsfData() : this(new(), [])
     {
     }
 
     /// <summary>
-    /// 
+    /// 初始化一个新的 CSF 文件实例
     /// </summary>
     /// <param name="metadata"></param>
     public CsfData(CsfMetadata metadata) : this(metadata, new(metadata.LabelCount))
@@ -46,8 +46,11 @@ public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList
     /// </remarks>
     public virtual void Add(CsfLabel item)
     {
-        Metadata.LabelCount++;
-        Metadata.StringCount += item.Count;
+        Metadata.Modify((ref i) =>
+        {
+            i.LabelCount++;
+            i.StringCount += item.Count;
+        });
         Labels.Add(item);
     }
 
@@ -63,7 +66,7 @@ public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList
     {
         CsfLabel data = new(label, values.Length);
 
-        foreach (var value in values)
+        foreach (string value in values)
             data.Add(new(value, default));
 
         Add(data);
@@ -87,8 +90,11 @@ public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList
     /// <inheritdoc/>
     public void Clear()
     {
-        Metadata.LabelCount = 0;
-        Metadata.StringCount = 0;
+        Metadata.Modify((ref i) =>
+        {
+            i.LabelCount = 0;
+            i.StringCount = 0;
+        });
         Labels.Clear();
     }
 
@@ -115,8 +121,11 @@ public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList
     /// </remarks>
     public void Insert(int index, CsfLabel item)
     {
-        Metadata.LabelCount++;
-        Metadata.StringCount += item.Count;
+        Metadata.Modify((ref i) =>
+        {
+            i.LabelCount++;
+            i.StringCount += item.Count;
+        });
         Labels.Insert(index, item);
     }
 
@@ -127,8 +136,11 @@ public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList
     /// </remarks>
     public bool Remove(CsfLabel item)
     {
-        Metadata.LabelCount--;
-        Metadata.StringCount -= item.Count;
+        Metadata.Modify((ref i) =>
+        {
+            i.LabelCount--;
+            i.StringCount -= item.Count;
+        });
         return Labels.Remove(item);
     }
 
@@ -139,19 +151,22 @@ public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList
     /// </remarks>
     public void RemoveAt(int index)
     {
-        Metadata.LabelCount--;
-        Metadata.StringCount -= Labels[index].Count;
+        Metadata.Modify((ref i) =>
+        {
+            i.LabelCount--;
+            i.StringCount -= Labels[index].Count;
+        });
         Labels.RemoveAt(index);
     }
 
     /// <summary>
     /// 更新文件头数据
     /// </summary>
-    public void UpdateMetadataCount()
+    public void UpdateMetadataCount() => Metadata.Modify((ref i) =>
     {
-        Metadata.LabelCount = Labels.Count;
-        Metadata.StringCount = Labels.Select(x => x.Count).Sum();
-    }
+        i.LabelCount = Labels.Count;
+        i.StringCount = Labels.Sum(x => x.Count);
+    });
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

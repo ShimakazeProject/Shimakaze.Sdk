@@ -8,18 +8,25 @@ namespace Shimakaze.Sdk.Csf;
 public record class CsfLabel(string Name, List<CsfValue> Values) : IList<CsfValue>
 {
     /// <summary>
-    /// 
+    /// 初始化一个新的 CSF 标签实例
     /// </summary>
-    /// <param name="name"></param>
+    public CsfLabel() : this(string.Empty)
+    {
+    }
+
+    /// <summary>
+    /// 初始化一个新的 CSF 标签实例
+    /// </summary>
+    /// <param name="name">标签名称</param>
     public CsfLabel(string name) : this(name, [])
     {
     }
 
     /// <summary>
-    /// 
+    /// 初始化一个新的 CSF 标签实例
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="capacity"></param>
+    /// <param name="name">标签名称</param>
+    /// <param name="capacity">初始容量</param>
     public CsfLabel(string name, int capacity) : this(name, Values: new(capacity))
     {
     }

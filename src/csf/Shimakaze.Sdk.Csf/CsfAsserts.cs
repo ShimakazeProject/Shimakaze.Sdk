@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Globalization;
 
 namespace Shimakaze.Sdk.Csf;
@@ -6,7 +5,6 @@ namespace Shimakaze.Sdk.Csf;
 /// <summary>
 /// CsfThrowHelper.
 /// </summary>
-[StackTraceHidden]
 internal static class CsfAsserts
 {
     /// <summary>
@@ -15,12 +13,9 @@ internal static class CsfAsserts
     /// <param name="flag"> flag. </param>
     /// <returns> flag value. </returns>
     /// <exception cref="FormatException"> Format is not true. </exception>
-    public static int IsCsfFile(int flag)
-    {
-        return flag is CsfConstants.CsfFlagRaw
-                ? flag
-                : throw new FormatException("It's not CSF File Flag.");
-    }
+    public static int IsCsfFile(int flag) => flag is CsfConstants.CsfFlagRaw
+        ? flag
+        : throw new FormatException("It's not CSF File Flag.");
 
     /// <summary>
     /// IsLabel.
@@ -29,12 +24,9 @@ internal static class CsfAsserts
     /// <param name="args"> args. </param>
     /// <returns> flag value. </returns>
     /// <exception cref="FormatException"> Format is not true. </exception>
-    public static int IsLabel(int flag, Func<object[]> args)
-    {
-        return flag is CsfConstants.LblFlagRaw
-                ? flag
-                : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF Label Flag. at 0x{0:X8}.", args()));
-    }
+    public static int IsLabel(int flag, Func<object[]> args) => flag is CsfConstants.LblFlagRaw
+        ? flag
+        : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF Label Flag. at 0x{0:X8}.", args()));
 
     /// <summary>
     /// IsStringOrExtraString.
@@ -43,10 +35,7 @@ internal static class CsfAsserts
     /// <param name="args"> args. </param>
     /// <returns> flag value. </returns>
     /// <exception cref="FormatException"> Format is not true. </exception>
-    public static int IsStringOrExtraString(int flag, Func<object[]> args)
-    {
-        return flag is CsfConstants.StrFlagRaw or CsfConstants.StrwFlgRaw
-                ? flag
-                : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF String Flag at 0x{0:X8}.", args()));
-    }
+    public static int IsStringOrExtraString(int flag, Func<object[]> args) => flag is CsfConstants.StrFlagRaw or CsfConstants.StrwFlgRaw
+        ? flag
+        : throw new FormatException(string.Format(CultureInfo.InvariantCulture, "It's not CSF String Flag at 0x{0:X8}.", args()));
 }
