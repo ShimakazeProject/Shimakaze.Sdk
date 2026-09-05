@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/csf/">
-    <Project Path="src/csf/Shimakaze.Sdk.Csf.Converter/Shimakaze.Sdk.Csf.Converter.csproj" />
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Json/Shimakaze.Sdk.Csf.Json.csproj" />
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Xml/Shimakaze.Sdk.Csf.Xml.csproj" />
     <Project Path="src/csf/Shimakaze.Sdk.Csf.Yaml/Shimakaze.Sdk.Csf.Yaml.csproj" />
@@ -17,14 +16,12 @@
   </Folder>
   <Folder Name="/ini/">
     <Project Path="src/ini/Shimakaze.Sdk.Ini/Shimakaze.Sdk.Ini.csproj" />
-    <Project Path="src/ini/Shimakaze.Sdk.Inilyn.Analyzer/Shimakaze.Sdk.Inilyn.Analyzer.csproj" />
-    <Project Path="src/ini/Shimakaze.Sdk.Inilyn/Shimakaze.Sdk.Inilyn.csproj" />
   </Folder>
   <Folder Name="/map/">
     <Project Path="src/map/Shimakaze.Sdk.Map/Shimakaze.Sdk.Map.csproj" />
   </Folder>
   <Folder Name="/mix/">
-        <Project Path="src/mix/Shimakaze.Sdk.Mix/Shimakaze.Sdk.Mix.csproj" />
+    <Project Path="src/mix/Shimakaze.Sdk.Mix/Shimakaze.Sdk.Mix.csproj" />
   </Folder>
   <Folder Name="/pal/">
     <Project Path="src/pal/Shimakaze.Sdk.Pal/Shimakaze.Sdk.Pal.csproj" />

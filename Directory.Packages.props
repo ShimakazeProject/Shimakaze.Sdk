@@ -9,20 +9,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="DotMake.CommandLine" Version="3.6.0" />
-    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.11" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="18.9.6" />
-    <PackageVersion Include="Polyfill" Version="11.2.0" />
-    <PackageVersion Include="Shimakaze.GeneratedRegex" Version="0.0.1" />
     <PackageVersion Include="Spectre.Console" Version="0.57.2" />
     <PackageVersion Include="StbImageSharp" Version="2.30.16" />
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
-    <PackageVersion Include="System.Collections.Immutable" Version="10.0.11" />
     <PackageVersion Include="System.IO.Hashing" Version="10.0.11" />
-    <PackageVersion Include="System.Memory" Version="4.6.3" />
-    <PackageVersion Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.11" />
-    <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
-    <PackageVersion Include="System.ValueTuple" Version="4.6.2" />
+    <PackageVersion Include="Vecc.YamlDotNet.Analyzers.StaticGenerator" Version="18.1.0" />
     <PackageVersion Include="XenoAtom.Terminal.UI" Version="3.9.0" />
     <PackageVersion Include="XenoAtom.Terminal.UI.Graphics" Version="3.9.0" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
