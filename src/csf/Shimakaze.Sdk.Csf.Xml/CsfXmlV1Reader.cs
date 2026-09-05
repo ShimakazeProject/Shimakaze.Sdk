@@ -1,7 +1,5 @@
 using System.Xml;
 
-using Shimakaze.Sdk.Csf.Xml.Converter.V1;
-
 namespace Shimakaze.Sdk.Csf.Xml;
 
 /// <summary>
@@ -10,15 +8,30 @@ namespace Shimakaze.Sdk.Csf.Xml;
 public static class CsfXmlV1Reader
 {
     /// <summary>
-    /// 
+    /// 从文本流读取 CSF 数据
     /// </summary>
     /// <param name="reader"></param>
-    /// <param name="settings"></param>
+    /// <param name="options"></param>
     /// <returns></returns>
-    public static CsfData Read(TextReader reader, XmlReaderSettings? settings = default)
+    public static CsfData Read(TextReader reader, XmlSerializerOptions? options = default)
     {
-        CsfDataXmlSerializer serializer = new();
-        using XmlReader xmlReader = XmlReader.Create(reader, settings);
-        return serializer.Deserialize(xmlReader);
+        options ??= new XmlSerializerOptions();
+
+        if (!options.TryGetConverter<CsfDataXmlConverterV1>(out var converter))
+            converter = new();
+        using var xmlReader = XmlReader.Create(reader, options.ReaderSettings);
+        return converter.Read(xmlReader, options);
+    }
+
+    /// <summary>
+    /// 从文本流读取 CSF 数据
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    public static CsfData Read(Stream stream, XmlSerializerOptions? options = default)
+    {
+        using StreamReader reader = new(stream, leaveOpen: true);
+        return Read(reader, options);
     }
 }

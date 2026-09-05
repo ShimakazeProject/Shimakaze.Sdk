@@ -1,7 +1,5 @@
 using System.Xml;
 
-using Shimakaze.Sdk.Csf.Xml.Converter.V1;
-
 namespace Shimakaze.Sdk.Csf.Xml;
 
 /// <summary>
@@ -12,23 +10,28 @@ public static class CsfXmlV1Writer
     /// <summary>
     /// 
     /// </summary>
-    public static readonly XmlWriterSettings DefaultSettings = new()
-    {
-        Indent = true,
-        IndentChars = "  ",
-    };
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="writer"></param>
     /// <param name="value"></param>
-    /// <param name="settings"></param>
-    public static void Write(TextWriter writer, CsfData value, XmlWriterSettings? settings = default)
+    /// <param name="options"></param>
+    public static void Write(TextWriter writer, CsfData value, XmlSerializerOptions? options = default)
     {
-        settings ??= DefaultSettings;
-        CsfDataXmlSerializer serializer = new();
-        using XmlWriter xmlWriter = XmlWriter.Create(writer, settings);
-        serializer.Serialize(xmlWriter, value);
+        options ??= new XmlSerializerOptions();
+
+        if (!options.TryGetConverter<CsfDataXmlConverterV1>(out var converter))
+            converter = new();
+        using var xmlWriter = XmlWriter.Create(writer, options.WriterSettings);
+        converter.Write(xmlWriter, value, options);
+    }
+
+    /// <summary>
+    /// 写入到文本流
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="value"></param>
+    /// <param name="options"></param>
+    public static void Write(Stream stream, CsfData value, XmlSerializerOptions? options = default)
+    {
+        using StreamWriter writer = new(stream, leaveOpen: true);
+        Write(writer, value, options);
     }
 }
