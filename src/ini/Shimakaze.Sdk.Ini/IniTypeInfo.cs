@@ -7,7 +7,6 @@ namespace Shimakaze.Sdk.Ini;
 /// <summary>
 /// Describes the deserialization strategy encoded by an <see cref="IniTypeInfo"/>.
 /// </summary>
-#pragma warning disable CA1720 // Identifier contains type name
 public enum IniTypeInfoKind
 {
     /// <summary>
@@ -33,7 +32,6 @@ public enum IniTypeInfoKind
     /// </summary>
     Dictionary,
 }
-#pragma warning restore CA1720
 
 /// <summary>
 /// Non-generic base for pre-computed INI type metadata.
@@ -132,13 +130,10 @@ public abstract class IniTypeInfo
     /// </exception>
     [RequiresDynamicCode("Array element-type allocation uses Array.CreateInstance which may not be available in AOT.")]
     [RequiresUnreferencedCode("Type analysis uses MakeGenericMethod and reflection-based constructor/property inspection.")]
-    public static IniTypeInfo Create([DynamicallyAccessedMembers(CreateAccessedMember)] Type type)
-    {
-        return (IniTypeInfo)typeof(IniTypeInfo)
+    public static IniTypeInfo Create([DynamicallyAccessedMembers(CreateAccessedMember)] Type type) => (IniTypeInfo)typeof(IniTypeInfo)
             .GetMethod(nameof(Create), [])!
             .MakeGenericMethod(type)
             .Invoke(null, null)!;
-    }
 
     /// <summary>
     /// Creates an <see cref="IniTypeInfo{T}"/> for <typeparamref name="T"/>
@@ -158,14 +153,14 @@ public abstract class IniTypeInfo
     [RequiresUnreferencedCode("Type analysis uses reflection to inspect constructors, properties, and interfaces.")]
     public static IniTypeInfo<T> Create<[DynamicallyAccessedMembers(CreateAccessedMember)] T>()
     {
-        Type type = typeof(T);
+        var type = typeof(T);
         if (type.IsAbstract)
             throw new NotSupportedException();
 
         // ── Constructor resolution ──
         // Priority: [IniConstructor] > parameterless > shortest parameter list
-        ConstructorInfo[] constructors = type.GetConstructors();
-        ConstructorInfo? constructor = constructors
+        var constructors = type.GetConstructors();
+        var constructor = constructors
             .FirstOrDefault(static i => i.GetCustomAttribute<IniConstructorAttribute>() is not null);
         constructor ??= type.GetConstructor([]);
         constructor ??= constructors.MinBy(static i => i.GetParameters().Length);
@@ -173,15 +168,15 @@ public abstract class IniTypeInfo
             throw new TypeAccessException($"找不到{type}的构造器");
 
         // ── Object mode ──
-        if (!type.IsAssignableTo<IEnumerable>())
+        if (!type.IsAssignableTo(typeof(IEnumerable)))
         {
             // Resolve property metadata: filter [IniIgnore], resolve [IniKey] and [IniInlineArray]
             IniPropertyInfo[] properties = [.. type.GetProperties()
                 .Where(static p => p.GetCustomAttribute<IniIgnoreAttribute>() is null)
                 .Select(static p =>
                 {
-                    IniKeyAttribute? keyAttr = p.GetCustomAttribute<IniKeyAttribute>();
-                    IniInlineArrayAttribute? arrayAttr = p.GetCustomAttribute<IniInlineArrayAttribute>();
+                    var keyAttr = p.GetCustomAttribute<IniKeyAttribute>();
+                    var arrayAttr = p.GetCustomAttribute<IniInlineArrayAttribute>();
                     return new IniPropertyInfo
                     {
                         Name = p.Name,
@@ -197,16 +192,16 @@ public abstract class IniTypeInfo
             // Build a lookup for parameter→property key resolution
             Dictionary<string, string> propKeys = new(
                 properties.Length, StringComparer.OrdinalIgnoreCase);
-            foreach (IniPropertyInfo prop in properties)
+            foreach (var prop in properties)
                 propKeys[prop.Name] = prop.Key;
 
             // Resolve constructor parameter metadata
             IniParameterInfo[] ctorParams = [.. constructor.GetParameters()
                 .Select(p =>
                 {
-                    IniIgnoreAttribute? ignoreAttr = p.GetCustomAttribute<IniIgnoreAttribute>();
-                    IniKeyAttribute? keyAttr = p.GetCustomAttribute<IniKeyAttribute>();
-                    IniInlineArrayAttribute? arrayAttr = p.GetCustomAttribute<IniInlineArrayAttribute>();
+                    var ignoreAttr = p.GetCustomAttribute<IniIgnoreAttribute>();
+                    var keyAttr = p.GetCustomAttribute<IniKeyAttribute>();
+                    var arrayAttr = p.GetCustomAttribute<IniInlineArrayAttribute>();
 
                     string? key = ignoreAttr is not null
                         ? null
@@ -257,12 +252,12 @@ public abstract class IniTypeInfo
         }
 
         // ── Collection / Dictionary dispatch ──
-        Type[] interfaces = type.GetInterfaces();
+        var interfaces = type.GetInterfaces();
         Type[] genericInterfaces = [.. interfaces.Where(static i => i.IsGenericType)];
 
         if (genericInterfaces.FirstOrDefault(static i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>)) is { } rwDictionary)
         {
-            Type[] types = rwDictionary.GetGenericArguments();
+            var types = rwDictionary.GetGenericArguments();
             IniParameterInfo[] ctorParams = [.. constructor.GetParameters()
                 .Select(static p => new IniParameterInfo
                 {
@@ -285,7 +280,7 @@ public abstract class IniTypeInfo
 
         if (genericInterfaces.FirstOrDefault(static i => i.GetGenericTypeDefinition() == typeof(ICollection<>)) is { } rwCollection)
         {
-            Type[] types = rwCollection.GetGenericArguments();
+            var types = rwCollection.GetGenericArguments();
             IniParameterInfo[] ctorParams = [.. constructor.GetParameters()
                 .Select(static p => new IniParameterInfo
                 {
@@ -319,7 +314,6 @@ public abstract class IniTypeInfo
 /// <para>The typed <see cref="CreateObject"/> property synchronizes with the untyped
 /// base.<see cref="IniTypeInfo.CreateObject"/> via a custom <see langword="init"/> accessor.</para>
 /// </remarks>
-#pragma warning disable CA1000 // Static members on generic type — same pattern as System.Text.Json.JsonTypeInfo<T>
 public sealed class IniTypeInfo<T>() : IniTypeInfo(typeof(T))
 {
     /// <summary>

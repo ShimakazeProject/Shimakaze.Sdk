@@ -65,10 +65,7 @@ public class IniDocument(IEnumerable<KeyValuePair<string, IniSection>> data) : I
     }
 
     /// <inheritdoc/>
-    public void Add(string key, IniSection value)
-    {
-        _entries.Add(KeyValuePair.Create(key, value));
-    }
+    public void Add(string key, IniSection value) => _entries.Add(KeyValuePair.Create(key, value));
 
     /// <inheritdoc/>
     public void Clear() => _entries.Clear();
@@ -285,16 +282,15 @@ public class IniDocument(IEnumerable<KeyValuePair<string, IniSection>> data) : I
         {
             if (StringComparer.Ordinal.Equals(_entries[i].Key, keyValuePair.Key)
                 && ReferenceEquals(_entries[i].Value, keyValuePair.Value))
+            {
                 return true;
+            }
         }
 
         return false;
     }
 
-    void ICollection<KeyValuePair<string, IniSection>>.CopyTo(KeyValuePair<string, IniSection>[] array, int arrayIndex)
-    {
-        _entries.CopyTo(array, arrayIndex);
-    }
+    void ICollection<KeyValuePair<string, IniSection>>.CopyTo(KeyValuePair<string, IniSection>[] array, int arrayIndex) => _entries.CopyTo(array, arrayIndex);
 
     bool ICollection<KeyValuePair<string, IniSection>>.Remove(KeyValuePair<string, IniSection> keyValuePair)
     {

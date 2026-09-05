@@ -64,10 +64,7 @@ public class IniSection(IEnumerable<KeyValuePair<string, string>> data) : IDicti
     }
 
     /// <inheritdoc/>
-    public void Add(string key, string value)
-    {
-        _entries.Add(KeyValuePair.Create(key, value));
-    }
+    public void Add(string key, string value) => _entries.Add(KeyValuePair.Create(key, value));
 
     /// <inheritdoc/>
     public void Clear() => _entries.Clear();
@@ -227,16 +224,15 @@ public class IniSection(IEnumerable<KeyValuePair<string, string>> data) : IDicti
         {
             if (StringComparer.Ordinal.Equals(_entries[i].Key, keyValuePair.Key)
                 && string.Equals(_entries[i].Value, keyValuePair.Value, StringComparison.Ordinal))
+            {
                 return true;
+            }
         }
 
         return false;
     }
 
-    void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
-    {
-        _entries.CopyTo(array, arrayIndex);
-    }
+    void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => _entries.CopyTo(array, arrayIndex);
 
     bool ICollection<KeyValuePair<string, string>>.Remove(KeyValuePair<string, string> keyValuePair)
     {

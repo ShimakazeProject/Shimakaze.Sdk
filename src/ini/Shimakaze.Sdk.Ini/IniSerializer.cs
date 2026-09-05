@@ -37,11 +37,11 @@ public static class IniSerializer
     {
         options ??= IniSerializerOptions.Default;
 
-        IniValueConverter<T>? converter = options.GetConverter<T>();
+        var converter = options.GetConverter<T>();
         if (converter is not null)
             return WrapSingleValue(converter.Write(value, options));
 
-        IniTypeInfo<T> typeInfo = IniTypeInfo.Create<T>();
+        var typeInfo = IniTypeInfo.Create<T>();
         return Serialize(value, typeInfo, options);
     }
 
@@ -53,7 +53,7 @@ public static class IniSerializer
     {
         options ??= IniSerializerOptions.Default;
 
-        IniValueConverter<T>? converter = options.GetConverter<T>();
+        var converter = options.GetConverter<T>();
         if (converter is not null)
             return WrapSingleValue(converter.Write(value, options));
 
@@ -68,7 +68,7 @@ public static class IniSerializer
     {
         options ??= IniSerializerOptions.Default;
 
-        IniValueConverter? converter = options.GetConverter(type);
+        var converter = options.GetConverter(type);
         if (converter is not null)
             return WrapSingleValue(converter.WriteObject(value, options));
 
@@ -107,11 +107,11 @@ public static class IniSerializer
     {
         options ??= IniSerializerOptions.Default;
 
-        IniValueConverter<T>? converter = options.GetConverter<T>();
+        var converter = options.GetConverter<T>();
         if (converter is not null)
             return converter.Read(GetFirstValue(section), options);
 
-        IniTypeInfo<T> typeInfo = IniTypeInfo.Create<T>();
+        var typeInfo = IniTypeInfo.Create<T>();
         return Deserialize(section, typeInfo, options);
     }
 
@@ -123,7 +123,7 @@ public static class IniSerializer
     {
         options ??= IniSerializerOptions.Default;
 
-        IniValueConverter? converter = options.GetConverter(type);
+        var converter = options.GetConverter(type);
         if (converter is not null)
             return converter.ReadObject(GetFirstValue(section), type, options);
 
@@ -137,9 +137,7 @@ public static class IniSerializer
     // ==================== Serialize dispatch ====================
 
     private static IniSection SerializeDispatch<T>(
-        T value, IniTypeInfo<T> typeInfo, IniSerializerOptions options)
-    {
-        return typeInfo.Kind switch
+        T value, IniTypeInfo<T> typeInfo, IniSerializerOptions options) => typeInfo.Kind switch
         {
             IniTypeInfoKind.Object => SerializeObject(value, typeInfo, options),
             IniTypeInfoKind.Array => SerializeEnumerable((IEnumerable)(object)value!, options),
@@ -148,15 +146,14 @@ public static class IniSerializer
             _ => throw new NotSupportedException(
                 $"Unsupported {nameof(IniTypeInfoKind)}: {typeInfo.Kind}"),
         };
-    }
 
     private static IniSection SerializeObject<T>(
         T value, IniTypeInfo<T> typeInfo, IniSerializerOptions options)
     {
         IniSection section = [];
-        IniPropertyInfo[] properties = typeInfo.Properties!;
+        var properties = typeInfo.Properties!;
 
-        foreach (IniPropertyInfo prop in properties)
+        foreach (var prop in properties)
         {
             object? propValue = prop.GetValue(value!);
 
@@ -189,8 +186,10 @@ public static class IniSerializer
     {
         IniSection section = [];
         foreach (object? item in enumerable)
+        {
             section.Add(string.Empty,
                 ConvertToString(item, item?.GetType(), options) ?? string.Empty);
+        }
         return section;
     }
 
@@ -213,9 +212,7 @@ public static class IniSerializer
     [RequiresDynamicCode("Uses Array.CreateInstance and MakeGenericType.")]
 #endif
     private static T DeserializeDispatch<T>(
-        IniSection section, IniTypeInfo<T> typeInfo, IniSerializerOptions options)
-    {
-        return typeInfo.Kind switch
+        IniSection section, IniTypeInfo<T> typeInfo, IniSerializerOptions options) => typeInfo.Kind switch
         {
             IniTypeInfoKind.Object => DeserializeObject(section, typeInfo, options),
             IniTypeInfoKind.Array => DeserializeArray(section, typeInfo, options),
@@ -224,7 +221,6 @@ public static class IniSerializer
             _ => throw new NotSupportedException(
                 $"Unsupported {nameof(IniTypeInfoKind)}: {typeInfo.Kind}"),
         };
-    }
 
 #if !NET9_0_OR_GREATER
     [RequiresDynamicCode("Uses Array.CreateInstance and MakeGenericType.")]
@@ -232,12 +228,12 @@ public static class IniSerializer
     private static T DeserializeObject<T>(
         IniSection section, IniTypeInfo<T> typeInfo, IniSerializerOptions options)
     {
-        IniParameterInfo[] ctorParams = typeInfo.ConstructorParameters!;
-        IniPropertyInfo[] properties = typeInfo.Properties!;
+        var ctorParams = typeInfo.ConstructorParameters!;
+        var properties = typeInfo.Properties!;
 
         // Build key→value lookup (case-insensitive)
         Dictionary<string, string> map = new(section.Count, StringComparer.OrdinalIgnoreCase);
-        foreach (KeyValuePair<string, string> kv in section)
+        foreach (var kv in section)
             map[kv.Key] = kv.Value;
 
         // Resolve constructor arguments
@@ -246,7 +242,7 @@ public static class IniSerializer
 
         for (int i = 0; i < ctorParams.Length; i++)
         {
-            IniParameterInfo param = ctorParams[i];
+            var param = ctorParams[i];
 
             if (!string.IsNullOrEmpty(param.Key)
                 && map.TryGetValue(param.Key, out string? strValue))
@@ -265,10 +261,10 @@ public static class IniSerializer
         }
 
         // Create instance
-        T obj = typeInfo.CreateObject!(args);
+        var obj = typeInfo.CreateObject!(args);
 
         // Set writable properties not already consumed by constructor
-        foreach (IniPropertyInfo prop in properties)
+        foreach (var prop in properties)
         {
             if (!prop.CanWrite)
                 continue;
@@ -295,11 +291,11 @@ public static class IniSerializer
     private static T DeserializeArray<T>(
         IniSection section, IniTypeInfo<T> typeInfo, IniSerializerOptions options)
     {
-        Type elementType = typeInfo.ValueType!;
-        Array array = (Array)(object)typeInfo.CreateObject!([section.Count])!;
+        var elementType = typeInfo.ValueType!;
+        var array = (Array)(object)typeInfo.CreateObject!([section.Count])!;
 
         int index = 0;
-        foreach (KeyValuePair<string, string> item in section)
+        foreach (var item in section)
             array.SetValue(ConvertFromString(item.Value, elementType, options), index++);
 
         return (T)(object)array;
@@ -308,12 +304,12 @@ public static class IniSerializer
     private static T DeserializeCollection<T>(
         IniSection section, IniTypeInfo<T> typeInfo, IniSerializerOptions options)
     {
-        Type elementType = typeInfo.ValueType!;
-        T collection = typeInfo.CreateObject!(null);
+        var elementType = typeInfo.ValueType!;
+        var collection = typeInfo.CreateObject!(null);
 
         if (collection is IList list)
         {
-            foreach (KeyValuePair<string, string> item in section)
+            foreach (var item in section)
                 list.Add(ConvertFromString(item.Value, elementType, options));
         }
 
@@ -323,13 +319,13 @@ public static class IniSerializer
     private static T DeserializeDictionary<T>(
         IniSection section, IniTypeInfo<T> typeInfo, IniSerializerOptions options)
     {
-        Type keyType = typeInfo.KeyType!;
-        Type valueType = typeInfo.ValueType!;
-        T dictionary = typeInfo.CreateObject!(null);
+        var keyType = typeInfo.KeyType!;
+        var valueType = typeInfo.ValueType!;
+        var dictionary = typeInfo.CreateObject!(null);
 
         if (dictionary is IDictionary dict)
         {
-            foreach (KeyValuePair<string, string> item in section)
+            foreach (var item in section)
             {
                 object? key = ConvertFromString(item.Key, keyType, options);
                 object? val = ConvertFromString(item.Value, valueType, options);
@@ -348,7 +344,7 @@ public static class IniSerializer
         if (value is null)
             return null;
 
-        Type resolvedType = type ?? value.GetType();
+        var resolvedType = type ?? value.GetType();
         return options.GetConverter(resolvedType)?.WriteObject(value, options)
             ?? value.ToString();
     }
@@ -356,11 +352,11 @@ public static class IniSerializer
     private static object? ConvertFromString(
         string value, Type targetType, IniSerializerOptions options)
     {
-        IniValueConverter? converter = options.GetConverter(targetType);
+        var converter = options.GetConverter(targetType);
         if (converter is not null)
             return converter.ReadObject(value, targetType, options);
 
-        Type? underlying = Nullable.GetUnderlyingType(targetType);
+        var underlying = Nullable.GetUnderlyingType(targetType);
         if (underlying is not null)
         {
             if (string.IsNullOrEmpty(value))
@@ -379,18 +375,18 @@ public static class IniSerializer
         T obj, IniPropertyInfo prop, string value, string separator,
         IniSerializerOptions options)
     {
-        Type propType = prop.PropertyType;
-        Type elementType = GetElementType(propType);
+        var propType = prop.PropertyType;
+        var elementType = GetElementType(propType);
 
         // Inline-array elements must be simple types backed by a registered converter
-        IniValueConverter? converter = options.GetConverter(elementType)
+        var converter = options.GetConverter(elementType)
             ?? throw new InvalidOperationException(
                 $"No {nameof(IniValueConverter)} registered for inline-array element type '{elementType}'. " +
                 "Inline-array properties only support simple types with registered value converters.");
 
         string[] parts = value.Split(separator);
 #if NET9_0_OR_GREATER
-        Array array = Array.CreateInstanceFromArrayType(propType, parts.Length);
+        var array = Array.CreateInstanceFromArrayType(propType, parts.Length);
 #else
         Array array = Array.CreateInstance(elementType, parts.Length);
 #endif
@@ -422,7 +418,9 @@ public static class IniSerializer
             .Where(iface => iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
             .Select(i => i.GetGenericArguments()[0])
             .FirstOrDefault() is { } element)
+        {
             return element;
+        }
 
         return typeof(string);
     }
@@ -435,7 +433,7 @@ public static class IniSerializer
         if (typeof(IDictionary).IsAssignableFrom(type))
             return false;
 
-        foreach (Type iface in type.GetInterfaces())
+        foreach (var iface in type.GetInterfaces())
         {
             if (iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IDictionary<,>))
                 return false;
@@ -456,7 +454,7 @@ public static class IniSerializer
 
     private static string GetFirstValue(IniSection section)
     {
-        foreach (KeyValuePair<string, string> kv in section)
+        foreach (var kv in section)
             return kv.Value;
         return string.Empty;
     }

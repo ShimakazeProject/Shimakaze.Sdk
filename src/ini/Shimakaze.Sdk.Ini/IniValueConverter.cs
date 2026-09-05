@@ -100,7 +100,7 @@ public sealed class IniBasicConverter : IniValueConverter
     public override bool CanConvert(Type type)
     {
         // Nullable<T> → unwrap and check the underlying type
-        Type? underlying = Nullable.GetUnderlyingType(type);
+        var underlying = Nullable.GetUnderlyingType(type);
         if (underlying is not null)
             type = underlying;
 
@@ -136,7 +136,7 @@ public sealed class IniBasicConverter : IniValueConverter
     /// </remarks>
     internal override object? ReadObject(string value, Type targetType, IniSerializerOptions options)
     {
-        Type? underlyingType = Nullable.GetUnderlyingType(targetType);
+        var underlyingType = Nullable.GetUnderlyingType(targetType);
         if (underlyingType is not null)
         {
             if (string.IsNullOrEmpty(value))
@@ -179,8 +179,8 @@ public sealed class IniBasicConverter : IniValueConverter
         if (obj is null)
             return null;
 
-        Type type = obj.GetType();
-        Type? underlying = Nullable.GetUnderlyingType(type);
+        var type = obj.GetType();
+        var underlying = Nullable.GetUnderlyingType(type);
         if (underlying is not null)
             type = underlying;
 
