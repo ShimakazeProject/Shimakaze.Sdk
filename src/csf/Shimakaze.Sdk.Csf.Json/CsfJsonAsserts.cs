@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using System.Text.Json;
 
 namespace Shimakaze.Sdk.Csf.Json;
 
-[StackTraceHidden]
 internal static class CsfJsonAsserts
 {
     public static void IsKind(this in JsonElement json, in JsonValueKind kind)
@@ -16,6 +14,8 @@ internal static class CsfJsonAsserts
     {
         if (!json.TryGetProperty("protocol", out var value)
             || protocol != value.GetInt32())
+        {
             throw new NotSupportedException($"Cannot Support Protocol {value}, This Converter are only supported Protocol {protocol}");
+        }
     }
 }
