@@ -16,6 +16,7 @@
   </Folder>
   <Folder Name="/ini/">
     <Project Path="src/ini/Shimakaze.Sdk.Ini/Shimakaze.Sdk.Ini.csproj" />
+    <Project Path="src/ini/Shimakaze.Sdk.Inilyn.Common/Shimakaze.Sdk.Inilyn.Common.csproj" />
   </Folder>
   <Folder Name="/map/">
     <Project Path="src/map/Shimakaze.Sdk.Map/Shimakaze.Sdk.Map.csproj" />
