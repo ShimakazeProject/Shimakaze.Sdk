@@ -10,69 +10,31 @@
       },
       "Microsoft.Build.Utilities.Core": {
         "type": "Direct",
-        "requested": "[18.9.6, )",
-        "resolved": "18.9.6",
-        "contentHash": "BkU2irGHBdkULHzLmEObQCjOz7x+3unHkcmGa+BlTXyEFyj4wupcSAG3E0SlzpeF9s3ViSLbhjNDMHwMxC/Ugg==",
+        "requested": "[18.10.1, )",
+        "resolved": "18.10.1",
+        "contentHash": "MXBaRIyOuy55jMsv8YMUEsyM9itWaPnfB56qe2St9fYF1YavL4MnCZovKP4Q1AiR1+RgMyLql3OfNbghDM3PbA==",
         "dependencies": {
-          "Microsoft.Build.Framework": "18.9.6",
-          "System.Configuration.ConfigurationManager": "10.0.8",
-          "System.Diagnostics.EventLog": "10.0.8",
-          "System.Security.Cryptography.ProtectedData": "10.0.8"
+          "Microsoft.Build.Framework": "[18.10.1]"
         }
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.10, )",
-        "resolved": "10.0.10",
-        "contentHash": "f5VCIE7AJpd5YvzNTeMGVzQIgyE9tX+AreTYwQF+REbu+DZo/2Ae+jNSwhPEYrVz6RRkd7y8ubXjk6Nn6Ka+Cg=="
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "IBf7lbovvjGWVWXZX5cJ/cO0WXbId0Zq4BuSeT94mGZuOAP66oMeH9PTBZ9Jpp3Jb6jtK0qm/NyUbPRo1gC/wQ=="
       },
       "Microsoft.Build.Framework": {
         "type": "Transitive",
-        "resolved": "18.9.6",
-        "contentHash": "P5y8IAhu6UyN6FtzfN4sCNZEQGyV6S4kSTBYldtzB9bzvgdCBBKjsS6epH5aJVFM0q1yJqa8RaTzr1iEJBwIMA==",
+        "resolved": "18.10.1",
+        "contentHash": "nL8dvvg9V/6PJQ92iQheiGnpkgS/VTBV2py8XM0pzxRYc8byHY83IuriHa3YXkLf3KMWnKlkdoTTt0c5irOXZQ==",
         "dependencies": {
-          "Microsoft.NET.StringTools": "18.9.6"
-        }
-      },
-      "Microsoft.CodeAnalysis.Common": {
-        "type": "Transitive",
-        "resolved": "4.4.0",
-        "contentHash": "JfHupS/B7Jb5MZoYkFFABn3mux0wQgxi2D8F/rJYZeRBK2ZOyk7TjQ2Kq9rh6W/DCh0KNbbSbn5qoFar+ueHqw==",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.3"
-        }
-      },
-      "Microsoft.CodeAnalysis.CSharp": {
-        "type": "Transitive",
-        "resolved": "4.4.0",
-        "contentHash": "eD2w0xHRoaqK07hjlOKGR9eLNy3nimiGNeCClNax1NDgS/+DBtBqCjXelOa+TNy99kIB3nHhUqDmr46nDXy/RQ==",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "[4.4.0]"
+          "Microsoft.NET.StringTools": "[18.10.1]"
         }
       },
       "Microsoft.NET.StringTools": {
         "type": "Transitive",
-        "resolved": "18.9.6",
-        "contentHash": "CNZfh4P65tHm1Wh/uuIbYfvHlPnb0dJ9SCaIZbXRzOMn+8JEorSqSdXdGRsrDbKBDJfNG6nmgleYhnfL2pd1oQ=="
-      },
-      "System.Configuration.ConfigurationManager": {
-        "type": "Transitive",
-        "resolved": "10.0.8",
-        "contentHash": "QG+HHwJjLyUiRuA9axr5pDqHAxboo7FXCTRakxMABE9CUAUij/tsd/MsgQPJUEppkf+YBLT+F/P/wKIVCAIcNg==",
-        "dependencies": {
-          "System.Diagnostics.EventLog": "10.0.8",
-          "System.Security.Cryptography.ProtectedData": "10.0.8"
-        }
-      },
-      "System.Diagnostics.EventLog": {
-        "type": "Transitive",
-        "resolved": "10.0.8",
-        "contentHash": "+Ro7WgIom+BDNH+YhTuZKL6QJ0ctfOpTyfUG/h3aU5KwXt3OaNf0wYWrTvoBUj+34Dy5V8dN9yCco1hAJQ4txw=="
-      },
-      "System.Security.Cryptography.ProtectedData": {
-        "type": "Transitive",
-        "resolved": "10.0.8",
-        "contentHash": "/ldVgSfImIBp6fLWS7sLH0BnmtFj0ZwGlZo4Xx2q0K3ZhJNDbW45kj2f6zPoC+L+BTINuHdMzTsopuwmkbgcNA=="
+        "resolved": "18.10.1",
+        "contentHash": "/fIQMMIRzamkho+Teh7K0G8YaH85s2meFwxjFleBJ1DMnX2RHnRjg4xyWoFbmj260Vl4W2b1r7CuvbMAC+W+nQ=="
       },
       "shimakaze.sdk.csf": {
         "type": "Project"
@@ -94,8 +56,7 @@
         "dependencies": {
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "Vecc.YamlDotNet.Analyzers.StaticGenerator": "[18.1.0, )",
-          "YamlDotNet": "[18.1.0, )",
-          "YamlDotNet.Analyzers.StaticGenerator": "[1.0.0, )"
+          "YamlDotNet": "[18.1.0, )"
         }
       },
       "shimakaze.sdk.engine": {
@@ -128,12 +89,6 @@
       },
       "shimakaze.sdk.tmp": {
         "type": "Project"
-      },
-      "yamldotnet.analyzers.staticgenerator": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "[4.4.0, )"
-        }
       },
       "StbImageSharp": {
         "type": "CentralTransitive",
