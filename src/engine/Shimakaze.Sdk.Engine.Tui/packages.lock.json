@@ -19,46 +19,30 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.10, )",
-        "resolved": "10.0.10",
-        "contentHash": "f5VCIE7AJpd5YvzNTeMGVzQIgyE9tX+AreTYwQF+REbu+DZo/2Ae+jNSwhPEYrVz6RRkd7y8ubXjk6Nn6Ka+Cg=="
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "IBf7lbovvjGWVWXZX5cJ/cO0WXbId0Zq4BuSeT94mGZuOAP66oMeH9PTBZ9Jpp3Jb6jtK0qm/NyUbPRo1gC/wQ=="
       },
       "XenoAtom.Terminal.UI": {
         "type": "Direct",
-        "requested": "[3.9.0, )",
-        "resolved": "3.9.0",
-        "contentHash": "OQ18w32TvJHqm0AVcTMYv0GRz+gcS7Le6oCxcILBiGsN+2N/13D0e0SoToCfZdt8xBfLB+8hVG+geZySW6c82w==",
+        "requested": "[3.10.0, )",
+        "resolved": "3.10.0",
+        "contentHash": "Dvdgw2EyoSdL9NoXsuVKHfl9Ebz6tCpikv7lyzqgyLa7TNhOosR63cIus3EAaerDjWG891ujAvge2S5Tkse2pw==",
         "dependencies": {
-          "XenoAtom.Ansi": "1.7.0",
+          "XenoAtom.Ansi": "1.7.1",
           "XenoAtom.Terminal": "2.2.0"
         }
       },
       "XenoAtom.Terminal.UI.Graphics": {
         "type": "Direct",
-        "requested": "[3.9.0, )",
-        "resolved": "3.9.0",
-        "contentHash": "kXl+637wQoanlh0wGdpPHmUw229bNUa9YS6TO9xYqHXiKsJsVRX0aJL63pAqCHLevaoz5ncFziiONKv3SNOvMA==",
+        "requested": "[3.10.0, )",
+        "resolved": "3.10.0",
+        "contentHash": "AIcLOUQlh9RhF5ymIsk61TIVz1kNJMVUMgZdf4VeZGjlBcfkSFMCdYGkspQTwW7Z1tWO1HDxwiUsksfrgyj01A==",
         "dependencies": {
-          "XenoAtom.Ansi": "1.7.0",
+          "XenoAtom.Ansi": "1.7.1",
           "XenoAtom.Terminal": "2.2.0",
           "XenoAtom.Terminal.Graphics": "2.2.0",
-          "XenoAtom.Terminal.UI": "3.9.0"
-        }
-      },
-      "Microsoft.CodeAnalysis.Common": {
-        "type": "Transitive",
-        "resolved": "4.4.0",
-        "contentHash": "JfHupS/B7Jb5MZoYkFFABn3mux0wQgxi2D8F/rJYZeRBK2ZOyk7TjQ2Kq9rh6W/DCh0KNbbSbn5qoFar+ueHqw==",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "3.3.3"
-        }
-      },
-      "Microsoft.CodeAnalysis.CSharp": {
-        "type": "Transitive",
-        "resolved": "4.4.0",
-        "contentHash": "eD2w0xHRoaqK07hjlOKGR9eLNy3nimiGNeCClNax1NDgS/+DBtBqCjXelOa+TNy99kIB3nHhUqDmr46nDXy/RQ==",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "[4.4.0]"
+          "XenoAtom.Terminal.UI": "3.10.0"
         }
       },
       "SkiaSharp": {
@@ -97,8 +81,8 @@
       },
       "XenoAtom.Ansi": {
         "type": "Transitive",
-        "resolved": "1.7.0",
-        "contentHash": "I6SZPpSrt5YoKRYQuzf93WZq6/lnEgAGrx25FYG4g/T+FjMSyTLN7xVhkgAvzIzqVYvnR0KwFBmnoSMLbjt6ig==",
+        "resolved": "1.7.1",
+        "contentHash": "TXxP5wKT4kMJBEG72crUoMPPntykmZhCizq2LNO21gk/GgGBxzcKA+CoewJNKe/qfncS3Zkd4ss4VbHsdE5BKA==",
         "dependencies": {
           "Wcwidth": "4.0.1"
         }
@@ -144,8 +128,7 @@
         "dependencies": {
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "Vecc.YamlDotNet.Analyzers.StaticGenerator": "[18.1.0, )",
-          "YamlDotNet": "[18.1.0, )",
-          "YamlDotNet.Analyzers.StaticGenerator": "[1.0.0, )"
+          "YamlDotNet": "[18.1.0, )"
         }
       },
       "shimakaze.sdk.engine": {
@@ -178,12 +161,6 @@
       },
       "shimakaze.sdk.tmp": {
         "type": "Project"
-      },
-      "yamldotnet.analyzers.staticgenerator": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "[4.4.0, )"
-        }
       },
       "StbImageSharp": {
         "type": "CentralTransitive",
