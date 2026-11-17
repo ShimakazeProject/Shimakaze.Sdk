@@ -51,7 +51,7 @@ public sealed class ReferencePass : ICompilationPass
                     CollectFromProperties(context, rules, group, entity, byKey, references);
                     break;
                 case EntityKind.Registry:
-                    CollectRegistryMembers(context, entity, group, byKey, references);
+                    CollectRegistryMembers(context, rules, entity, group, byKey, references);
                     break;
                 case EntityKind.EnumSection:
                     break;
@@ -67,11 +67,14 @@ public sealed class ReferencePass : ICompilationPass
 
     private static void CollectRegistryMembers(
         CompilationContext context,
+        RuleSet rules,
         EntityModel entity,
         RuleGroup? group,
         Dictionary<(string Group, string Name), EntityModel> byKey,
         List<ReferenceModel> references)
     {
+        _ = rules;
+
         if (group is null || group.Registries.TryGetValue(entity.Name, out var registry) is false)
             return;
 

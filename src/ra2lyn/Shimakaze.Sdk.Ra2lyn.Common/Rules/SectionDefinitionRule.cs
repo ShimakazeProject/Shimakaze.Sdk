@@ -14,7 +14,7 @@ public sealed class SectionDefinitionRule(string name)
     /// <summary>
     /// 父定义名，用于继承键规则。
     /// </summary>
-    public string? Base { get; internal set; }
+    public string? Base { get; set; }
 
     /// <summary>
     /// 本定义直接声明的键。

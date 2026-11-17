@@ -36,7 +36,18 @@ public sealed class IrBuilder
             BaseNames = baseNames is null ? [] : [.. baseNames],
         };
         _commands.Add(command);
+
+        // 登记时立即分配标识：汇总与直接创建实体都只读取命令上已有的标识，
+        // 因此重复 Build 或先 CreateEntity 再 Build 都不会改变编号。
+        AssignIds(command);
         return command;
+    }
+
+    private void AssignIds(EntityCommand command)
+    {
+        command.Id = new(_entityCount++);
+        foreach (var property in command.Properties)
+            property.Id = new(_propertyCount++);
     }
 
     /// <summary>
@@ -46,9 +57,9 @@ public sealed class IrBuilder
         => _commands.Add(new DiagnosticCommand { Diagnostic = diagnostic });
 
     /// <summary>
-    /// 汇总所有命令产物，编号在此时按命令顺序分配。
+    /// 汇总所有命令产物；编号在 <see cref="AddEntity"/> 登记时已确定，重复汇总结果稳定。
     /// </summary>
-    /// <param name="group">front 结果所属的规则组。</param>
+    /// <param name="group">前端结果所属的规则组。</param>
     /// <param name="sources">前端读取的源文件。</param>
     /// <param name="cancellationToken">取消令牌。</param>
     public FrontendResult Build(string group, IReadOnlyList<SourceFile> sources, CancellationToken cancellationToken = default)
@@ -75,20 +86,36 @@ public sealed class IrBuilder
     }
 
     /// <summary>
-    /// 构造单个实体，并分配其实体标识与属性标识。
+    /// 按命令上已分配的标识构造单个实体；未登记的自建命令使用构建器当前计数。
     /// </summary>
-    /// <param name="command">实体命令。</param>
+    /// <param name="command">已登记或自建的实体命令。</param>
     /// <param name="group">实体所属的规则组。</param>
     public EntityModel CreateEntity(EntityCommand command, string group)
+        => command.Id.Value >= 0
+            ? Materialize(command, group)
+            : MaterializeWithNewIds(command, group);
+
+    private EntityModel MaterializeWithNewIds(EntityCommand command, string group)
     {
-        EntityId entityId = new(_entityCount++);
+        command.Id = new(_entityCount++);
+        foreach (var property in command.Properties)
+            property.Id = new(_propertyCount++);
+
+        return Materialize(command, group);
+    }
+
+    private static EntityModel Materialize(EntityCommand command, string group)
+    {
+        EntityId entityId = command.Id.Value >= 0
+            ? command.Id
+            : new(0);
 
         List<PropertyModel> properties = [];
         foreach (var property in command.Properties)
         {
             properties.Add(new PropertyModel
             {
-                Id = new(_propertyCount++),
+                Id = property.Id.Value >= 0 ? property.Id : new(0),
                 Key = property.Key,
                 Value = property.Value,
                 ListSeparator = property.ListSeparator,
@@ -141,8 +168,16 @@ public sealed class IrBuilder
         /// 继承/混合名称。
         /// </summary>
         public required List<string> BaseNames { get; init; }
+
+        /// <summary>
+        /// 登记时分配的实体标识；直接新建而未登记的命令为 <see cref="EntityId.Unknown"/>。
+        /// </summary>
+        public EntityId Id { get; internal set; } = EntityId.Unknown;
     }
 
+    /// <summary>
+    /// 属性命令。
+    /// </summary>
     /// <summary>
     /// 属性命令。
     /// </summary>
@@ -167,6 +202,12 @@ public sealed class IrBuilder
         /// 属性在源文件中的位置。
         /// </summary>
         public SourceSpan Origin { get; init; }
+
+        /// <summary>
+        /// 登记时分配的属性标识；直接新建而未登记的命令为 <see cref="PropertyId.Unknown"/>。
+        /// 该属性为构建器内部状态，不作为命令的公开输入。
+        /// </summary>
+        internal PropertyId Id { get; set; } = PropertyId.Unknown;
     }
 
     private sealed class DiagnosticCommand : ICommand

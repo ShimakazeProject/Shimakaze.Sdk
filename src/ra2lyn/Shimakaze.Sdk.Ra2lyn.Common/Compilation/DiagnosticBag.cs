@@ -47,7 +47,13 @@ public sealed class DiagnosticBag : List<Diagnostic>
     }
 
     private static int GetPathOrder(string? path, IReadOnlyDictionary<string, int>? pathOrder)
-        => path is not null && pathOrder is not null && pathOrder.TryGetValue(path, out int order)
-        ? order
-        : int.MaxValue;
+    {
+        // 没有位置的诊断（Span 为默认值，Path 为 null）排在最后；路径未知的诊断排在已知路径之后。
+        if (path is null)
+            return int.MaxValue;
+
+        return pathOrder is not null && pathOrder.TryGetValue(path, out int order)
+            ? order
+            : int.MaxValue - 1;
+    }
 }
