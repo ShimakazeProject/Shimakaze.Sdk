@@ -1,8 +1,8 @@
 namespace Shimakaze.Sdk.Ra2lyn.Common.Types;
 
- /// <summary>
- /// 值校验的严格程度。
- /// </summary>
+/// <summary>
+/// 值校验的严格程度。
+/// </summary>
 public enum ValidationMode
 {
     /// <summary>

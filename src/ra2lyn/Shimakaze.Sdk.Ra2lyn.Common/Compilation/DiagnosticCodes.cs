@@ -1,0 +1,97 @@
+namespace Shimakaze.Sdk.Ra2lyn.Common.Compilation;
+
+/// <summary>
+/// 诊断码定义：后端与前端共享的诊断代码常量。
+/// </summary>
+public static class DiagnosticCodes
+{
+    /// <summary>
+    /// INI001：缺少左方括号。
+    /// </summary>
+    public const string MissingLeftBracket = "INI001";
+
+    /// <summary>
+    /// INI002：缺少右方括号。
+    /// </summary>
+    public const string MissingRightBracket = "INI002";
+
+    /// <summary>
+    /// INI003：缺少名称。
+    /// </summary>
+    public const string MissingName = "INI003";
+
+    /// <summary>
+    /// INI004：缺少继承冒号。
+    /// </summary>
+    public const string MissingColon = "INI004";
+
+    /// <summary>
+    /// INI005：缺少继承逗号。
+    /// </summary>
+    public const string MissingComma = "INI005";
+
+    /// <summary>
+    /// INI006：缺少等号。
+    /// </summary>
+    public const string MissingEquals = "INI006";
+
+    /// <summary>
+    /// INI007：缺少键名。
+    /// </summary>
+    public const string MissingKey = "INI007";
+
+    /// <summary>
+    /// INI008：值被意外截断或缺失。
+    /// </summary>
+    public const string MissingValue = "INI008";
+
+    /// <summary>
+    /// INI009：键名中包含空白。
+    /// </summary>
+    public const string WhitespaceInKey = "INI009";
+
+    /// <summary>
+    /// INI010：换行后的内容无法识别。
+    /// </summary>
+    public const string UnexpectedToken = "INI010";
+
+    /// <summary>
+    /// INI099：不可恢复的语法错误。
+    /// </summary>
+    public const string SyntaxError = "INI099";
+
+    /// <summary>
+    /// INI101：重复的节名。
+    /// </summary>
+    public const string DuplicateSection = "INI101";
+
+    /// <summary>
+    /// INI102：顶层键值对没有所属节。
+    /// </summary>
+    public const string KeyOutsideSection = "INI102";
+
+    /// <summary>
+    /// INI103：同一节内重复的键。
+    /// </summary>
+    public const string DuplicateKey = "INI103";
+
+    /// <summary>
+    /// INI104：无法解析的引用。
+    /// </summary>
+    public const string UnresolvedReference = "INI104";
+
+    /// <summary>
+    /// INI201：类型不匹配。
+    /// </summary>
+    public const string TypeMismatch = "INI201";
+
+    /// <summary>
+    /// INI202：未知的节定义。
+    /// </summary>
+    public const string UnknownDefinition = "INI202";
+
+    /// <summary>
+    /// INI203：未知的键。
+    /// </summary>
+    public const string UnknownKey = "INI203";
+}
