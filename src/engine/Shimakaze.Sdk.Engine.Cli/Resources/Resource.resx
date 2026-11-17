@@ -150,6 +150,33 @@
   <data name="Command.Csf.Merge.OutputFormat.Description" xml:space="preserve">
     <value>合并后的字符串表文件格式</value>
   </data>
+  <data name="Command.Ra2lyn.Build.Description" xml:space="preserve">
+    <value>编译 INI 源文件</value>
+  </data>
+  <data name="Command.Ra2lyn.Description" xml:space="preserve">
+    <value>Shimakaze.Sdk Ra2lyn INI 编译器</value>
+  </data>
+  <data name="Command.Ra2lyn.Build.Input.Description" xml:space="preserve">
+    <value>要编译的 INI 源文件（可重复指定，顺序即跨文件合并顺序）</value>
+  </data>
+  <data name="Command.Ra2lyn.Build.Output.Description" xml:space="preserve">
+    <value>编译输出目录</value>
+  </data>
+  <data name="Command.Ra2lyn.Build.Rules.Description" xml:space="preserve">
+    <value>规则 XML 文件（可重复指定，按顺序合并）</value>
+  </data>
+  <data name="Command.Ra2lyn.Build.Group.Description" xml:space="preserve">
+    <value>解析时使用的规则组，缺省按扩展名推断</value>
+  </data>
+  <data name="Command.Ra2lyn.Build.TreeShaking.Description" xml:space="preserve">
+    <value>输出时丢弃不可达实体</value>
+  </data>
+  <data name="Command.Ra2lyn.Build.ValidationMode.Description" xml:space="preserve">
+    <value>值校验模式（Loose 或 Strict）</value>
+  </data>
+  <data name="Command.Ra2lyn.Build.NewLine.Description" xml:space="preserve">
+    <value>输出换行符（CRLF 或 LF）</value>
+  </data>
   <data name="Command.Description" xml:space="preserve">
     <value>Shimakaze.Sdk 实用工具集</value>
   </data>

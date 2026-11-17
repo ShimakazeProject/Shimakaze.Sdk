@@ -28,6 +28,15 @@
         "resolved": "2.0.11",
         "contentHash": "Pmg3/T0M37ZS3ovwPHtfBNTCdqNpnxo+tnZMg8JDHVR0qD8KwcPUKlheEiZysb1En8IyH7yDoa9QDq97Ny/vhQ=="
       },
+      "shimakaze.sdk.cnclyn.common": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.cnclyn.ini": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Cnclyn.Common": "[1.0.0, )"
+        }
+      },
       "shimakaze.sdk.csf": {
         "type": "Project"
       },
@@ -54,6 +63,8 @@
       "shimakaze.sdk.engine": {
         "type": "Project",
         "dependencies": {
+          "Shimakaze.Sdk.Cnclyn.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Cnclyn.Ini": "[1.0.0, )",
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",

@@ -32,6 +32,15 @@
         "resolved": "10.0.11",
         "contentHash": "OzKDcIRkeNJeC8qAsbn8yJXnfTLP1dtkWILe+T56Gf/z+IkAASi7sMqLqJQat08j5z/mRN5xVtoAwbkMNMoBUQ=="
       },
+      "shimakaze.sdk.cnclyn.common": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.cnclyn.ini": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Cnclyn.Common": "[1.0.0, )"
+        }
+      },
       "shimakaze.sdk.csf": {
         "type": "Project"
       },

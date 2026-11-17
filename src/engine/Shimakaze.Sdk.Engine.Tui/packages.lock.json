@@ -108,6 +108,15 @@
           "XenoAtom.Terminal": "2.2.0"
         }
       },
+      "shimakaze.sdk.cnclyn.common": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.cnclyn.ini": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Cnclyn.Common": "[1.0.0, )"
+        }
+      },
       "shimakaze.sdk.csf": {
         "type": "Project"
       },
@@ -134,6 +143,8 @@
       "shimakaze.sdk.engine": {
         "type": "Project",
         "dependencies": {
+          "Shimakaze.Sdk.Cnclyn.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Cnclyn.Ini": "[1.0.0, )",
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",

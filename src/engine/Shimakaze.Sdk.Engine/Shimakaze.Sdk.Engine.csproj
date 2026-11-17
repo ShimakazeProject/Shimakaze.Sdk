@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <InternalsVisibleTo Include="Shimakaze.Sdk.Engine.Cli" />
@@ -13,6 +13,8 @@
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
+    <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Ra2lyn.Common\Shimakaze.Sdk.Ra2lyn.Common.csproj" />
+    <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Ra2lyn.Ini\Shimakaze.Sdk.Ra2lyn.Ini.csproj" />
     <ProjectReference Include="..\..\mix\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />
     <ProjectReference Include="..\..\pal\Shimakaze.Sdk.Pal\Shimakaze.Sdk.Pal.csproj" />
     <ProjectReference Include="..\..\shp\Shimakaze.Sdk.Shp\Shimakaze.Sdk.Shp.csproj" />

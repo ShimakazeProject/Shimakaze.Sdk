@@ -147,7 +147,8 @@ public static class IniParser
             List<Trivia> trailing = CollectRestOfLine();
 
             List<KeyValueNode> keyValues = [];
-            while (IsAtSectionBoundary() is false)
+            while (Current.Type is not IniTokenType.EndOfFile
+                && IsAtSectionBoundary() is false)
             {
                 if (Current.IsKeyStart is false)
                 {

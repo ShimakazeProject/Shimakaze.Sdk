@@ -90,6 +90,8 @@
           "Shimakaze.Sdk.Csf.Yaml": "[1.0.0, )",
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ra2lyn.Ini": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
           "Shimakaze.Sdk.Tmp": "[1.0.0, )",
           "StbImageSharp": "[2.30.16, )",
@@ -105,6 +107,15 @@
       },
       "shimakaze.sdk.pal": {
         "type": "Project"
+      },
+      "shimakaze.sdk.ra2lyn.common": {
+        "type": "Project"
+      },
+      "shimakaze.sdk.ra2lyn.ini": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
+        }
       },
       "shimakaze.sdk.shp": {
         "type": "Project"
