@@ -16,7 +16,10 @@
   </Folder>
   <Folder Name="/ini/">
     <Project Path="src/ini/Shimakaze.Sdk.Ini/Shimakaze.Sdk.Ini.csproj" />
-    <Project Path="src/ini/Shimakaze.Sdk.Inilyn.Common/Shimakaze.Sdk.Inilyn.Common.csproj" />
+  </Folder>
+  <Folder Name="/ra2lyn/">
+    <Project Path="src/ra2lyn/Shimakaze.Sdk.Ra2lyn.Common/Shimakaze.Sdk.Ra2lyn.Common.csproj" />
+    <Project Path="src/ra2lyn/Shimakaze.Sdk.Ra2lyn.Ini/Shimakaze.Sdk.Ra2lyn.Ini.csproj" />
   </Folder>
   <Folder Name="/map/">
     <Project Path="src/map/Shimakaze.Sdk.Map/Shimakaze.Sdk.Map.csproj" />
