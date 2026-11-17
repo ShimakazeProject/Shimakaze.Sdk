@@ -1,3 +1,5 @@
+using Shimakaze.Sdk.Ra2lyn.Common.Ir;
+
 namespace Shimakaze.Sdk.Ra2lyn.Common.Passes;
 
 /// <summary>

@@ -77,12 +77,8 @@ public sealed class MergePass : ICompilationPass
             Id = source.Id,
             Group = source.Group,
             Name = source.Name,
-            Kind = source.Kind,
-            TypeName = source.TypeName,
             BaseNames = baseNames,
             Properties = properties,
             Origin = source.Origin,
-            IsReachable = source.IsReachable,
         };
 }
-

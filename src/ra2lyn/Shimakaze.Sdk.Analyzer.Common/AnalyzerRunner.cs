@@ -1,26 +1,33 @@
+using Shimakaze.Sdk.Analyzer.Common.Passes;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
 namespace Shimakaze.Sdk.Analyzer.Common;
 
 /// <summary>
-/// 分析运行器：按登记顺序执行分析器并合并诊断。
+/// 分析运行器：按登记顺序执行分析器并汇总结果。
 /// </summary>
 public static class AnalyzerRunner
 {
-    private static volatile IAnalyzer[] s_defaultAnalyzers = [];
+    private static volatile IAnalyzer[] s_defaultAnalyzers =
+    [
+        new ClassificationAnalyzer(),
+        new ReferenceAnalyzer(),
+        new DiscoveryAnalyzer(),
+        new ReachabilityAnalyzer(),
+    ];
 
     /// <summary>
-    /// 默认分析器集合；<see cref="AnalyzerOptions.Analyzers"/> 为 <see langword="null"/> 时使用。
+    /// 默认分析器链：分类 → 引用 → 发现 → 可达性；规则校验类分析器由宿主追加。
     /// </summary>
     /// <remarks>
-    /// 具体分析器由所在程序集通过 <see cref="RegisterDefault"/> 登记；框架层不直接引用具体实现。
+    /// 顺序不可随意调整：引用依赖分类，发现依赖引用，可达性依赖引用图。
     /// </remarks>
     public static IReadOnlyList<IAnalyzer> DefaultAnalyzers
         => s_defaultAnalyzers;
 
     /// <summary>
-    /// 登记默认分析器；同名分析器会被替换，其余按登记顺序追加。
+    /// 登记默认分析器；同名分析器会被替换，其余按登记顺序追加到链尾。
     /// </summary>
     /// <param name="analyzers">分析器集合。</param>
     public static void RegisterDefault(IEnumerable<IAnalyzer> analyzers)
@@ -44,8 +51,8 @@ public static class AnalyzerRunner
     /// <param name="model">编译模型。</param>
     /// <param name="options">分析选项；为 <see langword="null"/> 时使用默认分析器。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns>编译诊断与分析诊断的合并结果，按源文件与位置排序并去重。</returns>
-    public static IReadOnlyList<Diagnostic> Run(
+    /// <returns>分析结果：注解、引用图与合并后的诊断。</returns>
+    public static AnalyzerResult Run(
         CompilationModel model,
         AnalyzerOptions? options = null,
         CancellationToken cancellationToken = default)
@@ -86,8 +93,34 @@ public static class AnalyzerRunner
         foreach (var diagnostic in context.Diagnostics)
             bag.Add(diagnostic);
 
-        return bag.ToSortedDiagnostics(pathOrder);
+        return new()
+        {
+            Annotations = context.Annotations,
+            Graph = context.Graph,
+            Diagnostics = bag.ToSortedDiagnostics(pathOrder),
+        };
     }
+}
+
+/// <summary>
+/// 分析结果。
+/// </summary>
+public sealed class AnalyzerResult
+{
+    /// <summary>
+    /// 语义注解：分类、类型与可达性。
+    /// </summary>
+    public required SemanticAnnotations Annotations { get; init; }
+
+    /// <summary>
+    /// 引用图。
+    /// </summary>
+    public required ReferenceGraph Graph { get; init; }
+
+    /// <summary>
+    /// 编译诊断与分析诊断的合并结果，已排序去重。
+    /// </summary>
+    public required IReadOnlyList<Diagnostic> Diagnostics { get; init; }
 }
 
 /// <summary>

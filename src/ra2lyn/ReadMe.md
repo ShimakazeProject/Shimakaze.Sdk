@@ -2,34 +2,30 @@
 
 面向《命令与征服：尤里的复仇》INI 数据的编译器前后端。
 
-> 名字后缀 `lyn` 与 Roslyn 同构，表示这是一个编译器 / 分析器 / 语言服务器内核；
-> `ra2` 表示目标数据来自 Red Alert 2 / Yuri's Revenge 使用的 INI 与规则体系。
-
 ## 1. 组成
 
 | 项目 | 角色 | 职责 |
 |---|---|---|
-| `Shimakaze.Sdk.Ra2lyn.Common` | 后端 | 源位置与诊断、IR、规则 XML、类型系统、语义 Pass、编译驱动、发射契约 |
+| `Shimakaze.Sdk.Ra2lyn.Common` | 内核 | 源位置与诊断、IR（节/组/键/简单值或引用值）、合并、编译驱动、发射契约 |
 | `Shimakaze.Sdk.Ra2lyn.Ini` | 前端 | INI 词法、语法树、语法诊断、AST → IR 降级、INI 发射器 |
-| `Shimakaze.Sdk.Analyzer.Common` | 分析器框架 | 分析器契约、分析上下文、执行顺序与诊断合并 |
+| `Shimakaze.Sdk.Analyzer.Common` | 分析层 | 规则 XML、类型系统、语义注解、分类/引用/发现/可达性分析器、分析运行器 |
 | `Shimakaze.Sdk.Analyzer.IniRule` | 分析器 | 按节定义与键规则校验 INI 实体（`INI201`～`INI203`） |
 
 依赖规则：
 
-- `Ra2lyn.Common` 只依赖 BCL（规则 XML 使用 `System.Xml.Linq`）。
+- `Ra2lyn.Common` 只依赖 BCL；**不认识**规则、类型、分组等具体语义。
 - `Ra2lyn.Ini` 只依赖 `Ra2lyn.Common` 与 BCL。
 - `Analyzer.Common` 只依赖 `Ra2lyn.Common`（需要 IR 与诊断类型）；**不得**引用任何具体分析器。
-- `Analyzer.IniRule` 只依赖 `Analyzer.Common`（经传递引用可访问 `Ra2lyn.Common`）。
+- `Analyzer.IniRule` 依赖 `Analyzer.Common` 与 `Ra2lyn.Common`。
 - 四个项目都**不得**依赖 EF Core、LSP 模型或 MSBuild。
 - MSBuild / CLI / LSP 是消费者：`Shimakaze.Sdk.Engine` 提供门面，CLI 提供 `ra2lyn` 子命令。
 
 ```text
-Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common ◀──只引用── Analyzer.Common
-   │                     │                          ▲
-   │ 词法 / 语法 / AST     │ IR / 诊断 / 规则 / 类型系统   │
-   │ AST → IR 降级         │ 分析 Pass / 可达性 / 发射契约  │
-   │ INI 文本发射          │ 编译驱动                    │
-                                                    Analyzer.IniRule
+Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common ◀──只引用── Analyzer.Common ◀──只引用── Analyzer.IniRule
+   │                     │                          │
+   │ 词法 / 语法 / AST     │ IR（节 / 组 / 键 / 值形态）  │ 规则 XML / 类型系统 / 语义注解
+   │ AST → IR 降级         │ 合并 / 编译驱动 / 发射契约     │ 分类 / 引用 / 发现 / 可达性分析器
+   │ INI 文本发射          │                            │ 分析运行器与诊断合并
 ```
 
 ## 2. 编译流程
@@ -37,12 +33,16 @@ Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common ◀──只引用── Analy
 ```text
 源文本 ─▶ IniLexer ─▶ IniParser ─▶ AstToIrLowerer ─▶ FrontendResult
                                                         │
-                     Compilation ──▶ MergePass
-                                ──▶ ClassificationPass
-                                ──▶ ReferencePass
-                                ──▶ DiscoveryPass
-                                ──▶ ReachabilityPass
-                                ──▶ （分析阶段）AnalyzerRunner ──▶ IniRuleAnalyzer
+                     Compilation ──▶ MergePass（内核唯一 Pass）
+                                                        │
+                     （分析阶段）AnalyzerRunner
+                         ├─▶ ClassificationAnalyzer
+                         ├─▶ ReferenceAnalyzer
+                         ├─▶ DiscoveryAnalyzer
+                         ├─▶ ReachabilityAnalyzer
+                         └─▶ IniRuleAnalyzer（宿主登记）
+                                                        │
+                                        SemanticAnnotations / ReferenceGraph
                                                         │
                                                   CompilationModel
                                                         │
@@ -50,11 +50,10 @@ Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common ◀──只引用── Analy
 ```
 
 - **前端只产出 IR**：`FrontendResult(Group, Sources, Entities, Diagnostics)`；语法诊断在降级阶段一并汇入。
-- **后端与源语言无关**：`Ra2lyn.Common` 不认识 `[section]`、`key=value`、继承括号等语法。
-- **Pass 顺序固定**（`Compilation.CreateDefaultPasses()`）：合并 → 分类 → 引用 → 发现 → 可达性。
-- **分析阶段**：通过 `Compilation.AddAnalysis(...)` 接入，在全部 Pass 结束后执行；规则校验由
-  `Analyzer.IniRule` 提供，内核不依赖任何具体分析器。分析阶段排在最后，使被发现规则新标记为普通实体的节
-  同样接受类型校验。
+- **内核与具体语义无关**：`Ra2lyn.Common` 只认识“节 / 组 / 键 / 简单值或引用值”，
+  分类、类型、可达性等都是分析层的注解（`SemanticAnnotations`），不写进实体模型。
+- **Pass 与分析的边界**：`Compilation` 内置只有 `MergePass`（跨文件合并，纯结构操作）；
+  其余分析全部通过 `AddAnalysis(...)` 注入，在合并之后执行。
 
 ### 2.1 分析器
 
@@ -64,12 +63,12 @@ AnalyzerRunner.Run(model, options) ─▶ foreach analyzer: analyzer.Analyze(con
 ```
 
 - `IAnalyzer`：`Name` + `Analyze(AnalyzerContext)`；实例可复用，状态放在上下文里。
-- `AnalyzerContext`：只读的 `CompilationModel`、`AnalyzerOptions`、`Diagnostics` 与 `Report(...)`。
-- `AnalyzerRunner.RegisterDefault(...)`：宿主在启动时登记具体分析器；`Analyzer.Common` 不含任何实现。
-- `IniRuleAnalyzerOptions.FromCompilation(context)`：把规则集、类型标注、校验模式与外部验证器
-  从编译上下文转交给规则分析器。
-
-
+- `AnalyzerContext`：只读的 `CompilationModel`、`AnalyzerOptions`（含 `RuleSet`）、
+  `SemanticAnnotations`、`ReferenceGraph`、`Diagnostics` 与 `Report(...)`。
+- 默认链顺序固定：分类 → 引用 → 发现 → 可达性；规则校验类分析器由宿主追加到链尾。
+- `AnalyzerRunner.RegisterDefault(...)`：宿主在启动时登记具体分析器；`Analyzer.Common` 不含具体校验规则。
+- 可达性结论通过 `AnalyzerResult.Annotations` 回传，由门面写入 `CompilationModel.ReachableEntities`，
+  发射器据此做 TreeShaking。
 ## 3. 核心类型
 
 ### 3.1 源与诊断（`Ra2lyn.Common.Source`）
@@ -83,22 +82,25 @@ AnalyzerRunner.Run(model, options) ─▶ foreach analyzer: analyzer.Analyze(con
 
 - `EntityId` / `PropertyId`：整数、由 `IrBuilder` 在登记时按命令顺序分配，确定且稳定。
 - `EntityModel` ≈ 源语言中的“节”；`PropertyModel` ≈ “键值对”；`ReferenceModel` 是一条引用边。
-- `EntityKind`：`Unknown` / `Registry` / `Global` / `EnumSection` / `Entity`。
-- `ReferenceKind`：`SectionRef` / `RegistryRef` / `Discovery` / `Global`。
+- `PropertyValueKind`：`Simple` / `Reference`——内核只区分值形态，含义由分析层解释。
+- `ReferenceKind`：`Direct` / `Indirect` / `Derived` / `Entry`。
 - 名字比较统一 `OrdinalIgnoreCase`，值保持原始字符串。
 
-### 3.3 规则与类型（`Ra2lyn.Common.Rules` / `Ra2lyn.Common.Types`）
+### 3.3 分析层（`Analyzer.Common`）
 
-- `RuleSetReader.ReadFilesAsync(paths)` 读取 XML；`Include` 支持相对路径、递归与循环去重。
-- 顶层 `<Type>` / `<Enum>` 登记到共享的 `default` 组；节定义只在所属组内可见。
-- `TypeValidator` 校验 `int` / `float` / `percent` / `boolean` / `string`、列表、复合类型、枚举、
-  外部验证器（`IExternalTypeValidator`）与未知类型兜底；`ValidationMode` 区分宽松与严格。
+- `EntitySemanticKind`：`Unknown` / `Registry` / `Global` / `EnumSection` / `Entity`；
+  与类型名、可达性一起保存在 `SemanticAnnotations`，不写进实体模型。
+- `ReferenceGraph`：引用分析器的输出，供可达性分析与发射阶段使用。
+- `Rules`（`RuleSetReader.ReadFilesAsync(paths)` 读取 XML；`Include` 支持相对路径、递归与循环去重；
+  顶层 `<Type>` / `<Enum>` 登记到共享的 `default` 组）。
+- `Types`（`TypeValidator` 校验 `int` / `float` / `percent` / `boolean` / `string`、列表、复合类型、枚举、
+  外部验证器（`IExternalTypeValidator`）与未知类型兜底；`ValidationMode` 区分宽松与严格）。
 
 ### 3.4 编译驱动与发射契约
 
-- `Compilation(CompilationOptions).Add(FrontendResult).AddRules(RuleSet).Run()`。
+- `Compilation(CompilationOptions).Add(FrontendResult).AddPass(...).AddAnalysis(...).Run()`：内核只内置合并 Pass。
 - `IEmitter.Emit(CompilationModel, EmitOptions)`；不支持的选项（如 `PreserveComments`）必须抛异常，禁止静默忽略。
-- 发射器由消费者显式调用：`IniWriter` 在 `Ra2lyn.Ini`，Common 不认识 INI 语法。
+- 发射器由消费者显式调用：`IniWriter` 在 `Ra2lyn.Ini`，内核不认识 INI 语法。
 
 ## 4. 前端（`Ra2lyn.Ini`）
 
@@ -107,14 +109,14 @@ AnalyzerRunner.Run(model, options) ─▶ foreach analyzer: analyzer.Analyze(con
 - 继承分隔符：第一项 `Colon`，后续 `Comma`；缺失时分别报告 `INI004` / `INI005`。
 - 重复节（`INI101`）、顶层键值对（`INI102`）、重复键（`INI103`）在降级阶段报告。
 - `IniWriter`：`[Name]`、`[Name]:[Base1],[Base2]`、每行 `Key=Value`；按组输出 `{组名}.ini`；
-  `TreeShaking` 只依赖 IR 的 `IsReachable`；`PreserveComments` 暂不支持。
+  `TreeShaking` 只依据 `CompilationModel.ReachableEntities`（分析阶段给出）；`PreserveComments` 暂不支持。
 
 ## 5. 消费者
 
 - **CLI**：`Shimakaze.Sdk.Engine.Cli` 的 `ra2lyn build`（`ra2lyn` 可缩写为 `ini`）。
   用法：`ra2lyn build --input a.ini [--input b.ini ...] [--rules x.xml ...] [--output dir] [--group g] [--tree-shaking]`。
 - **MSBuild**：`Shimakaze.Sdk.Ra2lyn.props` / `.targets` 收集输入，并调用上述 CLI 完成编译。
-- 门面：`Shimakaze.Sdk.Engine.Ra2lyn.Ra2lynCompiler`，只使用前后端公开类型。
+- 门面：`Shimakaze.Sdk.Engine.Ra2lyn.Ra2lynCompiler`，只使用前端、内核与分析层的公开类型。
 
 ## 6. 扩展点
 

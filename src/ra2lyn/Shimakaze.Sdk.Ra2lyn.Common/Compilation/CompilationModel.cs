@@ -43,4 +43,9 @@ public sealed class CompilationModel
     /// 编译诊断。
     /// </summary>
     public required IReadOnlyList<Diagnostic> Diagnostics { get; init; }
+
+    /// <summary>
+    /// 可达实体集合（由分析阶段给出）；为 <see langword="null"/> 表示未做可达性分析，发射时不做裁剪。
+    /// </summary>
+    public IReadOnlyList<EntityId>? ReachableEntities { get; init; }
 }

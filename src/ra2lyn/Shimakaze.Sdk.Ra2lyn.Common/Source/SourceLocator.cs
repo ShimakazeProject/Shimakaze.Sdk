@@ -1,9 +1,8 @@
 using System.Text;
 
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
-using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
-namespace Shimakaze.Sdk.Ra2lyn.Common.Types;
+namespace Shimakaze.Sdk.Ra2lyn.Common.Source;
 
 /// <summary>
 /// 源文件的行列计算：把字符偏移量转换为零基的行号与列号。

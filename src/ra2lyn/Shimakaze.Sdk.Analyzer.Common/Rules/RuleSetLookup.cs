@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Ra2lyn.Common.Rules;
+namespace Shimakaze.Sdk.Analyzer.Common.Rules;
 
 /// <summary>
 /// 规则键的查找工具：区分“必须出现在当前组”的规则与“可继承自默认组”的类型/枚举。

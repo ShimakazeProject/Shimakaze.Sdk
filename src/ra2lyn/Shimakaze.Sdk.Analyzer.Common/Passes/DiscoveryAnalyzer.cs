@@ -1,40 +1,39 @@
 using System.Globalization;
 
+using Shimakaze.Sdk.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
-using Shimakaze.Sdk.Ra2lyn.Common.Source;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
-using Shimakaze.Sdk.Ra2lyn.Common.Rules;
+using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
-namespace Shimakaze.Sdk.Ra2lyn.Common.Passes;
+namespace Shimakaze.Sdk.Analyzer.Common.Passes;
 
 /// <summary>
-/// 发现 Pass：按 <see cref="DiscoverRule"/> 从已知类型实体的键值出发，发现目标类型实体，迭代到不动点。
+/// 发现分析器：按 <see cref="DiscoverRule"/> 从已知类型实体的键值出发，发现目标类型实体，迭代到不动点。
 /// </summary>
 /// <remarks>
 /// <list type="bullet">
 /// <item><description><see cref="DiscoverRule.From"/> 可以是类型名，实体拥有的类型沿 <c>Base</c> 链向上匹配即满足。</description></item>
 /// <item><description><see cref="DiscoverRule.ResolveKey"/> 不含 <c>#</c> 时按键名精确匹配；含 <c>#</c> 时按 <c>Min</c>/<c>Max</c> 展开（数字或键名）。</description></item>
-/// <item><description><see cref="DiscoverRule.Target"/> 支持 <c>Group.Name</c> 跨组引用；目标实体原本 <see cref="EntityKind.Unknown"/> 时被分类为 <see cref="EntityKind.Entity"/> 并补充类型。</description></item>
+/// <item><description><see cref="DiscoverRule.Target"/> 支持 <c>Group.Name</c> 跨组引用；目标实体原本未知时被标记为普通实体并补充类型名。</description></item>
 /// <item><description><see cref="DiscoverRule.Fallback"/> 在解析失败时作为兜底目标。</description></item>
 /// </list>
 /// </remarks>
-public sealed class DiscoveryPass : ICompilationPass
+public sealed class DiscoveryAnalyzer : IAnalyzer
 {
     /// <inheritdoc/>
     public string Name => "Discovery";
 
     /// <inheritdoc/>
-    public void Run(CompilationContext context)
+    public void Analyze(AnalyzerContext context)
     {
-        RuleSet? rules = context.Rules;
-        if (rules is null)
+        if (context.Rules is not { } rules)
             return;
 
         Dictionary<(string Group, string Name), EntityModel> byKey = new(new EntityKeyComparer());
-        foreach (var entity in context.Entities)
+        foreach (var entity in context.Model.Entities)
             byKey[(entity.Group, entity.Name)] = entity;
 
-        List<ReferenceModel> references = [.. context.References];
+        List<ReferenceModel> references = [.. context.Graph.References];
         HashSet<ReferenceModel> seen = [.. references];
 
         bool changed = true;
@@ -43,11 +42,14 @@ public sealed class DiscoveryPass : ICompilationPass
             context.CancellationToken.ThrowIfCancellationRequested();
             changed = false;
 
-            foreach (var entity in context.Entities)
+            foreach (var entity in context.Model.Entities)
             {
                 RuleGroup? group = rules.FindGroup(entity.Group);
-                if (group is null || entity.Kind is EntityKind.Unknown or EntityKind.Registry)
+                if (group is null
+                    || context.Annotations.GetKind(entity.Id) is EntitySemanticKind.Unknown or EntitySemanticKind.Registry)
+                {
                     continue;
+                }
 
                 foreach (var discoverRule in group.Discover)
                 {
@@ -57,35 +59,35 @@ public sealed class DiscoveryPass : ICompilationPass
                     foreach (var property in CollectResolveKeys(entity, discoverRule))
                     {
                         string target = property.Value.Trim();
-                        (string targetGroup, string targetType) = ClassificationPass.SplitReference(discoverRule.Target, entity.Group);
+                        (string targetGroup, string targetType) = ClassificationAnalyzer.SplitReference(discoverRule.Target, entity.Group);
 
                         EntityModel? found = FindTarget(byKey, targetGroup, target);
                         if (found is null)
                         {
                             if (discoverRule.Fallback is not { Length: > 0 } fallback)
                             {
-                                context.Diagnostics.Add(new Diagnostic(
+                                context.Report(
                                     DiagnosticCodes.UnresolvedReference,
                                     DiagnosticSeverity.Warning,
                                     $"发现规则 '{discoverRule.ResolveKey}' 无法解析引用 '{target}'",
-                                    property.Origin));
+                                    property.Origin);
                                 continue;
                             }
 
-                            (targetGroup, targetType) = ClassificationPass.SplitReference(fallback, entity.Group);
+                            (targetGroup, targetType) = ClassificationAnalyzer.SplitReference(fallback, entity.Group);
                             found = FindTarget(byKey, targetGroup, fallback);
                             if (found is null)
                             {
-                                context.Diagnostics.Add(new Diagnostic(
+                                context.Report(
                                     DiagnosticCodes.UnresolvedReference,
                                     DiagnosticSeverity.Warning,
                                     $"发现规则的兜底目标 '{fallback}' 不存在",
-                                    property.Origin));
+                                    property.Origin);
                                 continue;
                             }
                         }
 
-                        ReferenceModel reference = new(property.Id, found.Id, ReferenceKind.Discovery);
+                        ReferenceModel reference = new(property.Id, found.Id, ReferenceKind.Derived);
                         if (seen.Add(reference))
                         {
                             references.Add(reference);
@@ -96,8 +98,7 @@ public sealed class DiscoveryPass : ICompilationPass
             }
         }
 
-        context.SetReferences(Order(references, context.Entities));
-        context.SetEntities(context.Entities);
+        context.Graph.SetReferences(Order(references, context.Model.Entities));
     }
 
     /// <summary>
@@ -157,15 +158,12 @@ public sealed class DiscoveryPass : ICompilationPass
     /// <summary>
     /// 判断实体是否拥有 <paramref name="fromType"/>；<paramref name="fromType"/> 为 <see langword="null"/> 时不做限制。
     /// </summary>
-    private static bool MatchesFrom(RuleSet rules, CompilationContext context, EntityModel entity, string? fromType)
+    private static bool MatchesFrom(RuleSet rules, AnalyzerContext context, EntityModel entity, string? fromType)
     {
         if (string.IsNullOrWhiteSpace(fromType))
             return true;
 
-        List<string> types = [.. context.GetTypes(entity.Id)];
-        if (entity.TypeName is { Length: > 0 } declared)
-            types.Add(declared);
-
+        IReadOnlyList<string> types = context.Annotations.GetTypes(entity.Id);
         foreach (string type in types)
         {
             foreach (string candidate in ExpandTypes(rules, entity.Group, type))
@@ -194,29 +192,22 @@ public sealed class DiscoveryPass : ICompilationPass
     private static EntityModel? FindTarget(Dictionary<(string Group, string Name), EntityModel> byKey, string group, string name)
         => byKey.TryGetValue((group, name), out var found) ? found : null;
 
-    private static bool TryAnnotate(CompilationContext context, EntityModel entity, string typeName)
+    private static bool TryAnnotate(AnalyzerContext context, EntityModel entity, string typeName)
     {
-        if (entity.Kind is EntityKind.Unknown)
-        {
-            entity.Kind = EntityKind.Entity;
-            entity.TypeName = typeName;
-            bool added = context.GetTypes(entity.Id).Contains(typeName, StringComparer.OrdinalIgnoreCase) is false;
-            context.AnnotateType(entity.Id, typeName);
-            return added;
-        }
-
-        if (entity.Kind is not EntityKind.Entity)
+        if (context.Annotations.GetKind(entity.Id) is EntitySemanticKind.Unknown)
+            context.Annotations.SetKind(entity.Id, EntitySemanticKind.Entity);
+        else if (context.Annotations.GetKind(entity.Id) is not EntitySemanticKind.Entity)
             return false;
 
-        bool isNew = context.GetTypes(entity.Id).Contains(typeName, StringComparer.OrdinalIgnoreCase) is false;
+        bool isNew = context.Annotations.GetTypes(entity.Id).Contains(typeName, StringComparer.OrdinalIgnoreCase) is false;
         if (isNew)
-            context.AnnotateType(entity.Id, typeName);
+            context.Annotations.AddType(entity.Id, typeName);
 
         return isNew;
     }
 
     /// <summary>
-    /// 引用按来源属性顺序排序，系统级引用排在最前。
+    /// 引用按来源属性顺序排序，入口引用排在最前。
     /// </summary>
     private static List<ReferenceModel> Order(List<ReferenceModel> references, IReadOnlyList<EntityModel> entities)
     {

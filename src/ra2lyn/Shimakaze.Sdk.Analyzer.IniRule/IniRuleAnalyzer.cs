@@ -1,9 +1,9 @@
 using Shimakaze.Sdk.Analyzer.Common;
+using Shimakaze.Sdk.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
-using Shimakaze.Sdk.Ra2lyn.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
-using Shimakaze.Sdk.Ra2lyn.Common.Types;
+using Shimakaze.Sdk.Analyzer.Common.Types;
 
 namespace Shimakaze.Sdk.Analyzer.IniRule;
 
@@ -12,11 +12,11 @@ namespace Shimakaze.Sdk.Analyzer.IniRule;
 /// </summary>
 /// <remarks>
 /// <list type="bullet">
-/// <item><description>实体带类型但没有对应的节定义：报 <see cref="IniRuleDiagnosticCodes.UnknownDefinition"/>。</description></item>
+/// <item><description>实体被识别为普通实体但没有对应的节定义：报 <see cref="IniRuleDiagnosticCodes.UnknownDefinition"/>。</description></item>
 /// <item><description>实体拥有节定义但出现了未声明的键：报 <see cref="IniRuleDiagnosticCodes.UnknownKey"/>。</description></item>
 /// <item><description>值不符合键规则声明的类型：报 <see cref="IniRuleDiagnosticCodes.TypeMismatch"/>。</description></item>
 /// </list>
-/// 只校验 <see cref="EntityKind.Entity"/>；Registry / Global / EnumSection / Unknown 由各自的语义规则负责。
+/// 只校验 <see cref="EntitySemanticKind.Entity"/>；其余分类由各自的语义规则负责。
 /// </remarks>
 public sealed class IniRuleAnalyzer : IAnalyzer
 {
@@ -26,27 +26,24 @@ public sealed class IniRuleAnalyzer : IAnalyzer
     /// <inheritdoc/>
     public void Analyze(AnalyzerContext context)
     {
-        if (IniRuleAnalyzerOptions.From(context.Options) is not { RuleSet: { } rules } options)
+        if (context.Rules is not { } rules)
             return;
+
+        ValidationMode validationMode = (context.Options as IniRuleAnalyzerOptions)?.ValidationMode ?? ValidationMode.Loose;
+        IReadOnlyList<IExternalTypeValidator> externalValidators = (context.Options as IniRuleAnalyzerOptions)?.ExternalValidators ?? [];
 
         foreach (var entity in context.Model.Entities)
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            if (entity.Kind is not EntityKind.Entity)
+            if (context.Annotations.GetKind(entity.Id) is not EntitySemanticKind.Entity)
                 continue;
 
             RuleGroup? group = rules.FindGroup(entity.Group);
             if (group is null)
                 continue;
 
-            List<string> types = [.. options.GetTypes(entity)];
-            if (entity.TypeName is { Length: > 0 } declared
-                && types.Contains(declared, StringComparer.OrdinalIgnoreCase) is false)
-            {
-                types.Add(declared);
-            }
-
+            IReadOnlyList<string> types = context.Annotations.GetTypes(entity.Id);
             SectionDefinitionRule? definition = FindFirstDefinition(rules, entity.Group, types);
             if (definition is null)
             {
@@ -62,8 +59,8 @@ public sealed class IniRuleAnalyzer : IAnalyzer
             TypeValidator validator = new(
                 RuleSetLookup.GetTypes(rules, entity.Group),
                 RuleSetLookup.GetEnums(rules, entity.Group),
-                options.ValidationMode,
-                options.ExternalValidators);
+                validationMode,
+                externalValidators);
 
             foreach (var property in entity.Properties)
             {
@@ -90,7 +87,7 @@ public sealed class IniRuleAnalyzer : IAnalyzer
         }
     }
 
-    private static SectionDefinitionRule? FindFirstDefinition(RuleSet rules, string group, List<string> types)
+    private static SectionDefinitionRule? FindFirstDefinition(RuleSet rules, string group, IReadOnlyList<string> types)
     {
         foreach (string type in types)
         {

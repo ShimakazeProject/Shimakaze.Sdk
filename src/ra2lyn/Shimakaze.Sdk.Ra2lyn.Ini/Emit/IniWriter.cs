@@ -1,8 +1,8 @@
 using System.Text;
 
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
-using Shimakaze.Sdk.Ra2lyn.Common.Emit;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
+using Shimakaze.Sdk.Ra2lyn.Common.Emit;
 
 namespace Shimakaze.Sdk.Ra2lyn.Ini.Emit;
 
@@ -33,9 +33,14 @@ public sealed class IniWriter : IEmitter
         string newLine = options.NewLine;
         Dictionary<string, StringBuilder> files = new(StringComparer.OrdinalIgnoreCase);
 
+        // TreeShaking 只依据分析阶段给出的可达集合；没有可达集合时不做裁剪。
+        HashSet<EntityId>? reachable = options.TreeShaking && model.ReachableEntities is { } set
+            ? [.. set]
+            : null;
+
         foreach (var entity in model.Entities)
         {
-            if (options.TreeShaking && entity.IsReachable is false)
+            if (reachable is not null && reachable.Contains(entity.Id) is false)
                 continue;
 
             string fileName = GetFileName(entity.Group);

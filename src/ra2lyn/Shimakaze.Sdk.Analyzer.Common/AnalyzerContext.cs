@@ -1,4 +1,6 @@
+using Shimakaze.Sdk.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
+using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
 namespace Shimakaze.Sdk.Analyzer.Common;
@@ -25,21 +27,48 @@ public interface IAnalyzer
 }
 
 /// <summary>
-/// 分析上下文：分析阶段的输入模型、规则与诊断收集。
+/// 分析上下文：分析阶段的输入模型、规则、语义注解与诊断收集。
 /// </summary>
-/// <param name="model">已经完成 Pass 的编译模型。</param>
-/// <param name="options">分析选项。</param>
-public sealed class AnalyzerContext(CompilationModel model, AnalyzerOptions options)
+public sealed class AnalyzerContext
 {
+    /// <summary>
+    /// 初始化分析上下文。
+    /// </summary>
+    /// <param name="model">已经完成 Pass 的编译模型。</param>
+    /// <param name="options">分析选项。</param>
+    /// <param name="annotations">语义注解；为 <see langword="null"/> 时新建。</param>
+    public AnalyzerContext(CompilationModel model, AnalyzerOptions options, SemanticAnnotations? annotations = null)
+    {
+        Model = model;
+        Options = options;
+        Annotations = annotations ?? new SemanticAnnotations();
+    }
+
     /// <summary>
     /// 被分析的编译模型；分析器不得改写其中的实体。
     /// </summary>
-    public CompilationModel Model { get; } = model;
+    public CompilationModel Model { get; }
 
     /// <summary>
     /// 分析选项。
     /// </summary>
-    public AnalyzerOptions Options { get; } = options;
+    public AnalyzerOptions Options { get; }
+
+    /// <summary>
+    /// 规则集；来自 <see cref="AnalyzerOptions.RuleSet"/>，为 <see langword="null"/> 表示不做规则相关分析。
+    /// </summary>
+    public RuleSet? Rules
+        => Options.RuleSet;
+
+    /// <summary>
+    /// 引用图：引用分析器的输出，供可达性分析与发射阶段使用。
+    /// </summary>
+    public ReferenceGraph Graph { get; } = new();
+
+    /// <summary>
+    /// 语义注解：分类、类型与可达性等分析层结论。
+    /// </summary>
+    public SemanticAnnotations Annotations { get; }
 
     /// <summary>
     /// 诊断收集器；与编译诊断合并后一起输出。
@@ -71,6 +100,11 @@ public class AnalyzerOptions
     /// 要执行的分析器；为 <see langword="null"/> 时使用 <see cref="AnalyzerRunner.DefaultAnalyzers"/>。
     /// </summary>
     public IReadOnlyList<IAnalyzer>? Analyzers { get; init; }
+
+    /// <summary>
+    /// 分析规则集；为 <see langword="null"/> 表示只做与规则无关的分析。
+    /// </summary>
+    public RuleSet? RuleSet { get; init; }
 
     /// <summary>
     /// 分析器抛出的未处理异常是否降级为警告；默认关闭，让错误直接暴露。

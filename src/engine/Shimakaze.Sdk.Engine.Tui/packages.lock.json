@@ -117,7 +117,8 @@
       "shimakaze.sdk.analyzer.inirule": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Analyzer.Common": "[1.0.0, )"
+          "Shimakaze.Sdk.Analyzer.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.csf": {

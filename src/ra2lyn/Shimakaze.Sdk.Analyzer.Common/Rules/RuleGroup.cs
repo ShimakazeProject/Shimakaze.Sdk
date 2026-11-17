@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Ra2lyn.Common.Rules;
+namespace Shimakaze.Sdk.Analyzer.Common.Rules;
 
 /// <summary>
 /// 规则组：一个文件分类（如 <c>rule</c>、<c>art</c>）下的全部规则。

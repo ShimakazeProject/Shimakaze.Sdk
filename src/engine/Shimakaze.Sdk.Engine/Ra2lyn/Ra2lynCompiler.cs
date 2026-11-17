@@ -2,27 +2,28 @@ using System.Globalization;
 using System.Text;
 
 using Shimakaze.Sdk.Analyzer.Common;
+using Shimakaze.Sdk.Analyzer.Common.Rules;
+using Shimakaze.Sdk.Analyzer.Common.Types;
 using Shimakaze.Sdk.Analyzer.IniRule;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Emit;
-using Shimakaze.Sdk.Ra2lyn.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
-using Shimakaze.Sdk.Ra2lyn.Common.Types;
 using Shimakaze.Sdk.Ra2lyn.Ini;
 using Shimakaze.Sdk.Ra2lyn.Ini.Emit;
 
 namespace Shimakaze.Sdk.Engine.Ra2lyn;
 
 /// <summary>
-/// Ra2lyn 编译入口：只调用前端门面与后端编译驱动，不直接操作 IR 内部字段。
+/// Ra2lyn 编译入口：只调用前端门面、编译驱动与分析器，不直接操作 IR 内部字段。
 /// </summary>
 /// <remarks>
-/// 输入按扩展名归入规则组：扩展名本身即组名（例如 <c>rulesmd.ini</c> 归入 <c>ini</c> 组）；
+/// 输入按扩展名归入分组：扩展名本身即组名（例如 <c>rulesmd.ini</c> 归入 <c>ini</c> 组）；
 /// 需要自定义分组时由调用方通过 <see cref="Ra2lynCompileOptions.Group"/> 显式指定。
+/// 语义分析（分类、引用、发现、可达性、规则校验）全部交给分析器链完成。
 /// </remarks>
 public sealed class Ra2lynCompiler
 {
-    // 具体分析器由宿主登记；分析器框架本身不引用任何实现。
+    // 规则分析器由宿主登记；分析器框架本身不引用任何具体实现。
     static Ra2lynCompiler()
     {
         IniRuleAnalyzerRegistration.Register();
@@ -47,7 +48,7 @@ public sealed class Ra2lynCompiler
         CancellationToken cancellationToken = default)
     {
         List<SourceFile> sourceFiles = [];
-        Compilation compilation = new(new CompilationOptions { ValidationMode = options.ValidationMode });
+        Compilation compilation = new(new CompilationOptions());
 
         foreach (var source in sources)
         {
@@ -59,32 +60,32 @@ public sealed class Ra2lynCompiler
             compilation.Add(_frontend.Parse(file, group, new IniParseOptions()));
         }
 
+        RuleSet? rules = null;
         if (ruleFiles.Count is not 0)
         {
             string[] paths = [.. ruleFiles.Select(static file => file.FullName)];
-            RuleSet rules = await RuleSetReader.ReadFilesAsync(paths, cancellationToken);
-            compilation.AddRules(rules);
+            rules = await RuleSetReader.ReadFilesAsync(paths, cancellationToken);
         }
 
-        // 规则校验由 Ra2lyn 之外的分析器完成：内核只构造模型，分析阶段读取完成的上下文。
-        compilation.AddAnalysis(context => AnalyzerRunner.Run(
-            new CompilationModel
-            {
-                Sources = context.Sources,
-                Entities = context.Entities,
-                References = context.References,
-                Diagnostics = [],
-            },
-            IniRuleAnalyzerOptions.FromCompilation(context),
-            context.CancellationToken));
+        // 分析器链在内核完成合并后进行：先分类，再引用/发现，最后可达性与规则校验。
+        compilation.AddAnalysis(context => RunAnalyzers(context, rules, options));
 
-        CompilationResult result = compilation.Run(cancellationToken);
-        IReadOnlyList<Diagnostic> diagnostics = result.Diagnostics;
+        CompilationResult compilationResult = compilation.Run(cancellationToken);
+        IReadOnlyList<Diagnostic> diagnostics = compilationResult.Diagnostics;
         if (diagnostics.Any(static diagnostic => diagnostic.IsError))
             return new() { Diagnostics = diagnostics, Sources = sourceFiles, FilePaths = [] };
 
+        CompilationModel model = new()
+        {
+            Sources = compilationResult.Model.Sources,
+            Entities = compilationResult.Model.Entities,
+            References = compilationResult.Model.References,
+            Diagnostics = diagnostics,
+            ReachableEntities = compilationResult.Model.ReachableEntities,
+        };
+
         EmitResult emitResult = new IniWriter().Emit(
-            result.Model,
+            model,
             new EmitOptions { TreeShaking = options.TreeShaking, NewLine = options.NewLine });
 
         outputDirectory.Create();
@@ -102,6 +103,32 @@ public sealed class Ra2lynCompiler
             Sources = sourceFiles,
             FilePaths = writtenPaths,
         };
+    }
+
+    /// <summary>
+    /// 运行分析器链，并把引用图与可达性结论写回编译上下文。
+    /// </summary>
+    private static IReadOnlyList<Diagnostic> RunAnalyzers(CompilationContext context, RuleSet? rules, Ra2lynCompileOptions options)
+    {
+        CompilationModel model = new()
+        {
+            Sources = context.Sources,
+            Entities = context.Entities,
+            References = context.References,
+            Diagnostics = [],
+        };
+
+        AnalyzerResult result = AnalyzerRunner.Run(
+            model,
+            new IniRuleAnalyzerOptions { RuleSet = rules, ValidationMode = options.ValidationMode },
+            context.CancellationToken);
+
+        context.SetReferences(result.Graph.References);
+        context.ApplyReachability(
+            context.Entities
+                .Where(entity => result.Annotations.IsReachable(entity.Id))
+                .Select(static entity => entity.Id));
+        return result.Diagnostics;
     }
 
     /// <summary>
@@ -179,7 +206,7 @@ public sealed record class Ra2lynCompileResult
 public sealed record class Ra2lynCompileOptions
 {
     /// <summary>
-    /// 解析时使用的规则组；为 <see langword="null"/> 时按扩展名推断。
+    /// 解析时使用的分组；为 <see langword="null"/> 时按扩展名推断。
     /// </summary>
     public string? Group { get; init; }
 
@@ -189,7 +216,7 @@ public sealed record class Ra2lynCompileOptions
     public bool TreeShaking { get; init; }
 
     /// <summary>
-    /// 值校验模式。
+    /// 规则分析器使用的值校验模式。
     /// </summary>
     public ValidationMode ValidationMode { get; init; } = ValidationMode.Loose;
 

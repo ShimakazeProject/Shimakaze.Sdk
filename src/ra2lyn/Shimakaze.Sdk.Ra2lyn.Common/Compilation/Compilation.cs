@@ -1,21 +1,20 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Passes;
-using Shimakaze.Sdk.Ra2lyn.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
 namespace Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 
 /// <summary>
-/// 编译驱动：按固定顺序编排后端 Pass。
+/// 编译驱动：按固定顺序编排后端 Pass，并为外部阶段提供挂载点。
 /// </summary>
 /// <remarks>
-/// 规则校验等“检查模型”的工作已从 Pass 中拆出，由外部分析器通过 <see cref="AddAnalysis"/> 接入；
-/// 内核只负责构造模型，不依赖任何具体分析器。
+/// 内核只认识“节 / 组 / 键 / 简单值或引用值”。分类、引用、发现、规则校验等具体语义
+/// 由外部分析器通过 <see cref="AddPass"/> 与 <see cref="AddAnalysis"/> 接入，内核不依赖任何具体规则。
 /// </remarks>
 public sealed class Compilation(CompilationOptions options)
 {
     private readonly List<FrontendResult> _frontends = [];
+    private readonly List<ICompilationPass> _passes = [];
     private readonly List<Func<CompilationContext, IReadOnlyList<Diagnostic>>> _analyses = [];
-    private RuleSet? _rules;
 
     /// <summary>
     /// 加入一个前端结果；顺序即合并顺序。
@@ -27,11 +26,12 @@ public sealed class Compilation(CompilationOptions options)
     }
 
     /// <summary>
-    /// 设置规则集；没有规则时只做合并与可达性检查。
+    /// 追加一个 Pass：在内置 Pass 之后、分析阶段之前执行。
     /// </summary>
-    public Compilation AddRules(RuleSet rules)
+    /// <param name="pass">Pass 实例。</param>
+    public Compilation AddPass(ICompilationPass pass)
     {
-        _rules = rules;
+        _passes.Add(pass);
         return this;
     }
 
@@ -40,7 +40,7 @@ public sealed class Compilation(CompilationOptions options)
     /// </summary>
     /// <param name="analysis">分析函数，接收已完成的编译上下文并返回诊断。</param>
     /// <remarks>
-    /// 分析阶段按登记顺序执行，且只能读到最终模型，不允许改写实体。
+    /// 分析阶段按登记顺序执行，只能读取最终模型，不允许改写实体。
     /// </remarks>
     public Compilation AddAnalysis(Func<CompilationContext, IReadOnlyList<Diagnostic>> analysis)
     {
@@ -54,9 +54,10 @@ public sealed class Compilation(CompilationOptions options)
     /// <param name="cancellationToken">取消令牌。</param>
     public CompilationResult Run(CancellationToken cancellationToken = default)
     {
-        CompilationContext context = new(options, _frontends, _rules) { CancellationToken = cancellationToken };
+        CompilationContext context = new(options, _frontends) { CancellationToken = cancellationToken };
 
-        foreach (var pass in CreateDefaultPasses())
+        IReadOnlyList<ICompilationPass> passes = [.. CreateDefaultPasses(), .. _passes];
+        foreach (var pass in passes)
         {
             cancellationToken.ThrowIfCancellationRequested();
             pass.Run(context);
@@ -81,6 +82,7 @@ public sealed class Compilation(CompilationOptions options)
             Entities = context.Entities,
             References = context.References,
             Diagnostics = diagnostics,
+            ReachableEntities = context.ReachableEntities.Count is 0 ? null : context.ReachableEntities,
         };
 
         return new CompilationResult
@@ -91,19 +93,11 @@ public sealed class Compilation(CompilationOptions options)
     }
 
     /// <summary>
-    /// Pass 顺序固定为：合并 → 分类 → 引用 → 发现 → 可达性。
+    /// 内核自带的 Pass：只有合并，其余全部由外部注入。
     /// </summary>
-    /// <remarks>
-    /// 规则校验由外部分析器在 Pass 之后执行；发现规则会把新发现的实体分类为普通实体，
-    /// 因此分析阶段必须排在最后，保证被发现的实体同样接受检查。
-    /// </remarks>
     public static IReadOnlyList<ICompilationPass> CreateDefaultPasses()
         =>
         [
             new MergePass(),
-            new ClassificationPass(),
-            new ReferencePass(),
-            new DiscoveryPass(),
-            new ReachabilityPass(),
         ];
 }

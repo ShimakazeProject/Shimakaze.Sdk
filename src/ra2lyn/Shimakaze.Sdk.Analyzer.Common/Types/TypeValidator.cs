@@ -1,8 +1,8 @@
 using System.Globalization;
 
-using Shimakaze.Sdk.Ra2lyn.Common.Rules;
+using Shimakaze.Sdk.Analyzer.Common.Rules;
 
-namespace Shimakaze.Sdk.Ra2lyn.Common.Types;
+namespace Shimakaze.Sdk.Analyzer.Common.Types;
 
 /// <summary>
 /// 值类型验证器：按规则声明的类型校验属性值。
