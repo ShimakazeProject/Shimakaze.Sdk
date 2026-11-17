@@ -1,0 +1,36 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Ra2lyn 模块的 props（Ra2lyn 编译/分析）。
+    本文件在 Shimakaze.Sdk.props 中被导入，声明编译与分析所需的全部属性默认值，
+    以及默认的分析规则集（随 SDK 分发）。使用方项目可在导入 SDK 后覆盖。
+  -->
+
+  <!--
+    Ra2lynCompile          是否在构建时编译 INI（默认 true）。
+    Ra2lynEnableTreeShaking 编译时是否启用 TreeShaking（默认 false；暂不启用）。
+    Ra2lynOutputDirectory  编译输出目录，默认复用 $(OutputPath)。
+                           该默认值依赖于使用方设置的 OutputPath，需在 .targets 中延迟求值，
+                           因此此处不声明（见 Shimakaze.Sdk.Ra2lyn.targets）。
+  -->
+  <PropertyGroup>
+    <Ra2lynCompile Condition="'$(Ra2lynCompile)' == ''">true</Ra2lynCompile>
+    <Ra2lynEnableTreeShaking Condition="'$(Ra2lynEnableTreeShaking)' == ''">false</Ra2lynEnableTreeShaking>
+  </PropertyGroup>
+
+  <!--
+    UseDefaultRuleGroup 是否启用默认 RuleGroup → 输出文件名映射（默认 true）。
+    UseDefaultInclude   是否按扩展名自动收集 Ra2lyn 输入文件（默认 true）。
+  -->
+  <PropertyGroup>
+    <UseDefaultRuleGroup Condition="'$(UseDefaultRuleGroup)' == ''">true</UseDefaultRuleGroup>
+    <UseDefaultInclude Condition="'$(UseDefaultInclude)' == ''">true</UseDefaultInclude>
+  </PropertyGroup>
+
+  <!--
+    编译输入：
+    Ra2lyn          INI 源文件（带 RuleGroup 元数据；默认按扩展名收集，见 .targets）。
+    Ra2lynRuleFile 规则 XML 文件（多个按声明顺序合并；在项目中自行添加）。
+  -->
+
+</Project>

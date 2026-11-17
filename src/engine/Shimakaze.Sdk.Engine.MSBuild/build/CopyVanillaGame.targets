@@ -44,7 +44,7 @@
     注册表键路径按进程位数选择：WOW6432Node 仅在 64 位进程可见；
     32 位进程读取 SOFTWARE 会被系统自动重定向到 WOW6432Node。
   -->
-  <Target Name="InilynResolveVanillaGamePath"
+  <Target Name="Ra2lynResolveVanillaGamePath"
           BeforeTargets="AssignTargetPaths"
           Condition="'$(CopyVanillaGame)' == 'true'">
 
@@ -75,8 +75,8 @@
     把 VanillaGameAsset 汇入 None 并标记 CopyToOutputDirectory=PreserveNewest，
     由标准管线复制到输出目录；Link 保留相对目录结构。
   -->
-  <Target Name="InilynCollectVanillaGame"
-          DependsOnTargets="InilynResolveVanillaGamePath"
+  <Target Name="Ra2lynCollectVanillaGame"
+          DependsOnTargets="Ra2lynResolveVanillaGamePath"
           BeforeTargets="AssignTargetPaths">
     <ItemGroup>
       <None Include="@(VanillaGameAsset)"

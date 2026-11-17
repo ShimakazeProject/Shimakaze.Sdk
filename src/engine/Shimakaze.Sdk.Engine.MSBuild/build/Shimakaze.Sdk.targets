@@ -3,7 +3,7 @@
   <!--
     Shimakaze.Sdk 的核心 targets（build\Shimakaze.Sdk.targets）。
     本文件在项目评估的最末期被导入，负责提供构建所需的（空）目标，
-    以及挂载各功能模块（Inilyn 编译、游戏复制）的导入。
+    以及挂载各功能模块（Ra2lyn 编译、游戏复制）的导入。
     Sdk\Sdk.targets 与 buildMultiTargeting\Shimakaze.Sdk.targets 仅重定向到本文件。
   -->
 
@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <!-- 扩展点：在导入 .NET SDK 目标之前，导入自定义的 targets。 -->
-  <Import Project="$(CustomBeforeInilynSdk)" Condition="'$(CustomBeforeInilynSdk)' != '' and Exists('$(CustomBeforeInilynSdk)')" />
+  <Import Project="$(CustomBeforeRa2lynSdk)" Condition="'$(CustomBeforeRa2lynSdk)' != '' and Exists('$(CustomBeforeRa2lynSdk)')" />
 
   <!-- 打包时不包含构建输出；纯打包项目不产出程序集。 -->
   <PropertyGroup>
@@ -30,7 +30,7 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition=" '$(CommonTargetsPath)' == '' " />
 
   <!--
-    共享任务程序集目录（Shimakaze.Sdk.Engine.MSBuild.dll 承载 Inilyn / Csf 等全部 MSBuild 任务）。
+    共享任务程序集目录（Shimakaze.Sdk.Engine.MSBuild.dll 承载 Ra2lyn / Csf 等全部 MSBuild 任务）。
     包内 tasks\ 下按宿主运行时提供多份任务程序集（net10.0 / net9.0 / net8.0 / netstandard2.0），
     具体选择逻辑见 Shimakaze.Sdk.Tasks.targets：按 MSBuild 宿主的 .NET 运行时版本取最高可用档，
     完整版 MSBuild（.NET Framework）与 .NET 8 以下的 dotnet build 回退到 netstandard2.0。
@@ -80,8 +80,8 @@
   <Target Name="GetFrameworkPaths" DependsOnTargets="$(GetFrameworkPathsDependsOn)" />
   <Target Name="GetReferenceAssemblyPaths" DependsOnTargets="$(GetReferenceAssemblyPathsDependsOn)" />
 
-  <!-- Inilyn 编译与分析：UsingTask 与编译/分析目标见 Shimakaze.Sdk.Inilyn.targets。 -->
-  <Import Project="Shimakaze.Sdk.Inilyn.targets" />
+  <!-- Ra2lyn 编译与分析：UsingTask 与编译/分析目标见 Shimakaze.Sdk.Ra2lyn.targets。 -->
+  <Import Project="Shimakaze.Sdk.Ra2lyn.targets" />
 
   <!-- Csf 编译与合并：UsingTask 与编译/合并目标见 Shimakaze.Sdk.Csf.targets。 -->
   <Import Project="Shimakaze.Sdk.Csf.targets" />
@@ -90,7 +90,7 @@
   <Import Project="CopyVanillaGame.targets" />
 
   <!-- 扩展点：在导入 .NET SDK 目标之后，导入自定义的 targets。 -->
-  <Import Project="$(CustomAfterInilynSdk)" Condition="'$(CustomAfterInilynSdk)' != '' and Exists('$(CustomAfterInilynSdk)')" />
+  <Import Project="$(CustomAfterRa2lynSdk)" Condition="'$(CustomAfterRa2lynSdk)' != '' and Exists('$(CustomAfterRa2lynSdk)')" />
 
   <!--
     当托管语言目标未导入时，引入 Microsoft.Managed.targets 以补齐 16.0+ MSBuild 所需的

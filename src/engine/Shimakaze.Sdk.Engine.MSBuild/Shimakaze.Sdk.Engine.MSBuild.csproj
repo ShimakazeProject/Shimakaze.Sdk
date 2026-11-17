@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>Shimakaze.Sdk</PackageId>
@@ -23,6 +23,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shimakaze.Sdk.Engine\Shimakaze.Sdk.Engine.csproj" />
+  </ItemGroup>
+
+  <!--
+    Ra2lyn 编译目标通过 CLI 门面完成：把 CLI 的可执行程序集作为项目引用，
+    随包一并发布到 tasks 目录，供 Shimakaze.Sdk.Ra2lyn.targets 调用。
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Shimakaze.Sdk.Engine.Cli\Shimakaze.Sdk.Engine.Cli.csproj" />
   </ItemGroup>
 
   <ItemGroup>

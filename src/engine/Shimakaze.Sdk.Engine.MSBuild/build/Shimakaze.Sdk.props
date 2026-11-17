@@ -3,7 +3,7 @@
   <!--
     Shimakaze.Sdk 的核心 props（build\Shimakaze.Sdk.props）。
     本文件在项目评估的最早期被导入，负责声明 SDK 的基础属性（纯打包、无编译）
-    以及各功能模块的默认配置。后续的模块（Inilyn 编译、Csf 编译、游戏复制）
+    以及各功能模块的默认配置。后续的模块（Ra2lyn 编译、Csf 编译、游戏复制）
     通过本目录下的分模块 props/targets 导入，便于按需裁剪。
     Sdk\Sdk.props 与 buildMultiTargeting\Shimakaze.Sdk.props 仅重定向到本文件。
   -->
@@ -29,9 +29,9 @@
 
   <!--
     扩展点：在使用方项目的任何属性声明之前，导入自定义的 props。
-    可通过设置 $(CustomBeforeInilynSdkProps) 指向一个文件来覆盖或追加 SDK 默认属性。
+    可通过设置 $(CustomBeforeRa2lynSdkProps) 指向一个文件来覆盖或追加 SDK 默认属性。
   -->
-  <Import Project="$(CustomBeforeInilynSdkProps)" Condition="'$(CustomBeforeInilynSdkProps)' != '' And Exists('$(CustomBeforeInilynSdkProps)')" />
+  <Import Project="$(CustomBeforeRa2lynSdkProps)" Condition="'$(CustomBeforeRa2lynSdkProps)' != '' And Exists('$(CustomBeforeRa2lynSdkProps)')" />
 
   <!--
     本 SDK 为纯打包型项目，不编译任何程序集。参照 Microsoft.Build.NoTargets
@@ -89,7 +89,7 @@
   </PropertyGroup>
 
   <!--
-    Inilyn SDK 自有属性：
+    Ra2lyn SDK 自有属性：
     ShimakazeSdkPath    SDK 根目录（供使用方项目引用 SDK 内资源）。
     OutputPath          输出目录，默认项目根下的 bin；可被使用方覆盖。
     CopyVanillaGame     是否把原版游戏文件复制到输出目录。
@@ -100,8 +100,8 @@
     <CopyVanillaGame Condition="'$(CopyVanillaGame)' == ''">false</CopyVanillaGame>
   </PropertyGroup>
 
-  <!-- Inilyn 编译/分析模块的属性与默认收集（见 Shimakaze.Sdk.Inilyn.props）。 -->
-  <Import Project="Shimakaze.Sdk.Inilyn.props" />
+  <!-- Ra2lyn 编译/分析模块的属性与默认收集（见 Shimakaze.Sdk.Ra2lyn.props）。 -->
+  <Import Project="Shimakaze.Sdk.Ra2lyn.props" />
 
   <!--
     导入 .NET SDK 的 props，获得标准 Build / CopyFilesToOutputDirectory 管线
@@ -118,7 +118,7 @@
   <Target Name="CreateManifestResourceNames" />
 
   <!-- 扩展点：在使用方项目的所有属性声明之后，导入自定义的 props。 -->
-  <Import Project="$(CustomAfterInilynSdkProps)" Condition="'$(CustomAfterInilynSdkProps)' != '' And Exists('$(CustomAfterInilynSdkProps)')" />
+  <Import Project="$(CustomAfterRa2lynSdkProps)" Condition="'$(CustomAfterRa2lynSdkProps)' != '' And Exists('$(CustomAfterRa2lynSdkProps)')" />
 
   <!-- For CPS/VS support：允许后续目标按需重定义（空实现）。 -->
   <Target Name="CompileDesignTime" />

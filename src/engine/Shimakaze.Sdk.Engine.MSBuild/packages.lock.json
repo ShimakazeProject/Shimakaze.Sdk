@@ -39,6 +39,11 @@
         "resolved": "18.9.6",
         "contentHash": "CNZfh4P65tHm1Wh/uuIbYfvHlPnb0dJ9SCaIZbXRzOMn+8JEorSqSdXdGRsrDbKBDJfNG6nmgleYhnfL2pd1oQ=="
       },
+      "System.CommandLine": {
+        "type": "Transitive",
+        "resolved": "2.0.11",
+        "contentHash": "Pmg3/T0M37ZS3ovwPHtfBNTCdqNpnxo+tnZMg8JDHVR0qD8KwcPUKlheEiZysb1En8IyH7yDoa9QDq97Ny/vhQ=="
+      },
       "System.Configuration.ConfigurationManager": {
         "type": "Transitive",
         "resolved": "10.0.8",
@@ -99,6 +104,13 @@
           "System.IO.Hashing": "[10.0.11, )"
         }
       },
+      "shimakaze.sdk.engine.cli": {
+        "type": "Project",
+        "dependencies": {
+          "DotMake.CommandLine": "[3.6.0, )",
+          "Shimakaze.Sdk.Engine": "[1.0.0, )"
+        }
+      },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
@@ -122,6 +134,15 @@
       },
       "shimakaze.sdk.tmp": {
         "type": "Project"
+      },
+      "DotMake.CommandLine": {
+        "type": "CentralTransitive",
+        "requested": "[3.6.0, )",
+        "resolved": "3.6.0",
+        "contentHash": "4pB/Z6vR6FqgUz/XxNvWQPCst09xD4q8JaPfsHeOd5rllVSBPhiqBa5my1WxILul+8jc+3Y4hRqoo9l0xmjySA==",
+        "dependencies": {
+          "System.CommandLine": "[2.0.11, 3.0.0)"
+        }
       },
       "StbImageSharp": {
         "type": "CentralTransitive",

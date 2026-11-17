@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace Shimakaze.Sdk.Ra2lyn.Common.Rules;
 
 /// <summary>
-/// 规则 XML 读取器，兼容现有 <c>InilynRules.xsd</c> 的元素结构。
+/// 规则 XML 读取器，兼容现有 <c>Ra2lynRules.xsd</c> 的元素结构。
 /// </summary>
 public static class RuleSetReader
 {
