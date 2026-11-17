@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Text;
 
+using Shimakaze.Sdk.Analyzer.Common;
+using Shimakaze.Sdk.Analyzer.IniRule;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Emit;
 using Shimakaze.Sdk.Ra2lyn.Common.Rules;
@@ -20,6 +22,12 @@ namespace Shimakaze.Sdk.Engine.Ra2lyn;
 /// </remarks>
 public sealed class Ra2lynCompiler
 {
+    // 具体分析器由宿主登记；分析器框架本身不引用任何实现。
+    static Ra2lynCompiler()
+    {
+        IniRuleAnalyzerRegistration.Register();
+    }
+
     private readonly IniFrontend _frontend = new();
 
     /// <summary>
@@ -57,6 +65,18 @@ public sealed class Ra2lynCompiler
             RuleSet rules = await RuleSetReader.ReadFilesAsync(paths, cancellationToken);
             compilation.AddRules(rules);
         }
+
+        // 规则校验由 Ra2lyn 之外的分析器完成：内核只构造模型，分析阶段读取完成的上下文。
+        compilation.AddAnalysis(context => AnalyzerRunner.Run(
+            new CompilationModel
+            {
+                Sources = context.Sources,
+                Entities = context.Entities,
+                References = context.References,
+                Diagnostics = [],
+            },
+            IniRuleAnalyzerOptions.FromCompilation(context),
+            context.CancellationToken));
 
         CompilationResult result = compilation.Run(cancellationToken);
         IReadOnlyList<Diagnostic> diagnostics = result.Diagnostics;

@@ -18,6 +18,8 @@
     <Project Path="src/ini/Shimakaze.Sdk.Ini/Shimakaze.Sdk.Ini.csproj" />
   </Folder>
   <Folder Name="/ra2lyn/">
+    <Project Path="src/ra2lyn/Shimakaze.Sdk.Analyzer.Common/Shimakaze.Sdk.Analyzer.Common.csproj" />
+    <Project Path="src/ra2lyn/Shimakaze.Sdk.Analyzer.IniRule/Shimakaze.Sdk.Analyzer.IniRule.csproj" />
     <Project Path="src/ra2lyn/Shimakaze.Sdk.Ra2lyn.Common/Shimakaze.Sdk.Ra2lyn.Common.csproj" />
     <Project Path="src/ra2lyn/Shimakaze.Sdk.Ra2lyn.Ini/Shimakaze.Sdk.Ra2lyn.Ini.csproj" />
   </Folder>

@@ -63,6 +63,18 @@
         "resolved": "10.0.8",
         "contentHash": "/ldVgSfImIBp6fLWS7sLH0BnmtFj0ZwGlZo4Xx2q0K3ZhJNDbW45kj2f6zPoC+L+BTINuHdMzTsopuwmkbgcNA=="
       },
+      "shimakaze.sdk.analyzer.common": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
+        }
+      },
+      "shimakaze.sdk.analyzer.inirule": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Analyzer.Common": "[1.0.0, )"
+        }
+      },
       "shimakaze.sdk.csf": {
         "type": "Project"
       },
@@ -89,6 +101,8 @@
       "shimakaze.sdk.engine": {
         "type": "Project",
         "dependencies": {
+          "Shimakaze.Sdk.Analyzer.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Analyzer.IniRule": "[1.0.0, )",
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",

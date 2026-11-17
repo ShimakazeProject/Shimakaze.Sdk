@@ -11,20 +11,25 @@
 |---|---|---|
 | `Shimakaze.Sdk.Ra2lyn.Common` | 后端 | 源位置与诊断、IR、规则 XML、类型系统、语义 Pass、编译驱动、发射契约 |
 | `Shimakaze.Sdk.Ra2lyn.Ini` | 前端 | INI 词法、语法树、语法诊断、AST → IR 降级、INI 发射器 |
+| `Shimakaze.Sdk.Analyzer.Common` | 分析器框架 | 分析器契约、分析上下文、执行顺序与诊断合并 |
+| `Shimakaze.Sdk.Analyzer.IniRule` | 分析器 | 按节定义与键规则校验 INI 实体（`INI201`～`INI203`） |
 
 依赖规则：
 
 - `Ra2lyn.Common` 只依赖 BCL（规则 XML 使用 `System.Xml.Linq`）。
 - `Ra2lyn.Ini` 只依赖 `Ra2lyn.Common` 与 BCL。
-- 两者都**不得**依赖 EF Core、LSP 模型或 MSBuild。
+- `Analyzer.Common` 只依赖 `Ra2lyn.Common`（需要 IR 与诊断类型）；**不得**引用任何具体分析器。
+- `Analyzer.IniRule` 只依赖 `Analyzer.Common`（经传递引用可访问 `Ra2lyn.Common`）。
+- 四个项目都**不得**依赖 EF Core、LSP 模型或 MSBuild。
 - MSBuild / CLI / LSP 是消费者：`Shimakaze.Sdk.Engine` 提供门面，CLI 提供 `ra2lyn` 子命令。
 
 ```text
-Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common
-   │                     │
-   │ 词法 / 语法 / AST     │ IR / 诊断 / 规则 / 类型系统
-   │ AST → IR 降级         │ 分析 Pass / 可达性 / TreeShaking
-   │ INI 文本发射          │ 编译驱动 / 发射契约
+Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common ◀──只引用── Analyzer.Common
+   │                     │                          ▲
+   │ 词法 / 语法 / AST     │ IR / 诊断 / 规则 / 类型系统   │
+   │ AST → IR 降级         │ 分析 Pass / 可达性 / 发射契约  │
+   │ INI 文本发射          │ 编译驱动                    │
+                                                    Analyzer.IniRule
 ```
 
 ## 2. 编译流程
@@ -37,7 +42,7 @@ Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common
                                 ──▶ ReferencePass
                                 ──▶ DiscoveryPass
                                 ──▶ ReachabilityPass
-                                ──▶ RuleValidationPass
+                                ──▶ （分析阶段）AnalyzerRunner ──▶ IniRuleAnalyzer
                                                         │
                                                   CompilationModel
                                                         │
@@ -46,9 +51,24 @@ Ra2lyn.Ini ──只引用──▶ Ra2lyn.Common
 
 - **前端只产出 IR**：`FrontendResult(Group, Sources, Entities, Diagnostics)`；语法诊断在降级阶段一并汇入。
 - **后端与源语言无关**：`Ra2lyn.Common` 不认识 `[section]`、`key=value`、继承括号等语法。
-- **Pass 顺序固定**（`Compilation.CreateDefaultPasses()`）：
-  合并 → 分类 → 引用 → 发现 → 可达性 → 规则校验。
-  规则校验放在最后，使被发现规则新标记为普通实体的节同样接受类型校验。
+- **Pass 顺序固定**（`Compilation.CreateDefaultPasses()`）：合并 → 分类 → 引用 → 发现 → 可达性。
+- **分析阶段**：通过 `Compilation.AddAnalysis(...)` 接入，在全部 Pass 结束后执行；规则校验由
+  `Analyzer.IniRule` 提供，内核不依赖任何具体分析器。分析阶段排在最后，使被发现规则新标记为普通实体的节
+  同样接受类型校验。
+
+### 2.1 分析器
+
+```text
+AnalyzerRunner.Run(model, options) ─▶ foreach analyzer: analyzer.Analyze(context)
+                                   ─▶ 合并编译诊断与分析诊断，按源文件与位置排序去重
+```
+
+- `IAnalyzer`：`Name` + `Analyze(AnalyzerContext)`；实例可复用，状态放在上下文里。
+- `AnalyzerContext`：只读的 `CompilationModel`、`AnalyzerOptions`、`Diagnostics` 与 `Report(...)`。
+- `AnalyzerRunner.RegisterDefault(...)`：宿主在启动时登记具体分析器；`Analyzer.Common` 不含任何实现。
+- `IniRuleAnalyzerOptions.FromCompilation(context)`：把规则集、类型标注、校验模式与外部验证器
+  从编译上下文转交给规则分析器。
+
 
 ## 3. 核心类型
 
