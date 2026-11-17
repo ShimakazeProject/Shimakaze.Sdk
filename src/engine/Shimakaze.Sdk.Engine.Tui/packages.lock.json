@@ -1,12 +1,12 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0": {
+    "net11.0": {
       "DotMake.CommandLine": {
         "type": "Direct",
-        "requested": "[3.6.0, )",
-        "resolved": "3.6.0",
-        "contentHash": "4pB/Z6vR6FqgUz/XxNvWQPCst09xD4q8JaPfsHeOd5rllVSBPhiqBa5my1WxILul+8jc+3Y4hRqoo9l0xmjySA==",
+        "requested": "[3.7.0, )",
+        "resolved": "3.7.0",
+        "contentHash": "t7DvPCfFPd8Hz5Xk7zopOj7kG7ubRkQc2U47fiI3/SCircEDKBoyQBzoqrUokyl0KpU66u9ri486iG1s1sc/oA==",
         "dependencies": {
           "System.CommandLine": "[2.0.11, 3.0.0)"
         }
@@ -19,55 +19,55 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.15, )",
-        "resolved": "10.0.15",
-        "contentHash": "u0WnRcZgBZYHlVFpbe/3Adpmb9rmNJ8/fmEwqc/xjB7fFppq+gfaLJd3Sdaw+J02zV0eP/T9dneQ3Dv5jWw6bw=="
+        "requested": "[11.0.0, )",
+        "resolved": "11.0.0",
+        "contentHash": "gK2aq4XvChj5kvozpPHrkfKkr7zc5Z4xoTrJb4GPZzDEPMlCk0TX632bwY3LsWcX2UVcVRQBBGzsBGC2lq6YhA=="
       },
       "XenoAtom.Terminal.UI": {
         "type": "Direct",
-        "requested": "[3.9.0, )",
-        "resolved": "3.9.0",
-        "contentHash": "OQ18w32TvJHqm0AVcTMYv0GRz+gcS7Le6oCxcILBiGsN+2N/13D0e0SoToCfZdt8xBfLB+8hVG+geZySW6c82w==",
+        "requested": "[3.11.0, )",
+        "resolved": "3.11.0",
+        "contentHash": "sF+koTPTg4vYshcpSiq6Cxj8PtohXIlDKm+aFPhAf45QTj6frRhVhQ1MuVBYVTlblJUseinhIq2ItxhjaR427A==",
         "dependencies": {
-          "XenoAtom.Ansi": "1.7.0",
-          "XenoAtom.Terminal": "2.2.0"
+          "XenoAtom.Ansi": "1.7.1",
+          "XenoAtom.Terminal": "2.4.0"
         }
       },
       "XenoAtom.Terminal.UI.Graphics": {
         "type": "Direct",
-        "requested": "[3.9.0, )",
-        "resolved": "3.9.0",
-        "contentHash": "kXl+637wQoanlh0wGdpPHmUw229bNUa9YS6TO9xYqHXiKsJsVRX0aJL63pAqCHLevaoz5ncFziiONKv3SNOvMA==",
+        "requested": "[3.11.0, )",
+        "resolved": "3.11.0",
+        "contentHash": "2XPOiLJ4tyT2jnK8kWJAgXUu9nPfvgQzJVdwva28UUyQN27nHGkYa8AdcGohBaGq0QTdg+hOSW4uEDX0hiOp3A==",
         "dependencies": {
-          "XenoAtom.Ansi": "1.7.0",
-          "XenoAtom.Terminal": "2.2.0",
-          "XenoAtom.Terminal.Graphics": "2.2.0",
-          "XenoAtom.Terminal.UI": "3.9.0"
+          "XenoAtom.Ansi": "1.7.1",
+          "XenoAtom.Terminal": "2.4.0",
+          "XenoAtom.Terminal.Graphics": "2.4.0",
+          "XenoAtom.Terminal.UI": "3.11.0"
         }
       },
       "SkiaSharp": {
         "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "nmy2dOFWPvQKMglfpjz8+/xQQcSrL9jzul3cUyzCJVSwrmSAw+6B1sEgU7jt6NZBptwGq2k/V0kjyu2GizMFtg==",
+        "resolved": "3.119.4",
+        "contentHash": "53NOSUZ1Us+91Sm0uCkIivh/k7jOowRErZT2sIWwPFN9mLUvdxnE6rS4sWo4255+Rd2MWUSF+j0NMZHD6Cke+Q==",
         "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "3.119.2",
-          "SkiaSharp.NativeAssets.macOS": "3.119.2"
+          "SkiaSharp.NativeAssets.Win32": "3.119.4",
+          "SkiaSharp.NativeAssets.macOS": "3.119.4"
         }
       },
       "SkiaSharp.NativeAssets.Linux": {
         "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "9WzxSyG/s9Id506j0Ht+Bi5ucOpWKPzd1XXr9TD4fuCafHHy2swRSlbZtC3IDQAsvCH63OerkDJajj43uSv5og=="
+        "resolved": "3.119.4",
+        "contentHash": "UAyVzbqNfZsZbKbzj68zXLyUyF/SbTKmzTfOO6qDu++dtIUMMTzPBe8oOuzU/DiewpfKoUUlOSsJmqWc6blxBw=="
       },
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "I2jMGQ/26KOnc6iAoR+Mxh9vSJJ2vioJyj9aJ9OL5yEZyXothXJxf4vBMqnSaiXMqiiU1scG7KqtT0CLkmMmWA=="
+        "resolved": "3.119.4",
+        "contentHash": "fgBOWEqbY012x7gMfJU4ezgz6dfhJb30Z6YdW35h85Zoe39+a8YNbAAwL29ihPfWoppg5AjvyKNzD1oCvlqWwA=="
       },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "3.119.2",
-        "contentHash": "uYe+da6+GXVgPKkCopzvIZ83DmC8SXXKeUAPrNcztJNsg0SjPQAxfKMOPZqmVjbzznrq/QUIjLUlJSZV/e0IPA=="
+        "resolved": "3.119.4",
+        "contentHash": "XOpbx/4CReO2wYsq2s6rbvdauc6dntG4Zv499sHGTJ87bwZaFXszFkwql3+FIZMc8kUPeaj3Mx2ezIJmo8a1Kg=="
       },
       "System.CommandLine": {
         "type": "Transitive",
@@ -81,31 +81,31 @@
       },
       "XenoAtom.Ansi": {
         "type": "Transitive",
-        "resolved": "1.7.0",
-        "contentHash": "I6SZPpSrt5YoKRYQuzf93WZq6/lnEgAGrx25FYG4g/T+FjMSyTLN7xVhkgAvzIzqVYvnR0KwFBmnoSMLbjt6ig==",
+        "resolved": "1.7.1",
+        "contentHash": "TXxP5wKT4kMJBEG72crUoMPPntykmZhCizq2LNO21gk/GgGBxzcKA+CoewJNKe/qfncS3Zkd4ss4VbHsdE5BKA==",
         "dependencies": {
           "Wcwidth": "4.0.1"
         }
       },
       "XenoAtom.Terminal": {
         "type": "Transitive",
-        "resolved": "2.2.0",
-        "contentHash": "J3oOWIoJm24pAN2zsSesy8eyv6nUQyjmW6OFqmbH596HyaEOErQPKdQMEIPNqQT7QymipcbHm6qEAfREuomfkA==",
+        "resolved": "2.4.0",
+        "contentHash": "vU4VEAG8EBloIX9VtARYCipxwCS/ngQrKS1ZIwPgqvR5NtaRhGhLihy6HI2GlS8JKX6R5aq8EYuZpE4I8UhJlA==",
         "dependencies": {
-          "XenoAtom.Ansi": "1.7.0"
+          "XenoAtom.Ansi": "1.7.1"
         }
       },
       "XenoAtom.Terminal.Graphics": {
         "type": "Transitive",
-        "resolved": "2.2.0",
-        "contentHash": "QLfYYruezrvNBI2YpuhLKTgZ/P9NEpJWnmJQxxLJXOBr7QaL9mPP/Rdryh8iKJmD2ii2xGz8rjh5BvOiTQRE5g==",
+        "resolved": "2.4.0",
+        "contentHash": "syuI/uBPfChBDn3fHCINqMPut40M1Qm9zKCoMjt2i7BZnGjyQQBxk/OXGAgwVjaX0j9YeyDr/4eEI47HhJhgMw==",
         "dependencies": {
-          "SkiaSharp": "3.119.2",
-          "SkiaSharp.NativeAssets.Linux": "3.119.2",
-          "SkiaSharp.NativeAssets.Win32": "3.119.2",
-          "SkiaSharp.NativeAssets.macOS": "3.119.2",
-          "XenoAtom.Ansi": "1.7.0",
-          "XenoAtom.Terminal": "2.2.0"
+          "SkiaSharp": "3.119.4",
+          "SkiaSharp.NativeAssets.Linux": "3.119.4",
+          "SkiaSharp.NativeAssets.Win32": "3.119.4",
+          "SkiaSharp.NativeAssets.macOS": "3.119.4",
+          "XenoAtom.Ansi": "1.7.1",
+          "XenoAtom.Terminal": "2.4.0"
         }
       },
       "shimakaze.sdk.analyzer.common": {
@@ -161,13 +161,13 @@
           "Shimakaze.Sdk.Tmp": "[1.0.0, )",
           "StbImageSharp": "[2.30.16, )",
           "StbImageWriteSharp": "[1.16.7, )",
-          "System.IO.Hashing": "[10.0.11, )"
+          "System.IO.Hashing": "[11.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
         "type": "Project",
         "dependencies": {
-          "System.IO.Hashing": "[10.0.11, )"
+          "System.IO.Hashing": "[11.0.0, )"
         }
       },
       "shimakaze.sdk.pal": {
@@ -202,9 +202,9 @@
       },
       "System.IO.Hashing": {
         "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "OzKDcIRkeNJeC8qAsbn8yJXnfTLP1dtkWILe+T56Gf/z+IkAASi7sMqLqJQat08j5z/mRN5xVtoAwbkMNMoBUQ=="
+        "requested": "[11.0.0, )",
+        "resolved": "11.0.0",
+        "contentHash": "U+Bv2qCYt6eONi+arSP0QIp4uTO6os6uceBsqiAwruZ+Wo2HrRhO/0tj38M9URJtS+4DhAtT3ka2TGNFYsnhyQ=="
       },
       "Vecc.YamlDotNet.Analyzers.StaticGenerator": {
         "type": "CentralTransitive",
