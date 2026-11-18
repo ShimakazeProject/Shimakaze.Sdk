@@ -76,6 +76,16 @@ public static class DiagnosticCodes
     public const string PragmaArgument = "INI014";
 
     /// <summary>
+    /// INI015：模板节头 <c>[$Name] :</c> 之后既不是 <c>[</c> 继承列表，也不是 <c>where</c> 关键字。
+    /// </summary>
+    public const string TemplateWhereExpected = "INI015";
+
+    /// <summary>
+    /// INI016：模板节头 <c>[$Name] : where</c> 之后缺少表达式。
+    /// </summary>
+    public const string TemplateWhereMissing = "INI016";
+
+    /// <summary>
     /// INI099：不可恢复的语法错误。
     /// </summary>
     public const string SyntaxError = "INI099";

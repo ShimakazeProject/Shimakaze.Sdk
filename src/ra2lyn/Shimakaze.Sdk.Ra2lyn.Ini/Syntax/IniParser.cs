@@ -1,4 +1,5 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
+using Shimakaze.Sdk.Ra2lyn.Ini.Directives;
 using Shimakaze.Sdk.Ra2lyn.Ini.Lexing;
 
 namespace Shimakaze.Sdk.Ra2lyn.Ini.Syntax;
@@ -34,7 +35,7 @@ public static class IniParser
     /// <param name="source">待分析的源文件。</param>
     /// <returns>语法树，其中包含本次分析产生的全部语法诊断。</returns>
     public static IniSyntaxTree Parse(SourceFile source)
-        => Parse(source, []);
+        => Parse(source, [], null, []);
 
     /// <summary>
     /// 对源文件进行语法分析，并附带预处理阶段产生的诊断与已预处理的记号流。
@@ -42,11 +43,13 @@ public static class IniParser
     /// <param name="source">待分析的源文件。</param>
     /// <param name="preprocessorDiagnostics">预处理诊断，会与语法诊断合并输出。</param>
     /// <param name="tokens">已预处理的记号流；为 <see langword="null"/> 时直接对源文本做词法分析。</param>
+    /// <param name="templateModes">预处理阶段收集到的 <c>#pragma template on|off</c> 指令，按出现顺序排列。</param>
     public static IniSyntaxTree Parse(
         SourceFile source,
         IReadOnlyList<Diagnostic> preprocessorDiagnostics,
-        IReadOnlyList<IniToken>? tokens = null)
-        => new ParserState(source, preprocessorDiagnostics, tokens).Parse();
+        IReadOnlyList<IniToken>? tokens = null,
+        IReadOnlyList<TemplateModeDirective>? templateModes = null)
+        => new ParserState(source, preprocessorDiagnostics, tokens, templateModes).Parse();
 
     /// <summary>
     /// 语法分析的可变状态；每次 <see cref="IniParser.Parse(SourceFile)"/> 使用独立实例，因此可重入。
@@ -56,14 +59,20 @@ public static class IniParser
         private readonly string _path;
         private readonly int _length;
         private readonly IReadOnlyList<IniToken> _tokens;
+        private readonly IReadOnlyList<TemplateModeDirective> _templateModes;
         private readonly List<Diagnostic> _diagnostics = [];
         private int _position;
 
-        public ParserState(SourceFile source, IReadOnlyList<Diagnostic> preprocessorDiagnostics, IReadOnlyList<IniToken>? tokens)
+        public ParserState(
+            SourceFile source,
+            IReadOnlyList<Diagnostic> preprocessorDiagnostics,
+            IReadOnlyList<IniToken>? tokens,
+            IReadOnlyList<TemplateModeDirective>? templateModes)
         {
             _path = source.Path;
             _length = source.Text.Length;
             _tokens = tokens ?? IniLexer.Tokenize(source.Text, source.Path);
+            _templateModes = templateModes ?? [];
 
             // 预处理诊断先进入诊断表，保证输出顺序稳定。
             foreach (var diagnostic in preprocessorDiagnostics)
@@ -133,7 +142,7 @@ public static class IniParser
             return new IniSyntaxTree { Root = root, Diagnostics = _diagnostics };
         }
 
-        private SectionNode ParseSection(List<Trivia> leading)
+        private SyntaxNode ParseSection(List<Trivia> leading)
         {
             IniToken open = Advance();
             NamedText name = ReadName();
@@ -157,11 +166,151 @@ public static class IniParser
                 colon = Advance();
             }
 
+            // 判断冒号后面跟的是 '[', 'where'，还是别的什么。
+            bool colonFollowedByInheritance = IsFollowedByToken(IniTokenType.LeftBracket);
+            bool colonFollowedByWhere = TryPeekWhereKeyword();
+
+            bool nameStartsWithDollar = name.Text.Length > 0 && name.Text[0] is '$';
+
+            // 决策表：
+            //   name 以 '$' 开头 + ':' 后跟 'where'  → TemplateNode（带条件）
+            //   name 以 '$' 开头 + 无 ':' + TemplateMode=on → TemplateNode（无条件）
+            //   name 以 '$' 开头 + 无 ':' + TemplateMode=off → SectionNode（保留 '$'）
+            //   name 以 '$' 开头 + ':' 后跟 '[' → SectionNode（继承列表）
+            //   name 不以 '$' 开头 + ':' 后跟 'where' → TemplateNode（兼容宽松处理）
+            //   其他 → 走原 SectionNode / 继承列表逻辑。
+            bool wantsTemplate =
+                (colon is not null && colonFollowedByWhere)
+                || (colon is null && nameStartsWithDollar && IsTemplateModeOn(open.Span.Start));
+
+            if (wantsTemplate)
+            {
+                return ParseTemplateSection(open, close, name, colon, leading,
+                    colonFollowedByWhere, colonFollowedByInheritance);
+            }
+
+            if (colon is not null && nameStartsWithDollar && colonFollowedByInheritance is false && colonFollowedByWhere is false)
+            {
+                // $ 开头节写了 ':'，但既不是 '[' 也不是 'where'：模板节语法错误。
+                Report(IniDiagnostics.TemplateWhereExpected(Current.Span));
+            }
+
             List<SectionInheritance> inheritances = ParseInheritanceList(colon);
 
             // 节头行的剩余部分（行内注释与换行）是节节点的尾随 trivia。
             List<Trivia> trailing = CollectRestOfLine();
 
+            List<KeyValueNode> keyValues = ParseBody();
+
+            SourceSpan header = MakeHeaderSpan(open.Span.Start, close, inheritances);
+            int end = header.IsEmpty
+                ? name.Span.End
+                : header.End;
+
+            return new SectionNode
+            {
+                Name = name.Text,
+                HasOpenBracket = true,
+                HasCloseBracket = close is not null,
+                Inheritances = inheritances,
+                KeyValues = keyValues,
+                LeadingTrivia = leading,
+                TrailingTrivia = trailing,
+                NameSpan = name.Span,
+                HeaderSpan = header,
+                Span = new(_path, open.Span.Start, end),
+            };
+        }
+
+        /// <summary>
+        /// 解析模板节 <c>[$Name] : where Expr</c> 或无条件模板 <c>[$Name]</c>。
+        /// where 表达式作为原始字符串保留（TODO.md §4.3），不做求值；求值与应用由后续
+        /// TemplateExpansionPass 完成。
+        /// </summary>
+        private TemplateNode ParseTemplateSection(
+            IniToken open,
+            IniToken? close,
+            NamedText rawName,
+            IniToken? colon,
+            List<Trivia> leading,
+            bool colonFollowedByWhere,
+            bool colonFollowedByInheritance)
+        {
+            // 去掉 '$' 前缀作为模板名；NameSpan 仍然指向源文本（含 '$'）。
+            string templateName = rawName.Text.Length > 0 && rawName.Text[0] is '$'
+                ? rawName.Text[1..]
+                : rawName.Text;
+
+            string? whereExpr = null;
+            SourceSpan whereSpan = SourceSpan.At(_path, close?.Span.End ?? rawName.Span.End);
+
+            if (colon is not null && colonFollowedByWhere)
+            {
+                // 消费 "where" 关键字。
+                SkipWhitespace();
+                IniToken whereToken = Advance(); // Text("where")
+                int whereStart = whereToken.Span.End;
+
+                // 收集行内剩余所有记号（直到 Newline 或 EOF）作为 where 表达式的原始文本。
+                List<IniToken> inline = [];
+                while (Current.Type is not (IniTokenType.Newline or IniTokenType.EndOfFile))
+                    inline.Add(Advance());
+
+                // 裁剪首尾空白后拼成原始表达式。
+                int first = 0;
+                while (first < inline.Count && IsBlank(inline[first]))
+                    first++;
+                int last = inline.Count;
+                while (last > first && IsBlank(inline[last - 1]))
+                    last--;
+
+                if (first >= last)
+                {
+                    Report(IniDiagnostics.TemplateWhereMissing(whereToken.Span));
+                    whereSpan = new(_path, whereStart, whereStart);
+                }
+                else
+                {
+                    whereExpr = string.Concat(inline[first..last].Select(static token => token.Text));
+                    whereSpan = new(_path, inline[first].Span.Start, inline[last - 1].Span.End);
+                }
+            }
+            else if (colon is not null && colonFollowedByInheritance is false && colonFollowedByWhere is false)
+            {
+                // ':' 之后既不是 '[' 也不是 'where'。
+                Report(IniDiagnostics.TemplateWhereExpected(Current.Span));
+            }
+
+            List<Trivia> trailing = CollectRestOfLine();
+            List<KeyValueNode> keyValues = ParseBody();
+
+            SourceSpan header;
+            if (whereExpr is not null)
+                header = new(_path, open.Span.Start, whereSpan.End);
+            else if (close is not null)
+                header = new(_path, open.Span.Start, close.Span.End);
+            else
+                header = new(_path, open.Span.Start, rawName.Span.End);
+
+            return new TemplateNode
+            {
+                Name = templateName,
+                WhereExpression = whereExpr,
+                KeyValues = keyValues,
+                LeadingTrivia = leading,
+                TrailingTrivia = trailing,
+                NameSpan = rawName.Span,
+                WhereSpan = whereSpan,
+                HeaderSpan = header,
+                Span = new(_path, open.Span.Start, header.End),
+            };
+        }
+
+        /// <summary>
+        /// 解析节体：连续的键值对，直到遇到下一个节头或 EOF。
+        /// </summary>
+        private List<KeyValueNode> ParseBody()
+        {
             List<KeyValueNode> keyValues = [];
             while (Current.Type is not IniTokenType.EndOfFile
                 && IsAtSectionBoundary() is false)
@@ -178,24 +327,39 @@ public static class IniParser
                     keyValues.Add(keyValue);
             }
 
-            SourceSpan header = MakeHeaderSpan(open.Span.Start, close, inheritances);
-            int end = header.IsEmpty
-                ? name.Span.End
-                : header.End;
+            return keyValues;
+        }
 
-            return new()
+        /// <summary>
+        /// 判断当前位置（跳过空白之后）是否是一个独立的 Text 记号，其文本不区分大小写等于 "where"。
+        /// </summary>
+        private bool TryPeekWhereKeyword()
+        {
+            int offset = 0;
+            while (Peek(offset).Type is IniTokenType.Whitespace)
+                offset++;
+
+            IniToken token = Peek(offset);
+            return token.Type is IniTokenType.Text
+                && token.Text.Equals("where", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// 查询当前行偏移 <paramref name="lineOffset"/> 处生效的 <c>#pragma template</c> 状态：
+        /// 取最后一个 <see cref="TemplateModeDirective.LineIndex"/> ≤ <paramref name="lineOffset"/> 的
+        /// 指令的 <see cref="TemplateModeDirective.Enabled"/>；没有指令时默认 <see langword="true"/>（TODO.md §1.2.1）。
+        /// </summary>
+        private bool IsTemplateModeOn(int lineOffset)
+        {
+            bool on = true;
+            foreach (var directive in _templateModes)
             {
-                Name = name.Text,
-                HasOpenBracket = true,
-                HasCloseBracket = close is not null,
-                Inheritances = inheritances,
-                KeyValues = keyValues,
-                LeadingTrivia = leading,
-                TrailingTrivia = trailing,
-                NameSpan = name.Span,
-                HeaderSpan = header,
-                Span = new(_path, open.Span.Start, end),
-            };
+                if (directive.LineIndex > lineOffset)
+                    break;
+                on = directive.Enabled;
+            }
+
+            return on;
         }
 
         /// <remarks>

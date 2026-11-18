@@ -82,6 +82,18 @@ public static class IniDiagnostics
     public static Diagnostic SyntaxError(string message, SourceSpan span)
         => Make(DiagnosticCodes.SyntaxError, DiagnosticSeverity.Error, message, span);
 
+    /// <summary>
+    /// INI015：模板节头 <c>[$Name] :</c> 之后既不是 <c>[</c> 继承列表，也不是 <c>where</c> 关键字。
+    /// </summary>
+    public static Diagnostic TemplateWhereExpected(SourceSpan span)
+        => Make(DiagnosticCodes.TemplateWhereExpected, DiagnosticSeverity.Error, "模板节 ':' 之后应为 '[' 继承列表或 'where' 表达式", span);
+
+    /// <summary>
+    /// INI016：模板节头 <c>[$Name] : where</c> 之后缺少表达式。
+    /// </summary>
+    public static Diagnostic TemplateWhereMissing(SourceSpan span)
+        => Make(DiagnosticCodes.TemplateWhereMissing, DiagnosticSeverity.Error, "'where' 之后缺少表达式", span);
+
     private static Diagnostic Make(string code, DiagnosticSeverity severity, string message, SourceSpan span)
         => new(code, severity, message, span);
 }

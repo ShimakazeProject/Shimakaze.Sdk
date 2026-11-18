@@ -66,7 +66,7 @@ public sealed class IniFrontend
     private static FrontendResult Run(SourceFile source, string group, bool lowerToIr, IniParseOptions options)
     {
         PreprocessResult preprocess = IniPreprocessor.Process(source, new DefineSet(options.Defines));
-        IniSyntaxTree tree = IniParser.Parse(source, preprocess.Diagnostics, preprocess.Tokens);
+        IniSyntaxTree tree = IniParser.Parse(source, preprocess.Diagnostics, preprocess.Tokens, preprocess.TemplateModes);
         if (lowerToIr is false)
             return new(group, [source], [], tree.Diagnostics);
 

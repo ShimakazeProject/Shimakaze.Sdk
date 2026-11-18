@@ -37,6 +37,7 @@ public static class IniPreprocessor
         HashSet<int> activeLineStarts = [];
         List<Frame> stack = [];
         List<PragmaDirective> pragmas = [];
+        List<TemplateModeDirective> templateModes = [];
 
         foreach (var line in lines)
         {
@@ -85,7 +86,7 @@ public static class IniPreprocessor
             tokens.Add(token);
         }
 
-        return new([.. tokens], diagnostics, [.. pragmas]);
+        return new([.. tokens], diagnostics, [.. pragmas], [.. templateModes]);
 
         void HandleDirective(Line line, string trimmed)
         {
@@ -176,6 +177,28 @@ public static class IniPreprocessor
 
                         pragmas.Add(new PragmaDirective(value, lineSpan, line.Range.Start));
                         return;
+                    }
+
+                    case "template":
+                    {
+                        if (args.Length is 0)
+                        {
+                            diagnostics.Add(new(DiagnosticCodes.PragmaArgument, DiagnosticSeverity.Error, "#pragma template 缺少参数 on|off", lineSpan));
+                            return;
+                        }
+
+                        switch (args.ToLowerInvariant())
+                        {
+                            case "on":
+                                templateModes.Add(new TemplateModeDirective(true, lineSpan, line.Range.Start));
+                                return;
+                            case "off":
+                                templateModes.Add(new TemplateModeDirective(false, lineSpan, line.Range.Start));
+                                return;
+                            default:
+                                diagnostics.Add(new(DiagnosticCodes.PragmaArgument, DiagnosticSeverity.Error, $"#pragma template 的参数 '{args}' 必须是 on 或 off", argsSpan));
+                                return;
+                        }
                     }
 
                     default:
@@ -380,12 +403,22 @@ public static class IniPreprocessor
 public sealed record class PragmaDirective(int Priority, SourceSpan LineSpan, int LineIndex);
 
 /// <summary>
+/// 一条 <c>#pragma template on|off</c> 指令的解析结果，按出现顺序排列（TODO.md §1.2）。
+/// </summary>
+/// <param name="Enabled"><see langword="true"/> 表示后续 <c>$</c> 开头节是模板；<see langword="false"/> 表示作为普通 entity。</param>
+/// <param name="LineSpan">整行的位置范围，用于诊断。</param>
+/// <param name="LineIndex">指令行在源文件中的字符起始偏移（与节头位置直接比较即可判断作用域是否覆盖该节）。</param>
+public sealed record class TemplateModeDirective(bool Enabled, SourceSpan LineSpan, int LineIndex);
+
+/// <summary>
 /// 预处理结果。
 /// </summary>
 /// <param name="Tokens">剔除未生效内容后的记号流，末尾仍是文件结束记号。</param>
 /// <param name="Diagnostics">指令相关的诊断。</param>
 /// <param name="Pragmas">按出现顺序收集到的 <c>#pragma priority</c> 指令。</param>
+/// <param name="TemplateModes">按出现顺序收集到的 <c>#pragma template on|off</c> 指令。</param>
 public sealed record class PreprocessResult(
     IReadOnlyList<IniToken> Tokens,
     IReadOnlyList<Diagnostic> Diagnostics,
-    IReadOnlyList<PragmaDirective> Pragmas);
+    IReadOnlyList<PragmaDirective> Pragmas,
+    IReadOnlyList<TemplateModeDirective> TemplateModes);
