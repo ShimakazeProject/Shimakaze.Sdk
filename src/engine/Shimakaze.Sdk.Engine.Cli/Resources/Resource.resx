@@ -162,6 +162,9 @@
   <data name="Command.Ra2lyn.Build.Output.Description" xml:space="preserve">
     <value>编译输出目录</value>
   </data>
+  <data name="Command.Ra2lyn.Build.Defines.Description" xml:space="preserve">
+    <value>预处理器宏列表，形如 A,B,C；列出的名字在 #if 中为真</value>
+  </data>
   <data name="Command.Ra2lyn.Build.Rules.Description" xml:space="preserve">
     <value>规则 XML 文件（可重复指定，按顺序合并）</value>
   </data>

@@ -31,6 +31,12 @@ internal sealed class BuildCommand
     public List<FileInfo> Rules { get; set; } = [];
 
     /// <summary>
+    /// 预处理器宏，形如 <c>--defines=A,B,C</c>；列出的名字在条件指令中为真。
+    /// </summary>
+    [CliOption(Description = nameof(Resource.Command_Ra2lyn_Build_Defines_Description), Alias = "d", Required = false, AllowMultipleArgumentsPerToken = true)]
+    public List<string> Defines { get; set; } = [];
+
+    /// <summary>
     /// 规则组；缺省按文件扩展名推断。
     /// </summary>
     [CliOption(Description = nameof(Resource.Command_Ra2lyn_Build_Group_Description), Alias = "g", Required = false)]
@@ -71,6 +77,7 @@ internal sealed class BuildCommand
             new Ra2lynCompileOptions
             {
                 Group = Group,
+                Defines = [.. Defines.SelectMany(static value => value.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))],
                 TreeShaking = TreeShaking,
                 ValidationMode = ValidationMode,
                 NewLine = NewLine is Ra2lynNewLine.Lf ? "\n" : "\r\n",

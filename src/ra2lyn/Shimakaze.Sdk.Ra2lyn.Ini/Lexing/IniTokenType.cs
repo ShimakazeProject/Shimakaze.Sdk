@@ -41,6 +41,12 @@ public enum IniTokenType
     Hash,
 
     /// <summary>
+    /// 预处理器指令前缀：<c>#</c> 后紧跟字母时只把 <c>#</c> 单独成记号，
+    /// 关键字由预处理器在行内读取。
+    /// </summary>
+    Directive,
+
+    /// <summary>
     /// 非特殊、非空白、非换行的连续字符片段。
     /// </summary>
     Text,

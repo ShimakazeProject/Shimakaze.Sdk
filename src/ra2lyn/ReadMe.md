@@ -111,10 +111,28 @@ AnalyzerRunner.Run(model, options) ─▶ foreach analyzer: analyzer.Analyze(con
 - `IniWriter`：`[Name]`、`[Name]:[Base1],[Base2]`、每行 `Key=Value`；按组输出 `{组名}.ini`；
   `TreeShaking` 只依据 `CompilationModel.ReachableEntities`（分析阶段给出）；`PreserveComments` 暂不支持。
 
+### 4.1 预处理器（`Ra2lyn.Ini.Directives`）
+
+在词法与语法之间执行（`IniPreprocessor`），按宏集合剔除未生效内容后再交给 `IniParser`：
+
+| 指令 | 含义 |
+|---|---|
+| `#if 表达式` / `#elif 表达式` / `#else` / `#endif` | 条件编译 |
+| `#region` / `#endregion` | 命名区域，只参与结构配对，不改变是否生效 |
+
+- 结构语义与 C# 一致：条件段与区域共用分层栈，只能打开或关闭栈顶同类结构，
+  因此 `#region` 不能跨越条件段边界，条件段也不能跨越区域边界。
+- 表达式只支持布尔运算：标识符、`!`、`&&`、`||` 与括号，优先级 `!` → `&&` → `||`。
+  比较、算术与字面量都报告 `INI013`。
+- 宏名大小写敏感：`--defines=A,B,C` 时 `A`/`B`/`C` 为真，其余一律为假。
+- 诊断：`INI011`（未知指令）、`INI012`（结构不成立）、`INI013`（表达式错误）。
+- 未生效部分的指令仍参与配对（未生效的 `#if` 内部必须有 `#endif`），与 C# 行为一致。
+- 指令行本身不进入语法分析；`#` 后紧跟字母才是指令，其余 `#` 仍是行注释。
+
 ## 5. 消费者
 
 - **CLI**：`Shimakaze.Sdk.Engine.Cli` 的 `ra2lyn build`（`ra2lyn` 可缩写为 `ini`）。
-  用法：`ra2lyn build --input a.ini [--input b.ini ...] [--rules x.xml ...] [--output dir] [--group g] [--tree-shaking]`。
+  用法：`ra2lyn build --input a.ini [--input b.ini ...] [--rules x.xml ...] [--output dir] [--group g] [--defines A,B,C] [--tree-shaking]`。
 - **MSBuild**：`Shimakaze.Sdk.Ra2lyn.props` / `.targets` 收集输入，并调用上述 CLI 完成编译。
 - 门面：`Shimakaze.Sdk.Engine.Ra2lyn.Ra2lynCompiler`，只使用前端、内核与分析层的公开类型。
 
@@ -122,7 +140,7 @@ AnalyzerRunner.Run(model, options) ─▶ foreach analyzer: analyzer.Analyze(con
 
 - 新的源语言目标（SHP 等）：新增 `Ra2lyn.<Source>` 项目。Common 保持与源语言无关，
   若目标与某个源语言共用一个写入器，则放在该源语言项目内。
-- 预处理与变量：`#if` / `#include` / `$()` 目前不进 MVP，预留位置为前端词法/语法与降级之间。
+- 预处理：`#if` 系列与 `#region` 已实现；`#include` / `$()` 变量替换仍未实现，预留位置同上。
 - 索引 / 缓存：放到独立 `Ra2lyn.Index` 项目，内核不得引用。
 - LSP：独立 `Ra2lyn.Lsp`，只做 `Diagnostic` → LSP 映射，`Range` 由 `SourceFile` 计算。
 

@@ -1,16 +1,17 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
+using Shimakaze.Sdk.Ra2lyn.Ini.Directives;
 using Shimakaze.Sdk.Ra2lyn.Ini.Lowering;
 using Shimakaze.Sdk.Ra2lyn.Ini.Syntax;
 
 namespace Shimakaze.Sdk.Ra2lyn.Ini;
 
 /// <summary>
-/// INI 前端门面：词法分析、语法分析与降级三阶段的固定编排。
+/// INI 前端门面：预处理、词法分析、语法分析与降级四阶段的固定编排。
 /// </summary>
 /// <remarks>
-/// 语法诊断在两条路径下都会出现在 <see cref="FrontendResult.Diagnostics"/> 中；
-/// 降级诊断（INI101/INI102/INI103）只在启用降级时出现。
+/// 预处理阶段按宏集合求值条件指令并剔除未生效内容；其诊断与语法、降级诊断一并出现在
+/// <see cref="FrontendResult.Diagnostics"/> 中。
 /// </remarks>
 public sealed class IniFrontend
 {
@@ -43,7 +44,7 @@ public sealed class IniFrontend
     /// <param name="source">待解析的源文件。</param>
     /// <param name="group">本文件所属的规则组，由调用方决定，不从扩展名推断。</param>
     public FrontendResult Parse(SourceFile source, string group)
-        => Run(source, group, _options.LowerToIr);
+        => Run(source, group, _options.LowerToIr, _options);
 
     /// <summary>
     /// 解析一个 INI 源文件。
@@ -59,12 +60,13 @@ public sealed class IniFrontend
     {
         // 显式选项与门面默认选项的“降级开关”共同决定结果：显式选项优先。
         bool lowerToIr = options.LowerToIr && _options.LowerToIr;
-        return Run(source, group, lowerToIr);
+        return Run(source, group, lowerToIr, options);
     }
 
-    private static FrontendResult Run(SourceFile source, string group, bool lowerToIr)
+    private static FrontendResult Run(SourceFile source, string group, bool lowerToIr, IniParseOptions options)
     {
-        IniSyntaxTree tree = IniParser.Parse(source);
+        PreprocessResult preprocess = IniPreprocessor.Process(source, new DefineSet(options.Defines));
+        IniSyntaxTree tree = IniParser.Parse(source, preprocess.Diagnostics, preprocess.Tokens);
         if (lowerToIr is false)
             return new(group, [source], [], tree.Diagnostics);
 

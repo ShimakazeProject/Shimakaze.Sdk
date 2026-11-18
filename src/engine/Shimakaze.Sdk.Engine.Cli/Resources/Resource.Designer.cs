@@ -146,6 +146,15 @@ namespace Shimakaze.Sdk.Engine.Cli.Resources {
         
 
         /// <summary>
+        ///   查找类似 预处理器宏列表，形如 A,B,C；列出的名字在 #if 中为真 的本地化字符串。
+        /// </summary>
+        internal static string Command_Ra2lyn_Build_Defines_Description {
+            get {
+                return ResourceManager.GetString("Command.Ra2lyn.Build.Defines.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 规则 XML 文件（可重复指定，按顺序合并） 的本地化字符串。
         /// </summary>
         internal static string Command_Ra2lyn_Build_Rules_Description {

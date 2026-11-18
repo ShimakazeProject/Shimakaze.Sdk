@@ -11,8 +11,9 @@ namespace Shimakaze.Sdk.Ra2lyn.Ini.Lexing;
 /// 连续的空白片段、连续的文本片段、换行符与文件结束。
 /// </para>
 /// <para>
-/// <c>#</c> 与 <c>;</c> 在 MVP 中一律作为行注释处理：记号文本从该符号开始一直延伸到行尾，
-/// 尾部空白被裁剪；整行剩余的空白与换行仍会作为独立记号输出，因此记号序列始终覆盖全文。
+/// <c>;</c> 始终作为行注释；<c>#</c> 后紧跟字母时视为预处理器指令前缀（只输出 <see cref="IniTokenType.Directive"/>），
+/// 否则按行注释处理。注释记号文本从该符号开始一直延伸到行尾，尾部空白被裁剪；
+/// 整行剩余的空白与换行仍会作为独立记号输出，因此记号序列始终覆盖全文。
 /// </para>
 /// </remarks>
 public static class IniLexer
@@ -49,7 +50,7 @@ public static class IniLexer
             '=' => MakeToken(IniTokenType.EqualSign, text, path, ref position, start, 1),
             ':' => MakeToken(IniTokenType.Colon, text, path, ref position, start, 1),
             ',' => MakeToken(IniTokenType.Comma, text, path, ref position, start, 1),
-            '#' => ReadComment(IniTokenType.Hash, text, path, ref position, start),
+            '#' => ReadHash(text, path, ref position, start),
             ';' => ReadComment(IniTokenType.Semicolon, text, path, ref position, start),
             '\r' or '\n' => ReadNewline(text, path, ref position, start),
             ' ' or '\t' => ReadRun(IniTokenType.Whitespace, text, path, ref position, start),
@@ -70,6 +71,22 @@ public static class IniLexer
             position++;
 
         return new(type, text[start..position], new(path, start, position));
+    }
+
+    /// <summary>
+    /// 读取以 <c>#</c> 开头的记号：预处理器指令前缀（<c>#</c> 后直接跟字母）单独成一个记号，
+    /// 其余 <c>#</c> 仍然按行注释处理。
+    /// </summary>
+    private static IniToken ReadHash(string text, string path, ref int position, int start)
+    {
+        int next = start + 1;
+        if (next < text.Length && (char.IsLetter(text[next]) || text[next] is '_'))
+        {
+            position = next;
+            return new(IniTokenType.Directive, text[start..position], new(path, start, position));
+        }
+
+        return ReadComment(IniTokenType.Hash, text, path, ref position, start);
     }
 
     private static IniToken ReadComment(IniTokenType type, string text, string path, ref int position, int start)

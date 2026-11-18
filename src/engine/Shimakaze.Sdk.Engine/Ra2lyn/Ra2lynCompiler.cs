@@ -57,7 +57,7 @@ public sealed class Ra2lynCompiler
             sourceFiles.Add(file);
 
             string group = options.Group ?? GetGroupName(source);
-            compilation.Add(_frontend.Parse(file, group, new IniParseOptions()));
+            compilation.Add(_frontend.Parse(file, group, new IniParseOptions { Defines = options.Defines }));
         }
 
         RuleSet? rules = null;
@@ -209,6 +209,11 @@ public sealed record class Ra2lynCompileOptions
     /// 解析时使用的分组；为 <see langword="null"/> 时按扩展名推断。
     /// </summary>
     public string? Group { get; init; }
+
+    /// <summary>
+    /// 预处理器宏：列出的名字在条件指令中为真，未列出的为假。
+    /// </summary>
+    public IReadOnlyList<string> Defines { get; init; } = [];
 
     /// <summary>
     /// 是否在输出时丢弃不可达实体。

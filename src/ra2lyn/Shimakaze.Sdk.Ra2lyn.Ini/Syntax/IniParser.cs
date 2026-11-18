@@ -34,10 +34,22 @@ public static class IniParser
     /// <param name="source">待分析的源文件。</param>
     /// <returns>语法树，其中包含本次分析产生的全部语法诊断。</returns>
     public static IniSyntaxTree Parse(SourceFile source)
-        => new ParserState(source).Parse();
+        => Parse(source, []);
 
     /// <summary>
-    /// 语法分析的可变状态；每次 <see cref="IniParser.Parse"/> 使用独立实例，因此可重入。
+    /// 对源文件进行语法分析，并附带预处理阶段产生的诊断与已预处理的记号流。
+    /// </summary>
+    /// <param name="source">待分析的源文件。</param>
+    /// <param name="preprocessorDiagnostics">预处理诊断，会与语法诊断合并输出。</param>
+    /// <param name="tokens">已预处理的记号流；为 <see langword="null"/> 时直接对源文本做词法分析。</param>
+    public static IniSyntaxTree Parse(
+        SourceFile source,
+        IReadOnlyList<Diagnostic> preprocessorDiagnostics,
+        IReadOnlyList<IniToken>? tokens = null)
+        => new ParserState(source, preprocessorDiagnostics, tokens).Parse();
+
+    /// <summary>
+    /// 语法分析的可变状态；每次 <see cref="IniParser.Parse(SourceFile)"/> 使用独立实例，因此可重入。
     /// </summary>
     private sealed class ParserState
     {
@@ -47,11 +59,15 @@ public static class IniParser
         private readonly List<Diagnostic> _diagnostics = [];
         private int _position;
 
-        public ParserState(SourceFile source)
+        public ParserState(SourceFile source, IReadOnlyList<Diagnostic> preprocessorDiagnostics, IReadOnlyList<IniToken>? tokens)
         {
             _path = source.Path;
             _length = source.Text.Length;
-            _tokens = IniLexer.Tokenize(source.Text, source.Path);
+            _tokens = tokens ?? IniLexer.Tokenize(source.Text, source.Path);
+
+            // 预处理诊断先进入诊断表，保证输出顺序稳定。
+            foreach (var diagnostic in preprocessorDiagnostics)
+                _diagnostics.Add(diagnostic);
         }
 
         private IniToken Current

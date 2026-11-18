@@ -56,6 +56,20 @@ public static class DiagnosticCodes
     public const string UnexpectedToken = "INI010";
 
     /// <summary>
+    /// INI011：无法识别的预处理器指令。
+    /// </summary>
+    public const string UnknownDirective = "INI011";
+
+    /// <summary>
+    /// INI012：指令的结构不成立（缺少 #if 或 #endif、分支顺序错误、#region 嵌套错误等）。
+    /// </summary>
+    public const string DirectiveStructure = "INI012";
+
+    /// <summary>
+    /// INI013：条件表达式无法解析或求值。
+    /// </summary>
+    public const string DirectiveExpression = "INI013";
+    /// <summary>
     /// INI099：不可恢复的语法错误。
     /// </summary>
     public const string SyntaxError = "INI099";
