@@ -72,6 +72,49 @@ public sealed class SymbolTable
     /// </summary>
     public IEnumerable<(string Group, string Name)> Sections => _sectionOrder;
 
+    /// <summary>
+    /// 从符号表中整体剔除若干节：这些节的属性条目与节枚举项都不再可见。
+    /// </summary>
+    /// <param name="sections">要剔除的 <c>(Group, Name)</c> 集合。</param>
+    /// <returns>被剔除的属性条目数量。</returns>
+    /// <remarks>
+    /// 用于模板展开后剔除模板节（TODO.md §4.5：应用后立即从符号表剔除，不进入 Emit，也不参与后续分析器）。
+    /// 属性条目本身保留在调用方手里（模板 body 的 <see cref="PropertyModel.Origin"/> 已经指向模板源位置），
+    /// 因此这里的剔除只影响"后续按符号表查值"，不会丢失模板注入属性的诊断位置。
+    /// </remarks>
+    public int Prune(IEnumerable<(string Group, string Name)> sections)
+    {
+        ArgumentNullException.ThrowIfNull(sections);
+
+        List<(string Group, string Name)> targets = [.. sections];
+        if (targets.Count is 0)
+            return 0;
+
+        int removed = 0;
+        foreach (var (group, name) in targets)
+        {
+            string sectionKey = string.Concat(group, "\0", name);
+            if (_sectionKeys.Remove(sectionKey) is false)
+                continue;
+
+            string prefix = string.Concat(sectionKey, "\0");
+            foreach (string composite in _entries.Keys.ToList())
+            {
+                if (composite.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) is false)
+                    continue;
+
+                removed += _entries[composite].Count;
+                _entries.Remove(composite);
+            }
+        }
+
+        _sectionOrder.RemoveAll(item => targets.Any(target =>
+            string.Equals(target.Group, item.Group, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(target.Name, item.Name, StringComparison.OrdinalIgnoreCase)));
+
+        return removed;
+    }
+
     private static string MakeKey(string group, string name, string key)
         => string.Concat(group, "\0", name, "\0", key);
 }

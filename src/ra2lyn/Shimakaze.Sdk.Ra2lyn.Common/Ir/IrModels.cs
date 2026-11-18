@@ -46,6 +46,26 @@ public sealed class EntityModel
     /// 数值越大的实体在合并队列中越靠后、覆盖先到者；默认 0。
     /// </summary>
     public int Priority { get; init; }
+
+    /// <summary>
+    /// 该实体是否为模板节（<c>[$Name]</c> 或 <c>[$Name] : where Expr</c>，TODO.md §4.2）。
+    /// </summary>
+    /// <remarks>
+    /// 为 <see langword="true"/> 时，<see cref="Name"/> 保留源文本里的 <c>$</c> 前缀，
+    /// <see cref="Properties"/> 是"待应用的改动包"，<see cref="TemplateWhere"/> 保存待求值的
+    /// <c>where</c> 表达式。<c>TemplateExpansionPass</c> 应用完模板后会把这些实体整体剔除，
+    /// 它们不进入 Emit，也不参与后续分析器（TODO.md §4.5）。
+    /// </remarks>
+    public bool IsTemplate { get; init; }
+
+    /// <summary>
+    /// 模板节的 <c>where</c> 表达式原始字符串（TODO.md §4.3）；为 <see langword="null"/> 时表示无条件模板。
+    /// </summary>
+    /// <remarks>
+    /// 仅当 <see cref="IsTemplate"/> 为 <see langword="true"/> 时有意义。表达式按原始文本保存，
+    /// 由 <c>TemplateExpansionPass</c> 交给 where 求值器解析，不在降级阶段求值。
+    /// </remarks>
+    public string? TemplateWhere { get; init; }
 }
 
 /// <summary>

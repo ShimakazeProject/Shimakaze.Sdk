@@ -23,12 +23,16 @@ public sealed class IrBuilder
     /// <param name="origin">实体在源文件中的位置。</param>
     /// <param name="baseNames">继承/混合名称。</param>
     /// <param name="priority">覆盖式合并优先级（TODO.md §1.1.1），默认 0。</param>
+    /// <param name="isTemplate">是否为模板节（TODO.md §4.2），默认 <see langword="false"/>。</param>
+    /// <param name="templateWhere">模板节的 <c>where</c> 表达式原始字符串；<see langword="null"/> 表示无条件模板。</param>
     public EntityCommand AddEntity(
         string name,
         IEnumerable<PropertyCommand>? properties = null,
         SourceSpan origin = default,
         IEnumerable<string>? baseNames = null,
-        int priority = 0)
+        int priority = 0,
+        bool isTemplate = false,
+        string? templateWhere = null)
     {
         EntityCommand command = new()
         {
@@ -37,6 +41,8 @@ public sealed class IrBuilder
             Origin = origin,
             BaseNames = baseNames is null ? [] : [.. baseNames],
             Priority = priority,
+            IsTemplate = isTemplate,
+            TemplateWhere = templateWhere,
         };
         _commands.Add(command);
 
@@ -135,6 +141,8 @@ public sealed class IrBuilder
             Properties = properties,
             Origin = command.Origin,
             Priority = command.Priority,
+            IsTemplate = command.IsTemplate,
+            TemplateWhere = command.TemplateWhere,
         };
     }
 
@@ -177,6 +185,16 @@ public sealed class IrBuilder
         /// 覆盖式合并优先级（TODO.md §1.1.1），由 <c>#pragma priority</c> 驱动，默认 0。
         /// </summary>
         public int Priority { get; init; }
+
+        /// <summary>
+        /// 是否为模板节（TODO.md §4.2）。
+        /// </summary>
+        public bool IsTemplate { get; init; }
+
+        /// <summary>
+        /// 模板节的 <c>where</c> 表达式原始字符串（TODO.md §4.3）；<see langword="null"/> 表示无条件模板。
+        /// </summary>
+        public string? TemplateWhere { get; init; }
 
         /// <summary>
         /// 登记时分配的实体标识；直接新建而未登记的命令为 <see cref="EntityId.Unknown"/>。

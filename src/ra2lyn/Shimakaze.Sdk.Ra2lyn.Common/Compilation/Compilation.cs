@@ -94,12 +94,19 @@ public sealed class Compilation(CompilationOptions options)
 
     /// <summary>
     /// 内核自带的 Pass：先建立符号表（<see cref="SymbolizerPass"/>），再按优先级合并
-    /// （<see cref="MergePass"/>）。其余全部由外部注入。
+    /// （<see cref="MergePass"/>），最后展开模板（<see cref="TemplateExpansionPass"/>，TODO.md §5）。
+    /// 其余全部由外部注入。
     /// </summary>
+    /// <remarks>
+    /// 展开模板必须排在合并之后：模板节也要参与 MergePass（TODO.md §4.5），同名模板先合并再应用一次。
+    /// 后续的 ValueResolutionPass / NullCleanupPass / 基础分析器本步骤尚未实现，由外部按顺序
+    /// <see cref="AddPass"/> 接入。
+    /// </remarks>
     public static IReadOnlyList<ICompilationPass> CreateDefaultPasses()
         =>
         [
             new SymbolizerPass(),
             new MergePass(),
+            new TemplateExpansionPass(),
         ];
 }

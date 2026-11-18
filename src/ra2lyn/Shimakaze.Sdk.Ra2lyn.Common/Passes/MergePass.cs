@@ -140,6 +140,9 @@ public sealed class MergePass : ICompilationPass
             Properties = properties,
             Origin = source.Origin,
             Priority = source.Priority,
+            // 模板标记必须随合并结果存活到 TemplateExpansionPass（TODO.md §4.5：模板节也参与 MergePass）。
+            IsTemplate = source.IsTemplate,
+            TemplateWhere = source.TemplateWhere,
         };
 
     /// <summary>桶内一个 entity 的来源定位。</summary>

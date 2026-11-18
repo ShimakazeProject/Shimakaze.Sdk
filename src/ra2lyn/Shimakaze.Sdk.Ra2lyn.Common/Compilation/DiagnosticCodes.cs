@@ -86,6 +86,16 @@ public static class DiagnosticCodes
     public const string TemplateWhereMissing = "INI016";
 
     /// <summary>
+    /// INI017：模板 <c>where</c> 表达式无法解析，或使用了不支持的方法 / 函数 / 语法。
+    /// </summary>
+    public const string TemplateWhereSyntax = "INI017";
+
+    /// <summary>
+    /// INI018：模板 <c>where</c> 表达式在求值时出现 NullReferenceError（属性不存在却用单点 <c>.</c> 访问）。
+    /// </summary>
+    public const string TemplateWhereNullReference = "INI018";
+
+    /// <summary>
     /// INI099：不可恢复的语法错误。
     /// </summary>
     public const string SyntaxError = "INI099";

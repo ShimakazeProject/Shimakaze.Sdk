@@ -63,6 +63,9 @@ public sealed class AstToIrLowerer
         {
             switch (entry)
             {
+                case TemplateNode template:
+                    LowerTemplate(template, sectionNames);
+                    break;
                 case SectionNode section:
                     LowerSection(section, sectionNames);
                     break;
@@ -80,12 +83,50 @@ public sealed class AstToIrLowerer
         if (sectionNames.Add(section.Name) is false)
             _builder.Report(DuplicateSection(section));
 
+        _builder.AddEntity(
+            section.Name,
+            LowerKeyValues(section.Name, section.KeyValues),
+            MakeOrigin(section),
+            MakeBaseNames(section),
+            priority: EffectivePriorityFor(section));
+    }
+
+    /// <summary>
+    /// 降级模板节（TODO.md §4.2）：实体名保留源文本里的 <c>$</c> 前缀，
+    /// <c>where</c> 表达式按原始字符串存进 <see cref="EntityModel.TemplateWhere"/>，
+    /// body 的键值对降级为普通属性（待应用的改动包）。
+    /// </summary>
+    /// <remarks>
+    /// 求值与属性注入由后续的 <c>TemplateExpansionPass</c> 完成，本阶段只做结构降级。
+    /// </remarks>
+    private void LowerTemplate(TemplateNode template, HashSet<string> sectionNames)
+    {
+        // 模板名的去重与普通节共用同一个名字集合：模板节也是 entity，同名模板合并后只应用一次。
+        string name = string.Concat("$", template.Name);
+        if (sectionNames.Add(name) is false)
+            _builder.Report(DuplicateTemplate(template, name));
+
+        _builder.AddEntity(
+            name,
+            LowerKeyValues(name, template.KeyValues),
+            MakeOrigin(template),
+            baseNames: null,
+            priority: EffectivePriorityFor(template),
+            isTemplate: true,
+            templateWhere: template.WhereExpression);
+    }
+
+    /// <summary>
+    /// 把节体 / 模板体降级为属性命令：重复键报 INI103，属性范围取键起点到值终点。
+    /// </summary>
+    private List<IrBuilder.PropertyCommand> LowerKeyValues(string ownerName, IReadOnlyList<KeyValueNode> keyValues)
+    {
         List<IrBuilder.PropertyCommand> properties = [];
         HashSet<string> keys = new(StringComparer.OrdinalIgnoreCase);
-        foreach (var keyValue in section.KeyValues)
+        foreach (var keyValue in keyValues)
         {
             if (keys.Add(keyValue.Key) is false)
-                _builder.Report(DuplicateKey(section, keyValue));
+                _builder.Report(DuplicateKey(ownerName, keyValue));
 
             properties.Add(new()
             {
@@ -95,12 +136,7 @@ public sealed class AstToIrLowerer
             });
         }
 
-        _builder.AddEntity(
-            section.Name,
-            properties,
-            MakeOrigin(section),
-            MakeBaseNames(section),
-            priority: EffectivePriorityFor(section));
+        return properties;
     }
 
     /// <summary>
@@ -112,6 +148,29 @@ public sealed class AstToIrLowerer
             return 0;
 
         int sectionStart = (section.HeaderSpan.IsEmpty ? section.NameSpan : section.HeaderSpan).Start;
+        int priority = 0;
+        foreach (var pragma in _pragmas)
+        {
+            if (pragma.LineIndex > sectionStart)
+                break;
+
+            priority = pragma.Priority;
+        }
+
+        return priority;
+    }
+
+    /// <summary>
+    /// 根据节头起始位置，取最后一个行起始偏移 ≤ 节头起始偏移的 pragma 的 priority（TODO.md §1.1.1）。
+    /// <para/>
+    /// 模板节同样享受 <c>#pragma priority</c> 机制（TODO.md §4.2），因此与普通节共用同一套规则。
+    /// </summary>
+    private int EffectivePriorityFor(TemplateNode template)
+    {
+        if (_pragmas.Count is 0)
+            return 0;
+
+        int sectionStart = (template.HeaderSpan.IsEmpty ? template.NameSpan : template.HeaderSpan).Start;
         int priority = 0;
         foreach (var pragma in _pragmas)
         {
@@ -158,6 +217,21 @@ public sealed class AstToIrLowerer
         return baseNames;
     }
 
+    /// <summary>
+    /// 模板来源：节头范围与普通节一致；模板节的节头覆盖到 <c>where</c> 表达式结尾。
+    /// </summary>
+    private static SourceSpan MakeOrigin(TemplateNode template)
+    {
+        SourceSpan header = template.HeaderSpan;
+        if (header.IsEmpty is false)
+            return header;
+
+        if (template.NameSpan.Path is not null)
+            return new(template.NameSpan.Path, template.NameSpan.Start - 1, template.NameSpan.End + 1);
+
+        return template.NameSpan;
+    }
+
     private static Diagnostic DuplicateSection(SectionNode section)
         => new(
             DiagnosticCodes.DuplicateSection,
@@ -172,10 +246,17 @@ public sealed class AstToIrLowerer
             $"键值对 '{keyValue.Key}' 不属于任何节",
             keyValue.KeySpan);
 
-    private static Diagnostic DuplicateKey(SectionNode section, KeyValueNode keyValue)
+    private static Diagnostic DuplicateKey(string sectionName, KeyValueNode keyValue)
         => new(
             DiagnosticCodes.DuplicateKey,
             DiagnosticSeverity.Warning,
-            $"节 '{section.Name}' 中存在重复的键 '{keyValue.Key}'",
+            $"节 '{sectionName}' 中存在重复的键 '{keyValue.Key}'",
             keyValue.KeySpan);
+
+    private static Diagnostic DuplicateTemplate(TemplateNode template, string name)
+        => new(
+            DiagnosticCodes.DuplicateSection,
+            DiagnosticSeverity.Warning,
+            $"重复的节名称: '{name}'",
+            template.HeaderSpan.IsEmpty ? template.NameSpan : template.HeaderSpan);
 }
