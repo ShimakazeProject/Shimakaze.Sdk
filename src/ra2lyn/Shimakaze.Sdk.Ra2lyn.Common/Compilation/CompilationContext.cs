@@ -118,4 +118,17 @@ public sealed class CompilationContext
 /// </summary>
 public sealed class CompilationOptions
 {
+    /// <summary>
+    /// 默认的变量求值递归深度上限（TODO.md §3.4）。
+    /// </summary>
+    public const int DefaultMaxRecursionDepth = 32;
+
+    /// <summary>
+    /// 变量求值递归深度上限（TODO.md §3.4），默认 <see cref="DefaultMaxRecursionDepth"/>。
+    /// </summary>
+    /// <remarks>
+    /// <c>ValueResolutionPass</c> 递归展开"引用了另一个变量"的属性值时，链长超过该上限即诊断 error
+    /// 并保留原始字符串。非正数视为使用默认值。
+    /// </remarks>
+    public int MaxRecursionDepth { get; init; } = DefaultMaxRecursionDepth;
 }

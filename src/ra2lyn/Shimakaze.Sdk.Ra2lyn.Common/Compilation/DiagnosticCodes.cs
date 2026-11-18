@@ -96,6 +96,26 @@ public static class DiagnosticCodes
     public const string TemplateWhereNullReference = "INI018";
 
     /// <summary>
+    /// INI019：<c>$</c> 引用无法识别（未配对的 <c>${</c>、空表达式、<c>.</c> 之后又出现 <c>::</c> 等，TODO.md §3.5.6）。
+    /// </summary>
+    public const string VariableSyntax = "INI019";
+
+    /// <summary>
+    /// INI020：<c>$</c> 引用解析不到任何属性（TODO.md §3.5.6：不匹配的 <c>::</c> / <c>.</c> 链）。
+    /// </summary>
+    public const string UnresolvedVariable = "INI020";
+
+    /// <summary>
+    /// INI021：属性之间出现循环引用（TODO.md §3.4）。
+    /// </summary>
+    public const string CircularVariableReference = "INI021";
+
+    /// <summary>
+    /// INI022：求值递归深度超过 <c>CompilationOptions.MaxRecursionDepth</c>（TODO.md §3.4）。
+    /// </summary>
+    public const string VariableRecursionLimit = "INI022";
+
+    /// <summary>
     /// INI099：不可恢复的语法错误。
     /// </summary>
     public const string SyntaxError = "INI099";
