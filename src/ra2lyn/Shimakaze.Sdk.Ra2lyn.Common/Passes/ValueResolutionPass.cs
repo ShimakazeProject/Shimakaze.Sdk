@@ -117,6 +117,7 @@ public sealed class ValueResolutionPass : ICompilationPass
             Value = resolved.HasValue ? resolved.Text! : null!,
             ValueKind = property.ValueKind,
             ListSeparator = property.ListSeparator,
+            TemplateName = property.TemplateName,
             Origin = property.Origin,
             History = property.History,
         };

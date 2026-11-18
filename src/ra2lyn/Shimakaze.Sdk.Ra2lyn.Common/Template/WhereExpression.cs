@@ -65,19 +65,28 @@ public enum WhereLiteralKind
 }
 
 /// <summary>
-/// 属性引用（TODO.md §4.3.2）：<c>Techlevel</c>、<c>PRI</c>，以及节名伪属性 <c>$id</c>（§4.3.3）。
+/// 属性引用（TODO.md §4.3.2）：<c>Techlevel</c>、<c>PRI</c>。
 /// </summary>
+/// <remarks>
+/// 节名引用 <c>$Section.Id</c> 不是属性引用，它有独立节点 <see cref="WhereSectionIdNode"/>（TODO.md §4.3.3）。
+/// </remarks>
 public sealed class WherePropertyNode : WhereExpressionNode
 {
     /// <summary>
     /// 属性名，保留源文本大小写；比较时不敏感。
     /// </summary>
     public required string Name { get; init; }
+}
 
-    /// <summary>
-    /// 是否为节名伪属性 <c>$id</c>（<c>$ID</c> 等写法同样成立）。
-    /// </summary>
-    public bool IsSectionId { get; init; }
+/// <summary>
+/// 节名引用 <c>$Section.Id</c>（TODO.md §4.3.3）：求值为<b>当前被评估目标节</b>的节名。
+/// </summary>
+/// <remarks>
+/// <c>$Section</c> 固定指"当前节自身"，不是名为 <c>Section</c> 的子节；模板自己的名字在 INI 里取不到，
+/// 只能比较目标节的名字。
+/// </remarks>
+public sealed class WhereSectionIdNode : WhereExpressionNode
+{
 }
 
 /// <summary>

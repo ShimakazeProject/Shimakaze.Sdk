@@ -109,6 +109,19 @@ public sealed class PropertyModel
     /// 新增 key 时为空列表。
     /// </summary>
     public IReadOnlyList<PropertyHistoryEntry> History { get; init; } = [];
+
+    /// <summary>
+    /// 该属性来自哪条模板（TODO.md §4.5）；目标节自己写的属性为 <see langword="null"/>。
+    /// </summary>
+    /// <remarks>
+    /// 取值是模板名，含源文本里的 <c>$</c> 前缀（例如 <c>$Temp1</c>），保留原始大小写。
+    /// <see cref="Passes.TemplateExpansionPass"/> 把模板 body 应用到目标节时写入；被覆盖的旧值进
+    /// <see cref="History"/> 链，除此之外后续 Pass 原样透传，不重新推导。
+    /// <para/>
+    /// 用途：模板节本身已被剔除（不进入 Emit、不参与分析器），这个字段是"这个值是哪条模板改的"
+    /// 的唯一可追溯来源。模板自己的名字在 INI 里取不到，只能通过该字段从编译期一侧读取。
+    /// </remarks>
+    public string? TemplateName { get; init; }
 }
 
 /// <summary>

@@ -10,8 +10,8 @@ namespace Shimakaze.Sdk.Ra2lyn.Common.Template;
 /// <remarks>
 /// <para>
 /// 输入是"模板节写下的原始表达式"与"被评估的目标节"，输出是"该节是否匹配"。模板在每个目标节上
-/// 各求值一次，因此表达式里引用的属性按"目标节"解析（TODO.md §4.3.2）：左操作数是属性 / <c>$id</c> /
-/// <c>is</c>，右操作数可以是字面量，也可以是同一个节里的另一个属性。
+/// 各求值一次，因此表达式里引用的属性按"目标节"解析（TODO.md §4.3.2）：左操作数是属性 /
+/// <c>$Section.Id</c> / <c>is</c>，右操作数可以是字面量，也可以是同一个节里的另一个属性。
 /// </para>
 /// <para>
 /// 求值期诊断（NullReferenceError、语法错误）通过 <see cref="WhereEvaluationResult.Diagnostics"/>
@@ -129,7 +129,8 @@ public sealed class WhereExpressionEvaluator
             case WhereLiteralNode literal:
                 return literal.Text;
 
-            case WherePropertyNode { IsSectionId: true }:
+            // 节名引用 $Section.Id：求值为当前被评估目标节的节名（TODO.md §4.3.3）。
+            case WhereSectionIdNode:
                 return _target.Name;
 
             case WherePropertyNode property:
@@ -374,7 +375,8 @@ public sealed class WhereExpressionEvaluator
         }
 
         // exists 是"属性存在"测试：属性不存在时返回 false，而不是触发 NullReferenceError。
-        return LookupProperty(property.IsSectionId ? "$id" : property.Name).Length > 0 ? "true" : "false";
+        // $Section.Id 永远存在（节一定有名字），因此 exists 对它是恒真。
+        return LookupProperty(property.Name).Length > 0 ? "true" : "false";
     }
 
     private bool EvaluateIs(WhereIsNode isNode)

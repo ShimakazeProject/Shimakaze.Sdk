@@ -118,6 +118,7 @@ public sealed class MergePass : ICompilationPass
                     Value = property.Value,
                     ValueKind = property.ValueKind,
                     ListSeparator = property.ListSeparator,
+                    TemplateName = property.TemplateName,
                     Origin = property.Origin,
                     History = history,
                 };

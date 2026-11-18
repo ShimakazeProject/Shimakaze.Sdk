@@ -132,6 +132,10 @@ public sealed class TemplateExpansionPass : ICompilationPass
     /// <summary>
     /// 把模板 body 的属性应用到一个目标节：同名 key 覆盖，新 key 追加（TODO.md §4.4）。
     /// </summary>
+    /// <remarks>
+    /// 注入的属性保留模板源位置（诊断回指模板）与来源模板名（<see cref="PropertyModel.TemplateName"/>，
+    /// TODO.md §4.5）；被覆盖的旧值进目标属性的 History 链。
+    /// </remarks>
     private static EntityModel ApplyTemplate(EntityModel template, EntityModel target)
     {
         List<PropertyModel> properties = [.. target.Properties];
@@ -160,6 +164,7 @@ public sealed class TemplateExpansionPass : ICompilationPass
                 ListSeparator = injected.ListSeparator,
                 Origin = injected.Origin,
                 History = history,
+                TemplateName = injected.TemplateName,
             };
         }
 
@@ -172,6 +177,9 @@ public sealed class TemplateExpansionPass : ICompilationPass
             Properties = properties,
             Origin = target.Origin,
             Priority = target.Priority,
+            // 目标节不是模板；显式透传以保持模型字段完整（模板节本身由本 Pass 整体剔除）。
+            IsTemplate = target.IsTemplate,
+            TemplateWhere = target.TemplateWhere,
         };
     }
 

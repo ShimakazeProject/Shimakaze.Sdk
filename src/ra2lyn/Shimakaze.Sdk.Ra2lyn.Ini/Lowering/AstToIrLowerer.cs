@@ -98,6 +98,8 @@ public sealed class AstToIrLowerer
     /// </summary>
     /// <remarks>
     /// 求值与属性注入由后续的 <c>TemplateExpansionPass</c> 完成，本阶段只做结构降级。
+    /// 模板 body 的每个键值对都打上来源模板名（<c>$Name</c>，TODO.md §4.5），
+    /// 这样属性被应用到目标节后仍能追溯"这个值是哪条模板改的"。
     /// </remarks>
     private void LowerTemplate(TemplateNode template, HashSet<string> sectionNames)
     {
@@ -108,7 +110,7 @@ public sealed class AstToIrLowerer
 
         _builder.AddEntity(
             name,
-            LowerKeyValues(name, template.KeyValues),
+            LowerKeyValues(name, template.KeyValues, templateName: name),
             MakeOrigin(template),
             baseNames: null,
             priority: EffectivePriorityFor(template),
@@ -119,7 +121,15 @@ public sealed class AstToIrLowerer
     /// <summary>
     /// 把节体 / 模板体降级为属性命令：重复键报 INI103，属性范围取键起点到值终点。
     /// </summary>
-    private List<IrBuilder.PropertyCommand> LowerKeyValues(string ownerName, IReadOnlyList<KeyValueNode> keyValues)
+    /// <param name="ownerName">节 / 模板名，仅用于重复键诊断。</param>
+    /// <param name="keyValues">键值对列表。</param>
+    /// <param name="templateName">
+    /// 模板 body 的键值对附带的来源模板名（TODO.md §4.5）；普通节体为 <see langword="null"/>。
+    /// </param>
+    private List<IrBuilder.PropertyCommand> LowerKeyValues(
+        string ownerName,
+        IReadOnlyList<KeyValueNode> keyValues,
+        string? templateName = null)
     {
         List<IrBuilder.PropertyCommand> properties = [];
         HashSet<string> keys = new(StringComparer.OrdinalIgnoreCase);
@@ -133,6 +143,7 @@ public sealed class AstToIrLowerer
                 Key = keyValue.Key,
                 Value = keyValue.Value ?? string.Empty,
                 Origin = new(keyValue.Span.Path, keyValue.KeySpan.Start, Math.Max(keyValue.KeySpan.End, keyValue.ValueSpan.End)),
+                TemplateName = templateName,
             });
         }
 

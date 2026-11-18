@@ -218,10 +218,8 @@ public sealed class WhereParser
 
             case WhereTokenKind.SectionId:
                 Advance();
-                return new WherePropertyNode
+                return new WhereSectionIdNode
                 {
-                    Name = token.Text,
-                    IsSectionId = true,
                     Start = token.Start,
                     End = token.End,
                 };
@@ -288,7 +286,6 @@ public sealed class WhereParser
         return new WherePropertyNode
         {
             Name = token.Text,
-            IsSectionId = false,
             Start = token.Start,
             End = token.End,
         };

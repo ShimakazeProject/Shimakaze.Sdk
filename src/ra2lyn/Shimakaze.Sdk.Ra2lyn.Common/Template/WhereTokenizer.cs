@@ -22,7 +22,7 @@ public enum WhereTokenKind
     /// <summary>标识符，如 <c>Techlevel</c>、<c>contains</c>、<c>where</c>。</summary>
     Identifier,
 
-    /// <summary>节名伪属性 <c>$id</c>，文本保存 <c>$</c> 之后的名称。</summary>
+    /// <summary>节名引用 <c>$Section.Id</c>（TODO.md §4.3.3），文本保存以 <c>$</c> 起的原文。</summary>
     SectionId,
 
     /// <summary>数字字面量。</summary>
@@ -221,20 +221,43 @@ public static class WhereTokenizer
 
                 case '$':
                 {
-                    // 唯一的合法 $ 形式是节名伪属性 $id（TODO.md §4.3.3）；其它 $ 与变量系统冲突，直接拒绝。
-                    position++;
+                    // `where` 里唯一合法的 $ 形式是节名引用 `$Section.Id`（TODO.md §4.3.3）：
+                    // `$` 之后必须是 `Section`，紧跟 `.` 与 `Id`。其它 $ 一律拒绝——
+                    // 变量系统的 `$Group::Section.Key` 不允许出现在 where 里（TODO.md §4.3.2）。
+                    position++; // 跳过 '$'
                     int nameStart = position;
                     while (position < text.Length && IsIdentifierPart(text[position]))
                         position++;
 
-                    string name = text[nameStart..position];
-                    if (name.Length is 0 || string.Equals(name, "id", StringComparison.OrdinalIgnoreCase) is false)
+                    string sectionName = text[nameStart..position];
+                    if (string.Equals(sectionName, "Section", StringComparison.OrdinalIgnoreCase) is false)
                     {
                         return Fail(out tokens, out errorOffset, out errorMessage, start,
-                            "'where' 表达式里只支持节名伪属性 '$id'");
+                            "'where' 表达式里只支持节名引用 '$Section.Id'");
                     }
 
-                    result.Add(new(WhereTokenKind.SectionId, name, start, position));
+                    // 紧跟 '.'
+                    if (position >= text.Length || text[position] is not '.')
+                    {
+                        return Fail(out tokens, out errorOffset, out errorMessage, start,
+                            "节名引用应写成 '$Section.Id'（缺少 '.'）");
+                    }
+
+                    position++; // 跳过 '.'
+
+                    int idStart = position;
+                    while (position < text.Length && IsIdentifierPart(text[position]))
+                        position++;
+
+                    string idName = text[idStart..position];
+                    if (string.Equals(idName, "Id", StringComparison.OrdinalIgnoreCase) is false)
+                    {
+                        return Fail(out tokens, out errorOffset, out errorMessage, start,
+                            "节名引用应写成 '$Section.Id'（'.' 之后只能是 'Id'）");
+                    }
+
+                    // 整个 `$Section.Id` 折叠成一个记号，文本保存以 `$` 起的原文。
+                    result.Add(new(WhereTokenKind.SectionId, text[start..position], start, position));
                     continue;
                 }
             }

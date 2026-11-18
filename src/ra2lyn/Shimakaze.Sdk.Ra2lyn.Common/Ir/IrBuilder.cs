@@ -128,6 +128,7 @@ public sealed class IrBuilder
                 Key = property.Key,
                 Value = property.Value,
                 ListSeparator = property.ListSeparator,
+                TemplateName = property.TemplateName,
                 Origin = property.Origin,
             });
         }
@@ -229,6 +230,11 @@ public sealed class IrBuilder
         /// 属性在源文件中的位置。
         /// </summary>
         public SourceSpan Origin { get; init; }
+
+        /// <summary>
+        /// 该属性来自哪条模板（TODO.md §4.5）；由前端在降级模板节时写入，普通属性为 <see langword="null"/>。
+        /// </summary>
+        public string? TemplateName { get; init; }
 
         /// <summary>
         /// 登记时分配的属性标识；直接新建而未登记的命令为 <see cref="PropertyId.Unknown"/>。
