@@ -1,5 +1,6 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
+using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
 namespace Shimakaze.Sdk.Ra2lyn.Common.Passes;
 
@@ -79,13 +80,68 @@ public sealed class MergePass : ICompilationPass
                 }
             }
 
-            EntityModel mergedEntity = CreateCopy(first.Entity, [.. properties.Select(t => t.Model)], baseNames);
+            EntityModel mergedEntity = CreateCopy(
+                first.Entity,
+                [.. properties.Select(t => t.Model)],
+                baseNames,
+                MergeTemplateWhere(context, key, bucket));
             mergedByKey[key] = mergedEntity;
             mergedOrder.Add(key);
         }
 
         // 合并结果按首次出现顺序排列，ID 保持首次分配值。
         context.SetEntities(mergedOrder.Select(k => mergedByKey[k]).ToList());
+    }
+
+    /// <summary>
+    /// 合并同一条模板在多个前端里的 <c>where</c> 表达式（TODO.md §4.5：模板节参与 MergePass）。
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// 模板 body 可以按 priority / 前后顺序合并，但 <c>where</c> 不是属性，无法平铺：
+    /// 若直接沿用"桶内首个 entity"的 <c>where</c>，当桶内首个是无条件模板时，整条模板会退化成
+    /// "对所有节无条件生效"，后到前端写的条件被静默丢掉，把本不该匹配的节全部串味。
+    /// </para>
+    /// <para>
+    /// 合并规则：桶内没有条件模板 → 结果仍是无条件模板（<see langword="null"/>）；
+    /// 有 <b>一个</b> 条件模板 → 用它的表达式，桶内其余同名的无条件模板只贡献 body；
+    /// 有 <b>多个</b> 条件模板（同一模板名在多处分别带了条件，属于源文件里的语义冲突）→ 按
+    /// <c>(Priority 降序, FrontendIndex 降序, EntityIndex 降序)</c> 用 <c>&amp;&amp;</c> 连接，
+    /// 即"所有条件都必须成立"，方向与属性合并中"高 priority 覆盖先到者"一致；同时报 INI101 warning
+    /// 提示作者有冲突，而不是静默挑一个。
+    /// </para>
+    /// <para>
+    /// 无论哪条路径，返回的表达式文本都取自源文件（要么原样，要么由原样文本按 <c>&amp;&amp;</c> 拼接），
+    /// 不引入新的偏移语义。
+    /// </para>
+    /// </remarks>
+    private static string? MergeTemplateWhere(CompilationContext context, (string Group, string Name) key, List<BucketEntry> bucket)
+    {
+        List<BucketEntry> conditional = [.. bucket
+            .Where(static entry => entry.Entity.TemplateWhere is not null)
+            .OrderByDescending(static entry => entry.Entity.Priority)
+            .ThenByDescending(static entry => entry.FrontendIndex)
+            .ThenByDescending(static entry => entry.EntityIndex)];
+
+        if (conditional.Count is 0)
+            return null;
+
+        if (conditional.Count is 1)
+            return conditional[0].Entity.TemplateWhere!.Trim();
+
+        // 多个条件：按确定性顺序用 && 连接，并报一条 warning，避免作者误以为只有一个条件生效。
+        context.Diagnostics.Add(new Diagnostic(
+            DiagnosticCodes.ConflictingTemplateWhere,
+            DiagnosticSeverity.Warning,
+            $"模板 '{key.Name}' 在多个前端里带了不同的 where 条件，已按 '&&' 合并全部条件（从新到旧）",
+            conditional[^1].Entity.Origin));
+
+        IEnumerable<string> parts = conditional
+            .Select(static entry => entry.Entity.TemplateWhere!.Trim())
+            .Where(static where => where.Length > 0);
+
+        string joined = string.Join(" && ", parts.Select(static where => $"({where})"));
+        return joined.Length is 0 ? null : joined;
     }
 
     /// <summary>
@@ -131,7 +187,7 @@ public sealed class MergePass : ICompilationPass
         }
     }
 
-    private static EntityModel CreateCopy(EntityModel source, List<PropertyModel> properties, List<string> baseNames)
+    private static EntityModel CreateCopy(EntityModel source, List<PropertyModel> properties, List<string> baseNames, string? templateWhere)
         => new()
         {
             Id = source.Id,
@@ -143,7 +199,8 @@ public sealed class MergePass : ICompilationPass
             Priority = source.Priority,
             // 模板标记必须随合并结果存活到 TemplateExpansionPass（TODO.md §4.5：模板节也参与 MergePass）。
             IsTemplate = source.IsTemplate,
-            TemplateWhere = source.TemplateWhere,
+            // where 不能简单沿用"桶内首个 entity"：无条件模板在前时会把后到的条件静默丢掉。
+            TemplateWhere = templateWhere,
         };
 
     /// <summary>桶内一个 entity 的来源定位。</summary>

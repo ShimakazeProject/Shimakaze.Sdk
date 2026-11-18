@@ -116,6 +116,11 @@ public static class DiagnosticCodes
     public const string VariableRecursionLimit = "INI022";
 
     /// <summary>
+    /// INI023：同一条模板在多个前端里带了不同的 <c>where</c> 条件（模板节参与 MergePass，条件按 <c>&amp;&amp;</c> 合并）。
+    /// </summary>
+    public const string ConflictingTemplateWhere = "INI023";
+
+    /// <summary>
     /// INI099：不可恢复的语法错误。
     /// </summary>
     public const string SyntaxError = "INI099";

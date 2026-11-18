@@ -77,6 +77,15 @@ public sealed class TemplateExpansionPass : ICompilationPass
             .. context.Entities.Where(static entity => entity.IsTemplate is false),
         ];
 
+        // 每个目标节的展开结果；按 targets 的原始下标存放，供最后按引用回填使用。
+        List<EntityModel> applied = [.. targets];
+
+        // 目标节 → 其在 targets 中的下标；键用实体引用（EntityModel 没有重写相等语义）。
+        // 回填时按引用查这个索引，不能用 EntityId：EntityId 只在单个前端内唯一（见下方回填处的说明）。
+        Dictionary<EntityModel, int> targetIndex = [];
+        for (int index = 0; index < targets.Count; index++)
+            targetIndex[targets[index]] = index;
+
         // 先把所有模板应用到所有目标节，再统一剔除模板节：处理期间模板节仍留在
         // context.Entities 里，便于诊断定位与后续排查。
         foreach (var template in templates)
@@ -96,7 +105,7 @@ public sealed class TemplateExpansionPass : ICompilationPass
                 if (evaluation.Succeeded is false || evaluation.Matches is false)
                     continue;
 
-                targets[index] = ApplyTemplate(template, target);
+                applied[index] = ApplyTemplate(template, applied[index]);
             }
         }
 
@@ -104,18 +113,19 @@ public sealed class TemplateExpansionPass : ICompilationPass
         symbolTable.Prune(templates.Select(static template => (template.Group, template.Name)));
 
         // 按原始顺序回填展开后的目标节；模板节整体消失，其它节的顺序与 Id 不变。
-        Dictionary<EntityId, EntityModel> expanded = [];
-        foreach (var target in targets)
-            expanded[target.Id] = target;
-
+        //
+        // 这里必须按引用回填，不能按 EntityId 建字典：每个前端各自持有一个 IrBuilder
+        // （见 IrBuilder 的说明），EntityId 只在单个前端的源文本内唯一，跨前端会重号；
+        // MergePass 的合并结果又继承了"桶内首个 entity"的 Id，因此不同名称的节完全可能共享
+        // 同一个 EntityId。按 Id 回填会让后一个节覆盖前一个节，导致节被吞掉、重复并串味。
         List<EntityModel> result = [];
         foreach (var entity in context.Entities)
         {
             if (entity.IsTemplate)
                 continue;
 
-            if (expanded.TryGetValue(entity.Id, out var replacement))
-                result.Add(replacement);
+            if (targetIndex.TryGetValue(entity, out int index))
+                result.Add(applied[index]);
         }
 
         context.SetEntities(result);
