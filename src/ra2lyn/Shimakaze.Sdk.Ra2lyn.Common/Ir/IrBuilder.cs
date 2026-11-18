@@ -22,11 +22,13 @@ public sealed class IrBuilder
     /// <param name="properties">实体属性。</param>
     /// <param name="origin">实体在源文件中的位置。</param>
     /// <param name="baseNames">继承/混合名称。</param>
+    /// <param name="priority">覆盖式合并优先级（TODO.md §1.1.1），默认 0。</param>
     public EntityCommand AddEntity(
         string name,
         IEnumerable<PropertyCommand>? properties = null,
         SourceSpan origin = default,
-        IEnumerable<string>? baseNames = null)
+        IEnumerable<string>? baseNames = null,
+        int priority = 0)
     {
         EntityCommand command = new()
         {
@@ -34,6 +36,7 @@ public sealed class IrBuilder
             Properties = properties is null ? [] : [.. properties],
             Origin = origin,
             BaseNames = baseNames is null ? [] : [.. baseNames],
+            Priority = priority,
         };
         _commands.Add(command);
 
@@ -131,6 +134,7 @@ public sealed class IrBuilder
             BaseNames = [.. command.BaseNames],
             Properties = properties,
             Origin = command.Origin,
+            Priority = command.Priority,
         };
     }
 
@@ -168,6 +172,11 @@ public sealed class IrBuilder
         /// 继承/混合名称。
         /// </summary>
         public required List<string> BaseNames { get; init; }
+
+        /// <summary>
+        /// 覆盖式合并优先级（TODO.md §1.1.1），由 <c>#pragma priority</c> 驱动，默认 0。
+        /// </summary>
+        public int Priority { get; init; }
 
         /// <summary>
         /// 登记时分配的实体标识；直接新建而未登记的命令为 <see cref="EntityId.Unknown"/>。

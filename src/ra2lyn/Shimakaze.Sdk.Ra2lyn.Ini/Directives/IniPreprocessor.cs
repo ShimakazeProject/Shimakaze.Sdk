@@ -36,6 +36,7 @@ public static class IniPreprocessor
         HashSet<int> directiveLineStarts = [];
         HashSet<int> activeLineStarts = [];
         List<Frame> stack = [];
+        List<PragmaDirective> pragmas = [];
 
         foreach (var line in lines)
         {
@@ -84,7 +85,7 @@ public static class IniPreprocessor
             tokens.Add(token);
         }
 
-        return new([.. tokens], diagnostics);
+        return new([.. tokens], diagnostics, [.. pragmas]);
 
         void HandleDirective(Line line, string trimmed)
         {
@@ -136,6 +137,51 @@ public static class IniPreprocessor
                         return;
                     case DirectiveKind.EndRegion:
                         ApplyEndRegion();
+                        return;
+                    case DirectiveKind.Pragma:
+                        ApplyPragma();
+                        return;
+                }
+            }
+
+            void ApplyPragma()
+            {
+                // operand 形如 "priority 10" 或 "template off"；先拆出第一个子关键字。
+                string trimmedOperand = operand.Trim();
+                int subLength = 0;
+                while (subLength < trimmedOperand.Length && (char.IsLetterOrDigit(trimmedOperand[subLength]) || trimmedOperand[subLength] is '_'))
+                    subLength++;
+
+                string sub = trimmedOperand[..subLength];
+                string args = trimmedOperand[subLength..].Trim();
+                SourceSpan argsSpan = args.Length is 0
+                    ? new(path, line.End, line.End)
+                    : OperandSpan(line, text, args);
+
+                switch (sub)
+                {
+                    case "priority":
+                    {
+                        if (args.Length is 0)
+                        {
+                            diagnostics.Add(new(DiagnosticCodes.PragmaArgument, DiagnosticSeverity.Error, "#pragma priority 缺少整数参数", lineSpan));
+                            return;
+                        }
+
+                        if (int.TryParse(args, out int value) is false)
+                        {
+                            diagnostics.Add(new(DiagnosticCodes.PragmaArgument, DiagnosticSeverity.Error, $"#pragma priority 的参数 '{args}' 不是整数", argsSpan));
+                            return;
+                        }
+
+                        pragmas.Add(new PragmaDirective(value, lineSpan, line.Range.Start));
+                        return;
+                    }
+
+                    default:
+                        diagnostics.Add(new(DiagnosticCodes.PragmaArgument, DiagnosticSeverity.Error, sub.Length is 0
+                            ? "#pragma 缺少子指令（例如 priority）"
+                            : $"暂未支持的 pragma 子指令 '#pragma {sub}'", lineSpan));
                         return;
                 }
             }
@@ -242,6 +288,7 @@ public static class IniPreprocessor
             case "endif": kind = DirectiveKind.EndIf; return true;
             case "region": kind = DirectiveKind.Region; return true;
             case "endregion": kind = DirectiveKind.EndRegion; return true;
+            case "pragma": kind = DirectiveKind.Pragma; return true;
             default: kind = default; return false;
         }
     }
@@ -325,10 +372,20 @@ public static class IniPreprocessor
 }
 
 /// <summary>
+/// 一条 <c>#pragma priority &lt;n&gt;</c> 指令的解析结果，按出现顺序排列（TODO.md §1.1.1）。
+/// </summary>
+/// <param name="Priority">优先级数值。</param>
+/// <param name="LineSpan">整行的位置范围，用于诊断。</param>
+/// <param name="LineIndex">指令行在源文件中的字符起始偏移（与节头位置直接比较即可判断作用域是否覆盖该节）。</param>
+public sealed record class PragmaDirective(int Priority, SourceSpan LineSpan, int LineIndex);
+
+/// <summary>
 /// 预处理结果。
 /// </summary>
 /// <param name="Tokens">剔除未生效内容后的记号流，末尾仍是文件结束记号。</param>
 /// <param name="Diagnostics">指令相关的诊断。</param>
+/// <param name="Pragmas">按出现顺序收集到的 <c>#pragma priority</c> 指令。</param>
 public sealed record class PreprocessResult(
     IReadOnlyList<IniToken> Tokens,
-    IReadOnlyList<Diagnostic> Diagnostics);
+    IReadOnlyList<Diagnostic> Diagnostics,
+    IReadOnlyList<PragmaDirective> Pragmas);

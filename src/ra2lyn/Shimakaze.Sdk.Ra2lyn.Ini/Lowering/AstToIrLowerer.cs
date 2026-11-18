@@ -1,6 +1,7 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
+using Shimakaze.Sdk.Ra2lyn.Ini.Directives;
 using Shimakaze.Sdk.Ra2lyn.Ini.Syntax;
 
 namespace Shimakaze.Sdk.Ra2lyn.Ini.Lowering;
@@ -21,13 +22,18 @@ public sealed class AstToIrLowerer
 {
     private readonly IrBuilder _builder = new();
     private readonly string _group;
+    private readonly IReadOnlyList<PragmaDirective> _pragmas;
 
     /// <summary>
     /// 初始化降级器。
     /// </summary>
     /// <param name="group">降级得到的实体所属的规则组，由调用方给出，不从扩展名推断。</param>
-    public AstToIrLowerer(string group)
-        => _group = group;
+    /// <param name="pragmas">预处理器收集到的 <c>#pragma priority</c> 列表，用于按节位置计算生效优先级。</param>
+    public AstToIrLowerer(string group, IReadOnlyList<PragmaDirective>? pragmas = null)
+    {
+        _group = group;
+        _pragmas = pragmas ?? [];
+    }
 
     /// <summary>
     /// 降级单个源文件的语法树。
@@ -93,7 +99,29 @@ public sealed class AstToIrLowerer
             section.Name,
             properties,
             MakeOrigin(section),
-            MakeBaseNames(section));
+            MakeBaseNames(section),
+            priority: EffectivePriorityFor(section));
+    }
+
+    /// <summary>
+    /// 根据节头起始位置，取最后一个行起始偏移 ≤ 节头起始偏移的 pragma 的 priority（TODO.md §1.1.1）。
+    /// </summary>
+    private int EffectivePriorityFor(SectionNode section)
+    {
+        if (_pragmas.Count is 0)
+            return 0;
+
+        int sectionStart = (section.HeaderSpan.IsEmpty ? section.NameSpan : section.HeaderSpan).Start;
+        int priority = 0;
+        foreach (var pragma in _pragmas)
+        {
+            if (pragma.LineIndex > sectionStart)
+                break;
+
+            priority = pragma.Priority;
+        }
+
+        return priority;
     }
 
     /// <summary>

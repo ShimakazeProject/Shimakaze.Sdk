@@ -40,6 +40,12 @@ public sealed class EntityModel
     /// 实体在源文件中的位置。
     /// </summary>
     public required SourceSpan Origin { get; init; }
+
+    /// <summary>
+    /// 覆盖式合并时的排序优先级，源自最近的 <c>#pragma priority &lt;n&gt;</c> 指令（TODO.md §1.1.1）。
+    /// 数值越大的实体在合并队列中越靠后、覆盖先到者；默认 0。
+    /// </summary>
+    public int Priority { get; init; }
 }
 
 /// <summary>

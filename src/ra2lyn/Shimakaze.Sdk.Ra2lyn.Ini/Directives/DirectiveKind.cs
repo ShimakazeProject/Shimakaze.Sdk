@@ -34,4 +34,9 @@ public enum DirectiveKind
     /// <c>#endregion</c>：结束命名区域。
     /// </summary>
     EndRegion,
+
+    /// <summary>
+    /// <c>#pragma &lt;name&gt; &lt;args&gt;</c>：命名空间指令，由子关键字（例如 <c>priority</c>、<c>template</c>）区分具体语义。
+    /// </summary>
+    Pragma,
 }

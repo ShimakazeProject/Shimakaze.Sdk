@@ -70,6 +70,6 @@ public sealed class IniFrontend
         if (lowerToIr is false)
             return new(group, [source], [], tree.Diagnostics);
 
-        return new AstToIrLowerer(group).Lower(tree, source);
+        return new AstToIrLowerer(group, preprocess.Pragmas).Lower(tree, source);
     }
 }

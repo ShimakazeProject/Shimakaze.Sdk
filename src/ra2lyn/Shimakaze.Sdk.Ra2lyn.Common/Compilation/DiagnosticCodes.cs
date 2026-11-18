@@ -69,6 +69,12 @@ public static class DiagnosticCodes
     /// INI013：条件表达式无法解析或求值。
     /// </summary>
     public const string DirectiveExpression = "INI013";
+
+    /// <summary>
+    /// INI014：<c>#pragma</c> 子指令的参数缺失、格式不合法，或子指令本身暂未支持。
+    /// </summary>
+    public const string PragmaArgument = "INI014";
+
     /// <summary>
     /// INI099：不可恢复的语法错误。
     /// </summary>
