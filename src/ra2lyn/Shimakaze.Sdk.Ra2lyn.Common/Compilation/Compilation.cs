@@ -93,11 +93,13 @@ public sealed class Compilation(CompilationOptions options)
     }
 
     /// <summary>
-    /// 内核自带的 Pass：只有合并，其余全部由外部注入。
+    /// 内核自带的 Pass：先建立符号表（<see cref="SymbolizerPass"/>），再按优先级合并
+    /// （<see cref="MergePass"/>）。其余全部由外部注入。
     /// </summary>
     public static IReadOnlyList<ICompilationPass> CreateDefaultPasses()
         =>
         [
+            new SymbolizerPass(),
             new MergePass(),
         ];
 }

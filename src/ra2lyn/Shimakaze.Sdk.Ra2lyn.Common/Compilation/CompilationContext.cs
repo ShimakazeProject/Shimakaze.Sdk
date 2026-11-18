@@ -64,6 +64,13 @@ public sealed class CompilationContext
     public IReadOnlyList<EntityModel> Entities { get; private set; }
 
     /// <summary>
+    /// 符号表，由 <c>Shimakaze.Sdk.Ra2lyn.Common.Passes.SymbolizerPass</c> 在
+    /// <c>Shimakaze.Sdk.Ra2lyn.Common.Passes.MergePass</c> 之前填充
+    /// （TODO.md §3.3、§5.1）。未运行 SymbolizerPass 时为 <see langword="null"/>。
+    /// </summary>
+    public SymbolTable? SymbolTable { get; set; }
+
+    /// <summary>
     /// 当前引用列表，由引用相关 Pass 替换。
     /// </summary>
     public IReadOnlyList<ReferenceModel> References { get; private set; } = [];
