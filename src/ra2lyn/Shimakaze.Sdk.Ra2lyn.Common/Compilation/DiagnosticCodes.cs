@@ -121,6 +121,11 @@ public static class DiagnosticCodes
     public const string ConflictingTemplateWhere = "INI023";
 
     /// <summary>
+    /// INI024：同名模板在多个文件 / 多个前端里重复出现（模板不参与跨文件合并，必须唯一，TODO.md §4.5）。
+    /// </summary>
+    public const string DuplicateTemplate = "INI024";
+
+    /// <summary>
     /// INI099：不可恢复的语法错误。
     /// </summary>
     public const string SyntaxError = "INI099";

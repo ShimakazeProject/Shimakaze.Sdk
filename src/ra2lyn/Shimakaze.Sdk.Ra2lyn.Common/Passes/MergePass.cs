@@ -63,6 +63,9 @@ public sealed class MergePass : ICompilationPass
                 return c != 0 ? c : a.EntityIndex.CompareTo(b.EntityIndex);
             });
 
+            // 同名模板跨文件 / 跨前端出现：直接报 error，不合并（见 ReportDuplicateTemplates）。
+            bool mergingTemplates = ReportDuplicateTemplates(context, key, bucket);
+
             // 排序后的第一个 entity 决定 Id / Group / Name / Origin。
             var first = bucket[0];
             List<TrackedProperty> properties = [.. first.Entity.Properties
@@ -72,6 +75,13 @@ public sealed class MergePass : ICompilationPass
             for (int i = 1; i < bucket.Count; i++)
             {
                 var entry = bucket[i];
+                if (mergingTemplates is false)
+                {
+                    // 模板重复：body 一律不合并，避免"静默挑一个"后把错误扩散到本不该匹配的节。
+                    // 只有 bucket[0] 这条源文本会继续走 TemplateExpansionPass。
+                    continue;
+                }
+
                 MergeProperties(properties, entry.Entity.Properties, entry.Entity.Priority, entry.FrontendIndex);
                 foreach (string baseName in entry.Entity.BaseNames)
                 {
@@ -83,8 +93,7 @@ public sealed class MergePass : ICompilationPass
             EntityModel mergedEntity = CreateCopy(
                 first.Entity,
                 [.. properties.Select(t => t.Model)],
-                baseNames,
-                MergeTemplateWhere(context, key, bucket));
+                baseNames);
             mergedByKey[key] = mergedEntity;
             mergedOrder.Add(key);
         }
@@ -94,54 +103,66 @@ public sealed class MergePass : ICompilationPass
     }
 
     /// <summary>
-    /// 合并同一条模板在多个前端里的 <c>where</c> 表达式（TODO.md §4.5：模板节参与 MergePass）。
+    /// 检查一个 <c>(Group, Name)</c> 桶里是否有跨文件重复的模板节；有则逐对报 error。
     /// </summary>
+    /// <param name="context">编译上下文，用于写诊断。</param>
+    /// <param name="key">桶键。</param>
+    /// <param name="bucket">已按 <c>(Priority 升序, FrontendIndex 升序, EntityIndex 升序)</c> 排序的桶。</param>
+    /// <returns>
+    /// 桶内第一个 entity 是模板时返回 <see langword="false"/>（调用方必须跳过 body 合并）；
+    /// 不是模板时返回 <see langword="true"/>（普通节照常合并）。
+    /// </returns>
     /// <remarks>
     /// <para>
-    /// 模板 body 可以按 priority / 前后顺序合并，但 <c>where</c> 不是属性，无法平铺：
-    /// 若直接沿用"桶内首个 entity"的 <c>where</c>，当桶内首个是无条件模板时，整条模板会退化成
-    /// "对所有节无条件生效"，后到前端写的条件被静默丢掉，把本不该匹配的节全部串味。
+    /// 用户拍板的语义：<b>同名模板跨文件 / 跨前端出现时直接 error，不合并</b>。
+    /// 模板的 body 与 <c>where</c> 都不是"属性"，无法用覆盖顺序平铺——静默合并会让哪条 body / 哪个条件生效
+    /// 取决于源文件顺序，把错误扩散到本不该匹配的节。因此这里不再尝试任何合并策略，只负责报错。
     /// </para>
     /// <para>
-    /// 合并规则：桶内没有条件模板 → 结果仍是无条件模板（<see langword="null"/>）；
-    /// 有 <b>一个</b> 条件模板 → 用它的表达式，桶内其余同名的无条件模板只贡献 body；
-    /// 有 <b>多个</b> 条件模板（同一模板名在多处分别带了条件，属于源文件里的语义冲突）→ 按
-    /// <c>(Priority 降序, FrontendIndex 降序, EntityIndex 降序)</c> 用 <c>&amp;&amp;</c> 连接，
-    /// 即"所有条件都必须成立"，方向与属性合并中"高 priority 覆盖先到者"一致；同时报 INI101 warning
-    /// 提示作者有冲突，而不是静默挑一个。
-    /// </para>
-    /// <para>
-    /// 无论哪条路径，返回的表达式文本都取自源文件（要么原样，要么由原样文本按 <c>&amp;&amp;</c> 拼接），
-    /// 不引入新的偏移语义。
+    /// 诊断位置指向<b>后出现</b>的那个模板，消息里列出与它冲突的先前文件（源文件路径取
+    /// <see cref="EntityModel.Origin"/>）与所属前端序号。同一前端的多条同名模板由前端降级阶段的
+    /// INI101 负责，这里不重复报。
     /// </para>
     /// </remarks>
-    private static string? MergeTemplateWhere(CompilationContext context, (string Group, string Name) key, List<BucketEntry> bucket)
+    private static bool ReportDuplicateTemplates(
+        CompilationContext context,
+        (string Group, string Name) key,
+        List<BucketEntry> bucket)
     {
-        List<BucketEntry> conditional = [.. bucket
-            .Where(static entry => entry.Entity.TemplateWhere is not null)
-            .OrderByDescending(static entry => entry.Entity.Priority)
-            .ThenByDescending(static entry => entry.FrontendIndex)
-            .ThenByDescending(static entry => entry.EntityIndex)];
+        var first = bucket[0];
+        if (first.Entity.IsTemplate is false)
+            return true;
 
-        if (conditional.Count is 0)
-            return null;
+        for (int i = 1; i < bucket.Count; i++)
+        {
+            var later = bucket[i];
+            for (int j = 0; j < i; j++)
+            {
+                var earlier = bucket[j];
 
-        if (conditional.Count is 1)
-            return conditional[0].Entity.TemplateWhere!.Trim();
+                // 同一前端里的同名模板由 AstToIrLowerer 报 INI101，这里只报跨前端的。
+                if (earlier.FrontendIndex == later.FrontendIndex)
+                    continue;
 
-        // 多个条件：按确定性顺序用 && 连接，并报一条 warning，避免作者误以为只有一个条件生效。
-        context.Diagnostics.Add(new Diagnostic(
-            DiagnosticCodes.ConflictingTemplateWhere,
-            DiagnosticSeverity.Warning,
-            $"模板 '{key.Name}' 在多个前端里带了不同的 where 条件，已按 '&&' 合并全部条件（从新到旧）",
-            conditional[^1].Entity.Origin));
+                context.Diagnostics.Add(new Diagnostic(
+                    DiagnosticCodes.DuplicateTemplate,
+                    DiagnosticSeverity.Error,
+                    $"模板 '{key.Name}' 重复定义：{DescribeLocation(earlier)} 与 {DescribeLocation(later)}",
+                    later.Entity.Origin));
+            }
+        }
 
-        IEnumerable<string> parts = conditional
-            .Select(static entry => entry.Entity.TemplateWhere!.Trim())
-            .Where(static where => where.Length > 0);
+        return false;
+    }
 
-        string joined = string.Join(" && ", parts.Select(static where => $"({where})"));
-        return joined.Length is 0 ? null : joined;
+    /// <summary>把一个桶条目描述成"文件 + 前端"的可读位置，供重复模板诊断使用。</summary>
+    private static string DescribeLocation(BucketEntry entry)
+    {
+        // 源文件路径直接取自实体位置：它由前端按 <c>SourceFile.Path</c> 填入，与 context.Sources 一致。
+        string path = entry.Entity.Origin.Path;
+        string file = string.IsNullOrEmpty(path) ? "未知文件" : path;
+
+        return $"文件 '{file}'（前端 #{entry.FrontendIndex}）";
     }
 
     /// <summary>
@@ -187,7 +208,7 @@ public sealed class MergePass : ICompilationPass
         }
     }
 
-    private static EntityModel CreateCopy(EntityModel source, List<PropertyModel> properties, List<string> baseNames, string? templateWhere)
+    private static EntityModel CreateCopy(EntityModel source, List<PropertyModel> properties, List<string> baseNames)
         => new()
         {
             Id = source.Id,
@@ -199,8 +220,7 @@ public sealed class MergePass : ICompilationPass
             Priority = source.Priority,
             // 模板标记必须随合并结果存活到 TemplateExpansionPass（TODO.md §4.5：模板节也参与 MergePass）。
             IsTemplate = source.IsTemplate,
-            // where 不能简单沿用"桶内首个 entity"：无条件模板在前时会把后到的条件静默丢掉。
-            TemplateWhere = templateWhere,
+            TemplateWhere = source.TemplateWhere,
         };
 
     /// <summary>桶内一个 entity 的来源定位。</summary>
