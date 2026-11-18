@@ -116,11 +116,6 @@ public static class DiagnosticCodes
     public const string VariableRecursionLimit = "INI022";
 
     /// <summary>
-    /// INI023：同一条模板在多个前端里带了不同的 <c>where</c> 条件（模板节参与 MergePass，条件按 <c>&amp;&amp;</c> 合并）。
-    /// </summary>
-    public const string ConflictingTemplateWhere = "INI023";
-
-    /// <summary>
     /// INI024：同名模板在多个文件 / 多个前端里重复出现（模板不参与跨文件合并，必须唯一，TODO.md §4.5）。
     /// </summary>
     public const string DuplicateTemplate = "INI024";

@@ -190,6 +190,7 @@ public sealed class TemplateExpansionPass : ICompilationPass
             // 目标节不是模板；显式透传以保持模型字段完整（模板节本身由本 Pass 整体剔除）。
             IsTemplate = target.IsTemplate,
             TemplateWhere = target.TemplateWhere,
+            TemplateWhereSpan = target.TemplateWhereSpan,
         };
     }
 
@@ -216,23 +217,37 @@ public sealed class TemplateExpansionPass : ICompilationPass
     /// 把求值诊断换算回模板源文件里的位置。
     /// </summary>
     /// <remarks>
-    /// 表达式在模板节头里、位于节头范围的末尾（<c>[...] : where Expr</c>），节头范围即模板实体的
-    /// <see cref="EntityModel.Origin"/>。表达式长度可由"诊断偏移 + 片段长度"推断，因此从节头末尾倒推即可。
+    /// <para>
+    /// <see cref="WhereDiagnostic.Offset"/> / <see cref="WhereDiagnostic.Length"/> 的语义是
+    /// <b>相对 <c>where</c> 表达式文本</b>的偏移（见 <see cref="WhereExpressionEvaluator"/>：节点位置直接取自
+    /// <c>WhereExpressionNode.Start/End</c>）。表达式在源文件里的真实起点由
+    /// <see cref="EntityModel.TemplateWhereSpan"/> 给出（前端从 <c>TemplateNode.WhereSpan</c> 降级而来，
+    /// 已裁剪首尾空白），因此源位置 = 表达式起点 + 表达式内偏移，直接相加即可。
+    /// </para>
+    /// <para>
+    /// 这里不能用模板实体 <see cref="EntityModel.Origin"/> 倒推：它覆盖整个节头、且会随 MergePass
+    /// 取"桶内首个 entity"的位置；倒推时假设诊断片段贴着节头末尾，对 <c>A &amp;&amp; B</c> 中间位置的节点会算错。
+    /// </para>
+    /// <para>
+    /// 只有在拿不到表达式位置时（例如手工构造的 <see cref="EntityModel"/> 没有填
+    /// <see cref="EntityModel.TemplateWhereSpan"/>）才退回粗略的节头区间。
+    /// </para>
     /// </remarks>
     private static Diagnostic MakeDiagnostic(EntityModel template, EntityModel target, WhereDiagnostic diagnostic)
     {
         SourceSpan origin = template.Origin;
         SourceSpan span;
-        if (origin.IsEmpty)
+        if (template.TemplateWhereSpan.IsEmpty)
         {
+            // 没有表达式位置：退回模板节头区间，至少把读者指到正确的节。
             span = origin;
         }
         else
         {
-            int expressionStart = origin.End - (diagnostic.Offset + diagnostic.Length) - 1;
-            int start = Math.Max(origin.Start, expressionStart + diagnostic.Offset);
-            int end = Math.Min(origin.End, Math.Max(start + 1, start + diagnostic.Length));
-            span = new(origin.Path, start, end);
+            SourceSpan expression = template.TemplateWhereSpan;
+            int start = Math.Clamp(expression.Start + diagnostic.Offset, expression.Start, expression.End);
+            int end = Math.Clamp(start + Math.Max(1, diagnostic.Length), start, expression.End);
+            span = new(expression.Path, start, end);
         }
 
         string message = diagnostic.Kind is WhereDiagnosticKind.NullReference

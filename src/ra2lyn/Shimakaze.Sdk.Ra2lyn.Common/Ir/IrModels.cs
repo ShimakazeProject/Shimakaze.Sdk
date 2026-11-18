@@ -66,6 +66,21 @@ public sealed class EntityModel
     /// 由 <c>TemplateExpansionPass</c> 交给 where 求值器解析，不在降级阶段求值。
     /// </remarks>
     public string? TemplateWhere { get; init; }
+
+    /// <summary>
+    /// <see cref="TemplateWhere"/> 在源文件中的位置（已裁剪首尾空白）；无条件模板或位置未知时为 <see langword="default"/>。
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// 求值器产生的诊断偏移是<b>相对 <see cref="TemplateWhere"/> 文本</b>的，因此 <c>TemplateExpansionPass</c>
+    /// 需要这个起点才能把偏移正确换算回源文件位置（而不是用节头区间粗略倒推）。
+    /// </para>
+    /// <para>
+    /// 与 <see cref="Origin"/> 的区别：<see cref="Origin"/> 覆盖整个节头（<c>[...]</c> 到表达式末尾，
+    /// 且会随 MergePass 取桶内首个 entity 的位置），<see cref="TemplateWhereSpan"/> 只覆盖表达式本身。
+    /// </para>
+    /// </remarks>
+    public SourceSpan TemplateWhereSpan { get; init; }
 }
 
 /// <summary>

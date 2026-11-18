@@ -221,6 +221,8 @@ public sealed class MergePass : ICompilationPass
             // 模板标记必须随合并结果存活到 TemplateExpansionPass（TODO.md §4.5：模板节也参与 MergePass）。
             IsTemplate = source.IsTemplate,
             TemplateWhere = source.TemplateWhere,
+            // 表达式位置同样随合并结果保留，供 TemplateExpansionPass 换算 where 求值诊断的 span。
+            TemplateWhereSpan = source.TemplateWhereSpan,
         };
 
     /// <summary>桶内一个 entity 的来源定位。</summary>

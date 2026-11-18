@@ -95,6 +95,7 @@ public sealed class ValueResolutionPass : ICompilationPass
                 Priority = entity.Priority,
                 IsTemplate = entity.IsTemplate,
                 TemplateWhere = entity.TemplateWhere,
+                TemplateWhereSpan = entity.TemplateWhereSpan,
             });
         }
 

@@ -73,6 +73,7 @@ public sealed class NullCleanupPass : ICompilationPass
                 Priority = entity.Priority,
                 IsTemplate = entity.IsTemplate,
                 TemplateWhere = entity.TemplateWhere,
+                TemplateWhereSpan = entity.TemplateWhereSpan,
             });
         }
 

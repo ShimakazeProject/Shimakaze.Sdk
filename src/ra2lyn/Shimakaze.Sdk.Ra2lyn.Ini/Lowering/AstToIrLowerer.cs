@@ -115,7 +115,10 @@ public sealed class AstToIrLowerer
             baseNames: null,
             priority: EffectivePriorityFor(template),
             isTemplate: true,
-            templateWhere: template.WhereExpression);
+            templateWhere: template.WhereExpression,
+            // 表达式在源文件里的真实位置：TemplateExpansionPass 靠它把 where 求值诊断的
+            // 表达式内偏移换算回源位置（表达式已裁剪首尾空白，偏移即相对这段文本）。
+            templateWhereSpan: template.WhereSpan);
     }
 
     /// <summary>

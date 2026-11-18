@@ -25,6 +25,7 @@ public sealed class IrBuilder
     /// <param name="priority">覆盖式合并优先级（TODO.md §1.1.1），默认 0。</param>
     /// <param name="isTemplate">是否为模板节（TODO.md §4.2），默认 <see langword="false"/>。</param>
     /// <param name="templateWhere">模板节的 <c>where</c> 表达式原始字符串；<see langword="null"/> 表示无条件模板。</param>
+    /// <param name="templateWhereSpan">模板节的 <c>where</c> 表达式在源文件中的位置；无条件模板保持默认值。</param>
     public EntityCommand AddEntity(
         string name,
         IEnumerable<PropertyCommand>? properties = null,
@@ -32,7 +33,8 @@ public sealed class IrBuilder
         IEnumerable<string>? baseNames = null,
         int priority = 0,
         bool isTemplate = false,
-        string? templateWhere = null)
+        string? templateWhere = null,
+        SourceSpan templateWhereSpan = default)
     {
         EntityCommand command = new()
         {
@@ -43,6 +45,7 @@ public sealed class IrBuilder
             Priority = priority,
             IsTemplate = isTemplate,
             TemplateWhere = templateWhere,
+            TemplateWhereSpan = templateWhereSpan,
         };
         _commands.Add(command);
 
@@ -144,6 +147,7 @@ public sealed class IrBuilder
             Priority = command.Priority,
             IsTemplate = command.IsTemplate,
             TemplateWhere = command.TemplateWhere,
+            TemplateWhereSpan = command.TemplateWhereSpan,
         };
     }
 
@@ -196,6 +200,14 @@ public sealed class IrBuilder
         /// 模板节的 <c>where</c> 表达式原始字符串（TODO.md §4.3）；<see langword="null"/> 表示无条件模板。
         /// </summary>
         public string? TemplateWhere { get; init; }
+
+        /// <summary>
+        /// 模板节的 <c>where</c> 表达式在源文件中的位置（TODO.md §4.3）；无条件模板为 <see langword="default"/>。
+        /// </summary>
+        /// <remarks>
+        /// 供 <c>TemplateExpansionPass</c> 把求值诊断的表达式内偏移换算回源位置。
+        /// </remarks>
+        public SourceSpan TemplateWhereSpan { get; init; }
 
         /// <summary>
         /// 登记时分配的实体标识；直接新建而未登记的命令为 <see cref="EntityId.Unknown"/>。
