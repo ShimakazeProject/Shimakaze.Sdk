@@ -56,7 +56,7 @@ jobs:
         with:
           global-json-file: ./global.json
           cache: true
-          cache-dependency-path: src/**/packages.lock.json
+          cache-dependency-path: '**/packages.lock.json'
 
       - name: 生成版本文件
         shell: pwsh
