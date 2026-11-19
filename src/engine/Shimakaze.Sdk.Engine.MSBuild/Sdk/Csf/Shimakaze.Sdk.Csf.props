@@ -1,0 +1,18 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Csf 模块的 props（Sdk\Csf\Shimakaze.Sdk.Csf.props）。
+    仅声明属性默认值；默认文件收集见 Shimakaze.Sdk.Csf.Items.targets，
+    编译/合并目标见 Shimakaze.Sdk.Csf.targets。
+  -->
+
+  <PropertyGroup>
+    <CsfCompile Condition="'$(CsfCompile)' == ''">true</CsfCompile>
+    <ImportDefaultCsfItems Condition="'$(ImportDefaultCsfItems)' == ''">true</ImportDefaultCsfItems>
+    <OutputCsfFileName Condition="'$(OutputCsfFileName)' == ''">ra2md.csf</OutputCsfFileName>
+    <OutputCsfFormat Condition="'$(OutputCsfFormat)' == ''">Csf</OutputCsfFormat>
+    <CsfOutputPath Condition="'$(CsfOutputPath)' == ''">$(OutputPath)</CsfOutputPath>
+    <CsfIntermediateOutputPath Condition="'$(CsfIntermediateOutputPath)' == ''">$(IntermediateOutputPath)csf\</CsfIntermediateOutputPath>
+  </PropertyGroup>
+
+</Project>

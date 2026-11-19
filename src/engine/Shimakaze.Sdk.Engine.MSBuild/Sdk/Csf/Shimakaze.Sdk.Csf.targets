@@ -1,6 +1,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="$(MSBuildThisFileDirectory)Shimakaze.Sdk.Csf.props" />
+  <!--
+    Shimakaze.Sdk.Csf 模块的 targets（Sdk\Csf\Shimakaze.Sdk.Csf.targets）。
+    本文件只声明 UsingTask 与编译/合并目标；
+    属性默认值（Shimakaze.Sdk.Csf.props）与默认文件收集（Shimakaze.Sdk.Csf.Items.targets）
+    由 Sdk\Sdk.targets 统一导入，本文件不再 Import 同目录其它文件。
+  -->
 
   <UsingTask TaskName="CsfCompiler"
     AssemblyFile="$(ShimakazeSdkTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"

@@ -1,0 +1,37 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Ra2lyn 默认文件收集（Sdk\Ra2lyn\Shimakaze.Sdk.Ra2lyn.Items.targets）。
+    把“按扩展名自动收集 INI 输入文件”的 ItemGroup 单独抽到本文件，
+    便于使用方项目在设置 UseDefaultInclude=false 时直接 Import 本文件做精细覆盖。
+  -->
+
+  <!--
+    默认 IniCompile 输入收集：递归项目目录下所有指定扩展名的文件。
+    Group 元数据指定编译组名，由 IniCompile 任务在编译时按组分组。
+  -->
+  <ItemGroup Condition="'$(UseDefaultInclude)' == 'true'">
+    <IniCompile Include="$(MSBuildProjectDirectory)\**\*.ai" Group="ai" />
+    <IniCompile Include="$(MSBuildProjectDirectory)\**\*.art" Group="art" />
+    <IniCompile Include="$(MSBuildProjectDirectory)\**\*.eva" Group="eva" />
+    <IniCompile Include="$(MSBuildProjectDirectory)\**\*.rule" Group="rule" />
+    <IniCompile Include="$(MSBuildProjectDirectory)\**\*.sound" Group="sound" />
+    <IniCompile Include="$(MSBuildProjectDirectory)\**\*.theme" Group="theme" />
+    <IniCompile Include="$(MSBuildProjectDirectory)\**\*.ui" Group="ui" />
+  </ItemGroup>
+
+  <!--
+    默认 IniTarget：组名 → 输出文件名映射。
+    未列出的组回退到 {组名}.ini。使用方可追加或 Remove 覆盖。
+  -->
+  <ItemGroup Condition="'$(UseDefaultInclude)' == 'true'">
+    <IniTarget Include="ai" TargetName="aimd.ini" />
+    <IniTarget Include="art" TargetName="artmd.ini" />
+    <IniTarget Include="eva" TargetName="evamd.ini" />
+    <IniTarget Include="rule" TargetName="rulesmd.ini" />
+    <IniTarget Include="sound" TargetName="soundmd.ini" />
+    <IniTarget Include="theme" TargetName="thememd.ini" />
+    <IniTarget Include="ui" TargetName="uimd.ini" />
+  </ItemGroup>
+
+</Project>

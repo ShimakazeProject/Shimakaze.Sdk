@@ -49,6 +49,12 @@ public sealed class Ra2lynCompiler : Task
     public string ValidationMode { get; set; } = "Loose";
 
     /// <summary>
+    /// 组名 → 输出文件名映射（可选）。每项 Identity 为组名，TargetName 元数据为输出文件名。
+    /// 未在映射中的组回退到 <c>{组名}.ini</c>。
+    /// </summary>
+    public ITaskItem[] GroupOutputNames { get; set; } = [];
+
+    /// <summary>
     /// 写出的文件列表。
     /// </summary>
     [Output]
@@ -87,6 +93,10 @@ public sealed class Ra2lynCompiler : Task
             Defines = Defines,
             TreeShaking = TreeShaking,
             ValidationMode = validationMode,
+            GroupOutputNames = GroupOutputNames.ToDictionary(
+                static item => item.ItemSpec,
+                static item => item.GetMetadata("TargetName"),
+                StringComparer.OrdinalIgnoreCase),
         };
 
         Ra2lynCompileResult result;

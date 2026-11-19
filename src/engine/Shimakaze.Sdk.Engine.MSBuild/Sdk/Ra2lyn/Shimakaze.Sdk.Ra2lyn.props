@@ -1,0 +1,37 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Ra2lyn 模块的 props（Sdk\Ra2lyn\Shimakaze.Sdk.Ra2lyn.props）。
+    本文件在 Sdk\Sdk.props 中被导入，声明编译所需的全部属性默认值。
+    使用方项目可在导入 SDK 后覆盖。
+  -->
+
+  <!--
+    IniCompile              是否在构建时编译 INI（默认 true）。
+    IniEnableTreeShaking   编译时是否启用 TreeShaking（默认 false；暂不启用）。
+    IniValidationMode      规则分析的校验模式（默认 "Loose"）。
+    IniOutputDirectory      编译输出目录，默认复用 $(OutputPath)；
+                            该默认值在 .targets 中延迟求值（依赖使用方最终的 OutputPath）。
+  -->
+  <PropertyGroup>
+    <IniCompile Condition="'$(IniCompile)' == ''">true</IniCompile>
+    <IniEnableTreeShaking Condition="'$(IniEnableTreeShaking)' == ''">false</IniEnableTreeShaking>
+    <IniValidationMode Condition="'$(IniValidationMode)' == ''">Loose</IniValidationMode>
+  </PropertyGroup>
+
+  <!--
+    UseDefaultInclude   是否按扩展名自动收集 IniCompile 输入文件（默认 true）。
+                        默认文件收集的 ItemGroup 见 Shimakaze.Sdk.Ra2lyn.Items.targets。
+  -->
+  <PropertyGroup>
+    <UseDefaultInclude Condition="'$(UseDefaultInclude)' == ''">true</UseDefaultInclude>
+  </PropertyGroup>
+
+  <!--
+    编译输入：
+    IniCompile      INI 源文件（默认按扩展名收集，见 Items.targets；Group 元数据指定编译组）。
+    IniRuleFile     规则 XML 文件（多个按声明顺序合并；在项目中自行添加）。
+    IniTarget       组名 → 输出文件名映射（默认见 Items.targets）。
+  -->
+
+</Project>

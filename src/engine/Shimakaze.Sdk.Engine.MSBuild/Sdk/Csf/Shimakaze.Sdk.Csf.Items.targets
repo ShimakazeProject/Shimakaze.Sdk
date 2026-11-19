@@ -1,13 +1,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <PropertyGroup>
-    <CsfCompile Condition="'$(CsfCompile)' == ''">true</CsfCompile>
-    <ImportDefaultCsfItems Condition="'$(ImportDefaultCsfItems)' == ''">true</ImportDefaultCsfItems>
-    <OutputCsfFileName Condition="'$(OutputCsfFileName)' == ''">ra2md.csf</OutputCsfFileName>
-    <OutputCsfFormat Condition="'$(OutputCsfFormat)' == ''">Csf</OutputCsfFormat>
-    <CsfOutputPath Condition="'$(CsfOutputPath)' == ''">$(OutputPath)</CsfOutputPath>
-    <CsfIntermediateOutputPath Condition="'$(CsfIntermediateOutputPath)' == ''">$(IntermediateOutputPath)csf\</CsfIntermediateOutputPath>
-  </PropertyGroup>
+  <!--
+    Shimakaze.Sdk.Csf 默认文件收集（Sdk\Csf\Shimakaze.Sdk.Csf.Items.targets）。
+    把“按扩展名自动收集 Csf 输入文件”的 ItemGroup 单独抽到本文件，
+    便于使用方项目在设置 ImportDefaultCsfItems=false 时直接 Import 本文件做精细覆盖。
+  -->
 
   <ItemGroup Condition="'$(ImportDefaultCsfItems)' == 'true'">
     <CsfResource Include="**\*.csf" Format="Csf" Destination="$(OutputCsfFileName)" />

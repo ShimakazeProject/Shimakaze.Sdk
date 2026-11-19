@@ -1,0 +1,51 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Shimakaze.Sdk.Ra2lyn 模块的 targets（Sdk\Ra2lyn\Shimakaze.Sdk.Ra2lyn.targets）。
+    本文件在 Sdk\Sdk.targets 中被导入，负责定义 IniCompile 目标：
+    直接调用 MSBuild 任务 Shimakaze.Sdk.Engine.MSBuild.Ra2lynCompiler，
+    该任务在同一进程内通过 Shimakaze.Sdk.Engine.Ra2lyn.Ra2lynCompiler 完成编译，
+    不再拉起独立进程。
+  -->
+
+  <!--
+    默认 IniCompile 输出目录：复用使用方最终设置的 $(OutputPath)。
+    .targets 在使用方项目主体之后导入，此处求值的 OutputPath 已是用户覆盖后的值；
+    若用户显式设置 IniOutputDirectory 则保持不变。
+  -->
+  <PropertyGroup>
+    <IniOutputDirectory Condition="'$(IniOutputDirectory)' == ''">$(OutputPath)</IniOutputDirectory>
+  </PropertyGroup>
+
+  <!-- 在同一进程内调用承载 INI 编译的 MSBuild 任务（Engine 门面）。 -->
+  <UsingTask TaskName="Shimakaze.Sdk.Engine.MSBuild.Ra2lynCompiler"
+             AssemblyFile="$(ShimakazeSdkTasksDir)\Shimakaze.Sdk.Engine.MSBuild.dll"
+             Condition="'$(ShimakazeSdkTasksDir)' != ''" />
+
+  <!--
+    编译目标：把所有 @(IniCompile) 项一次性交给 Ra2lynCompiler 任务。
+    任务内部按 Group 元数据分组，按 IniTarget 映射的输出文件名写出到 $(IniOutputDirectory)。
+  -->
+  <Target Name="IniCompile"
+          BeforeTargets="CoreCompile"
+          Condition="'$(IniCompile)' == 'true' AND '@(IniCompile)' != ''"
+          Inputs="@(IniCompile);@(IniRuleFile)"
+          Outputs="@(IniCompile->'$(IniOutputDirectory)%(RecursiveDir)%(Filename).ini')">
+
+    <Shimakaze.Sdk.Engine.MSBuild.Ra2lynCompiler
+        Sources="@(IniCompile)"
+        RuleFiles="@(IniRuleFile)"
+        OutputPath="$(IniOutputDirectory)"
+        TreeShaking="$(IniEnableTreeShaking)"
+        ValidationMode="$(IniValidationMode)"
+        GroupOutputNames="@(IniTarget)">
+      <Output TaskParameter="OutputFiles" ItemName="IniCompiledResource" />
+    </Shimakaze.Sdk.Engine.MSBuild.Ra2lynCompiler>
+
+    <!-- 把产物作为 Content 复制到输出目录（PreserveNewest）。 -->
+    <ItemGroup>
+      <Content Include="@(IniCompiledResource)" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+</Project>

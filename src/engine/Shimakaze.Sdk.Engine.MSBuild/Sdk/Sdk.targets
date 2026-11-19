@@ -1,11 +1,129 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!--
-    Shimakaze.Sdk 的 Sdk.targets 入口。
-    本文件仅重定向到核心的 build\Shimakaze.Sdk.targets（build 文件夹作为核心 SDK），
-    供以 Sdk="Shimakaze.Sdk" 方式使用该包时加载。
+    Shimakaze.Sdk 核心 targets（Sdk\Sdk.targets）。
+    本文件在项目评估的最末期被导入，负责提供构建所需的（空）目标，
+    以及挂载各功能模块（Ra2lyn 编译、Csf 编译、游戏复制）的导入。
+    build\Shimakaze.Sdk.targets 与 buildMultiTargeting\Shimakaze.Sdk.targets 仅重定向到本文件。
   -->
 
-  <Import Project="$(MSBuildThisFileDirectory)..\build\Shimakaze.Sdk.targets" />
+  <!--
+    本 SDK 为纯打包型，不依赖托管语言的编译目标。
+    无论项目使用什么扩展名（推荐 .ra2proj，也支持 .csproj/.proj 等），都兜底到
+    Microsoft.Common.targets 作为 LanguageTargets —— .NET SDK 仅在它认识的托管扩展名上
+    才会自行设置 LanguageTargets，我们这里统一显式补一个，避免在非托管扩展名下报错。
+  -->
+  <PropertyGroup>
+    <LanguageTargets Condition=" '$(LanguageTargets)' == '' ">$(MSBuildToolsPath)\Microsoft.Common.targets</LanguageTargets>
+    <MSBuildAllProjects Condition="'$(MSBuildToolsVersion)' != 'Current'">$(MSBuildAllProjects);$(MsBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <!-- 打包时不包含构建输出；纯打包项目不产出程序集。 -->
+  <PropertyGroup>
+    <IncludeBuildOutput Condition="'$(IncludeBuildOutput)' == ''">false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       .NET SDK（Targets）
+       获得标准构建管线；已被 .NET SDK 自身导入过（CommonTargetsPath 已设置）时跳过。
+       ============================================================ -->
+  <ImportGroup Label="DotNetSdk">
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition=" '$(CommonTargetsPath)' == '' " />
+  </ImportGroup>
+
+  <!--
+    共享任务程序集目录（Shimakaze.Sdk.Engine.MSBuild.dll 承载 Ra2lyn / Csf 等全部 MSBuild 任务）。
+    当前版本仅支持 .NET 10+ 的 MSBuild 宿主，任务程序集位于 tasks\net10.0\。
+    $(ShimakazeSdkPath) 即 Sdk\，因此回包根路径为 $(ShimakazeSdkPath)..\tasks\net10.0。
+    不再根据 MSBuildRuntimeType / Environment.Version 判断，因为目标运行时已经固定。
+  -->
+  <PropertyGroup Condition="'$(ShimakazeSdkTasksDir)' == ''">
+    <ShimakazeSdkTasksDir>$(ShimakazeSdkPath)..\tasks\net10.0</ShimakazeSdkTasksDir>
+  </PropertyGroup>
+
+  <!--
+    覆盖 CoreBuildDependsOn，去掉编译/资源/清单等“产出程序集”的步骤。
+    保留 PrepareForRun：它仍会通过 CopyFilesToOutputDirectory 触发 CopyToOutputDirectory，
+    使游戏/组件/资源等 None 项得以复制到输出目录。
+  -->
+  <PropertyGroup>
+    <CoreBuildDependsOn>
+      BuildOnlySettings;
+      PrepareForBuild;
+      PreBuildEvent;
+      ResolveReferences;
+      Compile;
+      GetTargetPath;
+      PrepareForRun;
+      IncrementalClean;
+      PostBuildEvent
+    </CoreBuildDependsOn>
+
+    <!-- 不产出调试符号与引用程序集。 -->
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <!--
+    清空 IDE 与 NuGet 读取的输出组项：纯打包项目不存在这些产物，
+    保留它们会导致 VS/打包工具误认为有程序集输出。
+  -->
+  <ItemGroup>
+    <BuiltProjectOutputGroupKeyOutput Remove="@(BuiltProjectOutputGroupKeyOutput)" />
+    <DebugSymbolsProjectOutputGroupOutput Remove="@(DebugSymbolsProjectOutputGroupOutput)" />
+    <IntermediateAssembly Remove="@(IntermediateAssembly)" />
+    <IntermediateRefAssembly Remove="@(IntermediateRefAssembly)" />
+    <Reference Remove="mscorlib" />
+  </ItemGroup>
+
+  <!-- 空目标：不生成附属程序集、不暴露目标路径、不解析框架引用程序集。 -->
+  <Target Name="ComputeIntermediateSatelliteAssemblies" />
+  <Target Name="GetTargetPath" />
+  <Target Name="GetTargetPathWithTargetPlatformMoniker" />
+  <Target Name="GetFrameworkPaths" DependsOnTargets="$(GetFrameworkPathsDependsOn)" />
+  <Target Name="GetReferenceAssemblyPaths" DependsOnTargets="$(GetReferenceAssemblyPathsDependsOn)" />
+
+  <!--
+    空目标：纯打包项目不产生资源，补齐语言目标中缺失的 CreateManifestResourceNames，
+    避免 PrepareResources 链路报“目标不存在”。
+  -->
+  <Target Name="CreateManifestResourceNames" />
+
+  <!-- For CPS/VS support：允许后续目标按需重定义（空实现）。 -->
+  <Target Name="CompileDesignTime" />
+
+  <!-- ============================================================
+       Shimakaze 模块（Targets）
+       各功能模块的默认文件收集与编译/合并目标。
+       ============================================================ -->
+  <ImportGroup Label="Shimakaze.Modules">
+    <Import Project="$(ShimakazeSdkPath)Ra2lyn\Shimakaze.Sdk.Ra2lyn.Items.targets" />
+    <Import Project="$(ShimakazeSdkPath)Ra2lyn\Shimakaze.Sdk.Ra2lyn.targets" />
+    <Import Project="$(ShimakazeSdkPath)Csf\Shimakaze.Sdk.Csf.Items.targets" />
+    <Import Project="$(ShimakazeSdkPath)Csf\Shimakaze.Sdk.Csf.targets" />
+    <Import Project="$(ShimakazeSdkPath)Game\CopyVanillaGame.targets" />
+  </ImportGroup>
+
+  <!-- ============================================================
+       外部通用目标（Targets）
+       Microsoft.Managed.targets 补齐 16.0+ MSBuild 所需的通用任务（参照 NoTargets）。
+       ============================================================ -->
+  <ImportGroup Label="External">
+    <Import Project="$(MSBuildToolsPath)\Microsoft.Managed.targets" Condition="'$(MSBuildAssemblyVersion)' >= '16.0'" />
+  </ImportGroup>
+
+  <!--
+    覆盖 CoreCompile 为空操作（保留扩展点 TargetsTriggeredByCompilation），
+    使“编译”这一步在纯打包项目中不产生任何输出。
+  -->
+  <Target Name="CoreCompile"
+          DependsOnTargets="$(CoreBuildDependsOn)">
+    <CallTarget Targets="$(TargetsTriggeredByCompilation)" Condition="'$(TargetsTriggeredByCompilation)' != ''" />
+  </Target>
+
+  <!-- 空目标：不需要生成编译输入与依赖缓存。 -->
+  <Target Name="_GenerateCompileInputs" />
+  <Target Name="_GenerateCompileDependencyCache" />
 
 </Project>

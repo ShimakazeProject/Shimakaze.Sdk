@@ -43,7 +43,7 @@ public sealed class IniWriter : IEmitter
             if (reachable is not null && reachable.Contains(entity.Id) is false)
                 continue;
 
-            string fileName = GetFileName(entity.Group);
+            string fileName = GetFileName(entity.Group, options.GroupOutputNames);
             if (files.TryGetValue(fileName, out var builder) is false)
             {
                 builder = new();
@@ -63,10 +63,16 @@ public sealed class IniWriter : IEmitter
     }
 
     /// <summary>
-    /// 按规则组取输出文件名；未提供组名时使用固定文件名。
+    /// 按规则组取输出文件名；优先查 <paramref name="groupOutputNames"/>，未命中时回退到 <c>{组名}.ini</c>；
+    /// 组名为空时使用固定文件名 <c>output.ini</c>。
     /// </summary>
-    private static string GetFileName(string group)
-        => string.IsNullOrEmpty(group) ? "output.ini" : $"{group}.ini";
+    private static string GetFileName(string group, IReadOnlyDictionary<string, string> groupOutputNames)
+    {
+        if (string.IsNullOrEmpty(group))
+            return "output.ini";
+
+        return groupOutputNames.TryGetValue(group, out var name) ? name : $"{group}.ini";
+    }
 
     /// <summary>
     /// 写出一个实体：节头、继承与键值，末尾补一个空行。

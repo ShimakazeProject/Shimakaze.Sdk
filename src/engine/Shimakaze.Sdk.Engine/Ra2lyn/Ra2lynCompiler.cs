@@ -86,7 +86,12 @@ public sealed class Ra2lynCompiler
 
         EmitResult emitResult = new IniWriter().Emit(
             model,
-            new EmitOptions { TreeShaking = options.TreeShaking, NewLine = options.NewLine });
+            new EmitOptions
+            {
+                TreeShaking = options.TreeShaking,
+                NewLine = options.NewLine,
+                GroupOutputNames = options.GroupOutputNames,
+            });
 
         outputDirectory.Create();
         List<string> writtenPaths = [];
@@ -229,4 +234,10 @@ public sealed record class Ra2lynCompileOptions
     /// 输出换行符。
     /// </summary>
     public string NewLine { get; init; } = "\r\n";
+
+    /// <summary>
+    /// 组名 → 输出文件名映射。未在映射中的组回退到 <c>{组名}.ini</c>。
+    /// </summary>
+    public IReadOnlyDictionary<string, string> GroupOutputNames { get; init; }
+        = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 }

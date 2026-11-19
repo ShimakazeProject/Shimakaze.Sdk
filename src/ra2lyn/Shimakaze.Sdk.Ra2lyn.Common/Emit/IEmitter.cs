@@ -33,6 +33,13 @@ public sealed record class EmitOptions
     /// 输出使用的换行符。
     /// </summary>
     public string NewLine { get; init; } = "\r\n";
+
+    /// <summary>
+    /// 组名 → 输出文件名映射。未在映射中的组回退到 <c>{组名}.ini</c>。
+    /// 例如 <c>{"rule": "rulesmd.ini"}</c> 表示 rule 组输出为 rulesmd.ini。
+    /// </summary>
+    public IReadOnlyDictionary<string, string> GroupOutputNames { get; init; }
+        = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 }
 
 /// <summary>
