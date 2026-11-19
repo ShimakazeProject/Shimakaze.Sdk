@@ -13,8 +13,8 @@
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Xml\Shimakaze.Sdk.Csf.Xml.csproj" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf.Yaml\Shimakaze.Sdk.Csf.Yaml.csproj" />
     <ProjectReference Include="..\..\csf\Shimakaze.Sdk.Csf\Shimakaze.Sdk.Csf.csproj" />
-    <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Analyzer.Common\Shimakaze.Sdk.Analyzer.Common.csproj" />
-    <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Analyzer.IniRule\Shimakaze.Sdk.Analyzer.IniRule.csproj" />
+    <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Ra2lyn.Analyzer.Common\Shimakaze.Sdk.Ra2lyn.Analyzer.Common.csproj" />
+    <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule\Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule.csproj" />
     <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Ra2lyn.Common\Shimakaze.Sdk.Ra2lyn.Common.csproj" />
     <ProjectReference Include="..\..\ra2lyn\Shimakaze.Sdk.Ra2lyn.Ini\Shimakaze.Sdk.Ra2lyn.Ini.csproj" />
     <ProjectReference Include="..\..\mix\Shimakaze.Sdk.Mix\Shimakaze.Sdk.Mix.csproj" />

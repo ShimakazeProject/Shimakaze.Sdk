@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Shimakaze.Sdk.Analyzer.Common\Shimakaze.Sdk.Analyzer.Common.csproj" />
+    <ProjectReference Include="..\Shimakaze.Sdk.Ra2lyn.Analyzer.Common\Shimakaze.Sdk.Ra2lyn.Analyzer.Common.csproj" />
     <ProjectReference Include="..\Shimakaze.Sdk.Ra2lyn.Common\Shimakaze.Sdk.Ra2lyn.Common.csproj" />
   </ItemGroup>
 

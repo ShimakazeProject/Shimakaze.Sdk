@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Analyzer.Common.Rules;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 
 /// <summary>
 /// 规则集：按规则组组织的一组规则。

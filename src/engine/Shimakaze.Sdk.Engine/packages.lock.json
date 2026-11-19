@@ -32,19 +32,6 @@
         "resolved": "11.0.0",
         "contentHash": "U+Bv2qCYt6eONi+arSP0QIp4uTO6os6uceBsqiAwruZ+Wo2HrRhO/0tj38M9URJtS+4DhAtT3ka2TGNFYsnhyQ=="
       },
-      "shimakaze.sdk.analyzer.common": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.analyzer.inirule": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Analyzer.Common": "[1.0.0, )",
-          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
-        }
-      },
       "shimakaze.sdk.csf": {
         "type": "Project"
       },
@@ -76,6 +63,19 @@
       },
       "shimakaze.sdk.pal": {
         "type": "Project"
+      },
+      "shimakaze.sdk.ra2lyn.analyzer.common": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
+        }
+      },
+      "shimakaze.sdk.ra2lyn.analyzer.inirule": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Ra2lyn.Analyzer.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
+        }
       },
       "shimakaze.sdk.ra2lyn.common": {
         "type": "Project"

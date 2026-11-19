@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Analyzer.Common.Passes;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Passes;
 
 /// <summary>
 /// 实体键比较器：组名与实体名均按 <see cref="StringComparer.OrdinalIgnoreCase"/> 比较。

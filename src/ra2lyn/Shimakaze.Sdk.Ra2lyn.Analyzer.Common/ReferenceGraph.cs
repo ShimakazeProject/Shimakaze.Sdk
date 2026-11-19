@@ -1,6 +1,6 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 
-namespace Shimakaze.Sdk.Analyzer.Common;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
 
 /// <summary>
 /// 引用图：分析层解析出的实体引用，供可达性分析与发射阶段使用。

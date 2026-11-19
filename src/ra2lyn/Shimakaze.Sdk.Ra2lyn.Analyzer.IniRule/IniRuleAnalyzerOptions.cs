@@ -1,7 +1,7 @@
-using Shimakaze.Sdk.Analyzer.Common;
-using Shimakaze.Sdk.Analyzer.Common.Types;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Types;
 
-namespace Shimakaze.Sdk.Analyzer.IniRule;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule;
 
 /// <summary>
 /// 规则分析器选项：在通用分析选项上携带校验模式与外部验证器。

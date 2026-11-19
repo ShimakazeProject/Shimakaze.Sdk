@@ -8,8 +8,8 @@
 |---|---|---|
 | `Shimakaze.Sdk.Ra2lyn.Common` | 内核 | 源位置与诊断、IR（节/组/键/简单值或引用值）、合并、编译驱动、发射契约 |
 | `Shimakaze.Sdk.Ra2lyn.Ini` | 前端 | INI 词法、语法树、语法诊断、AST → IR 降级、INI 发射器 |
-| `Shimakaze.Sdk.Analyzer.Common` | 分析层 | 规则 XML、类型系统、语义注解、分类/引用/发现/可达性分析器、分析运行器 |
-| `Shimakaze.Sdk.Analyzer.IniRule` | 分析器 | 按节定义与键规则校验 INI 实体（`INI201`～`INI203`） |
+| `Shimakaze.Sdk.Ra2lyn.Analyzer.Common` | 分析层 | 规则 XML、类型系统、语义注解、分类/引用/发现/可达性分析器、分析运行器 |
+| `Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule` | 分析器 | 按节定义与键规则校验 INI 实体（`INI201`～`INI203`） |
 
 依赖规则：
 

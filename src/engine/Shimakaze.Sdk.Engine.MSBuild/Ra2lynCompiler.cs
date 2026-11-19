@@ -1,7 +1,7 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Shimakaze.Sdk.Analyzer.Common.Types;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Types;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
 using Ra2lynEngineCompiler = Shimakaze.Sdk.Engine.Ra2lyn.Ra2lynCompiler;

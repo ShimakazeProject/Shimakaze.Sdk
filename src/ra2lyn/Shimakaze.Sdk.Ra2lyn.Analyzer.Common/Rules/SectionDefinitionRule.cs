@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Analyzer.Common.Rules;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 
 /// <summary>
 /// 节定义规则：声明一类实体允许出现的键。

@@ -1,10 +1,10 @@
 using System.Globalization;
 using System.Text;
 
-using Shimakaze.Sdk.Analyzer.Common;
-using Shimakaze.Sdk.Analyzer.Common.Rules;
-using Shimakaze.Sdk.Analyzer.Common.Types;
-using Shimakaze.Sdk.Analyzer.IniRule;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Types;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Emit;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;

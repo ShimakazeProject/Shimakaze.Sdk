@@ -1,7 +1,7 @@
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Shimakaze.Sdk.Analyzer.Common.Rules;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 
 /// <summary>
 /// 规则 XML 读取器，兼容现有 <c>Ra2lynRules.xsd</c> 的元素结构。

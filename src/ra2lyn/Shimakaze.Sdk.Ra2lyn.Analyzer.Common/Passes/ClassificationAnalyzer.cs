@@ -1,7 +1,7 @@
-using Shimakaze.Sdk.Analyzer.Common.Rules;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 
-namespace Shimakaze.Sdk.Analyzer.Common.Passes;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Passes;
 
 /// <summary>
 /// 分类分析器：按规则组给出实体的语义分类，并登记实体拥有的类型。

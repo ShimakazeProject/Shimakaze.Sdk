@@ -1,9 +1,9 @@
-using Shimakaze.Sdk.Analyzer.Common.Rules;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
-namespace Shimakaze.Sdk.Analyzer.Common.Passes;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Passes;
 
 /// <summary>
 /// 引用分析器：根据实体语义与键规则解析属性值中的实体引用，结果写入 <see cref="ReferenceGraph"/>。

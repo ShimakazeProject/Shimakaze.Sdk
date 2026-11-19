@@ -1,6 +1,6 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 
-namespace Shimakaze.Sdk.Analyzer.Common.Passes;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Passes;
 
 /// <summary>
 /// 可达性分析器：从入口类实体出发，沿引用图做 BFS，把结果写入 <see cref="SemanticAnnotations"/>。

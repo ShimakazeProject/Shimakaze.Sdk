@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Analyzer.Common.Rules;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 
 /// <summary>
 /// 复合类型定义，描述由分隔符隔开的多个字段。

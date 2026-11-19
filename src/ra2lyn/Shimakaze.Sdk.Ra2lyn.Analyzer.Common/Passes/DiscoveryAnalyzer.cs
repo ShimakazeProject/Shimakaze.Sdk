@@ -1,11 +1,11 @@
 using System.Globalization;
 
-using Shimakaze.Sdk.Analyzer.Common.Rules;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
-namespace Shimakaze.Sdk.Analyzer.Common.Passes;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Passes;
 
 /// <summary>
 /// 发现分析器：按 <see cref="DiscoverRule"/> 从已知类型实体的键值出发，发现目标类型实体，迭代到不动点。

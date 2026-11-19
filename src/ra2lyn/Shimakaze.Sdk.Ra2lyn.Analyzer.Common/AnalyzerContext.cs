@@ -1,9 +1,9 @@
-using Shimakaze.Sdk.Analyzer.Common.Rules;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
-namespace Shimakaze.Sdk.Analyzer.Common;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
 
 /// <summary>
 /// 分析器：对一次编译的产物做只读检查，并把诊断写入分析上下文。

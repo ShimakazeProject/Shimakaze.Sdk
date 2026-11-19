@@ -1,6 +1,6 @@
-using Shimakaze.Sdk.Analyzer.Common;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
 
-namespace Shimakaze.Sdk.Analyzer.IniRule;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule;
 
 /// <summary>
 /// 规则分析器的登记入口：宿主持有规则集时调用一次，即可让默认分析器集合包含规则校验。

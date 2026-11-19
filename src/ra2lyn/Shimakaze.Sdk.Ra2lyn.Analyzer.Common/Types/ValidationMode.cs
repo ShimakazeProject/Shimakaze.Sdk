@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Analyzer.Common.Types;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Types;
 
 /// <summary>
 /// 值校验的严格程度。

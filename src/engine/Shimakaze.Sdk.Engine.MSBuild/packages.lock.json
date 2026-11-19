@@ -39,11 +39,6 @@
         "resolved": "18.12.2",
         "contentHash": "qw/bBa2GCn4jBm/zCTOxyEGN6xUkd5QeXe119DLMtv+umudhMT1ZT16r/FPz+mqPgQYodaaLVG0CmB/5X8/pqg=="
       },
-      "System.CommandLine": {
-        "type": "Transitive",
-        "resolved": "2.0.11",
-        "contentHash": "Pmg3/T0M37ZS3ovwPHtfBNTCdqNpnxo+tnZMg8JDHVR0qD8KwcPUKlheEiZysb1En8IyH7yDoa9QDq97Ny/vhQ=="
-      },
       "System.Configuration.ConfigurationManager": {
         "type": "Transitive",
         "resolved": "10.0.10",
@@ -62,19 +57,6 @@
         "type": "Transitive",
         "resolved": "10.0.10",
         "contentHash": "BKt0SQgq2lq3ESE68jkeLwv95ypANrPDtkTOIFGcnhg2aRUeUUBDrQlkVDZctrg1WenVcvn5P5XZnuYI7q6rFQ=="
-      },
-      "shimakaze.sdk.analyzer.common": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
-        }
-      },
-      "shimakaze.sdk.analyzer.inirule": {
-        "type": "Project",
-        "dependencies": {
-          "Shimakaze.Sdk.Analyzer.Common": "[1.0.0, )",
-          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
-        }
       },
       "shimakaze.sdk.csf": {
         "type": "Project"
@@ -102,14 +84,14 @@
       "shimakaze.sdk.engine": {
         "type": "Project",
         "dependencies": {
-          "Shimakaze.Sdk.Analyzer.Common": "[1.0.0, )",
-          "Shimakaze.Sdk.Analyzer.IniRule": "[1.0.0, )",
           "Shimakaze.Sdk.Csf": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Json": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Xml": "[1.0.0, )",
           "Shimakaze.Sdk.Csf.Yaml": "[1.0.0, )",
           "Shimakaze.Sdk.Mix": "[1.0.0, )",
           "Shimakaze.Sdk.Pal": "[1.0.0, )",
+          "Shimakaze.Sdk.Ra2lyn.Analyzer.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule": "[1.0.0, )",
           "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )",
           "Shimakaze.Sdk.Ra2lyn.Ini": "[1.0.0, )",
           "Shimakaze.Sdk.Shp": "[1.0.0, )",
@@ -117,13 +99,6 @@
           "StbImageSharp": "[2.30.16, )",
           "StbImageWriteSharp": "[1.16.7, )",
           "System.IO.Hashing": "[11.0.0, )"
-        }
-      },
-      "shimakaze.sdk.engine.cli": {
-        "type": "Project",
-        "dependencies": {
-          "DotMake.CommandLine": "[3.7.0, )",
-          "Shimakaze.Sdk.Engine": "[1.0.0, )"
         }
       },
       "shimakaze.sdk.mix": {
@@ -134,6 +109,19 @@
       },
       "shimakaze.sdk.pal": {
         "type": "Project"
+      },
+      "shimakaze.sdk.ra2lyn.analyzer.common": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
+        }
+      },
+      "shimakaze.sdk.ra2lyn.analyzer.inirule": {
+        "type": "Project",
+        "dependencies": {
+          "Shimakaze.Sdk.Ra2lyn.Analyzer.Common": "[1.0.0, )",
+          "Shimakaze.Sdk.Ra2lyn.Common": "[1.0.0, )"
+        }
       },
       "shimakaze.sdk.ra2lyn.common": {
         "type": "Project"
@@ -149,15 +137,6 @@
       },
       "shimakaze.sdk.tmp": {
         "type": "Project"
-      },
-      "DotMake.CommandLine": {
-        "type": "CentralTransitive",
-        "requested": "[3.7.0, )",
-        "resolved": "3.7.0",
-        "contentHash": "t7DvPCfFPd8Hz5Xk7zopOj7kG7ubRkQc2U47fiI3/SCircEDKBoyQBzoqrUokyl0KpU66u9ri486iG1s1sc/oA==",
-        "dependencies": {
-          "System.CommandLine": "[2.0.11, 3.0.0)"
-        }
       },
       "StbImageSharp": {
         "type": "CentralTransitive",

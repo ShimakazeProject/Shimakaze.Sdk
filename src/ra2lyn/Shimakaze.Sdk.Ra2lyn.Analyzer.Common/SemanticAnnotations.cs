@@ -1,6 +1,6 @@
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 
-namespace Shimakaze.Sdk.Analyzer.Common;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
 
 /// <summary>
 /// 实体语义：分析层对“节”的分类与类型判断。

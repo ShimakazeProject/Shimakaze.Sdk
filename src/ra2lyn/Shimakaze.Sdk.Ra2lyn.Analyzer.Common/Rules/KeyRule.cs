@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Analyzer.Common.Rules;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 
 /// <summary>
 /// 一条键规则：声明属性值的类型，以及可选的列表分隔符。

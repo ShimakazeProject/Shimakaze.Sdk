@@ -1,8 +1,8 @@
-using Shimakaze.Sdk.Analyzer.Common.Passes;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Passes;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
 
-namespace Shimakaze.Sdk.Analyzer.Common;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
 
 /// <summary>
 /// 分析运行器：按登记顺序执行分析器并汇总结果。

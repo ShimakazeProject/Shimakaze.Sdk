@@ -1,11 +1,11 @@
-using Shimakaze.Sdk.Analyzer.Common;
-using Shimakaze.Sdk.Analyzer.Common.Rules;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 using Shimakaze.Sdk.Ra2lyn.Common.Compilation;
 using Shimakaze.Sdk.Ra2lyn.Common.Ir;
 using Shimakaze.Sdk.Ra2lyn.Common.Source;
-using Shimakaze.Sdk.Analyzer.Common.Types;
+using Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Types;
 
-namespace Shimakaze.Sdk.Analyzer.IniRule;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.IniRule;
 
 /// <summary>
 /// INI 规则分析器：按节定义与键规则校验普通实体的属性值类型。

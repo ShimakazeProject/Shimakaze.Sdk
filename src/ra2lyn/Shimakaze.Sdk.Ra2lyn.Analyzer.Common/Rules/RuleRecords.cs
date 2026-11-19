@@ -1,4 +1,4 @@
-namespace Shimakaze.Sdk.Analyzer.Common.Rules;
+namespace Shimakaze.Sdk.Ra2lyn.Analyzer.Common.Rules;
 
 /// <summary>
 /// 注册表规则：声明某个节登记了哪些类型的成员。
