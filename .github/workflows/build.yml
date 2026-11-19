@@ -55,13 +55,16 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
+          cache: true
+          cache-dependency-path: src/**/packages.lock.json
 
       - name: 生成版本文件
+        shell: pwsh
         run: |
           "### Version Information" >> $env:GITHUB_STEP_SUMMARY
           '```' >> $env:GITHUB_STEP_SUMMARY
           $Version = dotnet tool exec Shimakaze.GitSemVer --version 0.0.1-preview.1 | ConvertFrom-Json
-          $Version >> $env:GITHUB_STEP_SUMMARY
+          $Version | Format-List | Out-String | ForEach-Object { $_ >> $env:GITHUB_STEP_SUMMARY }
           '```' >> $env:GITHUB_STEP_SUMMARY
           @"
           <Project>
@@ -129,7 +132,7 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
-          cache: false
+          cache: true
 
       - name: Download a Build Artifact
         uses: actions/download-artifact@v8
