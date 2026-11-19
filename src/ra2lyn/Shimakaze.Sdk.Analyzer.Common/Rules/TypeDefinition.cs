@@ -16,6 +16,12 @@ public sealed class TypeDefinition
     public string? Separator { get; init; }
 
     /// <summary>
+    /// 是否为外部类型（由宿主注入实际可用值，如 CSF 键值、资源文件名）。
+    /// 外部类型在值校验时直接放行，不做语法校验。
+    /// </summary>
+    public bool IsExternal { get; init; }
+
+    /// <summary>
     /// 字段列表。
     /// </summary>
     public List<TypeField> Fields { get; init; } = [];

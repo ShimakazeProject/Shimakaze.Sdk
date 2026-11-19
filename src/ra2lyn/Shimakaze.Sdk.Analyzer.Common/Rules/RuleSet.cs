@@ -8,7 +8,7 @@ public sealed class RuleSet
     /// <summary>
     /// 规则组，键为组名。
     /// </summary>
-    public Dictionary<string, RuleGroup> Groups { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, RuleGroup> Groups { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// 找不到指定规则组时返回 <see langword="null"/>。

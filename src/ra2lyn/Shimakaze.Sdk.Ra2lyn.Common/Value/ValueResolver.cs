@@ -109,9 +109,9 @@ public sealed class ValueResolver
     private const string DoubleColonSeparator = "::";
     private const string DollarPrefix = "$";
 
-    private readonly Dictionary<string, PropertyNode> _nodes = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, PropertyNode> _nodes = [with(StringComparer.OrdinalIgnoreCase)];
     private readonly List<PropertyNode> _nodeOrder = [];
-    private readonly Dictionary<string, ResolvedValue> _values = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, ResolvedValue> _values = [with(StringComparer.OrdinalIgnoreCase)];
     private readonly List<VariableDiagnostic> _diagnostics = [];
     private int _maxDepth = CompilationOptions.DefaultMaxRecursionDepth;
 
@@ -137,7 +137,7 @@ public sealed class ValueResolver
 
         BuildGraph(entities);
 
-        HashSet<string> stack = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> stack = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (var node in _nodeOrder)
             ResolveNode(node, depth: 0, stack);
 

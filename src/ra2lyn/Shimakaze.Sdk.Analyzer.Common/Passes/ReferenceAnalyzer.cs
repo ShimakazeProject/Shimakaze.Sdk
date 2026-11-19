@@ -28,7 +28,7 @@ public sealed class ReferenceAnalyzer : IAnalyzer
         if (context.Rules is not { } rules)
             return;
 
-        Dictionary<(string Group, string Name), EntityModel> byKey = new(new EntityKeyComparer());
+        Dictionary<(string Group, string Name), EntityModel> byKey = [with(new EntityKeyComparer())];
         Dictionary<PropertyId, EntityId> owners = [];
         foreach (var entity in context.Model.Entities)
         {

@@ -19,15 +19,15 @@ public sealed class SectionDefinitionRule(string name)
     /// <summary>
     /// 本定义直接声明的键。
     /// </summary>
-    public Dictionary<string, KeyRule> Keys { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, KeyRule> Keys { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// 沿 <see cref="Base"/> 链合并得到的键集合（子定义覆盖父定义）。
     /// </summary>
     public Dictionary<string, KeyRule> GetEffectiveKeys(RuleGroup group)
     {
-        Dictionary<string, KeyRule> result = new(StringComparer.OrdinalIgnoreCase);
-        HashSet<string> visiting = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, KeyRule> result = [with(StringComparer.OrdinalIgnoreCase)];
+        HashSet<string> visiting = [with(StringComparer.OrdinalIgnoreCase)];
         Collect(group, result, visiting);
         return result;
     }

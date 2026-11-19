@@ -34,7 +34,7 @@ public sealed class TypeValidator
         _enumDefinitions = enumDefinitions;
         _mode = mode;
 
-        Dictionary<string, IExternalTypeValidator> validators = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, IExternalTypeValidator> validators = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (var validator in externalValidators ?? [])
             validators[validator.TypeName] = validator;
 
@@ -99,7 +99,13 @@ public sealed class TypeValidator
             return externalValidator.Validate(value, _mode);
 
         if (_typeDefinitions.TryGetValue(typeName, out var typeDefinition))
+        {
+            // 外部类型（CSF 引用、资源文件名等）由宿主注入实际值，不做语法校验。
+            if (typeDefinition.IsExternal)
+                return null;
+
             return ValidateComposite(value, typeDefinition);
+        }
 
         if (_enumDefinitions.TryGetValue(typeName, out var enumDefinition))
             return ValidateEnum(value, enumDefinition);

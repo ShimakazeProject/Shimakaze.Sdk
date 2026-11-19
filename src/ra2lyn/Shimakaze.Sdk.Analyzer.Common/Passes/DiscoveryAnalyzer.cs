@@ -29,7 +29,7 @@ public sealed class DiscoveryAnalyzer : IAnalyzer
         if (context.Rules is not { } rules)
             return;
 
-        Dictionary<(string Group, string Name), EntityModel> byKey = new(new EntityKeyComparer());
+        Dictionary<(string Group, string Name), EntityModel> byKey = [with(new EntityKeyComparer())];
         foreach (var entity in context.Model.Entities)
             byKey[(entity.Group, entity.Name)] = entity;
 
@@ -59,6 +59,8 @@ public sealed class DiscoveryAnalyzer : IAnalyzer
                     foreach (var property in CollectResolveKeys(entity, discoverRule))
                     {
                         string target = property.Value.Trim();
+
+                        // Target 支持跨组引用 "Group.Type"；解析时若键值缺失则用 Fallback。
                         (string targetGroup, string targetType) = ClassificationAnalyzer.SplitReference(discoverRule.Target, entity.Group);
 
                         EntityModel? found = FindTarget(byKey, targetGroup, target);
@@ -178,7 +180,7 @@ public sealed class DiscoveryAnalyzer : IAnalyzer
 
     private static IEnumerable<string> ExpandTypes(RuleSet rules, string groupName, string type)
     {
-        HashSet<string> visited = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> visited = [with(StringComparer.OrdinalIgnoreCase)];
         yield return type;
 
         SectionDefinitionRule? definition = RuleSetLookup.FindDefinition(rules, groupName, type);

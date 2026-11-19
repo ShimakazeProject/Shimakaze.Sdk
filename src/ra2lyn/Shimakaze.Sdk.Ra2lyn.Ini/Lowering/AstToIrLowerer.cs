@@ -58,7 +58,7 @@ public sealed class AstToIrLowerer
         foreach (var diagnostic in tree.Diagnostics)
             _builder.Report(diagnostic);
 
-        HashSet<string> sectionNames = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> sectionNames = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (var entry in tree.Root.Entries)
         {
             switch (entry)
@@ -135,7 +135,7 @@ public sealed class AstToIrLowerer
         string? templateName = null)
     {
         List<IrBuilder.PropertyCommand> properties = [];
-        HashSet<string> keys = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> keys = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (var keyValue in keyValues)
         {
             if (keys.Add(keyValue.Key) is false)
@@ -218,7 +218,7 @@ public sealed class AstToIrLowerer
     private static List<string> MakeBaseNames(SectionNode section)
     {
         List<string> baseNames = [];
-        HashSet<string> seen = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> seen = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (var inheritance in section.Inheritances)
         {
             if (inheritance.Name.Length is 0)

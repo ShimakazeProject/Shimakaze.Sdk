@@ -31,7 +31,7 @@ public sealed class IniWriter : IEmitter
             throw new NotSupportedException("INI 发射器暂不支持保留注释");
 
         string newLine = options.NewLine;
-        Dictionary<string, StringBuilder> files = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, StringBuilder> files = [with(StringComparer.OrdinalIgnoreCase)];
 
         // TreeShaking 只依据分析阶段给出的可达集合；没有可达集合时不做裁剪。
         HashSet<EntityId>? reachable = options.TreeShaking && model.ReachableEntities is { } set
@@ -54,7 +54,7 @@ public sealed class IniWriter : IEmitter
         }
 
         // 输出的键顺序即首次写出顺序：先按实体所属组登记，再按字典的稳定插入顺序导出。
-        Dictionary<string, string> output = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, string> output = [with(StringComparer.OrdinalIgnoreCase)];
         foreach ((string fileName, var builder) in files)
             output[fileName] = builder.ToString();
 

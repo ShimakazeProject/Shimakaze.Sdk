@@ -33,10 +33,10 @@ public sealed record PropertyEntry(
 public sealed class SymbolTable
 {
     private readonly Dictionary<string, List<PropertyEntry>> _entries
-        = new(StringComparer.OrdinalIgnoreCase);
+        = [with(StringComparer.OrdinalIgnoreCase)];
 
     // 节枚举使用 "Group\0Name" 作为复合 key，与 Group / Name 均 OrdinalIgnoreCase 的语义一致。
-    private readonly HashSet<string> _sectionKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _sectionKeys = [with(StringComparer.OrdinalIgnoreCase)];
 
     private readonly List<(string Group, string Name)> _sectionOrder = [];
 

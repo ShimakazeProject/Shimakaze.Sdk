@@ -24,7 +24,7 @@ public sealed class CompilationContext
 
         List<SourceFile> sources = [];
         List<EntityModel> entities = [];
-        HashSet<string> sourcePaths = new(StringComparer.Ordinal);
+        HashSet<string> sourcePaths = [with(StringComparer.Ordinal)];
         foreach (var frontend in frontends)
         {
             foreach (var source in frontend.Sources)
@@ -78,7 +78,7 @@ public sealed class CompilationContext
     /// <summary>
     /// 诊断收集器。
     /// </summary>
-    public DiagnosticBag Diagnostics { get; } = new();
+    public DiagnosticBag Diagnostics { get; } = [];
 
     /// <summary>
     /// 取消令牌。

@@ -24,7 +24,7 @@ public sealed class MergePass : ICompilationPass
     public void Run(CompilationContext context)
     {
         // 1. 收集所有 (Group, Name) 桶，记录每个 entity 的原始来源序号。
-        Dictionary<(string Group, string Name), List<BucketEntry>> buckets = new(new EntityKeyComparer());
+        Dictionary<(string Group, string Name), List<BucketEntry>> buckets = [with(new EntityKeyComparer())];
         List<(string Group, string Name)> bucketOrder = [];
 
         for (int frontendIndex = 0; frontendIndex < context.Frontends.Count; frontendIndex++)
@@ -48,7 +48,7 @@ public sealed class MergePass : ICompilationPass
         }
 
         // 2. 对每个桶做稳定排序后依次合并。
-        Dictionary<(string Group, string Name), EntityModel> mergedByKey = new(new EntityKeyComparer());
+        Dictionary<(string Group, string Name), EntityModel> mergedByKey = [with(new EntityKeyComparer())];
         List<(string Group, string Name)> mergedOrder = [];
 
         foreach (var key in bucketOrder)

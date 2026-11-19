@@ -21,7 +21,7 @@ public sealed class ClassificationAnalyzer : IAnalyzer
         if (context.Rules is not { } rules)
             return;
 
-        Dictionary<(string Group, string Name), EntityModel> byKey = new(new EntityKeyComparer());
+        Dictionary<(string Group, string Name), EntityModel> byKey = [with(new EntityKeyComparer())];
         foreach (var entity in context.Model.Entities)
             byKey[(entity.Group, entity.Name)] = entity;
 

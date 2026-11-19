@@ -8,22 +8,22 @@ public sealed class RuleGroup
     /// <summary>
     /// 节定义，键为定义名（实体类型名）。
     /// </summary>
-    public Dictionary<string, SectionDefinitionRule> Definitions { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, SectionDefinitionRule> Definitions { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// 注册表规则，键为承载注册表的实体名。
     /// </summary>
-    public Dictionary<string, RegistryRule> Registries { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, RegistryRule> Registries { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// 全局规则，键为入口实体名。
     /// </summary>
-    public Dictionary<string, GlobalRule> Globals { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, GlobalRule> Globals { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// 枚举节规则，键为实体名。
     /// </summary>
-    public Dictionary<string, EnumSectionRule> EnumSections { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, EnumSectionRule> EnumSections { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// 发现规则集合。
@@ -33,12 +33,12 @@ public sealed class RuleGroup
     /// <summary>
     /// 复合类型定义，键为类型名。
     /// </summary>
-    public Dictionary<string, TypeDefinition> Types { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, TypeDefinition> Types { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// 枚举定义，键为枚举名。
     /// </summary>
-    public Dictionary<string, EnumDefinition> Enums { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, EnumDefinition> Enums { get; } = [with(StringComparer.OrdinalIgnoreCase)];
 }
 
 /// <summary>

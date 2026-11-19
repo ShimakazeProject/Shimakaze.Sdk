@@ -40,7 +40,7 @@ public static class RuleSetReader
 /// </summary>
 file sealed class RuleFileReader
 {
-    private readonly HashSet<string> _loaded = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _loaded = [with(StringComparer.Ordinal)];
 
     public RuleSet Result { get; } = new();
 
@@ -200,6 +200,7 @@ file sealed class RuleFileReader
         {
             Name = typeName,
             Separator = element.Attribute("Separator")?.Value,
+            IsExternal = element.Attribute("External")?.Value is "true" or "True" or "TRUE",
         };
 
         foreach (XElement fieldElement in element.Elements("Field"))

@@ -81,7 +81,7 @@ public static class RuleSetLookup
         Dictionary<string, TValue>? local,
         Dictionary<string, TValue>? shared)
     {
-        Dictionary<string, TValue> result = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, TValue> result = [with(StringComparer.OrdinalIgnoreCase)];
         foreach ((string key, TValue value) in shared ?? [])
             result[key] = value;
 
