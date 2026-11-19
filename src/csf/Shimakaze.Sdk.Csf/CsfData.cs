@@ -18,7 +18,7 @@ public record class CsfData(CsfMetadata Metadata, List<CsfLabel> Labels) : IList
     /// 初始化一个新的 CSF 文件实例
     /// </summary>
     /// <param name="metadata"></param>
-    public CsfData(CsfMetadata metadata) : this(metadata, new(metadata.LabelCount))
+    public CsfData(CsfMetadata metadata) : this(metadata, [with(metadata.LabelCount)])
     {
     }
 

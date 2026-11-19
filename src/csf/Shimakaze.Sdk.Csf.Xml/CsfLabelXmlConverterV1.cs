@@ -10,7 +10,7 @@ public sealed class CsfLabelXmlConverterV1 : XmlConverter<CsfLabel>
     /// <inheritdoc/>
     public override CsfLabel Read(XmlReader reader, XmlSerializerOptions options)
     {
-        CsfLabel label = new(reader.GetAttribute("name") ?? string.Empty);
+        CsfLabel label = [with(reader.GetAttribute("name") ?? string.Empty)];
         string? extra = reader.GetAttribute("extra");
 
         if (!options.TryGetConverter<CsfValueXmlConverterV1>(out var converter))

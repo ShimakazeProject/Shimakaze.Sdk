@@ -32,7 +32,7 @@ public static class CsfMerger
                 throw new NotSupportedException();
         }
 
-        Dictionary<string, CsfLabel> csf = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, CsfLabel> csf = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (var label in sources.SelectMany(i => i))
             csf[label.Name] = label;
 

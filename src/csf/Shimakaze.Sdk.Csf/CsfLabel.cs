@@ -27,7 +27,7 @@ public record class CsfLabel(string Name, List<CsfValue> Values) : IList<CsfValu
     /// </summary>
     /// <param name="name">标签名称</param>
     /// <param name="capacity">初始容量</param>
-    public CsfLabel(string name, int capacity) : this(name, Values: new(capacity))
+    public CsfLabel(string name, int capacity) : this(name, Values: [with(capacity)])
     {
     }
 

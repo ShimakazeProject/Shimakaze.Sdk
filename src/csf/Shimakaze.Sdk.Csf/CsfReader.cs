@@ -64,7 +64,7 @@ public sealed class CsfReader(Stream stream, bool leaveOpen = false) : IDisposab
     /// <returns></returns>
     public CsfData ReadAllData()
     {
-        CsfData data = new(ReadMetadata());
+        CsfData data = [with(ReadMetadata())];
         for (int i = 0; i < data.Metadata.LabelCount; i++)
             data.Labels.Add(ReadLabel());
 

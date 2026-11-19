@@ -238,7 +238,7 @@ public static class IniSerializer
 
         // Resolve constructor arguments
         object?[] args = new object?[ctorParams.Length];
-        HashSet<string> consumedKeys = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> consumedKeys = [with(StringComparer.OrdinalIgnoreCase)];
 
         for (int i = 0; i < ctorParams.Length; i++)
         {

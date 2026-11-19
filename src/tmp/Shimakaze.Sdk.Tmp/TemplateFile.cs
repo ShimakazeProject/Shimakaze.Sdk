@@ -38,7 +38,7 @@ public sealed record class TemplateFile(
         uint[] offsets = GC.AllocateUninitializedArray<uint>((int)count);
         stream.Read(offsets);
 
-        List<TemplateTileCell> tiles = new(offsets.Length);
+        List<TemplateTileCell> tiles = [with(offsets.Length)];
         for (int i = 0; i < offsets.Length; i++)
         {
             stream.Seek(zero, SeekOrigin.Begin);
