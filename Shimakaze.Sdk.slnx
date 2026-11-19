@@ -45,7 +45,6 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
-    <File Path="GitVersion.yaml" />
     <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="nuget.config" />
