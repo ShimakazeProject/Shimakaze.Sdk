@@ -15,8 +15,8 @@
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
     <PackageVersion Include="System.IO.Hashing" Version="11.0.0" />
     <PackageVersion Include="Vecc.YamlDotNet.Analyzers.StaticGenerator" Version="18.1.0" />
-    <PackageVersion Include="XenoAtom.Terminal.UI" Version="3.11.0" />
-    <PackageVersion Include="XenoAtom.Terminal.UI.Graphics" Version="3.11.0" />
+    <PackageVersion Include="XenoAtom.Terminal.UI" Version="3.12.0" />
+    <PackageVersion Include="XenoAtom.Terminal.UI.Graphics" Version="3.12.0" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>
 </Project>
